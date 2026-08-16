@@ -151,6 +151,187 @@ lemma cornerAdjacentChordLength_gt_one
   rw [chord_difference]
   positivity
 
+noncomputable def cornerCutAreaCoefficient (tangentHalfAngle : ℝ) : ℝ :=
+  tangentHalfAngle * (1 - tangentHalfAngle ^ 2) /
+    (1 + tangentHalfAngle ^ 2) ^ 2
+
+noncomputable def unitCornerCutArea (tangentHalfAngle : ℝ) : ℝ :=
+  (tangentHalfAngle - tangentHalfAngle ^ 2) / (1 + tangentHalfAngle)
+
+noncomputable def unitCornerCutChord (tangentHalfAngle : ℝ) : ℝ :=
+  1 - unitCornerCutArea tangentHalfAngle
+
+lemma cornerCut_area_add_half_chord_gt_half
+    {tangentHalfAngle chordGrowth : ℝ}
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_lt_one : tangentHalfAngle < 1)
+    (chord_growth_nonnegative : 0 ≤ chordGrowth) :
+    let chord := unitCornerCutChord tangentHalfAngle + chordGrowth
+    let area := chord ^ 2 * cornerCutAreaCoefficient tangentHalfAngle
+    1 / 2 < area + chord / 2 := by
+  have one_add_tangent_positive : 0 < 1 + tangentHalfAngle := by linarith
+  have one_minus_tangent_sq_positive : 0 < 1 - tangentHalfAngle ^ 2 := by
+    nlinarith
+  have coefficient_positive : 0 < cornerCutAreaCoefficient tangentHalfAngle := by
+    dsimp [cornerCutAreaCoefficient]
+    positivity
+  have unit_area_positive : 0 < unitCornerCutArea tangentHalfAngle := by
+    dsimp [unitCornerCutArea]
+    exact div_pos (by nlinarith) one_add_tangent_positive
+  have unit_area_lt_one : unitCornerCutArea tangentHalfAngle < 1 := by
+    rw [unitCornerCutArea, div_lt_one one_add_tangent_positive]
+    nlinarith
+  have unit_chord_positive : 0 < unitCornerCutChord tangentHalfAngle := by
+    dsimp [unitCornerCutChord]
+    linarith
+  have unit_area_identity :
+      unitCornerCutChord tangentHalfAngle ^ 2 *
+          cornerCutAreaCoefficient tangentHalfAngle =
+        unitCornerCutArea tangentHalfAngle := by
+    dsimp [unitCornerCutChord, unitCornerCutArea, cornerCutAreaCoefficient]
+    field_simp [ne_of_gt one_add_tangent_positive]
+    ring
+  let chord := unitCornerCutChord tangentHalfAngle + chordGrowth
+  let area := chord ^ 2 * cornerCutAreaCoefficient tangentHalfAngle
+  have chord_at_least_unit : unitCornerCutChord tangentHalfAngle ≤ chord := by
+    dsimp [chord]
+    linarith
+  have chord_nonnegative : 0 ≤ chord :=
+    unit_chord_positive.le.trans chord_at_least_unit
+  have chord_sq_at_least :
+      unitCornerCutChord tangentHalfAngle ^ 2 ≤ chord ^ 2 := by
+    nlinarith
+  have area_at_least_unit : unitCornerCutArea tangentHalfAngle ≤ area := by
+    dsimp [area]
+    rw [← unit_area_identity]
+    exact mul_le_mul_of_nonneg_right chord_sq_at_least coefficient_positive.le
+  dsimp only
+  calc
+    1 / 2 < unitCornerCutArea tangentHalfAngle +
+        unitCornerCutChord tangentHalfAngle / 2 := by
+      dsimp [unitCornerCutChord]
+      linarith
+    _ ≤ area + chord / 2 := by
+      gcongr
+
+lemma pinnedCutPolynomial_positive
+    {tangentHalfAngle : ℝ}
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_lt : tangentHalfAngle < 1 - Real.sqrt (1 / 5)) :
+    0 <
+      (1 - tangentHalfAngle) ^ 2 * (1 - tangentHalfAngle ^ 2) -
+        2 *
+          (tangentHalfAngle * (1 - tangentHalfAngle) ^ 2 -
+            tangentHalfAngle / 5) := by
+  have sqrt_two_nonnegative : 0 ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  have sqrt_two_sq : (Real.sqrt 2) ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  have sqrt_fifth_nonnegative : 0 ≤ Real.sqrt (1 / 5) := Real.sqrt_nonneg _
+  have sqrt_fifth_sq : (Real.sqrt (1 / 5)) ^ 2 = 1 / 5 :=
+    Real.sq_sqrt (by norm_num)
+  have sqrt_fifth_lt_one : Real.sqrt (1 / 5) < 1 := by nlinarith
+  have tangent_lt_one : tangentHalfAngle < 1 := by linarith
+  have polynomial_identity :
+      (1 - tangentHalfAngle) ^ 2 * (1 - tangentHalfAngle ^ 2) -
+          2 *
+            (tangentHalfAngle * (1 - tangentHalfAngle) ^ 2 -
+              tangentHalfAngle / 5) =
+        (1 - tangentHalfAngle) ^ 2 *
+            (2 - (1 + tangentHalfAngle) ^ 2) +
+          (2 / 5) * tangentHalfAngle := by ring
+  rw [polynomial_identity]
+  by_cases tangent_at_most : tangentHalfAngle ≤ Real.sqrt 2 - 1
+  · have square_at_most_two : (1 + tangentHalfAngle) ^ 2 ≤ 2 := by
+      nlinarith
+    have first_term_nonnegative :
+        0 ≤ (1 - tangentHalfAngle) ^ 2 *
+          (2 - (1 + tangentHalfAngle) ^ 2) := by positivity
+    have second_term_positive : 0 < (2 / 5) * tangentHalfAngle := by positivity
+    linarith
+  · have root_bound : 41 / 100 < Real.sqrt 2 - 1 := by nlinarith
+    have tangent_gt_lower : 41 / 100 < tangentHalfAngle := by
+      exact root_bound.trans_le (le_of_not_ge tangent_at_most)
+    have sqrt_fifth_gt : 11 / 25 < Real.sqrt (1 / 5) := by nlinarith
+    have tangent_lt_upper : tangentHalfAngle < 14 / 25 := by linarith
+    let firstFactor := (1 - tangentHalfAngle) ^ 2
+    let secondFactor := 2 - (1 + tangentHalfAngle) ^ 2
+    have first_factor_nonnegative : 0 ≤ firstFactor := by
+      dsimp [firstFactor]
+      positivity
+    have first_factor_at_most : firstFactor ≤ (59 / 100) ^ 2 := by
+      dsimp [firstFactor]
+      nlinarith
+    have second_factor_lower :
+        2 - (39 / 25) ^ 2 < secondFactor := by
+      dsimp [secondFactor]
+      nlinarith
+    by_cases second_factor_nonnegative : 0 ≤ secondFactor
+    · have first_term_nonnegative : 0 ≤ firstFactor * secondFactor := by positivity
+      have second_term_positive : 0 < (2 / 5) * tangentHalfAngle := by positivity
+      linarith
+    · have second_factor_negative : secondFactor < 0 := lt_of_not_ge second_factor_nonnegative
+      have product_at_least_scaled :
+          (59 / 100) ^ 2 * secondFactor ≤ firstFactor * secondFactor := by
+        exact mul_le_mul_of_nonpos_right first_factor_at_most second_factor_negative.le
+      have lower_constant_nonnegative : 0 ≤ (59 / 100 : ℝ) ^ 2 := by positivity
+      have scaled_gt_constant :
+          (59 / 100) ^ 2 * (2 - (39 / 25) ^ 2) <
+            (59 / 100) ^ 2 * secondFactor := by
+        exact mul_lt_mul_of_pos_left second_factor_lower (by positivity)
+      have product_lower :
+          (59 / 100) ^ 2 * (2 - (39 / 25) ^ 2) <
+            firstFactor * secondFactor :=
+        scaled_gt_constant.trans_le product_at_least_scaled
+      have linear_lower :
+          (2 / 5) * (41 / 100) < (2 / 5) * tangentHalfAngle := by
+        nlinarith
+      have constant_sum_positive :
+          0 <
+            (59 / 100 : ℝ) ^ 2 * (2 - (39 / 25) ^ 2) +
+              (2 / 5) * (41 / 100) := by norm_num
+      change 0 < firstFactor * secondFactor + (2 / 5) * tangentHalfAngle
+      linarith
+
+noncomputable def pinnedCutArea (tangentHalfAngle : ℝ) : ℝ :=
+  tangentHalfAngle * (1 - tangentHalfAngle) / (1 + tangentHalfAngle)
+
+noncomputable def pinnedCutChord (tangentHalfAngle : ℝ) : ℝ :=
+  (1 + tangentHalfAngle ^ 2) / (1 + tangentHalfAngle)
+
+noncomputable def pinnedCutMissingLength (tangentHalfAngle : ℝ) : ℝ :=
+  2 * tangentHalfAngle *
+      (tangentHalfAngle * (1 - tangentHalfAngle) ^ 2 - tangentHalfAngle / 5) /
+    (1 - tangentHalfAngle ^ 2) ^ 2
+
+lemma pinnedCut_score_gt_one
+    {tangentHalfAngle : ℝ}
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_lt : tangentHalfAngle < 1 - Real.sqrt (1 / 5)) :
+    1 <
+      pinnedCutArea tangentHalfAngle + pinnedCutChord tangentHalfAngle / 2 +
+        1 / 2 - pinnedCutMissingLength tangentHalfAngle / 2 := by
+  have sqrt_fifth_nonnegative : 0 ≤ Real.sqrt (1 / 5) := Real.sqrt_nonneg _
+  have sqrt_fifth_sq : (Real.sqrt (1 / 5)) ^ 2 = 1 / 5 :=
+    Real.sq_sqrt (by norm_num)
+  have sqrt_fifth_positive : 0 < Real.sqrt (1 / 5) := by nlinarith
+  have tangent_lt_one : tangentHalfAngle < 1 := by linarith
+  have one_add_tangent_positive : 0 < 1 + tangentHalfAngle := by linarith
+  have one_minus_tangent_sq_positive : 0 < 1 - tangentHalfAngle ^ 2 := by
+    nlinarith
+  have area_add_chord :
+      pinnedCutArea tangentHalfAngle + pinnedCutChord tangentHalfAngle = 1 := by
+    dsimp [pinnedCutArea, pinnedCutChord]
+    field_simp [ne_of_gt one_add_tangent_positive]
+    ring
+  have area_gt_missing :
+      pinnedCutMissingLength tangentHalfAngle < pinnedCutArea tangentHalfAngle := by
+    have polynomial_positive := pinnedCutPolynomial_positive tangent_positive tangent_lt
+    dsimp [pinnedCutMissingLength, pinnedCutArea]
+    rw [div_lt_div_iff₀ (sq_pos_of_pos one_minus_tangent_sq_positive)
+      one_add_tangent_positive]
+    field_simp [ne_of_gt one_add_tangent_positive]
+    nlinarith
+  linarith
+
 lemma score_gt_one_of_dilatedInteriorRegion_subset_innerArea
     {size : ℕ} {factor : ℝ} {square : PlacedSquare}
     (factor_gt_one : 1 < factor)

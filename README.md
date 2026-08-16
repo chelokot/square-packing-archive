@@ -118,6 +118,8 @@ makes possible. Every individual result retains discoverer, optimizer, prover,
 date, and source roles where available.
 
 See [ATTRIBUTION.md](ATTRIBUTION.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+Source-specific corrections discovered during formalization are recorded in
+[the Nagamochi 2005 notes](docs/nagamochi-2005-formalization.md).
 
 ## License
 
