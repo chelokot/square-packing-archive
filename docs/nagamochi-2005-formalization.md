@@ -42,9 +42,10 @@ their coordinates have a single formal definition. Lean proves that membership
 of two distinct `Q` points contributes at least `0.9`, while membership of any
 valid indexed `P` point contributes at least `0.5`. The Case 5 score arithmetic
 is connected as well: positive inner-area score, two distinct `0.1` boundary
-chords, and two distinct `Q` points imply total score greater than one. What is
-not yet claimed is the geometric premise that every square whose center lies in
-a corner region necessarily contains those resources.
+chords, and two distinct `Q` points imply total score greater than one. The
+geometric premise is now connected too: every dilated square whose center lies
+in one of the four corner regions contains the corresponding unit-corner and
+two `Q` points, and therefore has score greater than one.
 
 The final pinned subcase of Case 6 is now connected to the resource measure.
 The corrected Lemma 6 expression is represented as an inner-area contribution
@@ -68,14 +69,14 @@ than one for every side orientation. The remaining Case 3 task is therefore a
 pure classification theorem deriving this witness from the paper's positional
 hypotheses.
 
-Case 5 is now fully proved for the lower-left corner in every frame. Local
-quarter rotations normalize the frame signs without changing the dilated
-region, and coordinate-swap symmetry handles either ordering of the normalized
-sine and cosine. Container containment yields exact center half-extent bounds
-even though the square region is open. Those bounds force the two `Q` points
-`(0.9, 1)` and `(1, 0.9)` and the interior point `(1, 1)` into the dilated
-square. Convexity supplies the two intervening boundary chords, while openness
-supplies positive inner-area measure. Together these facts discharge the Case
-5 score inequality without additional geometric hypotheses. Extending this
-result to the other three container corners still requires a formal
-resource-reflection symmetry layer.
+Case 5 is now fully proved for all four container corners and every frame.
+Local quarter rotations normalize the frame signs without changing the
+dilated region, coordinate swap handles either ordering of normalized sine and
+cosine, and exact horizontal reflection transfers the point geometry across
+the container. Container containment yields exact center half-extent bounds
+even though the square region is open. Those bounds force the corresponding
+two `Q` points and unit-corner point into the dilated square. Convexity supplies
+the two intervening boundary chords, while openness supplies positive
+inner-area measure. A final theorem performs the four-way corner-strip case
+split and discharges the Case 5 score inequality without additional geometric
+hypotheses.

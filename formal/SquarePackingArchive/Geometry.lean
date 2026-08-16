@@ -10,6 +10,9 @@ structure Point where
 def Point.swap (point : Point) : Point :=
   ⟨point.y, point.x⟩
 
+def Point.reflectX (coordinateSum : ℝ) (point : Point) : Point :=
+  ⟨coordinateSum - point.x, point.y⟩
+
 @[simp] lemma Point.swap_swap (point : Point) :
     point.swap.swap = point := by
   rfl
@@ -17,6 +20,17 @@ def Point.swap (point : Point) : Point :=
 lemma Point.swap_injective : Function.Injective Point.swap := by
   intro left right equality
   have := congrArg Point.swap equality
+  simpa using this
+
+@[simp] lemma Point.reflectX_reflectX (coordinateSum : ℝ) (point : Point) :
+    (point.reflectX coordinateSum).reflectX coordinateSum = point := by
+  cases point
+  simp [Point.reflectX]
+
+lemma Point.reflectX_injective (coordinateSum : ℝ) :
+    Function.Injective (Point.reflectX coordinateSum) := by
+  intro left right equality
+  have := congrArg (Point.reflectX coordinateSum) equality
   simpa using this
 
 structure Frame where
@@ -42,6 +56,11 @@ def Frame.rotateQuarter (frame : Frame) : Frame where
   sine := frame.cosine
   unit := by nlinarith [frame.unit]
 
+def Frame.reflectX (frame : Frame) : Frame where
+  cosine := -frame.cosine
+  sine := frame.sine
+  unit := by nlinarith [frame.unit]
+
 def Frame.place (frame : Frame) (localX localY : ℝ) : Point :=
   ⟨localX * frame.cosine - localY * frame.sine,
     localX * frame.sine + localY * frame.cosine⟩
@@ -63,6 +82,10 @@ def PlacedSquare.rotateHalf (square : PlacedSquare) : PlacedSquare :=
 
 def PlacedSquare.rotateThreeQuarter (square : PlacedSquare) : PlacedSquare :=
   square.rotateHalf.rotateQuarter
+
+def PlacedSquare.reflectX (coordinateSum : ℝ) (square : PlacedSquare) : PlacedSquare where
+  center := square.center.reflectX coordinateSum
+  frame := square.frame.reflectX
 
 noncomputable def PlacedSquare.firstQuadrant (square : PlacedSquare) : PlacedSquare :=
   if 0 ≤ square.frame.cosine then

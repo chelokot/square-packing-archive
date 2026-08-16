@@ -860,17 +860,25 @@ lemma score_gt_one_of_case5_resource_bounds
   rw [weights_sum]
   exact add_le_add boundary_tenth corner_nine_tenths
 
-lemma innerArea_positive_of_unitCornerPoint_mem
+lemma innerArea_positive_of_inward_point_family
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
-    (size_at_least_three : 3 ≤ size)
+    (boundaryPoint : Plane) (inwardPoint : ℝ → Plane)
     (factor_nonzero : factor ≠ 0)
-    (unit_corner_mem :
-      ![(1 : ℝ), 1] ∈ square.dilatedInteriorRegion factor) :
+    (boundary_point_mem :
+      boundaryPoint ∈ square.dilatedInteriorRegion factor)
+    (inward_near :
+      ∀ {radius delta : ℝ}, 0 < radius → 0 < delta → delta < radius →
+        inwardPoint delta ∈ Metric.ball boundaryPoint radius)
+    (inward_inside :
+      ∀ {delta : ℝ}, 0 < delta → delta ≤ 1 / 2 →
+        inwardPoint delta ∈
+          Set.pi univ fun _ => Ioo (1 : ℝ) ((size : ℝ) - 1)) :
     0 < NagamochiResource.innerArea size
       (square.dilatedInteriorRegion factor) := by
   let region := square.dilatedInteriorRegion factor
-  have region_open : IsOpen region := square.isOpen_dilatedInteriorRegion factor_nonzero
-  rcases Metric.isOpen_iff.mp region_open ![(1 : ℝ), 1] unit_corner_mem with
+  have region_open : IsOpen region :=
+    square.isOpen_dilatedInteriorRegion factor_nonzero
+  rcases Metric.isOpen_iff.mp region_open boundaryPoint boundary_point_mem with
     ⟨radius, radius_positive, ball_subset⟩
   let delta := min (radius / 2) (1 / 2)
   have delta_positive : 0 < delta := by
@@ -880,34 +888,24 @@ lemma innerArea_positive_of_unitCornerPoint_mem
     have delta_at_most_half_radius : delta ≤ radius / 2 := min_le_left _ _
     linarith
   have delta_at_most_half : delta ≤ 1 / 2 := min_le_right _ _
-  let interiorPoint : Plane := ![1 + delta, 1 + delta]
-  have interior_point_in_ball :
-      interiorPoint ∈ Metric.ball ![(1 : ℝ), 1] radius := by
-    rw [Metric.mem_ball, dist_pi_lt_iff radius_positive]
-    intro coordinate
-    fin_cases coordinate <;>
-      simp [interiorPoint, abs_of_nonneg delta_positive.le,
-        delta_lt_radius]
-  have interior_point_in_region : interiorPoint ∈ region :=
-    ball_subset interior_point_in_ball
-  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  have interior_point_in_region : inwardPoint delta ∈ region :=
+    ball_subset (inward_near radius_positive delta_positive delta_lt_radius)
   let innerOpen : Set Plane :=
     Set.pi univ fun _ => Ioo (1 : ℝ) ((size : ℝ) - 1)
   have inner_open : IsOpen innerOpen := by
     exact isOpen_set_pi Set.finite_univ fun _ _ => isOpen_Ioo
-  have interior_point_in_inner_open : interiorPoint ∈ innerOpen := by
-    intro coordinate coordinate_mem
-    fin_cases coordinate <;>
-      change 1 < 1 + delta ∧ 1 + delta < (size : ℝ) - 1 <;>
-      constructor <;> linarith
+  have interior_point_in_inner_open : inwardPoint delta ∈ innerOpen :=
+    inward_inside delta_positive delta_at_most_half
   let openPatch := region ∩ innerOpen
   have open_patch_open : IsOpen openPatch := region_open.inter inner_open
   have open_patch_nonempty : openPatch.Nonempty :=
-    ⟨interiorPoint, interior_point_in_region, interior_point_in_inner_open⟩
+    ⟨inwardPoint delta, interior_point_in_region,
+      interior_point_in_inner_open⟩
   have open_patch_volume_positive : 0 < volume openPatch :=
     open_patch_open.measure_pos volume open_patch_nonempty
   have open_patch_subset :
-      openPatch ⊆ region ∩ Icc (fun _ => 1) (fun _ => (size : ℝ) - 1) := by
+      openPatch ⊆ region ∩
+        Icc (fun _ => 1) (fun _ => (size : ℝ) - 1) := by
     intro point point_mem
     refine ⟨point_mem.1, ?_⟩
     constructor
@@ -917,13 +915,116 @@ lemma innerArea_positive_of_unitCornerPoint_mem
       exact (point_mem.2 coordinate (mem_univ coordinate)).2.le
   have patch_measure_bound :
       volume openPatch ≤
-        volume (region ∩ Icc (fun _ => 1) (fun _ => (size : ℝ) - 1)) :=
+        volume (region ∩
+          Icc (fun _ => 1) (fun _ => (size : ℝ) - 1)) :=
     measure_mono open_patch_subset
   rw [NagamochiResource.innerArea,
     Measure.restrict_apply
       (square.measurableSet_dilatedInteriorRegion factor_nonzero)]
   simpa only [region] using
     open_patch_volume_positive.trans_le patch_measure_bound
+
+lemma innerArea_positive_of_unitCornerPoint_mem
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_nonzero : factor ≠ 0)
+    (unit_corner_mem :
+      ![(1 : ℝ), 1] ∈ square.dilatedInteriorRegion factor) :
+    0 < NagamochiResource.innerArea size
+      (square.dilatedInteriorRegion factor) := by
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  apply innerArea_positive_of_inward_point_family square
+    ![(1 : ℝ), 1] (fun delta => ![1 + delta, 1 + delta])
+    factor_nonzero unit_corner_mem
+  · intro radius delta radius_positive delta_positive delta_lt_radius
+    rw [Metric.mem_ball, dist_pi_lt_iff radius_positive]
+    intro coordinate
+    fin_cases coordinate <;>
+      simp [abs_of_nonneg delta_positive.le, delta_lt_radius]
+  · intro delta delta_positive delta_at_most_half coordinate coordinate_mem
+    fin_cases coordinate <;>
+      change 1 < 1 + delta ∧ 1 + delta < (size : ℝ) - 1 <;>
+      constructor <;> linarith
+
+lemma innerArea_positive_of_rightUnitCornerPoint_mem
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_nonzero : factor ≠ 0)
+    (unit_corner_mem :
+      ![(size : ℝ) - 1, (1 : ℝ)] ∈
+        square.dilatedInteriorRegion factor) :
+    0 < NagamochiResource.innerArea size
+      (square.dilatedInteriorRegion factor) := by
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  apply innerArea_positive_of_inward_point_family square
+    ![(size : ℝ) - 1, (1 : ℝ)]
+    (fun delta => ![(size : ℝ) - 1 - delta, 1 + delta])
+    factor_nonzero unit_corner_mem
+  · intro radius delta radius_positive delta_positive delta_lt_radius
+    rw [Metric.mem_ball, dist_pi_lt_iff radius_positive]
+    intro coordinate
+    fin_cases coordinate <;>
+      simp [abs_of_nonneg delta_positive.le, delta_lt_radius]
+  · intro delta delta_positive delta_at_most_half coordinate coordinate_mem
+    fin_cases coordinate
+    · change 1 < (size : ℝ) - 1 - delta ∧
+        (size : ℝ) - 1 - delta < (size : ℝ) - 1
+      constructor <;> linarith
+    · change 1 < 1 + delta ∧ 1 + delta < (size : ℝ) - 1
+      constructor <;> linarith
+
+lemma innerArea_positive_of_topUnitCornerPoint_mem
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_nonzero : factor ≠ 0)
+    (unit_corner_mem :
+      ![(1 : ℝ), (size : ℝ) - 1] ∈
+        square.dilatedInteriorRegion factor) :
+    0 < NagamochiResource.innerArea size
+      (square.dilatedInteriorRegion factor) := by
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  apply innerArea_positive_of_inward_point_family square
+    ![(1 : ℝ), (size : ℝ) - 1]
+    (fun delta => ![1 + delta, (size : ℝ) - 1 - delta])
+    factor_nonzero unit_corner_mem
+  · intro radius delta radius_positive delta_positive delta_lt_radius
+    rw [Metric.mem_ball, dist_pi_lt_iff radius_positive]
+    intro coordinate
+    fin_cases coordinate <;>
+      simp [abs_of_nonneg delta_positive.le, delta_lt_radius]
+  · intro delta delta_positive delta_at_most_half coordinate coordinate_mem
+    fin_cases coordinate
+    · change 1 < 1 + delta ∧ 1 + delta < (size : ℝ) - 1
+      constructor <;> linarith
+    · change 1 < (size : ℝ) - 1 - delta ∧
+        (size : ℝ) - 1 - delta < (size : ℝ) - 1
+      constructor <;> linarith
+
+lemma innerArea_positive_of_topRightUnitCornerPoint_mem
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_nonzero : factor ≠ 0)
+    (unit_corner_mem :
+      ![(size : ℝ) - 1, (size : ℝ) - 1] ∈
+        square.dilatedInteriorRegion factor) :
+    0 < NagamochiResource.innerArea size
+      (square.dilatedInteriorRegion factor) := by
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  apply innerArea_positive_of_inward_point_family square
+    ![(size : ℝ) - 1, (size : ℝ) - 1]
+    (fun delta =>
+      ![(size : ℝ) - 1 - delta, (size : ℝ) - 1 - delta])
+    factor_nonzero unit_corner_mem
+  · intro radius delta radius_positive delta_positive delta_lt_radius
+    rw [Metric.mem_ball, dist_pi_lt_iff radius_positive]
+    intro coordinate
+    fin_cases coordinate <;>
+      simp [abs_of_nonneg delta_positive.le, delta_lt_radius]
+  · intro delta delta_positive delta_at_most_half coordinate coordinate_mem
+    fin_cases coordinate <;>
+      change 1 < (size : ℝ) - 1 - delta ∧
+        (size : ℝ) - 1 - delta < (size : ℝ) - 1 <;>
+      constructor <;> linarith
 
 lemma score_gt_one_of_case5_geometry_and_corner_points
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
@@ -1042,6 +1143,230 @@ lemma score_gt_one_of_case5_any_frame
     normalized_center_x normalized_center_y
   rw [region_eq] at normalized_score
   exact normalized_score
+
+lemma score_gt_one_of_case5_bottom_right
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_x_at_least_size_sub_one :
+      (size : ℝ) - 1 ≤ factor * square.center.x)
+    (center_y_at_most_one : factor * square.center.y ≤ 1) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have factor_nonzero : factor ≠ 0 := factor_positive.ne'
+  have points := square.case5RightPoints_mem_dilatedInteriorRegion_any_frame
+    factor_gt_one inside_container center_x_at_least_size_sub_one
+    center_y_at_most_one
+  have unit_corner_mem :
+      ![(size : ℝ) - 1, (1 : ℝ)] ∈
+        square.dilatedInteriorRegion factor := points.1
+  have bottom_right_mem :
+      NagamochiResource.cornerPoint size .bottomRight ∈
+        square.dilatedInteriorRegion factor := by
+    simpa [NagamochiResource.cornerPoint] using points.2.1
+  have right_bottom_mem :
+      NagamochiResource.cornerPoint size .rightBottom ∈
+        square.dilatedInteriorRegion factor := by
+    simpa [NagamochiResource.cornerPoint] using points.2.2
+  have inner_positive := innerArea_positive_of_rightUnitCornerPoint_mem square
+    size_at_least_three factor_nonzero unit_corner_mem
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  have bottom_right_point_mem :
+      ![(size : ℝ) - 9 / 10, (1 : ℝ)] ∈
+        square.dilatedInteriorRegion factor := points.2.1
+  have right_bottom_point_mem :
+      ![(size : ℝ) - 1, (9 / 10 : ℝ)] ∈
+        square.dilatedInteriorRegion factor := points.2.2
+  have bottom_chord :
+      NagamochiResource.HasBoundaryChord size .bottom
+        (square.dilatedInteriorRegion factor) (1 / 10) := by
+    refine ⟨(size : ℝ) - 1, (size : ℝ) - 9 / 10, by norm_num,
+      ?_, ?_⟩
+    · intro coordinate coordinate_mem
+      constructor
+      · linarith [coordinate_mem.1]
+      · exact coordinate_mem.2.le
+    · exact horizontal_openSegment_subset_of_convex
+        (square.convex_dilatedInteriorRegion factor) (by norm_num)
+        unit_corner_mem bottom_right_point_mem
+  have right_chord :
+      NagamochiResource.HasBoundaryChord size .right
+        (square.dilatedInteriorRegion factor) (1 / 10) := by
+    refine ⟨9 / 10, 1, by norm_num, ?_, ?_⟩
+    · intro coordinate coordinate_mem
+      exact ⟨coordinate_mem.1.le, by linarith [coordinate_mem.2]⟩
+    · exact vertical_openSegment_subset_of_convex
+        (square.convex_dilatedInteriorRegion factor) (by norm_num)
+        right_bottom_point_mem unit_corner_mem
+  exact score_gt_one_of_case5_resource_bounds
+    (firstSide := .bottom) (secondSide := .right)
+    (firstKind := .bottomRight) (secondKind := .rightBottom)
+    (square.measurableSet_dilatedInteriorRegion factor_nonzero)
+    inner_positive (by decide) (by decide) bottom_chord right_chord
+    bottom_right_mem right_bottom_mem
+
+lemma score_gt_one_of_case5_top_left
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_x_at_most_one : factor * square.center.x ≤ 1)
+    (center_y_at_least_size_sub_one :
+      (size : ℝ) - 1 ≤ factor * square.center.y) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have factor_nonzero : factor ≠ 0 := factor_positive.ne'
+  have points := square.case5TopPoints_mem_dilatedInteriorRegion_any_frame
+    factor_gt_one inside_container center_x_at_most_one
+    center_y_at_least_size_sub_one
+  have unit_corner_mem :
+      ![(1 : ℝ), (size : ℝ) - 1] ∈
+        square.dilatedInteriorRegion factor := points.1
+  have left_top_mem :
+      NagamochiResource.cornerPoint size .leftTop ∈
+        square.dilatedInteriorRegion factor := by
+    simpa [NagamochiResource.cornerPoint] using points.2.1
+  have top_left_mem :
+      NagamochiResource.cornerPoint size .topLeft ∈
+        square.dilatedInteriorRegion factor := by
+    simpa [NagamochiResource.cornerPoint] using points.2.2
+  have inner_positive := innerArea_positive_of_topUnitCornerPoint_mem square
+    size_at_least_three factor_nonzero unit_corner_mem
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  have left_top_point_mem :
+      ![(1 : ℝ), (size : ℝ) - 9 / 10] ∈
+        square.dilatedInteriorRegion factor := points.2.1
+  have top_left_point_mem :
+      ![(9 / 10 : ℝ), (size : ℝ) - 1] ∈
+        square.dilatedInteriorRegion factor := points.2.2
+  have left_chord :
+      NagamochiResource.HasBoundaryChord size .left
+        (square.dilatedInteriorRegion factor) (1 / 10) := by
+    refine ⟨(size : ℝ) - 1, (size : ℝ) - 9 / 10, by norm_num,
+      ?_, ?_⟩
+    · intro coordinate coordinate_mem
+      constructor
+      · linarith [coordinate_mem.1]
+      · exact coordinate_mem.2.le
+    · exact vertical_openSegment_subset_of_convex
+        (square.convex_dilatedInteriorRegion factor) (by norm_num)
+        unit_corner_mem left_top_point_mem
+  have top_chord :
+      NagamochiResource.HasBoundaryChord size .top
+        (square.dilatedInteriorRegion factor) (1 / 10) := by
+    refine ⟨9 / 10, 1, by norm_num, ?_, ?_⟩
+    · intro coordinate coordinate_mem
+      exact ⟨coordinate_mem.1.le, by linarith [coordinate_mem.2]⟩
+    · exact horizontal_openSegment_subset_of_convex
+        (square.convex_dilatedInteriorRegion factor) (by norm_num)
+        top_left_point_mem unit_corner_mem
+  exact score_gt_one_of_case5_resource_bounds
+    (firstSide := .left) (secondSide := .top)
+    (firstKind := .leftTop) (secondKind := .topLeft)
+    (square.measurableSet_dilatedInteriorRegion factor_nonzero)
+    inner_positive (by decide) (by decide) left_chord top_chord
+    left_top_mem top_left_mem
+
+lemma score_gt_one_of_case5_top_right
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_x_at_least_size_sub_one :
+      (size : ℝ) - 1 ≤ factor * square.center.x)
+    (center_y_at_least_size_sub_one :
+      (size : ℝ) - 1 ≤ factor * square.center.y) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have factor_nonzero : factor ≠ 0 := factor_positive.ne'
+  have points :=
+    square.case5TopRightPoints_mem_dilatedInteriorRegion_any_frame
+      factor_gt_one inside_container center_x_at_least_size_sub_one
+      center_y_at_least_size_sub_one
+  have unit_corner_mem :
+      ![(size : ℝ) - 1, (size : ℝ) - 1] ∈
+        square.dilatedInteriorRegion factor := points.1
+  have right_top_mem :
+      NagamochiResource.cornerPoint size .rightTop ∈
+        square.dilatedInteriorRegion factor := by
+    simpa [NagamochiResource.cornerPoint] using points.2.1
+  have top_right_mem :
+      NagamochiResource.cornerPoint size .topRight ∈
+        square.dilatedInteriorRegion factor := by
+    simpa [NagamochiResource.cornerPoint] using points.2.2
+  have inner_positive :=
+    innerArea_positive_of_topRightUnitCornerPoint_mem square
+      size_at_least_three factor_nonzero unit_corner_mem
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  have right_top_point_mem :
+      ![(size : ℝ) - 1, (size : ℝ) - 9 / 10] ∈
+        square.dilatedInteriorRegion factor := points.2.1
+  have top_right_point_mem :
+      ![(size : ℝ) - 9 / 10, (size : ℝ) - 1] ∈
+        square.dilatedInteriorRegion factor := points.2.2
+  have right_chord :
+      NagamochiResource.HasBoundaryChord size .right
+        (square.dilatedInteriorRegion factor) (1 / 10) := by
+    refine ⟨(size : ℝ) - 1, (size : ℝ) - 9 / 10, by norm_num,
+      ?_, ?_⟩
+    · intro coordinate coordinate_mem
+      constructor
+      · linarith [coordinate_mem.1]
+      · exact coordinate_mem.2.le
+    · exact vertical_openSegment_subset_of_convex
+        (square.convex_dilatedInteriorRegion factor) (by norm_num)
+        unit_corner_mem right_top_point_mem
+  have top_chord :
+      NagamochiResource.HasBoundaryChord size .top
+        (square.dilatedInteriorRegion factor) (1 / 10) := by
+    refine ⟨(size : ℝ) - 1, (size : ℝ) - 9 / 10, by norm_num,
+      ?_, ?_⟩
+    · intro coordinate coordinate_mem
+      constructor
+      · linarith [coordinate_mem.1]
+      · exact coordinate_mem.2.le
+    · exact horizontal_openSegment_subset_of_convex
+        (square.convex_dilatedInteriorRegion factor) (by norm_num)
+        unit_corner_mem top_right_point_mem
+  exact score_gt_one_of_case5_resource_bounds
+    (firstSide := .right) (secondSide := .top)
+    (firstKind := .rightTop) (secondKind := .topRight)
+    (square.measurableSet_dilatedInteriorRegion factor_nonzero)
+    inner_positive (by decide) (by decide) right_chord top_chord
+    right_top_mem top_right_mem
+
+lemma score_gt_one_of_case5
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_x_in_corner_strip :
+      factor * square.center.x ≤ 1 ∨
+        (size : ℝ) - 1 ≤ factor * square.center.x)
+    (center_y_in_corner_strip :
+      factor * square.center.y ≤ 1 ∨
+        (size : ℝ) - 1 ≤ factor * square.center.y) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  rcases center_x_in_corner_strip with center_x_low | center_x_high
+  · rcases center_y_in_corner_strip with center_y_low | center_y_high
+    · exact score_gt_one_of_case5_any_frame square size_at_least_three
+        factor_gt_one inside_container center_x_low center_y_low
+    · exact score_gt_one_of_case5_top_left square size_at_least_three
+        factor_gt_one inside_container center_x_low center_y_high
+  · rcases center_y_in_corner_strip with center_y_low | center_y_high
+    · exact score_gt_one_of_case5_bottom_right square size_at_least_three
+        factor_gt_one inside_container center_x_high center_y_low
+    · exact score_gt_one_of_case5_top_right square size_at_least_three
+        factor_gt_one inside_container center_x_high center_y_high
 
 lemma score_gt_one_of_two_boundaryLine_chords
     {size : ℕ} {region : Set Plane} {factor : ℝ}
