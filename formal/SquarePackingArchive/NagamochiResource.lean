@@ -180,4 +180,15 @@ lemma NagamochiResource.measure_univ_ne_top
   rw [NagamochiResource.measure_univ size_at_least_three]
   finiteness
 
+lemma NagamochiResource.measure_univ_nat
+    {size : ℕ} (size_at_least_three : 3 ≤ size) :
+    NagamochiResource.measure size univ = (size * size - 2 : ℕ) := by
+  rw [NagamochiResource.measure_univ size_at_least_three]
+  rw [← ENNReal.ofReal_natCast]
+  congr 2
+  rw [Nat.cast_sub]
+  · push_cast
+    ring
+  · nlinarith
+
 end SquarePackingArchive

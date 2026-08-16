@@ -187,6 +187,44 @@ lemma PlacedSquare.disjoint_interiorRegion
     (left.mem_interiorRegion_iff point).mp left_mem,
     (right.mem_interiorRegion_iff point).mp right_mem⟩
 
+def dilatePlane (factor : ℝ) (point : Plane) : Plane :=
+  factor • point
+
+lemma dilatePlane_injective {factor : ℝ} (factor_nonzero : factor ≠ 0) :
+    Function.Injective (dilatePlane factor) := by
+  intro left right equality
+  funext coordinate
+  have coordinate_equality := congrFun equality coordinate
+  simp only [dilatePlane, Pi.smul_apply, smul_eq_mul] at coordinate_equality
+  exact mul_left_cancel₀ factor_nonzero coordinate_equality
+
+def PlacedSquare.dilatedInteriorRegion
+    (square : PlacedSquare) (factor : ℝ) : Set Plane :=
+  dilatePlane factor '' square.interiorRegion
+
+lemma PlacedSquare.isOpen_dilatedInteriorRegion
+    (square : PlacedSquare) {factor : ℝ} (factor_nonzero : factor ≠ 0) :
+    IsOpen (square.dilatedInteriorRegion factor) := by
+  exact (isOpenMap_smul₀ factor_nonzero) square.interiorRegion square.isOpen_interiorRegion
+
+lemma PlacedSquare.measurableSet_dilatedInteriorRegion
+    (square : PlacedSquare) {factor : ℝ} (factor_nonzero : factor ≠ 0) :
+    MeasurableSet (square.dilatedInteriorRegion factor) :=
+  (square.isOpen_dilatedInteriorRegion factor_nonzero).measurableSet
+
+lemma PlacedSquare.disjoint_dilatedInteriorRegion
+    {left right : PlacedSquare} {factor : ℝ}
+    (disjoint : left.InteriorDisjoint right) (factor_nonzero : factor ≠ 0) :
+    Disjoint (left.dilatedInteriorRegion factor) (right.dilatedInteriorRegion factor) := by
+  rw [Set.disjoint_left]
+  rintro point ⟨leftPoint, leftPoint_mem, leftPoint_eq⟩
+    ⟨rightPoint, rightPoint_mem, rightPoint_eq⟩
+  have source_equality : leftPoint = rightPoint :=
+    dilatePlane_injective factor_nonzero (leftPoint_eq.trans rightPoint_eq.symm)
+  subst rightPoint
+  exact Set.disjoint_left.mp (PlacedSquare.disjoint_interiorRegion disjoint)
+    leftPoint_mem rightPoint_mem
+
 def containerRegion (side : ℝ) : Set Plane :=
   Icc (fun _ => 0) (fun _ => side)
 
@@ -223,6 +261,23 @@ lemma PlacedSquare.interiorRegion_subset_containerRegion
   rcases (square.mem_interiorRegion_iff point).mp point_mem with
     ⟨localX, localY, localX_lt, localY_lt, point_eq⟩
   exact ⟨localX, localY, le_of_lt localX_lt, le_of_lt localY_lt, point_eq⟩
+
+lemma PlacedSquare.dilatedInteriorRegion_subset_containerRegion
+    {square : PlacedSquare} {sourceSide targetSide factor : ℝ}
+    (fits : square.Fits sourceSide)
+    (factor_nonnegative : 0 ≤ factor)
+    (scaled_side_at_most : factor * sourceSide ≤ targetSide) :
+    square.dilatedInteriorRegion factor ⊆ containerRegion targetSide := by
+  intro point point_mem
+  rcases point_mem with ⟨sourcePoint, sourcePoint_mem, rfl⟩
+  have source_bounds := square.interiorRegion_subset_containerRegion fits sourcePoint_mem
+  rcases source_bounds with ⟨source_lower, source_upper⟩
+  constructor
+  · intro coordinate
+    exact mul_nonneg factor_nonnegative (source_lower coordinate)
+  · intro coordinate
+    exact (mul_le_mul_of_nonneg_left (source_upper coordinate) factor_nonnegative).trans
+      scaled_side_at_most
 
 theorem Packing.squareCount_le_side_sq
     {squareCount : ℕ} {side : ℝ} (packing : Packing squareCount side) :
