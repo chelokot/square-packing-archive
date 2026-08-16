@@ -484,13 +484,17 @@ noncomputable def pinnedCutMissingLength (tangentHalfAngle : ℝ) : ℝ :=
       (tangentHalfAngle * (1 - tangentHalfAngle) ^ 2 - tangentHalfAngle / 5) /
     (1 - tangentHalfAngle ^ 2) ^ 2
 
+noncomputable def pinnedBoundaryCornerScore (tangentHalfAngle : ℝ) : ℝ :=
+  pinnedCutChord tangentHalfAngle / 2 + 1 / 2 -
+    pinnedCutMissingLength tangentHalfAngle / 2
+
 lemma pinnedCut_score_gt_one
     {tangentHalfAngle : ℝ}
     (tangent_positive : 0 < tangentHalfAngle)
     (tangent_lt : tangentHalfAngle < 1 - Real.sqrt (1 / 5)) :
     1 <
-      pinnedCutArea tangentHalfAngle + pinnedCutChord tangentHalfAngle / 2 +
-        1 / 2 - pinnedCutMissingLength tangentHalfAngle / 2 := by
+      pinnedCutArea tangentHalfAngle +
+        pinnedBoundaryCornerScore tangentHalfAngle := by
   have sqrt_fifth_nonnegative : 0 ≤ Real.sqrt (1 / 5) := Real.sqrt_nonneg _
   have sqrt_fifth_sq : (Real.sqrt (1 / 5)) ^ 2 = 1 / 5 :=
     Real.sq_sqrt (by norm_num)
@@ -512,7 +516,79 @@ lemma pinnedCut_score_gt_one
       one_add_tangent_positive]
     field_simp [ne_of_gt one_add_tangent_positive]
     nlinarith
+  dsimp [pinnedBoundaryCornerScore]
   linarith
+
+lemma score_gt_one_of_real_grouped_bounds
+    {size : ℕ} {region : Set Plane}
+    {innerScore boundaryCornerScore edgeScore : ℝ}
+    (inner_nonnegative : 0 ≤ innerScore)
+    (boundary_corner_nonnegative : 0 ≤ boundaryCornerScore)
+    (edge_nonnegative : 0 ≤ edgeScore)
+    (score_gt_one : 1 < innerScore + boundaryCornerScore + edgeScore)
+    (inner_bound :
+      ENNReal.ofReal innerScore ≤ NagamochiResource.innerArea size region)
+    (boundary_corner_bound :
+      ENNReal.ofReal boundaryCornerScore ≤
+        NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region)
+    (edge_bound :
+      ENNReal.ofReal edgeScore ≤ NagamochiResource.edgePoints size region) :
+    1 < NagamochiResource.measure size region := by
+  have encoded_score_gt_one :
+      1 < ENNReal.ofReal (innerScore + boundaryCornerScore + edgeScore) := by
+    rw [ENNReal.one_lt_ofReal]
+    exact score_gt_one
+  have encoded_score_eq :
+      ENNReal.ofReal (innerScore + boundaryCornerScore + edgeScore) =
+        ENNReal.ofReal innerScore + ENNReal.ofReal boundaryCornerScore +
+          ENNReal.ofReal edgeScore := by
+    rw [ENNReal.ofReal_add (add_nonneg inner_nonnegative boundary_corner_nonnegative)
+      edge_nonnegative]
+    rw [ENNReal.ofReal_add inner_nonnegative boundary_corner_nonnegative]
+  calc
+    1 < ENNReal.ofReal (innerScore + boundaryCornerScore + edgeScore) :=
+      encoded_score_gt_one
+    _ = ENNReal.ofReal innerScore + ENNReal.ofReal boundaryCornerScore +
+        ENNReal.ofReal edgeScore := encoded_score_eq
+    _ ≤ NagamochiResource.innerArea size region +
+          (NagamochiResource.boundaryLines size region +
+            NagamochiResource.cornerPoints size region) +
+        NagamochiResource.edgePoints size region :=
+      add_le_add (add_le_add inner_bound boundary_corner_bound) edge_bound
+    _ = NagamochiResource.measure size region := by
+      simp only [NagamochiResource.measure, Measure.coe_add, Pi.add_apply]
+      ac_rfl
+
+lemma score_gt_one_of_pinned_cut_bounds
+    {size : ℕ} {region : Set Plane} {tangentHalfAngle : ℝ}
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_lt : tangentHalfAngle < 1 - Real.sqrt (1 / 5))
+    (boundary_corner_nonnegative :
+      0 ≤ pinnedBoundaryCornerScore tangentHalfAngle)
+    (inner_bound :
+      ENNReal.ofReal (pinnedCutArea tangentHalfAngle) ≤
+        NagamochiResource.innerArea size region)
+    (boundary_corner_bound :
+      ENNReal.ofReal (pinnedBoundaryCornerScore tangentHalfAngle) ≤
+        NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region) :
+    1 < NagamochiResource.measure size region := by
+  have sqrt_fifth_nonnegative : 0 ≤ Real.sqrt (1 / 5) := Real.sqrt_nonneg _
+  have sqrt_fifth_sq : (Real.sqrt (1 / 5)) ^ 2 = 1 / 5 :=
+    Real.sq_sqrt (by norm_num)
+  have tangent_lt_one : tangentHalfAngle < 1 := by nlinarith
+  have area_nonnegative : 0 ≤ pinnedCutArea tangentHalfAngle := by
+    dsimp [pinnedCutArea]
+    positivity
+  apply score_gt_one_of_real_grouped_bounds
+    (innerScore := pinnedCutArea tangentHalfAngle)
+    (boundaryCornerScore := pinnedBoundaryCornerScore tangentHalfAngle)
+    (edgeScore := 0)
+    area_nonnegative boundary_corner_nonnegative (by norm_num)
+    (by simpa using pinnedCut_score_gt_one tangent_positive tangent_lt)
+    inner_bound boundary_corner_bound
+  simp
 
 lemma score_gt_one_of_dilatedInteriorRegion_subset_innerArea
     {size : ℕ} {factor : ℝ} {square : PlacedSquare}

@@ -45,3 +45,11 @@ is connected as well: positive inner-area score, two distinct `0.1` boundary
 chords, and two distinct `Q` points imply total score greater than one. What is
 not yet claimed is the geometric premise that every square whose center lies in
 a corner region necessarily contains those resources.
+
+The final pinned subcase of Case 6 is now connected to the resource measure.
+The corrected Lemma 6 expression is represented as an inner-area contribution
+plus a combined boundary-line/`Q` contribution; the previously checked strict
+real inequality lifts to an `ENNReal` score theorem once those two geometric
+lower bounds are supplied. A general nonnegative real-component compositor is
+used for this and the remaining subcases instead of repeating measure
+arithmetic.
