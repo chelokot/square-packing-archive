@@ -370,6 +370,53 @@ lemma score_gt_one_of_dilatedInteriorRegion_subset_innerArea
         _ ≤ _ + NagamochiResource.edgePoints size
             (square.dilatedInteriorRegion factor) := le_add_of_nonneg_right bot_le
 
+lemma score_gt_one_of_two_boundaryLine_chords
+    {size : ℕ} {region : Set Plane} {factor : ℝ}
+    {firstSide secondSide : NagamochiResource.BoundarySide}
+    (factor_gt_one : 1 < factor)
+    (different_sides : firstSide ≠ secondSide)
+    (first_chord :
+      ENNReal.ofReal factor ≤
+        NagamochiResource.boundaryLine size firstSide region)
+    (second_chord :
+      ENNReal.ofReal factor ≤
+        NagamochiResource.boundaryLine size secondSide region) :
+    1 < NagamochiResource.measure size region := by
+  have factor_score_gt_one : 1 < ENNReal.ofReal factor := by
+    rw [ENNReal.one_lt_ofReal]
+    exact factor_gt_one
+  have pair_subset :
+      ({firstSide, secondSide} : Finset NagamochiResource.BoundarySide) ⊆
+        NagamochiResource.boundarySides := by
+    intro side side_mem
+    exact NagamochiResource.mem_boundarySides side
+  have pair_bound := NagamochiResource.boundaryLines_subset_lower_bound
+    (size := size) (region := region) pair_subset
+  have half_times_two : (2 : ENNReal)⁻¹ * 2 = 1 := by
+    exact ENNReal.inv_mul_cancel (by norm_num) (by norm_num)
+  calc
+    1 < ENNReal.ofReal factor := factor_score_gt_one
+    _ = (1 / 2 : ENNReal) *
+        (ENNReal.ofReal factor + ENNReal.ofReal factor) := by
+      rw [show (1 / 2 : ENNReal) = 2⁻¹ by norm_num]
+      calc
+        ENNReal.ofReal factor = 1 * ENNReal.ofReal factor := by rw [one_mul]
+        _ = (2⁻¹ * 2) * ENNReal.ofReal factor := by rw [half_times_two]
+        _ = 2⁻¹ *
+            (ENNReal.ofReal factor + ENNReal.ofReal factor) := by ring
+    _ ≤ (1 / 2 : ENNReal) *
+        (NagamochiResource.boundaryLine size firstSide region +
+          NagamochiResource.boundaryLine size secondSide region) := by
+      exact mul_le_mul le_rfl (add_le_add first_chord second_chord) bot_le bot_le
+    _ = (1 / 2 : ENNReal) *
+        (∑ side ∈ ({firstSide, secondSide} :
+          Finset NagamochiResource.BoundarySide),
+            NagamochiResource.boundaryLine size side region) := by
+      rw [Finset.sum_pair different_sides]
+    _ ≤ NagamochiResource.boundaryLines size region := pair_bound
+    _ ≤ NagamochiResource.measure size region :=
+      NagamochiResource.boundaryLines_le_measure size region
+
 lemma adjacentCut_triangleArea_lt_half_chord
     {side firstLeg secondLeg : ℝ}
     (side_at_least_one : 1 ≤ side)

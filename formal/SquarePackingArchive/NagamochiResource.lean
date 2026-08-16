@@ -30,6 +30,62 @@ lemma verticalSegmentMeasure_univ (bottom top horizontal : ℝ) :
   · fun_prop
   · exact MeasurableSet.univ
 
+lemma horizontalSegmentMeasure_apply
+    {left right height : ℝ} {region : Set Plane}
+    (region_measurable : MeasurableSet region) :
+    horizontalSegmentMeasure left right height region =
+      volume (Icc left right ∩
+        (fun coordinate : ℝ => ![coordinate, height]) ⁻¹' region) := by
+  have parametrization_measurable :
+      Measurable (fun coordinate : ℝ => ![coordinate, height]) := by fun_prop
+  rw [horizontalSegmentMeasure,
+    Measure.map_apply parametrization_measurable region_measurable,
+    Measure.restrict_apply (region_measurable.preimage parametrization_measurable),
+    inter_comm]
+
+lemma verticalSegmentMeasure_apply
+    {bottom top horizontal : ℝ} {region : Set Plane}
+    (region_measurable : MeasurableSet region) :
+    verticalSegmentMeasure bottom top horizontal region =
+      volume (Icc bottom top ∩
+        (fun coordinate : ℝ => ![horizontal, coordinate]) ⁻¹' region) := by
+  have parametrization_measurable :
+      Measurable (fun coordinate : ℝ => ![horizontal, coordinate]) := by fun_prop
+  rw [verticalSegmentMeasure,
+    Measure.map_apply parametrization_measurable region_measurable,
+    Measure.restrict_apply (region_measurable.preimage parametrization_measurable),
+    inter_comm]
+
+lemma horizontalSegmentMeasure_lower_bound
+    {left right height chordStart chordEnd : ℝ} {region : Set Plane}
+    (region_measurable : MeasurableSet region)
+    (chord_inside_segment : Ioo chordStart chordEnd ⊆ Icc left right)
+    (chord_inside_region :
+      ∀ coordinate ∈ Ioo chordStart chordEnd, ![coordinate, height] ∈ region) :
+    ENNReal.ofReal (chordEnd - chordStart) ≤
+      horizontalSegmentMeasure left right height region := by
+  rw [horizontalSegmentMeasure_apply region_measurable]
+  rw [← Real.volume_Ioo]
+  apply measure_mono
+  intro coordinate coordinate_mem
+  exact ⟨chord_inside_segment coordinate_mem,
+    chord_inside_region coordinate coordinate_mem⟩
+
+lemma verticalSegmentMeasure_lower_bound
+    {bottom top horizontal chordStart chordEnd : ℝ} {region : Set Plane}
+    (region_measurable : MeasurableSet region)
+    (chord_inside_segment : Ioo chordStart chordEnd ⊆ Icc bottom top)
+    (chord_inside_region :
+      ∀ coordinate ∈ Ioo chordStart chordEnd, ![horizontal, coordinate] ∈ region) :
+    ENNReal.ofReal (chordEnd - chordStart) ≤
+      verticalSegmentMeasure bottom top horizontal region := by
+  rw [verticalSegmentMeasure_apply region_measurable]
+  rw [← Real.volume_Ioo]
+  apply measure_mono
+  intro coordinate coordinate_mem
+  exact ⟨chord_inside_segment coordinate_mem,
+    chord_inside_region coordinate coordinate_mem⟩
+
 noncomputable def weightedPointMeasure
     (weight : ENNReal) (point : Plane) : Measure Plane :=
   weight • Measure.dirac point
@@ -38,15 +94,47 @@ lemma weightedPointMeasure_univ (weight : ENNReal) (point : Plane) :
     weightedPointMeasure weight point univ = weight := by
   simp [weightedPointMeasure]
 
+lemma weightedPointMeasure_apply
+    {weight : ENNReal} {point : Plane} {region : Set Plane}
+    (region_measurable : MeasurableSet region) :
+    weightedPointMeasure weight point region =
+      region.indicator (fun _ => weight) point := by
+  by_cases point_mem : point ∈ region <;>
+    simp [weightedPointMeasure, Measure.smul_apply,
+      Measure.dirac_apply' point region_measurable, point_mem]
+
 noncomputable def NagamochiResource.innerArea (size : ℕ) : Measure Plane :=
   volume.restrict (Icc (fun _ => 1) (fun _ => (size : ℝ) - 1))
 
+inductive NagamochiResource.BoundarySide
+  | bottom
+  | top
+  | left
+  | right
+  deriving DecidableEq
+
+def NagamochiResource.boundarySides :
+    Finset NagamochiResource.BoundarySide :=
+  {.bottom, .top, .left, .right}
+
+lemma NagamochiResource.mem_boundarySides
+    (side : NagamochiResource.BoundarySide) :
+    side ∈ NagamochiResource.boundarySides := by
+  cases side <;> simp [NagamochiResource.boundarySides]
+
+noncomputable def NagamochiResource.boundaryLine
+    (size : ℕ) : NagamochiResource.BoundarySide → Measure Plane
+  | .bottom => horizontalSegmentMeasure (9 / 10) ((size : ℝ) - 9 / 10) 1
+  | .top =>
+      horizontalSegmentMeasure (9 / 10) ((size : ℝ) - 9 / 10) ((size : ℝ) - 1)
+  | .left => verticalSegmentMeasure (9 / 10) ((size : ℝ) - 9 / 10) 1
+  | .right =>
+      verticalSegmentMeasure (9 / 10) ((size : ℝ) - 9 / 10) ((size : ℝ) - 1)
+
 noncomputable def NagamochiResource.boundaryLines (size : ℕ) : Measure Plane :=
   (1 / 2 : ENNReal) •
-    (horizontalSegmentMeasure (9 / 10) ((size : ℝ) - 9 / 10) 1 +
-      horizontalSegmentMeasure (9 / 10) ((size : ℝ) - 9 / 10) ((size : ℝ) - 1) +
-        verticalSegmentMeasure (9 / 10) ((size : ℝ) - 9 / 10) 1 +
-          verticalSegmentMeasure (9 / 10) ((size : ℝ) - 9 / 10) ((size : ℝ) - 1))
+    ∑ side ∈ NagamochiResource.boundarySides,
+      NagamochiResource.boundaryLine size side
 
 noncomputable def NagamochiResource.cornerPoints (size : ℕ) : Measure Plane :=
   (9 / 20 : ENNReal) •
@@ -100,20 +188,24 @@ lemma NagamochiResource.boundaryLines_univ
   have segment_nonnegative : 0 ≤ (size : ℝ) - 9 / 5 := by
     have size_real : (2 : ℝ) ≤ size := by exact_mod_cast size_at_least_two
     linarith
-  simp only [NagamochiResource.boundaryLines, Measure.smul_apply,
-    Measure.coe_add, Pi.add_apply, horizontalSegmentMeasure_univ,
+  simp [NagamochiResource.boundaryLines, NagamochiResource.boundarySides,
+    NagamochiResource.boundaryLine, horizontalSegmentMeasure_univ,
     verticalSegmentMeasure_univ]
   norm_num
   have segment_eq : (size : ℝ) - 9 / 10 - 9 / 10 = (size : ℝ) - 9 / 5 := by ring
   rw [segment_eq]
   calc
-    (2 : ENNReal)⁻¹ *
+    (2 : ENNReal)⁻¹ * ENNReal.ofReal ((size : ℝ) - 9 / 5) +
+        ((2 : ENNReal)⁻¹ * ENNReal.ofReal ((size : ℝ) - 9 / 5) +
+          ((2 : ENNReal)⁻¹ * ENNReal.ofReal ((size : ℝ) - 9 / 5) +
+            (2 : ENNReal)⁻¹ * ENNReal.ofReal ((size : ℝ) - 9 / 5))) =
+      (2 : ENNReal)⁻¹ *
         (ENNReal.ofReal ((size : ℝ) - 9 / 5) +
           ENNReal.ofReal ((size : ℝ) - 9 / 5) +
           ENNReal.ofReal ((size : ℝ) - 9 / 5) +
-          ENNReal.ofReal ((size : ℝ) - 9 / 5)) =
-        ((2 : ENNReal)⁻¹ * 4) *
-          ENNReal.ofReal ((size : ℝ) - 9 / 5) := by ring
+          ENNReal.ofReal ((size : ℝ) - 9 / 5)) := by ring
+    _ = ((2 : ENNReal)⁻¹ * 4) *
+        ENNReal.ofReal ((size : ℝ) - 9 / 5) := by ring
     _ = 2 * ENNReal.ofReal ((size : ℝ) - 9 / 5) := by
       have half_times_two : (2 : ENNReal)⁻¹ * 2 = 1 := by
         exact ENNReal.inv_mul_cancel (by norm_num) (by norm_num)
@@ -125,6 +217,55 @@ lemma NagamochiResource.boundaryLines_univ
     _ = ENNReal.ofReal (2 * (size : ℝ) - 18 / 5) := by
       congr 2
       ring
+
+lemma NagamochiResource.boundaryLine_le_boundaryLines
+    (size : ℕ) (side : NagamochiResource.BoundarySide) (region : Set Plane) :
+    (1 / 2 : ENNReal) * NagamochiResource.boundaryLine size side region ≤
+      NagamochiResource.boundaryLines size region := by
+  simp only [NagamochiResource.boundaryLines, Measure.smul_apply]
+  have component_le :
+      NagamochiResource.boundaryLine size side region ≤
+        ∑ otherSide ∈ NagamochiResource.boundarySides,
+          NagamochiResource.boundaryLine size otherSide region :=
+    Finset.single_le_sum
+      (f := fun otherSide => NagamochiResource.boundaryLine size otherSide region)
+      (fun otherSide _ => bot_le)
+      (NagamochiResource.mem_boundarySides side)
+  exact mul_le_mul le_rfl component_le bot_le bot_le
+
+lemma NagamochiResource.boundaryLines_lower_bound
+    {size : ℕ} {side : NagamochiResource.BoundarySide}
+    {region : Set Plane} {length : ENNReal}
+    (line_length_lower_bound :
+      length ≤ NagamochiResource.boundaryLine size side region) :
+    (1 / 2 : ENNReal) * length ≤ NagamochiResource.boundaryLines size region := by
+  exact (mul_le_mul le_rfl line_length_lower_bound bot_le bot_le).trans
+    (NagamochiResource.boundaryLine_le_boundaryLines size side region)
+
+lemma NagamochiResource.boundaryLines_subset_lower_bound
+    {size : ℕ} {selectedSides : Finset NagamochiResource.BoundarySide}
+    {region : Set Plane}
+    (selected_sides_valid : selectedSides ⊆ NagamochiResource.boundarySides) :
+    (1 / 2 : ENNReal) *
+        (∑ side ∈ selectedSides, NagamochiResource.boundaryLine size side region) ≤
+      NagamochiResource.boundaryLines size region := by
+  simp only [NagamochiResource.boundaryLines, Measure.smul_apply]
+  exact mul_le_mul le_rfl (Finset.sum_le_sum_of_subset selected_sides_valid) bot_le bot_le
+
+lemma NagamochiResource.boundaryLines_le_measure
+    (size : ℕ) (region : Set Plane) :
+    NagamochiResource.boundaryLines size region ≤
+      NagamochiResource.measure size region := by
+  simp only [NagamochiResource.measure, Measure.coe_add, Pi.add_apply]
+  calc
+    NagamochiResource.boundaryLines size region ≤
+        NagamochiResource.innerArea size region +
+          NagamochiResource.boundaryLines size region :=
+      le_add_of_nonneg_left bot_le
+    _ ≤ _ + NagamochiResource.cornerPoints size region :=
+      le_add_of_nonneg_right bot_le
+    _ ≤ _ + NagamochiResource.edgePoints size region :=
+      le_add_of_nonneg_right bot_le
 
 lemma NagamochiResource.cornerPoints_univ (size : ℕ) :
     NagamochiResource.cornerPoints size univ = 18 / 5 := by
