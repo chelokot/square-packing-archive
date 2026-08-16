@@ -23,7 +23,9 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.Square68.s68_le_8_80339
 #print axioms SquarePackingArchive.Records.Square69.s69_le_8_8272
 #print axioms SquarePackingArchive.Packing.squareCount_lt_resourceMass
+#print axioms SquarePackingArchive.finiteFamily_card_lt_resourceMass
 #print axioms SquarePackingArchive.NagamochiResource.measure_univ
 #print axioms SquarePackingArchive.Nagamochi.adjacentCut_triangleArea_lt_half_chord
+#print axioms SquarePackingArchive.Nagamochi.score_gt_one_of_dilatedInteriorRegion_subset_innerArea
 #print axioms SquarePackingArchive.Packing.squareCount_lt_nagamochiMass
 #print axioms SquarePackingArchive.Records.NearSquare.squareMinusTwo_isMinimumSide_of_nagamochiScores

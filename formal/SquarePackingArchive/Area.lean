@@ -1,9 +1,11 @@
 import SquarePackingArchive.Geometry
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 
 namespace SquarePackingArchive
 
 open Function MeasureTheory Set
+open scoped Pointwise
 
 abbrev Plane := Fin 2 → ℝ
 
@@ -211,6 +213,14 @@ lemma PlacedSquare.measurableSet_dilatedInteriorRegion
     (square : PlacedSquare) {factor : ℝ} (factor_nonzero : factor ≠ 0) :
     MeasurableSet (square.dilatedInteriorRegion factor) :=
   (square.isOpen_dilatedInteriorRegion factor_nonzero).measurableSet
+
+lemma PlacedSquare.volume_dilatedInteriorRegion
+    (square : PlacedSquare) {factor : ℝ} (factor_nonnegative : 0 ≤ factor) :
+    volume (square.dilatedInteriorRegion factor) = ENNReal.ofReal (factor ^ 2) := by
+  rw [show square.dilatedInteriorRegion factor = factor • square.interiorRegion by rfl]
+  rw [Measure.addHaar_smul_of_nonneg volume factor_nonnegative]
+  rw [show Module.finrank ℝ Plane = 2 by simp [Plane]]
+  rw [square.volume_interiorRegion, mul_one]
 
 lemma PlacedSquare.disjoint_dilatedInteriorRegion
     {left right : PlacedSquare} {factor : ℝ}

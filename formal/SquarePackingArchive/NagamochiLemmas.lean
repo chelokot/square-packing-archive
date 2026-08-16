@@ -2,6 +2,46 @@ import SquarePackingArchive.NagamochiResource
 
 namespace SquarePackingArchive.Nagamochi
 
+open MeasureTheory Set
+
+lemma score_gt_one_of_dilatedInteriorRegion_subset_innerArea
+    {size : ℕ} {factor : ℝ} {square : PlacedSquare}
+    (factor_gt_one : 1 < factor)
+    (inside_inner_area :
+      square.dilatedInteriorRegion factor ⊆
+        Icc (fun _ => 1) (fun _ => (size : ℝ) - 1)) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have region_measurable :=
+    square.measurableSet_dilatedInteriorRegion factor_positive.ne'
+  have inner_area_score :
+      NagamochiResource.innerArea size (square.dilatedInteriorRegion factor) =
+        volume (square.dilatedInteriorRegion factor) := by
+    rw [NagamochiResource.innerArea, Measure.restrict_apply region_measurable]
+    rw [inter_eq_left.mpr inside_inner_area]
+  have region_volume_gt_one :
+      1 < volume (square.dilatedInteriorRegion factor) := by
+    rw [square.volume_dilatedInteriorRegion factor_positive.le]
+    rw [ENNReal.one_lt_ofReal]
+    nlinarith
+  calc
+    1 < NagamochiResource.innerArea size
+        (square.dilatedInteriorRegion factor) := by
+      rw [inner_area_score]
+      exact region_volume_gt_one
+    _ ≤ NagamochiResource.measure size
+        (square.dilatedInteriorRegion factor) := by
+      simp only [NagamochiResource.measure, Measure.coe_add, Pi.add_apply]
+      calc
+        _ ≤ NagamochiResource.innerArea size (square.dilatedInteriorRegion factor) +
+            NagamochiResource.boundaryLines size (square.dilatedInteriorRegion factor) :=
+          le_add_of_nonneg_right bot_le
+        _ ≤ _ + NagamochiResource.cornerPoints size
+            (square.dilatedInteriorRegion factor) := le_add_of_nonneg_right bot_le
+        _ ≤ _ + NagamochiResource.edgePoints size
+            (square.dilatedInteriorRegion factor) := le_add_of_nonneg_right bot_le
+
 lemma adjacentCut_triangleArea_lt_half_chord
     {side firstLeg secondLeg : ℝ}
     (side_at_least_one : 1 ≤ side)
