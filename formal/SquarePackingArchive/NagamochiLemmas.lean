@@ -1050,6 +1050,47 @@ lemma score_gt_one_of_case5_resource_bounds
   rw [weights_sum]
   exact add_le_add boundary_tenth corner_nine_tenths
 
+lemma score_gt_one_of_two_corner_points_and_long_chord
+    {size : ℕ} {region : Set Plane}
+    {side : NagamochiResource.BoundarySide}
+    {firstKind secondKind : NagamochiResource.CornerPoint}
+    (region_measurable : MeasurableSet region)
+    (inner_positive : 0 < NagamochiResource.innerArea size region)
+    (different_kinds : firstKind ≠ secondKind)
+    (chord :
+      NagamochiResource.HasBoundaryChord size side region (1 / 5))
+    (first_point_mem :
+      NagamochiResource.cornerPoint size firstKind ∈ region)
+    (second_point_mem :
+      NagamochiResource.cornerPoint size secondKind ∈ region) :
+    1 < NagamochiResource.measure size region := by
+  have line_bound := NagamochiResource.boundaryLine_lower_bound_of_chord
+    region_measurable chord
+  have scaled_line_bound := NagamochiResource.boundaryLines_lower_bound
+    (size := size) (region := region) line_bound
+  have boundary_tenth :
+      (1 / 10 : ENNReal) ≤ NagamochiResource.boundaryLines size region := by
+    have weight_eq :
+        (1 / 10 : ENNReal) =
+          (1 / 2 : ENNReal) * ENNReal.ofReal (1 / 5 : ℝ) := by
+      apply (ENNReal.toReal_eq_toReal_iff' (by finiteness)
+        (by finiteness)).mp
+      rw [ENNReal.toReal_mul]
+      norm_num
+    rw [weight_eq]
+    exact scaled_line_bound
+  have corner_nine_tenths :=
+    NagamochiResource.cornerPoints_lower_bound_of_two_mem
+      region_measurable different_kinds first_point_mem second_point_mem
+  apply score_gt_one_of_positive_inner_and_boundary_corner inner_positive
+  have one_eq : (1 : ENNReal) = 1 / 10 + 9 / 10 := by
+    apply (ENNReal.toReal_eq_toReal_iff' (by finiteness)
+      (by finiteness)).mp
+    rw [ENNReal.toReal_add (by finiteness) (by finiteness)]
+    norm_num
+  rw [one_eq]
+  exact add_le_add boundary_tenth corner_nine_tenths
+
 lemma score_gt_one_of_corner_chord_and_edge_point
     {size coordinate : ℕ} {region : Set Plane}
     {side : NagamochiResource.BoundarySide}
@@ -1660,6 +1701,43 @@ lemma score_gt_one_of_case7_bottom_corner_and_edge_point
   exact score_gt_one_of_corner_chord_and_edge_point
     (square.measurableSet_dilatedInteriorRegion factor_nonzero)
     inner_positive chord corner_point_mem coordinate_mem edge_point_mem
+
+lemma score_gt_one_of_case7_both_bottom_corner_points
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_nonzero : factor ≠ 0)
+    (inner_positive :
+      0 < NagamochiResource.innerArea size
+        (square.dilatedInteriorRegion factor))
+    (bottom_left_mem :
+      NagamochiResource.cornerPoint size .bottomLeft ∈
+        square.dilatedInteriorRegion factor)
+    (bottom_right_mem :
+      NagamochiResource.cornerPoint size .bottomRight ∈
+        square.dilatedInteriorRegion factor) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  have left_point_mem :
+      ![(9 / 10 : ℝ), 1] ∈ square.dilatedInteriorRegion factor := by
+    simpa [NagamochiResource.cornerPoint] using bottom_left_mem
+  have right_point_mem :
+      ![(size : ℝ) - 9 / 10, (1 : ℝ)] ∈
+        square.dilatedInteriorRegion factor := by
+    simpa [NagamochiResource.cornerPoint] using bottom_right_mem
+  have endpoints_ordered :
+      (9 / 10 : ℝ) < (size : ℝ) - 9 / 10 := by linarith
+  have chord :
+      NagamochiResource.HasBoundaryChord size .bottom
+        (square.dilatedInteriorRegion factor) (1 / 5) := by
+    refine ⟨9 / 10, (size : ℝ) - 9 / 10, by linarith,
+      fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩, ?_⟩
+    exact horizontal_openSegment_subset_of_convex
+      (square.convex_dilatedInteriorRegion factor) endpoints_ordered
+      left_point_mem right_point_mem
+  exact score_gt_one_of_two_corner_points_and_long_chord
+    (square.measurableSet_dilatedInteriorRegion factor_nonzero)
+    inner_positive (by decide) chord bottom_left_mem bottom_right_mem
 
 lemma score_gt_one_of_two_boundaryLine_chords
     {size : ℕ} {region : Set Plane} {factor : ℝ}

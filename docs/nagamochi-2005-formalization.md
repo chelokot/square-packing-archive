@@ -59,8 +59,10 @@ The Lemma 5 branch of Case 6 is connected too. Its checked
 triangle-area-plus-half-chord inequality now composes directly with a typed `P`
 point, a boundary chord, and an inner-area lower bound. For the canonical bottom
 orientation of Case 7, Lean also closes the nonadjacent-chord-plus-`P` branch
-and the short-corner-chord-plus-`Q`-plus-`P` branch. The remaining obligation is
-the exhaustive geometric classification that produces one of these resource
+and the short-corner-chord-plus-`Q`-plus-`P` branch. If both extreme `Q` points
+on the boundary line are present, convexity supplies the whole chord between
+them and Lean closes that branch directly. The remaining obligation is the
+exhaustive geometric classification that produces one of these resource
 witnesses, including the reduction from the last Case 7 branch back to Case 6.
 
 Coordinate-swap symmetry is formalized as an involution on points, frames and
