@@ -131,6 +131,45 @@ noncomputable def NagamochiResource.boundaryLine
   | .right =>
       verticalSegmentMeasure (9 / 10) ((size : ℝ) - 9 / 10) ((size : ℝ) - 1)
 
+def NagamochiResource.HasBoundaryChord
+    (size : ℕ) (side : NagamochiResource.BoundarySide)
+    (region : Set Plane) (minimumLength : ℝ) : Prop :=
+  match side with
+  | .bottom =>
+      ∃ chordStart chordEnd,
+        minimumLength ≤ chordEnd - chordStart ∧
+          Ioo chordStart chordEnd ⊆ Icc (9 / 10) ((size : ℝ) - 9 / 10) ∧
+            ∀ coordinate ∈ Ioo chordStart chordEnd, ![coordinate, 1] ∈ region
+  | .top =>
+      ∃ chordStart chordEnd,
+        minimumLength ≤ chordEnd - chordStart ∧
+          Ioo chordStart chordEnd ⊆ Icc (9 / 10) ((size : ℝ) - 9 / 10) ∧
+            ∀ coordinate ∈ Ioo chordStart chordEnd,
+              ![coordinate, (size : ℝ) - 1] ∈ region
+  | .left =>
+      ∃ chordStart chordEnd,
+        minimumLength ≤ chordEnd - chordStart ∧
+          Ioo chordStart chordEnd ⊆ Icc (9 / 10) ((size : ℝ) - 9 / 10) ∧
+            ∀ coordinate ∈ Ioo chordStart chordEnd, ![1, coordinate] ∈ region
+  | .right =>
+      ∃ chordStart chordEnd,
+        minimumLength ≤ chordEnd - chordStart ∧
+          Ioo chordStart chordEnd ⊆ Icc (9 / 10) ((size : ℝ) - 9 / 10) ∧
+            ∀ coordinate ∈ Ioo chordStart chordEnd,
+              ![(size : ℝ) - 1, coordinate] ∈ region
+
+lemma NagamochiResource.HasBoundaryChord.mono
+    {size : ℕ} {side : NagamochiResource.BoundarySide}
+    {region : Set Plane} {longerLength shorterLength : ℝ}
+    (chord : NagamochiResource.HasBoundaryChord size side region longerLength)
+    (length_le : shorterLength ≤ longerLength) :
+    NagamochiResource.HasBoundaryChord size side region shorterLength := by
+  cases side <;>
+    rcases chord with
+      ⟨chordStart, chordEnd, chord_length, inside_segment, inside_region⟩ <;>
+    exact ⟨chordStart, chordEnd, length_le.trans chord_length,
+      inside_segment, inside_region⟩
+
 noncomputable def NagamochiResource.boundaryLines (size : ℕ) : Measure Plane :=
   (1 / 2 : ENNReal) •
     ∑ side ∈ NagamochiResource.boundarySides,
@@ -217,6 +256,39 @@ lemma NagamochiResource.boundaryLines_univ
     _ = ENNReal.ofReal (2 * (size : ℝ) - 18 / 5) := by
       congr 2
       ring
+
+lemma NagamochiResource.boundaryLine_lower_bound_of_chord
+    {size : ℕ} {side : NagamochiResource.BoundarySide}
+    {region : Set Plane} {minimumLength : ℝ}
+    (region_measurable : MeasurableSet region)
+    (chord : NagamochiResource.HasBoundaryChord size side region minimumLength) :
+    ENNReal.ofReal minimumLength ≤
+      NagamochiResource.boundaryLine size side region := by
+  cases side with
+  | bottom =>
+      rcases chord with
+        ⟨chordStart, chordEnd, length_bound, inside_segment, inside_region⟩
+      exact (ENNReal.ofReal_le_ofReal length_bound).trans
+        (horizontalSegmentMeasure_lower_bound region_measurable
+          inside_segment inside_region)
+  | top =>
+      rcases chord with
+        ⟨chordStart, chordEnd, length_bound, inside_segment, inside_region⟩
+      exact (ENNReal.ofReal_le_ofReal length_bound).trans
+        (horizontalSegmentMeasure_lower_bound region_measurable
+          inside_segment inside_region)
+  | left =>
+      rcases chord with
+        ⟨chordStart, chordEnd, length_bound, inside_segment, inside_region⟩
+      exact (ENNReal.ofReal_le_ofReal length_bound).trans
+        (verticalSegmentMeasure_lower_bound region_measurable
+          inside_segment inside_region)
+  | right =>
+      rcases chord with
+        ⟨chordStart, chordEnd, length_bound, inside_segment, inside_region⟩
+      exact (ENNReal.ofReal_le_ofReal length_bound).trans
+        (verticalSegmentMeasure_lower_bound region_measurable
+          inside_segment inside_region)
 
 lemma NagamochiResource.boundaryLine_le_boundaryLines
     (size : ℕ) (side : NagamochiResource.BoundarySide) (region : Set Plane) :

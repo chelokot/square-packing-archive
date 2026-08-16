@@ -73,6 +73,114 @@ lemma centeredAdjacentChordLength_gt_one
   rw [chord_difference]
   positivity
 
+lemma horizontalAdjacentChord_length_gt_one
+    (square : PlacedSquare) {factor height offset tangentHalfAngle : ℝ}
+    (factor_at_least_one : 1 ≤ factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (cosine_eq :
+      square.frame.cosine =
+        (1 - tangentHalfAngle ^ 2) / (1 + tangentHalfAngle ^ 2))
+    (sine_eq :
+      square.frame.sine =
+        2 * tangentHalfAngle / (1 + tangentHalfAngle ^ 2))
+    (vertical_offset : height - factor * square.center.y = -offset)
+    (offset_nonnegative : 0 ≤ offset)
+    (offset_lt : offset < (Real.sqrt 2 - 1) / 2)
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_at_most : tangentHalfAngle ≤ Real.sqrt 2 - 1) :
+    1 <
+      square.horizontalAdjacentChordEnd factor height -
+        square.horizontalAdjacentChordStart factor height := by
+  have sqrt_two_nonnegative : 0 ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  have sqrt_two_sq : (Real.sqrt 2) ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  have sqrt_two_lt_two : Real.sqrt 2 < 2 := by nlinarith
+  have tangent_lt_one : tangentHalfAngle < 1 := by linarith
+  have tangent_sq_lt_one : tangentHalfAngle ^ 2 < 1 := by nlinarith
+  have one_add_tangent_sq_positive : 0 < 1 + tangentHalfAngle ^ 2 := by positivity
+  have denominator_positive :
+      0 < 2 * square.frame.sine * square.frame.cosine := by positivity
+  have cosine_add_sine_positive :
+      0 < square.frame.cosine + square.frame.sine := by linarith
+  have base_expression_eq :
+      (square.frame.cosine + square.frame.sine - 2 * offset) /
+          (2 * square.frame.sine * square.frame.cosine) =
+        centeredAdjacentChordLength offset tangentHalfAngle := by
+    rw [cosine_eq, sine_eq]
+    dsimp [centeredAdjacentChordLength]
+    field_simp [tangent_positive.ne', ne_of_gt one_add_tangent_sq_positive,
+      ne_of_gt (sub_pos.mpr tangent_sq_lt_one)]
+    ring
+  have base_gt_one :
+      1 <
+        (square.frame.cosine + square.frame.sine - 2 * offset) /
+          (2 * square.frame.sine * square.frame.cosine) := by
+    rw [base_expression_eq]
+    exact centeredAdjacentChordLength_gt_one offset_nonnegative offset_lt
+      tangent_positive tangent_at_most
+  rw [square.horizontalAdjacentChord_length
+    cosine_positive.ne' sine_positive.ne', vertical_offset]
+  have base_le_scaled :
+      (square.frame.cosine + square.frame.sine - 2 * offset) /
+          (2 * square.frame.sine * square.frame.cosine) ≤
+        (factor * (square.frame.cosine + square.frame.sine) + 2 * -offset) /
+          (2 * square.frame.sine * square.frame.cosine) := by
+    apply div_le_div_of_nonneg_right
+    · nlinarith
+    · exact denominator_positive.le
+  exact base_gt_one.trans_le base_le_scaled
+
+lemma bottomBoundaryChord_of_horizontalAdjacent
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (other_lower_at_most :
+      square.horizontalAdjacentOtherLower factor 1 ≤
+        square.horizontalAdjacentChordStart factor 1)
+    (end_at_most_other_upper :
+      square.horizontalAdjacentChordEnd factor 1 ≤
+        square.horizontalAdjacentOtherUpper factor 1)
+    (chord_inside_segment :
+      Ioo (square.horizontalAdjacentChordStart factor 1)
+          (square.horizontalAdjacentChordEnd factor 1) ⊆
+        Icc (9 / 10) ((size : ℝ) - 9 / 10)) :
+    NagamochiResource.HasBoundaryChord size .bottom
+      (square.dilatedInteriorRegion factor)
+      (square.horizontalAdjacentChordEnd factor 1 -
+        square.horizontalAdjacentChordStart factor 1) := by
+  exact ⟨square.horizontalAdjacentChordStart factor 1,
+    square.horizontalAdjacentChordEnd factor 1, le_rfl, chord_inside_segment,
+    square.horizontalAdjacentChord_inside_dilatedInteriorRegion
+      factor_positive cosine_positive sine_positive
+      other_lower_at_most end_at_most_other_upper⟩
+
+lemma topBoundaryChord_of_horizontalAdjacent
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (other_lower_at_most :
+      square.horizontalAdjacentOtherLower factor ((size : ℝ) - 1) ≤
+        square.horizontalAdjacentChordStart factor ((size : ℝ) - 1))
+    (end_at_most_other_upper :
+      square.horizontalAdjacentChordEnd factor ((size : ℝ) - 1) ≤
+        square.horizontalAdjacentOtherUpper factor ((size : ℝ) - 1))
+    (chord_inside_segment :
+      Ioo (square.horizontalAdjacentChordStart factor ((size : ℝ) - 1))
+          (square.horizontalAdjacentChordEnd factor ((size : ℝ) - 1)) ⊆
+        Icc (9 / 10) ((size : ℝ) - 9 / 10)) :
+    NagamochiResource.HasBoundaryChord size .top
+      (square.dilatedInteriorRegion factor)
+      (square.horizontalAdjacentChordEnd factor ((size : ℝ) - 1) -
+        square.horizontalAdjacentChordStart factor ((size : ℝ) - 1)) := by
+  exact ⟨square.horizontalAdjacentChordStart factor ((size : ℝ) - 1),
+    square.horizontalAdjacentChordEnd factor ((size : ℝ) - 1),
+    le_rfl, chord_inside_segment,
+    square.horizontalAdjacentChord_inside_dilatedInteriorRegion
+      factor_positive cosine_positive sine_positive
+      other_lower_at_most end_at_most_other_upper⟩
+
 noncomputable def cornerAdjacentChordLength (height tangentHalfAngle : ℝ) : ℝ :=
   -(height - 1) * (1 + tangentHalfAngle ^ 2) ^ 2 /
       (2 * tangentHalfAngle * (1 - tangentHalfAngle ^ 2)) +
@@ -416,6 +524,43 @@ lemma score_gt_one_of_two_boundaryLine_chords
     _ ≤ NagamochiResource.boundaryLines size region := pair_bound
     _ ≤ NagamochiResource.measure size region :=
       NagamochiResource.boundaryLines_le_measure size region
+
+lemma score_gt_one_of_two_boundary_chords
+    {size : ℕ} {region : Set Plane} {factor : ℝ}
+    {firstSide secondSide : NagamochiResource.BoundarySide}
+    (region_measurable : MeasurableSet region)
+    (factor_gt_one : 1 < factor)
+    (different_sides : firstSide ≠ secondSide)
+    (first_chord :
+      NagamochiResource.HasBoundaryChord size firstSide region factor)
+    (second_chord :
+      NagamochiResource.HasBoundaryChord size secondSide region factor) :
+    1 < NagamochiResource.measure size region := by
+  apply score_gt_one_of_two_boundaryLine_chords factor_gt_one different_sides
+  · exact NagamochiResource.boundaryLine_lower_bound_of_chord
+      region_measurable first_chord
+  · exact NagamochiResource.boundaryLine_lower_bound_of_chord
+      region_measurable second_chord
+
+lemma score_gt_one_of_two_long_boundary_chords
+    {size : ℕ} {region : Set Plane} {firstLength secondLength : ℝ}
+    {firstSide secondSide : NagamochiResource.BoundarySide}
+    (region_measurable : MeasurableSet region)
+    (first_length_gt_one : 1 < firstLength)
+    (second_length_gt_one : 1 < secondLength)
+    (different_sides : firstSide ≠ secondSide)
+    (first_chord :
+      NagamochiResource.HasBoundaryChord size firstSide region firstLength)
+    (second_chord :
+      NagamochiResource.HasBoundaryChord size secondSide region secondLength) :
+    1 < NagamochiResource.measure size region := by
+  have common_length_gt_one : 1 < min firstLength secondLength := by
+    rw [lt_min_iff]
+    exact ⟨first_length_gt_one, second_length_gt_one⟩
+  apply score_gt_one_of_two_boundary_chords region_measurable
+    common_length_gt_one different_sides
+  · exact first_chord.mono (min_le_left _ _)
+  · exact second_chord.mono (min_le_right _ _)
 
 lemma adjacentCut_triangleArea_lt_half_chord
     {side firstLeg secondLeg : ℝ}
