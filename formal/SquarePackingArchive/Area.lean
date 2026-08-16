@@ -319,6 +319,19 @@ lemma PlacedSquare.swap_dilatedPoint
   · simp [PlacedSquare.swap, Point.swap, Frame.swap,
       PlacedSquare.dilatedPoint, Frame.place]
 
+lemma PlacedSquare.rotateQuarter_dilatedPoint
+    (square : PlacedSquare) (factor localX localY : ℝ) :
+    square.rotateQuarter.dilatedPoint factor localX localY =
+      square.dilatedPoint factor (-localY) localX := by
+  rw [Point.mk.injEq]
+  constructor
+  · simp [PlacedSquare.rotateQuarter, Frame.rotateQuarter,
+      PlacedSquare.dilatedPoint, Frame.place]
+    ring
+  · simp [PlacedSquare.rotateQuarter, Frame.rotateQuarter,
+      PlacedSquare.dilatedPoint, Frame.place]
+    ring
+
 lemma PlacedSquare.dilatedInteriorContains_swap_iff
     (square : PlacedSquare) (factor : ℝ) (point : Point) :
     square.swap.DilatedInteriorContains factor point.swap ↔
@@ -334,6 +347,22 @@ lemma PlacedSquare.dilatedInteriorContains_swap_iff
     refine ⟨localX, -localY, localX_bound, ?_, ?_⟩
     · simpa only [abs_neg] using localY_bound
     · rw [square.swap_dilatedPoint, neg_neg, point_eq]
+
+lemma PlacedSquare.dilatedInteriorContains_rotateQuarter_iff
+    (square : PlacedSquare) (factor : ℝ) (point : Point) :
+    square.rotateQuarter.DilatedInteriorContains factor point ↔
+      square.DilatedInteriorContains factor point := by
+  constructor
+  · rintro ⟨localX, localY, localX_bound, localY_bound, point_eq⟩
+    refine ⟨-localY, localX, ?_, localX_bound, ?_⟩
+    · simpa only [abs_neg] using localY_bound
+    · exact point_eq.trans (square.rotateQuarter_dilatedPoint factor localX localY)
+  · rintro ⟨localX, localY, localX_bound, localY_bound, point_eq⟩
+    refine ⟨localY, -localX, localY_bound, ?_, ?_⟩
+    · simpa only [abs_neg] using localX_bound
+    · exact point_eq.trans
+        (by simpa only [neg_neg] using
+          (square.rotateQuarter_dilatedPoint factor localY (-localX)).symm)
 
 lemma PlacedSquare.mem_dilatedInteriorRegion_iff
     (square : PlacedSquare) {factor : ℝ} (factor_positive : 0 < factor)
@@ -419,6 +448,42 @@ lemma PlacedSquare.mem_swap_dilatedInteriorRegion_iff
     square.mem_dilatedInteriorRegion_iff factor_positive]
   rw [Plane.toPoint_swap]
   exact square.dilatedInteriorContains_swap_iff factor point.toPoint
+
+lemma PlacedSquare.rotateQuarter_dilatedInteriorRegion_eq
+    (square : PlacedSquare) {factor : ℝ} (factor_positive : 0 < factor) :
+    square.rotateQuarter.dilatedInteriorRegion factor =
+      square.dilatedInteriorRegion factor := by
+  ext point
+  rw [square.rotateQuarter.mem_dilatedInteriorRegion_iff factor_positive,
+    square.mem_dilatedInteriorRegion_iff factor_positive]
+  exact square.dilatedInteriorContains_rotateQuarter_iff factor point.toPoint
+
+lemma PlacedSquare.rotateHalf_dilatedInteriorRegion_eq
+    (square : PlacedSquare) {factor : ℝ} (factor_positive : 0 < factor) :
+    square.rotateHalf.dilatedInteriorRegion factor =
+      square.dilatedInteriorRegion factor := by
+  rw [PlacedSquare.rotateHalf,
+    square.rotateQuarter.rotateQuarter_dilatedInteriorRegion_eq factor_positive,
+    square.rotateQuarter_dilatedInteriorRegion_eq factor_positive]
+
+lemma PlacedSquare.rotateThreeQuarter_dilatedInteriorRegion_eq
+    (square : PlacedSquare) {factor : ℝ} (factor_positive : 0 < factor) :
+    square.rotateThreeQuarter.dilatedInteriorRegion factor =
+      square.dilatedInteriorRegion factor := by
+  rw [PlacedSquare.rotateThreeQuarter,
+    square.rotateHalf.rotateQuarter_dilatedInteriorRegion_eq factor_positive,
+    square.rotateHalf_dilatedInteriorRegion_eq factor_positive]
+
+lemma PlacedSquare.firstQuadrant_dilatedInteriorRegion_eq
+    (square : PlacedSquare) {factor : ℝ} (factor_positive : 0 < factor) :
+    square.firstQuadrant.dilatedInteriorRegion factor =
+      square.dilatedInteriorRegion factor := by
+  simp only [PlacedSquare.firstQuadrant]
+  split_ifs
+  · rfl
+  · exact square.rotateQuarter_dilatedInteriorRegion_eq factor_positive
+  · exact square.rotateThreeQuarter_dilatedInteriorRegion_eq factor_positive
+  · exact square.rotateHalf_dilatedInteriorRegion_eq factor_positive
 
 def PlacedSquare.dilatedLocalX
     (square : PlacedSquare) (factor : ℝ) (point : Point) : ℝ :=
@@ -1089,7 +1154,7 @@ lemma PlacedSquare.unitCornerPoint_mem_dilatedInteriorRegion_of_center_le_one
         Matrix.cons_val_one]
       linarith
 
-lemma PlacedSquare.case5CornerPoints_mem_dilatedInteriorRegion
+lemma PlacedSquare.case5CornerPoints_mem_dilatedInteriorRegion_of_sine_le_cosine
     {square : PlacedSquare} {factor side : ℝ}
     (factor_gt_one : 1 < factor)
     (cosine_nonnegative : 0 ≤ square.frame.cosine)
@@ -1247,6 +1312,45 @@ lemma PlacedSquare.case5CornerPoints_mem_dilatedInteriorRegion
       constructor <;>
         simp only [PlacedSquare.dilatedLocalY, Plane.toPoint,
           Matrix.cons_val_zero, Matrix.cons_val_one] <;> linarith
+
+lemma PlacedSquare.case5CornerPoints_mem_dilatedInteriorRegion
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_nonnegative : 0 ≤ square.frame.cosine)
+    (sine_nonnegative : 0 ≤ square.frame.sine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side)
+    (center_x_at_most_one : factor * square.center.x ≤ 1)
+    (center_y_at_most_one : factor * square.center.y ≤ 1) :
+    ![(9 / 10 : ℝ), 1] ∈ square.dilatedInteriorRegion factor ∧
+      ![(1 : ℝ), 9 / 10] ∈ square.dilatedInteriorRegion factor := by
+  by_cases sine_at_most_cosine : square.frame.sine ≤ square.frame.cosine
+  · exact square.case5CornerPoints_mem_dilatedInteriorRegion_of_sine_le_cosine
+      factor_gt_one cosine_nonnegative sine_nonnegative sine_at_most_cosine
+      inside_container center_x_at_most_one center_y_at_most_one
+  · have cosine_at_most_sine : square.frame.cosine ≤ square.frame.sine :=
+      le_of_lt (lt_of_not_ge sine_at_most_cosine)
+    have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+    have swapped_inside :=
+      square.swap_dilatedInteriorRegion_subset_containerRegion
+        factor_positive inside_container
+    have swapped_center_x_at_most_one :
+        factor * square.swap.center.x ≤ 1 := by
+      simpa [PlacedSquare.swap, Point.swap] using center_y_at_most_one
+    have swapped_center_y_at_most_one :
+        factor * square.swap.center.y ≤ 1 := by
+      simpa [PlacedSquare.swap, Point.swap] using center_x_at_most_one
+    have swapped_points :=
+      square.swap.case5CornerPoints_mem_dilatedInteriorRegion_of_sine_le_cosine
+        factor_gt_one sine_nonnegative cosine_nonnegative cosine_at_most_sine
+        swapped_inside swapped_center_x_at_most_one swapped_center_y_at_most_one
+    have original_left_bottom :
+        ![(1 : ℝ), 9 / 10] ∈ square.dilatedInteriorRegion factor :=
+      (square.horizontalPoint_mem_swap_iff factor_positive).mp swapped_points.1
+    have original_bottom_left :
+        ![(9 / 10 : ℝ), 1] ∈ square.dilatedInteriorRegion factor :=
+      (square.horizontalPoint_mem_swap_iff factor_positive).mp swapped_points.2
+    exact ⟨original_bottom_left, original_left_bottom⟩
 
 lemma volume_containerRegion_toReal
     {side : ℝ} (side_nonnegative : 0 ≤ side) :

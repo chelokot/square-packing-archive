@@ -989,7 +989,6 @@ lemma score_gt_one_of_case5_geometry
     (factor_gt_one : 1 < factor)
     (cosine_nonnegative : 0 ≤ square.frame.cosine)
     (sine_nonnegative : 0 ≤ square.frame.sine)
-    (sine_at_most_cosine : square.frame.sine ≤ square.frame.cosine)
     (inside_container :
       square.dilatedInteriorRegion factor ⊆ containerRegion size)
     (center_x_at_most_one : factor * square.center.x ≤ 1)
@@ -997,7 +996,7 @@ lemma score_gt_one_of_case5_geometry
     1 < NagamochiResource.measure size
       (square.dilatedInteriorRegion factor) := by
   have corner_points := square.case5CornerPoints_mem_dilatedInteriorRegion
-    factor_gt_one cosine_nonnegative sine_nonnegative sine_at_most_cosine
+    factor_gt_one cosine_nonnegative sine_nonnegative
     inside_container center_x_at_most_one center_y_at_most_one
   have bottom_left_mem :
       NagamochiResource.cornerPoint size .bottomLeft ∈
@@ -1011,6 +1010,38 @@ lemma score_gt_one_of_case5_geometry
     size_at_least_three factor_gt_one cosine_nonnegative sine_nonnegative
     inside_container center_x_at_most_one center_y_at_most_one
     bottom_left_mem left_bottom_mem
+
+lemma score_gt_one_of_case5_any_frame
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_x_at_most_one : factor * square.center.x ≤ 1)
+    (center_y_at_most_one : factor * square.center.y ≤ 1) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have region_eq :=
+    square.firstQuadrant_dilatedInteriorRegion_eq factor_positive
+  have normalized_inside :
+      square.firstQuadrant.dilatedInteriorRegion factor ⊆
+        containerRegion size := by
+    rw [region_eq]
+    exact inside_container
+  have normalized_center_x :
+      factor * square.firstQuadrant.center.x ≤ 1 := by
+    simpa using center_x_at_most_one
+  have normalized_center_y :
+      factor * square.firstQuadrant.center.y ≤ 1 := by
+    simpa using center_y_at_most_one
+  have normalized_score := score_gt_one_of_case5_geometry
+    square.firstQuadrant size_at_least_three factor_gt_one
+    square.firstQuadrant_cosine_nonnegative
+    square.firstQuadrant_sine_nonnegative normalized_inside
+    normalized_center_x normalized_center_y
+  rw [region_eq] at normalized_score
+  exact normalized_score
 
 lemma score_gt_one_of_two_boundaryLine_chords
     {size : ℕ} {region : Set Plane} {factor : ℝ}

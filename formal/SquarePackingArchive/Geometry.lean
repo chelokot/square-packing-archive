@@ -37,6 +37,11 @@ def Frame.swap (frame : Frame) : Frame where
   sine := frame.cosine
   unit := by nlinarith [frame.unit]
 
+def Frame.rotateQuarter (frame : Frame) : Frame where
+  cosine := -frame.sine
+  sine := frame.cosine
+  unit := by nlinarith [frame.unit]
+
 def Frame.place (frame : Frame) (localX localY : ℝ) : Point :=
   ⟨localX * frame.cosine - localY * frame.sine,
     localX * frame.sine + localY * frame.cosine⟩
@@ -48,6 +53,53 @@ structure PlacedSquare where
 def PlacedSquare.swap (square : PlacedSquare) : PlacedSquare where
   center := square.center.swap
   frame := square.frame.swap
+
+def PlacedSquare.rotateQuarter (square : PlacedSquare) : PlacedSquare where
+  center := square.center
+  frame := square.frame.rotateQuarter
+
+def PlacedSquare.rotateHalf (square : PlacedSquare) : PlacedSquare :=
+  square.rotateQuarter.rotateQuarter
+
+def PlacedSquare.rotateThreeQuarter (square : PlacedSquare) : PlacedSquare :=
+  square.rotateHalf.rotateQuarter
+
+noncomputable def PlacedSquare.firstQuadrant (square : PlacedSquare) : PlacedSquare :=
+  if 0 ≤ square.frame.cosine then
+    if 0 ≤ square.frame.sine then square else square.rotateQuarter
+  else if 0 ≤ square.frame.sine then square.rotateThreeQuarter else square.rotateHalf
+
+lemma PlacedSquare.firstQuadrant_cosine_nonnegative (square : PlacedSquare) :
+    0 ≤ square.firstQuadrant.frame.cosine := by
+  simp only [PlacedSquare.firstQuadrant]
+  split_ifs with cosine_nonnegative sine_nonnegative sine_nonnegative
+  · exact cosine_nonnegative
+  · simp [PlacedSquare.rotateQuarter, Frame.rotateQuarter]
+    linarith
+  · simp [PlacedSquare.rotateThreeQuarter, PlacedSquare.rotateHalf,
+      PlacedSquare.rotateQuarter, Frame.rotateQuarter]
+    exact sine_nonnegative
+  · simp [PlacedSquare.rotateHalf, PlacedSquare.rotateQuarter, Frame.rotateQuarter]
+    linarith
+
+lemma PlacedSquare.firstQuadrant_sine_nonnegative (square : PlacedSquare) :
+    0 ≤ square.firstQuadrant.frame.sine := by
+  simp only [PlacedSquare.firstQuadrant]
+  split_ifs with cosine_nonnegative sine_nonnegative sine_nonnegative
+  · exact sine_nonnegative
+  · simp [PlacedSquare.rotateQuarter, Frame.rotateQuarter]
+    exact cosine_nonnegative
+  · simp [PlacedSquare.rotateThreeQuarter, PlacedSquare.rotateHalf,
+      PlacedSquare.rotateQuarter, Frame.rotateQuarter]
+    linarith
+  · simp [PlacedSquare.rotateHalf, PlacedSquare.rotateQuarter, Frame.rotateQuarter]
+    linarith
+
+@[simp] lemma PlacedSquare.firstQuadrant_center (square : PlacedSquare) :
+    square.firstQuadrant.center = square.center := by
+  simp only [PlacedSquare.firstQuadrant]
+  split_ifs <;>
+    rfl
 
 def PlacedSquare.point (square : PlacedSquare) (localX localY : ℝ) : Point :=
   let offset := square.frame.place localX localY
