@@ -1,6 +1,8 @@
 import SquarePackingArchive.Geometry
+import SquarePackingArchive.Area
 import SquarePackingArchive.RationalCertificate
 import SquarePackingArchive.Records.Basic
+import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
 import SquarePackingArchive.Audit

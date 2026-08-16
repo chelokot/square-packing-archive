@@ -24,8 +24,9 @@ the literature faithfully while making the formalization gap measurable.
   progressions.
 - Lean-verified exact rational certificates for the archive's new upper bounds
   `s(68) ≤ 8.80339` and `s(69) ≤ 8.8272`.
-- A Lean geometry model and a rational separating-axis certificate checker with
-  a proved soundness theorem, plus a formal proof that `s(1) = 1`.
+- A Lean geometry model, a formal area theorem, a proof that `s(m²) = m` for
+  every `m`, and a rational separating-axis certificate checker with a proved
+  soundness theorem.
 - A generated dashboard with a proof matrix, historical coverage graph, record
   timelines, source links, and an interactive packing viewer.
 - Viewer controls for zoom, pan, view rotation, square inspection, exact

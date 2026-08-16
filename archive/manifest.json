@@ -185,6 +185,13 @@
           "kind": "elementary-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s4_eq_two"
         }
       ],
       "active": true
@@ -268,6 +275,13 @@
           "kind": "elementary-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s9_eq_three"
         }
       ],
       "active": true
@@ -421,6 +435,13 @@
           "kind": "elementary-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s16_eq_four"
         }
       ],
       "active": true
@@ -485,6 +506,13 @@
           "kind": "elementary-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s25_eq_five"
         }
       ],
       "active": true
@@ -549,6 +577,13 @@
           "kind": "elementary-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s36_eq_six"
         }
       ],
       "active": true
@@ -613,6 +648,13 @@
           "kind": "elementary-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s49_eq_seven"
         }
       ],
       "active": true
@@ -661,6 +703,13 @@
           "kind": "elementary-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s64_eq_eight"
         }
       ],
       "active": true
@@ -816,6 +865,13 @@
           "kind": "elementary-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s81_eq_nine"
         }
       ],
       "active": true
