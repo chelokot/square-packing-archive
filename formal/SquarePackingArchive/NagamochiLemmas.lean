@@ -701,6 +701,157 @@ lemma score_gt_one_of_pinned_cut_bounds
     inner_bound boundary_corner_bound
   simp
 
+lemma score_gt_one_of_boundary_chord_and_edge_point
+    {size coordinate : ℕ} {region : Set Plane} {factor : ℝ}
+    {side : NagamochiResource.BoundarySide}
+    {kind : NagamochiResource.EdgePoint}
+    (factor_gt_one : 1 < factor)
+    (region_measurable : MeasurableSet region)
+    (chord : NagamochiResource.HasBoundaryChord size side region factor)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (point_mem :
+      NagamochiResource.edgePoint size coordinate kind ∈ region) :
+    1 < NagamochiResource.measure size region := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have line_bound := NagamochiResource.boundaryLine_lower_bound_of_chord
+    region_measurable chord
+  have boundary_bound :
+      ENNReal.ofReal (factor / 2) ≤
+        NagamochiResource.boundaryLines size region := by
+    have scaled_bound := NagamochiResource.boundaryLines_lower_bound
+      (size := size) (region := region) line_bound
+    have encoded_half :
+        ENNReal.ofReal (factor / 2) =
+          (1 / 2 : ENNReal) * ENNReal.ofReal factor := by
+      rw [ENNReal.ofReal_div_of_pos (by norm_num : (0 : ℝ) < 2)]
+      norm_num
+      ac_rfl
+    rw [encoded_half]
+    exact scaled_bound
+  have edge_bound :
+      (1 / 2 : ENNReal) ≤ NagamochiResource.edgePoints size region :=
+    NagamochiResource.edgePoints_lower_bound_of_mem kind coordinate_mem
+      region_measurable point_mem
+  have encoded_sum_gt_one :
+      1 < ENNReal.ofReal (factor / 2) + (1 / 2 : ENNReal) := by
+    apply (ENNReal.toReal_lt_toReal (by finiteness) (by finiteness)).mp
+    rw [ENNReal.toReal_add (by finiteness) (by finiteness)]
+    rw [ENNReal.toReal_ofReal (by positivity)]
+    norm_num
+    linarith
+  calc
+    1 < ENNReal.ofReal (factor / 2) + (1 / 2 : ENNReal) :=
+      encoded_sum_gt_one
+    _ ≤ NagamochiResource.boundaryLines size region +
+        NagamochiResource.edgePoints size region :=
+      add_le_add boundary_bound edge_bound
+    _ ≤ NagamochiResource.measure size region := by
+      simp only [NagamochiResource.measure, Measure.coe_add, Pi.add_apply]
+      calc
+        _ ≤ (NagamochiResource.innerArea size region +
+              NagamochiResource.boundaryLines size region) +
+            NagamochiResource.edgePoints size region :=
+          add_le_add (le_add_of_nonneg_left bot_le) le_rfl
+        _ ≤ ((NagamochiResource.innerArea size region +
+                NagamochiResource.boundaryLines size region) +
+              NagamochiResource.cornerPoints size region) +
+            NagamochiResource.edgePoints size region :=
+          add_le_add (le_add_of_nonneg_right bot_le) le_rfl
+
+lemma score_gt_one_of_area_chord_and_edge_point
+    {size coordinate : ℕ} {region : Set Plane} {area chordLength : ℝ}
+    {side : NagamochiResource.BoundarySide}
+    {kind : NagamochiResource.EdgePoint}
+    (area_nonnegative : 0 ≤ area)
+    (chord_nonnegative : 0 ≤ chordLength)
+    (area_chord_gt_half : 1 / 2 < area + chordLength / 2)
+    (region_measurable : MeasurableSet region)
+    (inner_bound :
+      ENNReal.ofReal area ≤ NagamochiResource.innerArea size region)
+    (chord :
+      NagamochiResource.HasBoundaryChord size side region chordLength)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (point_mem :
+      NagamochiResource.edgePoint size coordinate kind ∈ region) :
+    1 < NagamochiResource.measure size region := by
+  have line_bound := NagamochiResource.boundaryLine_lower_bound_of_chord
+    region_measurable chord
+  have scaled_bound := NagamochiResource.boundaryLines_lower_bound
+    (size := size) (region := region) line_bound
+  have boundary_bound :
+      ENNReal.ofReal (chordLength / 2) ≤
+        NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region := by
+    have encoded_half :
+        ENNReal.ofReal (chordLength / 2) =
+          (1 / 2 : ENNReal) * ENNReal.ofReal chordLength := by
+      rw [ENNReal.ofReal_div_of_pos (by norm_num : (0 : ℝ) < 2)]
+      norm_num
+      ac_rfl
+    rw [encoded_half]
+    exact scaled_bound.trans (le_add_of_nonneg_right bot_le)
+  have edge_bound := NagamochiResource.edgePoints_lower_bound_of_mem kind
+    coordinate_mem region_measurable point_mem
+  apply score_gt_one_of_real_grouped_bounds
+    (innerScore := area) (boundaryCornerScore := chordLength / 2)
+    (edgeScore := 1 / 2)
+  · exact area_nonnegative
+  · positivity
+  · norm_num
+  · linarith
+  · exact inner_bound
+  · exact boundary_bound
+  · simpa using edge_bound
+
+lemma score_gt_one_of_case6_corner_cut_and_edge_point
+    {size coordinate : ℕ} {region : Set Plane}
+    {tangentHalfAngle chordGrowth : ℝ}
+    {side : NagamochiResource.BoundarySide}
+    {kind : NagamochiResource.EdgePoint}
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_lt_one : tangentHalfAngle < 1)
+    (chord_growth_nonnegative : 0 ≤ chordGrowth)
+    (region_measurable : MeasurableSet region)
+    (inner_bound :
+      ENNReal.ofReal
+          ((unitCornerCutChord tangentHalfAngle + chordGrowth) ^ 2 *
+            cornerCutAreaCoefficient tangentHalfAngle) ≤
+        NagamochiResource.innerArea size region)
+    (chord :
+      NagamochiResource.HasBoundaryChord size side region
+        (unitCornerCutChord tangentHalfAngle + chordGrowth))
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (point_mem :
+      NagamochiResource.edgePoint size coordinate kind ∈ region) :
+    1 < NagamochiResource.measure size region := by
+  have one_add_tangent_positive : 0 < 1 + tangentHalfAngle := by linarith
+  have one_minus_tangent_sq_positive : 0 < 1 - tangentHalfAngle ^ 2 := by
+    nlinarith
+  have coefficient_positive :
+      0 < cornerCutAreaCoefficient tangentHalfAngle := by
+    dsimp [cornerCutAreaCoefficient]
+    positivity
+  have unit_area_positive : 0 < unitCornerCutArea tangentHalfAngle := by
+    dsimp [unitCornerCutArea]
+    exact div_pos (by nlinarith) one_add_tangent_positive
+  have unit_chord_positive : 0 < unitCornerCutChord tangentHalfAngle := by
+    dsimp [unitCornerCutChord]
+    have unit_area_lt_one : unitCornerCutArea tangentHalfAngle < 1 := by
+      rw [unitCornerCutArea, div_lt_one one_add_tangent_positive]
+      nlinarith
+    linarith
+  have chord_nonnegative :
+      0 ≤ unitCornerCutChord tangentHalfAngle + chordGrowth := by
+    linarith
+  have area_nonnegative :
+      0 ≤ (unitCornerCutChord tangentHalfAngle + chordGrowth) ^ 2 *
+        cornerCutAreaCoefficient tangentHalfAngle := by positivity
+  exact score_gt_one_of_area_chord_and_edge_point area_nonnegative
+    chord_nonnegative
+    (cornerCut_area_add_half_chord_gt_half tangent_positive tangent_lt_one
+      chord_growth_nonnegative)
+    region_measurable inner_bound chord coordinate_mem point_mem
+
 lemma score_gt_one_of_dilatedInteriorRegion_subset_innerArea
     {size : ℕ} {factor : ℝ} {square : PlacedSquare}
     (factor_gt_one : 1 < factor)
@@ -800,6 +951,45 @@ lemma score_gt_one_of_positive_inner_and_boundary_corner
       NagamochiResource.innerArea_add_boundaryLines_add_cornerPoints_le_measure
         size region
 
+lemma score_gt_one_of_positive_inner_and_two_half_resources
+    {size : ℕ} {region : Set Plane}
+    (inner_positive : 0 < NagamochiResource.innerArea size region)
+    (boundary_corner_half :
+      (1 / 2 : ENNReal) ≤
+        NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region)
+    (edge_half :
+      (1 / 2 : ENNReal) ≤ NagamochiResource.edgePoints size region) :
+    1 < NagamochiResource.measure size region := by
+  have combined_resources :
+      (1 : ENNReal) ≤
+        (NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region) +
+            NagamochiResource.edgePoints size region := by
+    have one_eq : (1 : ENNReal) = 1 / 2 + 1 / 2 := by
+      apply (ENNReal.toReal_eq_toReal_iff' (by finiteness)
+        (by finiteness)).mp
+      rw [ENNReal.toReal_add (by finiteness) (by finiteness)]
+      norm_num
+    rw [one_eq]
+    exact add_le_add boundary_corner_half edge_half
+  have inner_plus_one_gt :
+      1 < NagamochiResource.innerArea size region + 1 := by
+    calc
+      1 = 0 + 1 := by rw [zero_add]
+      _ < NagamochiResource.innerArea size region + 1 :=
+        ENNReal.add_lt_add_right (by finiteness) inner_positive
+  calc
+    1 < NagamochiResource.innerArea size region + 1 := inner_plus_one_gt
+    _ ≤ NagamochiResource.innerArea size region +
+        ((NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region) +
+            NagamochiResource.edgePoints size region) :=
+      add_le_add le_rfl combined_resources
+    _ = NagamochiResource.measure size region := by
+      simp only [NagamochiResource.measure, Measure.coe_add, Pi.add_apply]
+      ac_rfl
+
 lemma score_gt_one_of_case5_resource_bounds
     {size : ℕ} {region : Set Plane}
     {firstSide secondSide : NagamochiResource.BoundarySide}
@@ -859,6 +1049,54 @@ lemma score_gt_one_of_case5_resource_bounds
     norm_num
   rw [weights_sum]
   exact add_le_add boundary_tenth corner_nine_tenths
+
+lemma score_gt_one_of_corner_chord_and_edge_point
+    {size coordinate : ℕ} {region : Set Plane}
+    {side : NagamochiResource.BoundarySide}
+    {cornerKind : NagamochiResource.CornerPoint}
+    {edgeKind : NagamochiResource.EdgePoint}
+    (region_measurable : MeasurableSet region)
+    (inner_positive : 0 < NagamochiResource.innerArea size region)
+    (chord : NagamochiResource.HasBoundaryChord size side region (1 / 10))
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size cornerKind ∈ region)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (edge_point_mem :
+      NagamochiResource.edgePoint size coordinate edgeKind ∈ region) :
+    1 < NagamochiResource.measure size region := by
+  have line_bound := NagamochiResource.boundaryLine_lower_bound_of_chord
+    region_measurable chord
+  have scaled_line_bound := NagamochiResource.boundaryLines_lower_bound
+    (size := size) (region := region) line_bound
+  have boundary_twentieth :
+      (1 / 20 : ENNReal) ≤ NagamochiResource.boundaryLines size region := by
+    have weight_eq :
+        (1 / 20 : ENNReal) =
+          (1 / 2 : ENNReal) * ENNReal.ofReal (1 / 10 : ℝ) := by
+      apply (ENNReal.toReal_eq_toReal_iff' (by finiteness)
+        (by finiteness)).mp
+      rw [ENNReal.toReal_mul]
+      norm_num
+    rw [weight_eq]
+    exact scaled_line_bound
+  have corner_nine_twentieths :=
+    NagamochiResource.cornerPoints_lower_bound_of_mem cornerKind
+      region_measurable corner_point_mem
+  have boundary_corner_half :
+      (1 / 2 : ENNReal) ≤
+        NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region := by
+    have half_eq : (1 / 2 : ENNReal) = 1 / 20 + 9 / 20 := by
+      apply (ENNReal.toReal_eq_toReal_iff' (by finiteness)
+        (by finiteness)).mp
+      rw [ENNReal.toReal_add (by finiteness) (by finiteness)]
+      norm_num
+    rw [half_eq]
+    exact add_le_add boundary_twentieth corner_nine_twentieths
+  have edge_half := NagamochiResource.edgePoints_lower_bound_of_mem edgeKind
+    coordinate_mem region_measurable edge_point_mem
+  exact score_gt_one_of_positive_inner_and_two_half_resources
+    inner_positive boundary_corner_half edge_half
 
 lemma innerArea_positive_of_inward_point_family
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
@@ -1367,6 +1605,61 @@ lemma score_gt_one_of_case5
         factor_gt_one inside_container center_x_high center_y_low
     · exact score_gt_one_of_case5_top_right square size_at_least_three
         factor_gt_one inside_container center_x_high center_y_high
+
+lemma score_gt_one_of_case7_bottom_opposite_and_edge_point
+    {size coordinate : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (opposite : HasHorizontalOppositeChordWithin size square factor 1)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (edge_point_mem :
+      NagamochiResource.edgePoint size coordinate .bottom ∈
+        square.dilatedInteriorRegion factor) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have factor_nonzero : factor ≠ 0 := factor_positive.ne'
+  have chord := bottomBoundaryChord_of_horizontalOpposite square
+    factor_positive cosine_positive sine_positive opposite
+  exact score_gt_one_of_boundary_chord_and_edge_point factor_gt_one
+    (square.measurableSet_dilatedInteriorRegion factor_nonzero) chord
+    coordinate_mem edge_point_mem
+
+lemma score_gt_one_of_case7_bottom_corner_and_edge_point
+    {size coordinate : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_nonzero : factor ≠ 0)
+    (inner_positive :
+      0 < NagamochiResource.innerArea size
+        (square.dilatedInteriorRegion factor))
+    (unit_point_mem :
+      ![(1 : ℝ), 1] ∈ square.dilatedInteriorRegion factor)
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size .bottomLeft ∈
+        square.dilatedInteriorRegion factor)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (edge_point_mem :
+      NagamochiResource.edgePoint size coordinate .bottom ∈
+        square.dilatedInteriorRegion factor) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  have corner_mem :
+      ![(9 / 10 : ℝ), 1] ∈ square.dilatedInteriorRegion factor := by
+    simpa [NagamochiResource.cornerPoint] using corner_point_mem
+  have chord :
+      NagamochiResource.HasBoundaryChord size .bottom
+        (square.dilatedInteriorRegion factor) (1 / 10) := by
+    refine ⟨9 / 10, 1, by norm_num, ?_, ?_⟩
+    · intro coordinate coordinate_mem
+      exact ⟨coordinate_mem.1.le, by linarith [coordinate_mem.2]⟩
+    · exact horizontal_openSegment_subset_of_convex
+        (square.convex_dilatedInteriorRegion factor) (by norm_num)
+        corner_mem unit_point_mem
+  exact score_gt_one_of_corner_chord_and_edge_point
+    (square.measurableSet_dilatedInteriorRegion factor_nonzero)
+    inner_positive chord corner_point_mem coordinate_mem edge_point_mem
 
 lemma score_gt_one_of_two_boundaryLine_chords
     {size : ℕ} {region : Set Plane} {factor : ℝ}

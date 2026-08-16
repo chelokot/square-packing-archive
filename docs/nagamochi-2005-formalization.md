@@ -55,6 +55,14 @@ lower bounds are supplied. A general nonnegative real-component compositor is
 used for this and the remaining subcases instead of repeating measure
 arithmetic.
 
+The Lemma 5 branch of Case 6 is connected too. Its checked
+triangle-area-plus-half-chord inequality now composes directly with a typed `P`
+point, a boundary chord, and an inner-area lower bound. For the canonical bottom
+orientation of Case 7, Lean also closes the nonadjacent-chord-plus-`P` branch
+and the short-corner-chord-plus-`Q`-plus-`P` branch. The remaining obligation is
+the exhaustive geometric classification that produces one of these resource
+witnesses, including the reduction from the last Case 7 branch back to Case 6.
+
 Coordinate-swap symmetry is formalized as an involution on points, frames and
 placed squares. Lean proves that it preserves membership in dilated open square
 regions, allowing the vertical chord theory to be derived from the horizontal
