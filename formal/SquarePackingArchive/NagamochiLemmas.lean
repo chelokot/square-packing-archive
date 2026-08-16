@@ -574,6 +574,105 @@ lemma score_gt_one_of_compensated_inner_area
     _ ≤ NagamochiResource.measure size region :=
       NagamochiResource.innerArea_add_boundaryLines_le_measure size region
 
+lemma score_gt_one_of_positive_inner_and_boundary_corner
+    {size : ℕ} {region : Set Plane}
+    (inner_positive : 0 < NagamochiResource.innerArea size region)
+    (boundary_corner_at_least_one :
+      1 ≤ NagamochiResource.boundaryLines size region +
+        NagamochiResource.cornerPoints size region) :
+    1 < NagamochiResource.measure size region := by
+  by_cases boundary_corner_top :
+      NagamochiResource.boundaryLines size region +
+        NagamochiResource.cornerPoints size region = ⊤
+  · have components_top :
+        NagamochiResource.innerArea size region +
+              NagamochiResource.boundaryLines size region +
+            NagamochiResource.cornerPoints size region = ⊤ := by
+      rw [add_assoc, boundary_corner_top, add_top]
+    have measure_top : NagamochiResource.measure size region = ⊤ := by
+      apply top_unique
+      rw [← components_top]
+      exact NagamochiResource.innerArea_add_boundaryLines_add_cornerPoints_le_measure
+        size region
+    rw [measure_top]
+    exact ENNReal.one_lt_top
+  calc
+    1 ≤ NagamochiResource.boundaryLines size region +
+        NagamochiResource.cornerPoints size region :=
+      boundary_corner_at_least_one
+    _ = 0 + (NagamochiResource.boundaryLines size region +
+        NagamochiResource.cornerPoints size region) := by rw [zero_add]
+    _ < NagamochiResource.innerArea size region +
+        (NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region) :=
+      ENNReal.add_lt_add_right boundary_corner_top inner_positive
+    _ = NagamochiResource.innerArea size region +
+          NagamochiResource.boundaryLines size region +
+        NagamochiResource.cornerPoints size region := by rw [add_assoc]
+    _ ≤ NagamochiResource.measure size region :=
+      NagamochiResource.innerArea_add_boundaryLines_add_cornerPoints_le_measure
+        size region
+
+lemma score_gt_one_of_case5_resource_bounds
+    {size : ℕ} {region : Set Plane}
+    {firstSide secondSide : NagamochiResource.BoundarySide}
+    {firstKind secondKind : NagamochiResource.CornerPoint}
+    (region_measurable : MeasurableSet region)
+    (inner_positive : 0 < NagamochiResource.innerArea size region)
+    (different_sides : firstSide ≠ secondSide)
+    (different_kinds : firstKind ≠ secondKind)
+    (first_chord :
+      NagamochiResource.HasBoundaryChord size firstSide region (1 / 10))
+    (second_chord :
+      NagamochiResource.HasBoundaryChord size secondSide region (1 / 10))
+    (first_point_mem :
+      NagamochiResource.cornerPoint size firstKind ∈ region)
+    (second_point_mem :
+      NagamochiResource.cornerPoint size secondKind ∈ region) :
+    1 < NagamochiResource.measure size region := by
+  have first_line_bound :=
+    NagamochiResource.boundaryLine_lower_bound_of_chord
+      region_measurable first_chord
+  have second_line_bound :=
+    NagamochiResource.boundaryLine_lower_bound_of_chord
+      region_measurable second_chord
+  have pair_subset :
+      ({firstSide, secondSide} : Finset NagamochiResource.BoundarySide) ⊆
+        NagamochiResource.boundarySides := by
+    intro side side_mem
+    exact NagamochiResource.mem_boundarySides side
+  have pair_bound := NagamochiResource.boundaryLines_subset_lower_bound
+    (size := size) (region := region) pair_subset
+  rw [Finset.sum_pair different_sides] at pair_bound
+  have boundary_tenth :
+      (1 / 10 : ENNReal) ≤ NagamochiResource.boundaryLines size region := by
+    have two_chords_bound :
+        (1 / 2 : ENNReal) *
+            (ENNReal.ofReal (1 / 10 : ℝ) + ENNReal.ofReal (1 / 10 : ℝ)) ≤
+          NagamochiResource.boundaryLines size region :=
+      (mul_le_mul le_rfl (add_le_add first_line_bound second_line_bound)
+        bot_le bot_le).trans pair_bound
+    have weights_eq :
+        (1 / 10 : ENNReal) =
+          (1 / 2 : ENNReal) *
+            (ENNReal.ofReal (1 / 10 : ℝ) + ENNReal.ofReal (1 / 10 : ℝ)) := by
+      apply (ENNReal.toReal_eq_toReal_iff' (by finiteness) (by finiteness)).mp
+      rw [ENNReal.toReal_mul,
+        ENNReal.toReal_add (by finiteness) (by finiteness)]
+      norm_num
+    rw [weights_eq]
+    exact two_chords_bound
+  have corner_nine_tenths :=
+    NagamochiResource.cornerPoints_lower_bound_of_two_mem
+      region_measurable different_kinds first_point_mem second_point_mem
+  apply score_gt_one_of_positive_inner_and_boundary_corner inner_positive
+  have weights_sum : (1 : ENNReal) = 1 / 10 + 9 / 10 := by
+    apply (ENNReal.toReal_eq_toReal_iff' (by finiteness) (by finiteness)).mp
+    rw [ENNReal.toReal_add (by finiteness) (by finiteness)]
+    norm_num
+  rw [weights_sum]
+  exact add_le_add boundary_tenth corner_nine_tenths
+
 lemma score_gt_one_of_two_boundaryLine_chords
     {size : ℕ} {region : Set Plane} {factor : ℝ}
     {firstSide secondSide : NagamochiResource.BoundarySide}

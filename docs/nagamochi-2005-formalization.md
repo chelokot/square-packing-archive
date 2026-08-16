@@ -36,3 +36,12 @@ area, and the boundary-line score covers that loss, then the total score is
 greater than one. The remaining Case 2 obligation is geometric: construct the
 finite family of cut-off triangles and derive those two inequalities from the
 strict chord-versus-triangle lemma.
+
+The discrete `Q` and `P` resources are represented by typed finite indices, so
+their coordinates have a single formal definition. Lean proves that membership
+of two distinct `Q` points contributes at least `0.9`, while membership of any
+valid indexed `P` point contributes at least `0.5`. The Case 5 score arithmetic
+is connected as well: positive inner-area score, two distinct `0.1` boundary
+chords, and two distinct `Q` points imply total score greater than one. What is
+not yet claimed is the geometric premise that every square whose center lies in
+a corner region necessarily contains those resources.

@@ -175,28 +175,198 @@ noncomputable def NagamochiResource.boundaryLines (size : ℕ) : Measure Plane :
     ∑ side ∈ NagamochiResource.boundarySides,
       NagamochiResource.boundaryLine size side
 
+inductive NagamochiResource.CornerPoint
+  | bottomLeft
+  | bottomRight
+  | topLeft
+  | topRight
+  | leftBottom
+  | leftTop
+  | rightBottom
+  | rightTop
+  deriving DecidableEq
+
+def NagamochiResource.cornerPointKinds :
+    Finset NagamochiResource.CornerPoint :=
+  {.bottomLeft, .bottomRight, .topLeft, .topRight,
+    .leftBottom, .leftTop, .rightBottom, .rightTop}
+
+lemma NagamochiResource.mem_cornerPointKinds
+    (kind : NagamochiResource.CornerPoint) :
+    kind ∈ NagamochiResource.cornerPointKinds := by
+  cases kind <;> simp [NagamochiResource.cornerPointKinds]
+
+noncomputable def NagamochiResource.cornerPoint
+    (size : ℕ) : NagamochiResource.CornerPoint → Plane
+  | .bottomLeft => ![(9 / 10 : ℝ), 1]
+  | .bottomRight => ![(size : ℝ) - 9 / 10, 1]
+  | .topLeft => ![(9 / 10 : ℝ), (size : ℝ) - 1]
+  | .topRight => ![(size : ℝ) - 9 / 10, (size : ℝ) - 1]
+  | .leftBottom => ![1, (9 / 10 : ℝ)]
+  | .leftTop => ![1, (size : ℝ) - 9 / 10]
+  | .rightBottom => ![(size : ℝ) - 1, (9 / 10 : ℝ)]
+  | .rightTop => ![(size : ℝ) - 1, (size : ℝ) - 9 / 10]
+
 noncomputable def NagamochiResource.cornerPoints (size : ℕ) : Measure Plane :=
   (9 / 20 : ENNReal) •
-    (Measure.dirac ![(9 / 10 : ℝ), 1] +
-      Measure.dirac ![(size : ℝ) - 9 / 10, 1] +
-        Measure.dirac ![(9 / 10 : ℝ), (size : ℝ) - 1] +
-          Measure.dirac ![(size : ℝ) - 9 / 10, (size : ℝ) - 1] +
-            Measure.dirac ![1, (9 / 10 : ℝ)] +
-              Measure.dirac ![1, (size : ℝ) - 9 / 10] +
-                Measure.dirac ![(size : ℝ) - 1, (9 / 10 : ℝ)] +
-                  Measure.dirac ![(size : ℝ) - 1, (size : ℝ) - 9 / 10])
+    ∑ kind ∈ NagamochiResource.cornerPointKinds,
+      Measure.dirac (NagamochiResource.cornerPoint size kind)
+
+lemma NagamochiResource.cornerPoints_lower_bound_of_mem
+    {size : ℕ} {region : Set Plane} (kind : NagamochiResource.CornerPoint)
+    (region_measurable : MeasurableSet region)
+    (point_mem : NagamochiResource.cornerPoint size kind ∈ region) :
+    (9 / 20 : ENNReal) ≤ NagamochiResource.cornerPoints size region := by
+  have point_score :
+      Measure.dirac (NagamochiResource.cornerPoint size kind) region = 1 := by
+    rw [Measure.dirac_apply' _ region_measurable]
+    simp [point_mem]
+  have component_le :
+      Measure.dirac (NagamochiResource.cornerPoint size kind) region ≤
+        ∑ otherKind ∈ NagamochiResource.cornerPointKinds,
+          Measure.dirac (NagamochiResource.cornerPoint size otherKind) region :=
+    Finset.single_le_sum
+      (f := fun otherKind =>
+        Measure.dirac (NagamochiResource.cornerPoint size otherKind) region)
+      (fun otherKind _ => bot_le)
+      (NagamochiResource.mem_cornerPointKinds kind)
+  simp only [NagamochiResource.cornerPoints, Measure.smul_apply]
+  calc
+    (9 / 20 : ENNReal) = (9 / 20 : ENNReal) * 1 := by rw [mul_one]
+    _ = (9 / 20 : ENNReal) *
+        Measure.dirac (NagamochiResource.cornerPoint size kind) region := by
+      rw [point_score]
+    _ ≤ (9 / 20 : ENNReal) *
+        (∑ otherKind ∈ NagamochiResource.cornerPointKinds,
+          Measure.dirac (NagamochiResource.cornerPoint size otherKind) region) :=
+      mul_le_mul le_rfl component_le bot_le bot_le
+
+lemma NagamochiResource.cornerPoints_subset_lower_bound
+    {size : ℕ} {selectedKinds : Finset NagamochiResource.CornerPoint}
+    {region : Set Plane}
+    (selected_kinds_valid :
+      selectedKinds ⊆ NagamochiResource.cornerPointKinds) :
+    (9 / 20 : ENNReal) *
+        (∑ kind ∈ selectedKinds,
+          Measure.dirac (NagamochiResource.cornerPoint size kind) region) ≤
+      NagamochiResource.cornerPoints size region := by
+  simp only [NagamochiResource.cornerPoints, Measure.smul_apply]
+  exact mul_le_mul le_rfl
+    (Finset.sum_le_sum_of_subset selected_kinds_valid) bot_le bot_le
+
+lemma NagamochiResource.cornerPoints_lower_bound_of_two_mem
+    {size : ℕ} {region : Set Plane}
+    {firstKind secondKind : NagamochiResource.CornerPoint}
+    (region_measurable : MeasurableSet region)
+    (different_kinds : firstKind ≠ secondKind)
+    (first_mem : NagamochiResource.cornerPoint size firstKind ∈ region)
+    (second_mem : NagamochiResource.cornerPoint size secondKind ∈ region) :
+    (9 / 10 : ENNReal) ≤ NagamochiResource.cornerPoints size region := by
+  have pair_subset :
+      ({firstKind, secondKind} : Finset NagamochiResource.CornerPoint) ⊆
+        NagamochiResource.cornerPointKinds := by
+    intro kind kind_mem
+    exact NagamochiResource.mem_cornerPointKinds kind
+  have pair_bound := NagamochiResource.cornerPoints_subset_lower_bound
+    (size := size) (region := region) pair_subset
+  rw [Finset.sum_pair different_kinds] at pair_bound
+  rw [Measure.dirac_apply' _ region_measurable,
+    Measure.dirac_apply' _ region_measurable] at pair_bound
+  simp [first_mem, second_mem] at pair_bound
+  have weights_eq :
+      (9 / 10 : ENNReal) = (9 / 20 : ENNReal) * (1 + 1) := by
+    apply (ENNReal.toReal_eq_toReal_iff' (by finiteness) (by finiteness)).mp
+    rw [ENNReal.toReal_mul]
+    norm_num
+  rw [weights_eq]
+  exact pair_bound
+
+inductive NagamochiResource.EdgePoint
+  | bottom
+  | top
+  | left
+  | right
+  deriving DecidableEq
+
+def NagamochiResource.edgePointKinds : Finset NagamochiResource.EdgePoint :=
+  {.bottom, .top, .left, .right}
+
+lemma NagamochiResource.mem_edgePointKinds
+    (kind : NagamochiResource.EdgePoint) :
+    kind ∈ NagamochiResource.edgePointKinds := by
+  cases kind <;> simp [NagamochiResource.edgePointKinds]
+
+noncomputable def NagamochiResource.edgePoint
+    (size coordinate : ℕ) : NagamochiResource.EdgePoint → Plane
+  | .bottom => ![(coordinate : ℝ), (9 / 10 : ℝ)]
+  | .top => ![(coordinate : ℝ), (size : ℝ) - 9 / 10]
+  | .left => ![(9 / 10 : ℝ), (coordinate : ℝ)]
+  | .right => ![(size : ℝ) - 9 / 10, (coordinate : ℝ)]
 
 noncomputable def NagamochiResource.edgePointCluster
     (size coordinate : ℕ) : Measure Plane :=
   (1 / 2 : ENNReal) •
-    (Measure.dirac ![(coordinate : ℝ), (9 / 10 : ℝ)] +
-      Measure.dirac ![(coordinate : ℝ), (size : ℝ) - 9 / 10] +
-        Measure.dirac ![(9 / 10 : ℝ), (coordinate : ℝ)] +
-          Measure.dirac ![(size : ℝ) - 9 / 10, (coordinate : ℝ)])
+    ∑ kind ∈ NagamochiResource.edgePointKinds,
+      Measure.dirac (NagamochiResource.edgePoint size coordinate kind)
 
 noncomputable def NagamochiResource.edgePoints (size : ℕ) : Measure Plane :=
   ∑ coordinate ∈ Finset.Icc 2 (size - 2),
     NagamochiResource.edgePointCluster size coordinate
+
+lemma NagamochiResource.edgePointCluster_lower_bound_of_mem
+    {size coordinate : ℕ} {region : Set Plane}
+    (kind : NagamochiResource.EdgePoint)
+    (region_measurable : MeasurableSet region)
+    (point_mem : NagamochiResource.edgePoint size coordinate kind ∈ region) :
+    (1 / 2 : ENNReal) ≤
+      NagamochiResource.edgePointCluster size coordinate region := by
+  have point_score :
+      Measure.dirac (NagamochiResource.edgePoint size coordinate kind) region = 1 := by
+    rw [Measure.dirac_apply' _ region_measurable]
+    simp [point_mem]
+  have component_le :
+      Measure.dirac (NagamochiResource.edgePoint size coordinate kind) region ≤
+        ∑ otherKind ∈ NagamochiResource.edgePointKinds,
+          Measure.dirac
+            (NagamochiResource.edgePoint size coordinate otherKind) region :=
+    Finset.single_le_sum
+      (f := fun otherKind =>
+        Measure.dirac (NagamochiResource.edgePoint size coordinate otherKind) region)
+      (fun otherKind _ => bot_le)
+      (NagamochiResource.mem_edgePointKinds kind)
+  simp only [NagamochiResource.edgePointCluster, Measure.smul_apply]
+  calc
+    (1 / 2 : ENNReal) = (1 / 2 : ENNReal) * 1 := by rw [mul_one]
+    _ = (1 / 2 : ENNReal) *
+        Measure.dirac (NagamochiResource.edgePoint size coordinate kind) region := by
+      rw [point_score]
+    _ ≤ (1 / 2 : ENNReal) *
+        (∑ otherKind ∈ NagamochiResource.edgePointKinds,
+          Measure.dirac
+            (NagamochiResource.edgePoint size coordinate otherKind) region) :=
+      mul_le_mul le_rfl component_le bot_le bot_le
+
+lemma NagamochiResource.edgePoints_lower_bound_of_mem
+    {size coordinate : ℕ} {region : Set Plane}
+    (kind : NagamochiResource.EdgePoint)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (region_measurable : MeasurableSet region)
+    (point_mem : NagamochiResource.edgePoint size coordinate kind ∈ region) :
+    (1 / 2 : ENNReal) ≤ NagamochiResource.edgePoints size region := by
+  have cluster_lower_bound :=
+    NagamochiResource.edgePointCluster_lower_bound_of_mem kind
+      region_measurable point_mem
+  have component_le :
+      NagamochiResource.edgePointCluster size coordinate region ≤
+        ∑ otherCoordinate ∈ Finset.Icc 2 (size - 2),
+          NagamochiResource.edgePointCluster size otherCoordinate region :=
+    Finset.single_le_sum
+      (f := fun otherCoordinate =>
+        NagamochiResource.edgePointCluster size otherCoordinate region)
+      (fun otherCoordinate _ => bot_le)
+      coordinate_mem
+  exact cluster_lower_bound.trans (by
+    simpa [NagamochiResource.edgePoints] using component_le)
 
 noncomputable def NagamochiResource.measure (size : ℕ) : Measure Plane :=
   NagamochiResource.innerArea size +
@@ -347,24 +517,28 @@ lemma NagamochiResource.innerArea_add_boundaryLines_le_measure
   simp only [NagamochiResource.measure, Measure.coe_add, Pi.add_apply]
   exact (le_add_of_nonneg_right bot_le).trans (le_add_of_nonneg_right bot_le)
 
+lemma NagamochiResource.innerArea_add_boundaryLines_add_cornerPoints_le_measure
+    (size : ℕ) (region : Set Plane) :
+    NagamochiResource.innerArea size region +
+          NagamochiResource.boundaryLines size region +
+        NagamochiResource.cornerPoints size region ≤
+      NagamochiResource.measure size region := by
+  simp only [NagamochiResource.measure, Measure.coe_add, Pi.add_apply]
+  exact le_add_of_nonneg_right bot_le
+
 lemma NagamochiResource.cornerPoints_univ (size : ℕ) :
     NagamochiResource.cornerPoints size univ = 18 / 5 := by
-  simp [NagamochiResource.cornerPoints]
+  simp [NagamochiResource.cornerPoints, NagamochiResource.cornerPointKinds]
   apply (ENNReal.toReal_eq_toReal_iff' (by finiteness) (by finiteness)).mp
   repeat' rw [ENNReal.toReal_add (by finiteness) (by finiteness)]
   norm_num
 
 lemma NagamochiResource.edgePointCluster_univ (size coordinate : ℕ) :
     NagamochiResource.edgePointCluster size coordinate univ = 2 := by
-  simp [NagamochiResource.edgePointCluster]
-  have half_times_two : (2 : ENNReal)⁻¹ * 2 = 1 := by
-    exact ENNReal.inv_mul_cancel (by norm_num) (by norm_num)
-  calc
-    (2 : ENNReal)⁻¹ + (2 : ENNReal)⁻¹ + (2 : ENNReal)⁻¹ + (2 : ENNReal)⁻¹ =
-        (2 : ENNReal)⁻¹ * (1 + 1 + 1 + 1) := by ring
-    _ =
-        ((2 : ENNReal)⁻¹ * 2) * 2 := by ring
-    _ = 2 := by rw [half_times_two, one_mul]
+  simp [NagamochiResource.edgePointCluster, NagamochiResource.edgePointKinds]
+  apply (ENNReal.toReal_eq_toReal_iff' (by finiteness) (by finiteness)).mp
+  repeat' rw [ENNReal.toReal_add (by finiteness) (by finiteness)]
+  norm_num
 
 lemma NagamochiResource.edgePoints_univ (size : ℕ) :
     NagamochiResource.edgePoints size univ = (2 * (size - 3) : ℕ) := by
