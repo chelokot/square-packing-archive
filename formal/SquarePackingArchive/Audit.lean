@@ -1,7 +1,17 @@
 import SquarePackingArchive.Records.Basic
+import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
 
 #print axioms SquarePackingArchive.Records.Basic.s1_eq_one
+#print axioms SquarePackingArchive.Records.SquareNumbers.squareNumber_isMinimumSide
+#print axioms SquarePackingArchive.Records.SquareNumbers.s4_eq_two
+#print axioms SquarePackingArchive.Records.SquareNumbers.s9_eq_three
+#print axioms SquarePackingArchive.Records.SquareNumbers.s16_eq_four
+#print axioms SquarePackingArchive.Records.SquareNumbers.s25_eq_five
+#print axioms SquarePackingArchive.Records.SquareNumbers.s36_eq_six
+#print axioms SquarePackingArchive.Records.SquareNumbers.s49_eq_seven
+#print axioms SquarePackingArchive.Records.SquareNumbers.s64_eq_eight
+#print axioms SquarePackingArchive.Records.SquareNumbers.s81_eq_nine
 #print axioms SquarePackingArchive.Records.Square68.s68_le_8_80339
 #print axioms SquarePackingArchive.Records.Square69.s69_le_8_8272
