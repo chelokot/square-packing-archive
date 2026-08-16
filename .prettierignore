@@ -1,0 +1,6 @@
+archive/configurations/
+apps/web/src/generated/
+apps/web/dist/
+formal/
+node_modules/
+test-results/

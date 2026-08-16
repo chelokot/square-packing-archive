@@ -1,0 +1,26 @@
+{
+  "name": "square-packing-archive",
+  "private": true,
+  "packageManager": "bun@1.2.22",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "archive:build": "bun run scripts/build-archive.ts",
+    "archive:check": "bun run scripts/check-archive.ts",
+    "build": "bun run archive:build && bun --filter @square-packing/web build",
+    "check": "bun run archive:check && bun --filter '*' check",
+    "dev": "bun run archive:build && bun --filter @square-packing/web dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "bun --filter '*' test",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/bun": "^1.2.22",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2"
+  }
+}

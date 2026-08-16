@@ -1,0 +1,44 @@
+name: New or improved bound
+description: Submit a packing, lower bound, or exact result.
+title: "[bound] s(n) relation value"
+labels: ["bound submission"]
+body:
+  - type: input
+    id: claim
+    attributes:
+      label: Claim
+      description: State the exact relation, for example s(68) ≤ 8.80339.
+    validations:
+      required: true
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Authors and provenance
+      description: List discoverers, optimizers, provers, dates, and primary links.
+    validations:
+      required: true
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Configuration or proof artifacts
+      description: Link coordinates, source code, paper, certificate, and Lean theorem where available.
+    validations:
+      required: true
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: Strongest evidence
+      options:
+        - Reported configuration
+        - Computational certificate
+        - Published proof awaiting Lean
+        - Lean theorem
+    validations:
+      required: true
+  - type: checkboxes
+    id: attribution
+    attributes:
+      label: Attribution
+      options:
+        - label: I have credited every known discoverer, optimizer, and prover.
+          required: true

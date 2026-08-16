@@ -1,0 +1,1938 @@
+{
+  "schemaVersion": 1,
+  "id": "square-68",
+  "n": 68,
+  "containerSide": {
+    "numerator": "880339",
+    "denominator": "100000",
+    "decimal": "8.80339"
+  },
+  "coordinateSystem": "physical-cartesian-bottom-left",
+  "squareSide": {
+    "numerator": "1",
+    "denominator": "1"
+  },
+  "squares": [
+    {
+      "id": 0,
+      "center": {
+        "x": {
+          "numerator": "1000000824792769029733",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "103792369845045232079",
+          "denominator": "12500000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 2.0518770460426502e-17
+      }
+    },
+    {
+      "id": 1,
+      "center": {
+        "x": {
+          "numerator": "750003946244073699397",
+          "denominator": "500000000000000000000"
+        },
+        "y": {
+          "numerator": "16606779175207229209589",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0.0
+      }
+    },
+    {
+      "id": 2,
+      "center": {
+        "x": {
+          "numerator": "625018115435064053283",
+          "denominator": "250000000000000000000"
+        },
+        "y": {
+          "numerator": "8303375004318129556933",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "9971890803",
+          "denominator": "9816444682470332"
+        },
+        "cosine": {
+          "numerator": "96362586203900618638383104205415",
+          "denominator": "96362586204099495850757016175033"
+        },
+        "sine": {
+          "numerator": "195777028894568317982313192",
+          "denominator": "96362586204099495850757016175033"
+        },
+        "angleRadiansApprox": 2.031670553964171e-06
+      }
+    },
+    {
+      "id": 3,
+      "center": {
+        "x": {
+          "numerator": "200000164959380972471",
+          "denominator": "400000000000000000000"
+        },
+        "y": {
+          "numerator": "3651694381406458726449",
+          "denominator": "500000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "4759",
+          "denominator": "2299035813507041"
+        },
+        "cosine": {
+          "numerator": "2642782835893990902287866963800",
+          "denominator": "2642782835893990902287889611881"
+        },
+        "sine": {
+          "numerator": "10941111436480008119",
+          "denominator": "2642782835893990902287889611881"
+        },
+        "angleRadiansApprox": 4.139996403744952e-12
+      }
+    },
+    {
+      "id": 4,
+      "center": {
+        "x": {
+          "numerator": "1500001237190534356321",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "14606777525618932167697",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "10124",
+          "denominator": "7334338506207079"
+        },
+        "cosine": {
+          "numerator": "53792521323631887003010727216865",
+          "denominator": "53792521323631887003010932207617"
+        },
+        "sine": {
+          "numerator": "148505686073680935592",
+          "denominator": "53792521323631887003010932207617"
+        },
+        "angleRadiansApprox": 2.7607125009111646e-12
+      }
+    },
+    {
+      "id": 5,
+      "center": {
+        "x": {
+          "numerator": "500012867974939975309",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "25213551752050224638177",
+          "denominator": "4000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 5.279542851290382e-18
+      }
+    },
+    {
+      "id": 6,
+      "center": {
+        "x": {
+          "numerator": "125000103099096238759",
+          "denominator": "250000000000000000000"
+        },
+        "y": {
+          "numerator": "53033871132197858533197",
+          "denominator": "10000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0.0
+      }
+    },
+    {
+      "id": 7,
+      "center": {
+        "x": {
+          "numerator": "3321355835041446546189",
+          "denominator": "400000000000000000000"
+        },
+        "y": {
+          "numerator": "8303389587603615925303",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "1",
+          "denominator": "10000000000000000"
+        },
+        "cosine": {
+          "numerator": "99999999999999999999999999999999",
+          "denominator": "100000000000000000000000000000001"
+        },
+        "sine": {
+          "numerator": "20000000000000000",
+          "denominator": "100000000000000000000000000000001"
+        },
+        "angleRadiansApprox": 1.5047114190827156e-16
+      }
+    },
+    {
+      "id": 8,
+      "center": {
+        "x": {
+          "numerator": "7303388762652001167427",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "4151694793801808402821",
+          "denominator": "500000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 2.648683701479457e-18
+      }
+    },
+    {
+      "id": 9,
+      "center": {
+        "x": {
+          "numerator": "25213551751436922388403",
+          "denominator": "4000000000000000000000"
+        },
+        "y": {
+          "numerator": "2075847396900903761241",
+          "denominator": "250000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 1.436471745040431e-18
+      }
+    },
+    {
+      "id": 10,
+      "center": {
+        "x": {
+          "numerator": "26516935565332304975737",
+          "denominator": "5000000000000000000000"
+        },
+        "y": {
+          "numerator": "2075847396900903761241",
+          "denominator": "250000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 5.6037465938769754e-18
+      }
+    },
+    {
+      "id": 11,
+      "center": {
+        "x": {
+          "numerator": "207584739686119254929",
+          "denominator": "25000000000000000000"
+        },
+        "y": {
+          "numerator": "14606777525621696432157",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "1372623",
+          "denominator": "8641240313698375"
+        },
+        "cosine": {
+          "numerator": "37335517079542995187393191870248",
+          "denominator": "37335517079542995189277285770377"
+        },
+        "sine": {
+          "numerator": "11861165203109604587625",
+          "denominator": "37335517079542995189277285770377"
+        },
+        "angleRadiansApprox": 3.176911994506329e-10
+      }
+    },
+    {
+      "id": 12,
+      "center": {
+        "x": {
+          "numerator": "3651694381326001023883",
+          "denominator": "500000000000000000000"
+        },
+        "y": {
+          "numerator": "730338876281084689557",
+          "denominator": "100000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "461192",
+          "denominator": "8710200176245073"
+        },
+        "cosine": {
+          "numerator": "75867587110259700751313058714465",
+          "denominator": "75867587110259700751738454836193"
+        },
+        "sine": {
+          "numerator": "8034149279365635414032",
+          "denominator": "75867587110259700751738454836193"
+        },
+        "angleRadiansApprox": 1.0589699218573361e-10
+      }
+    },
+    {
+      "id": 13,
+      "center": {
+        "x": {
+          "numerator": "8303389587603615925303",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "31516939690884608286171",
+          "denominator": "5000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 3.9291372992524455e-17
+      }
+    },
+    {
+      "id": 14,
+      "center": {
+        "x": {
+          "numerator": "1000000824794823740959",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "500000412396727406907",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "3257",
+          "denominator": "9527606377230073"
+        },
+        "cosine": {
+          "numerator": "45387641639717578046501982488640",
+          "denominator": "45387641639717578046501993096689"
+        },
+        "sine": {
+          "numerator": "31031413970638347761",
+          "denominator": "45387641639717578046501993096689"
+        },
+        "angleRadiansApprox": 6.836974306125556e-13
+      }
+    },
+    {
+      "id": 15,
+      "center": {
+        "x": {
+          "numerator": "93750077430268556787",
+          "denominator": "62500000000000000000"
+        },
+        "y": {
+          "numerator": "500000412554422531977",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "414425",
+          "denominator": "2647860317013581"
+        },
+        "cosine": {
+          "numerator": "3505582129207630835379395181468",
+          "denominator": "3505582129207630835551143262093"
+        },
+        "sine": {
+          "numerator": "1097339511878353305925",
+          "denominator": "3505582129207630835551143262093"
+        },
+        "angleRadiansApprox": 3.130263309866843e-10
+      }
+    },
+    {
+      "id": 16,
+      "center": {
+        "x": {
+          "numerator": "10000008254083609532121",
+          "denominator": "4000000000000000000000"
+        },
+        "y": {
+          "numerator": "125000103102008400171",
+          "denominator": "250000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "37379",
+          "denominator": "3208638008280625"
+        },
+        "cosine": {
+          "numerator": "5147678934091528073033676600492",
+          "denominator": "5147678934091528073035073790133"
+        },
+        "sine": {
+          "numerator": "119935680111521481875",
+          "denominator": "5147678934091528073035073790133"
+        },
+        "angleRadiansApprox": 2.329898224949959e-11
+      }
+    },
+    {
+      "id": 17,
+      "center": {
+        "x": {
+          "numerator": "3501033357397068201189",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "500000412451304903551",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "227330",
+          "denominator": "4139242025030553"
+        },
+        "cosine": {
+          "numerator": "17133324541779033148128904556909",
+          "denominator": "17133324541779033148232262414709"
+        },
+        "sine": {
+          "numerator": "1881947779100391226980",
+          "denominator": "17133324541779033148232262414709"
+        },
+        "angleRadiansApprox": 1.0984136642665731e-10
+      }
+    },
+    {
+      "id": 18,
+      "center": {
+        "x": {
+          "numerator": "500000412396987987251",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "3000002474378113414619",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "3055",
+          "denominator": "5061376365348252"
+        },
+        "cosine": {
+          "numerator": "25617530711705882108849230122479",
+          "denominator": "25617530711705882108849248788529"
+        },
+        "sine": {
+          "numerator": "30925009592277819720",
+          "denominator": "25617530711705882108849248788529"
+        },
+        "angleRadiansApprox": 1.2071815172313503e-12
+      }
+    },
+    {
+      "id": 19,
+      "center": {
+        "x": {
+          "numerator": "3000002475905640673181",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "3000002475908686646121",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "6539297",
+          "denominator": "8563056153670304"
+        },
+        "cosine": {
+          "numerator": "73325930690910860949847926198207",
+          "denominator": "73325930690910861035372736706625"
+        },
+        "sine": {
+          "numerator": "111992734833055515872576",
+          "denominator": "73325930690910861035372736706625"
+        },
+        "angleRadiansApprox": 1.5273278331118082e-09
+      }
+    },
+    {
+      "id": 20,
+      "center": {
+        "x": {
+          "numerator": "5000004127167358274071",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "600000494857662710917",
+          "denominator": "400000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "565351",
+          "denominator": "8320418349191498"
+        },
+        "cosine": {
+          "numerator": "69229361505562572746710653730803",
+          "denominator": "69229361505562572747349897237205"
+        },
+        "sine": {
+          "numerator": "9407913668267525171596",
+          "denominator": "69229361505562572747349897237205"
+        },
+        "angleRadiansApprox": 1.358948495792728e-10
+      }
+    },
+    {
+      "id": 21,
+      "center": {
+        "x": {
+          "numerator": "70000057766185392594587",
+          "denominator": "20000000000000000000000"
+        },
+        "y": {
+          "numerator": "3000002474316989717171",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "15876",
+          "denominator": "519734844724141"
+        },
+        "cosine": {
+          "numerator": "270124308820426955862136140505",
+          "denominator": "270124308820426955862640235257"
+        },
+        "sine": {
+          "numerator": "16502620789680925032",
+          "denominator": "270124308820426955862640235257"
+        },
+        "angleRadiansApprox": 6.109269047922498e-11
+      }
+    },
+    {
+      "id": 22,
+      "center": {
+        "x": {
+          "numerator": "200000165148328132041",
+          "denominator": "400000000000000000000"
+        },
+        "y": {
+          "numerator": "50000041233466814679353",
+          "denominator": "20000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "4244498",
+          "denominator": "8946443289122595"
+        },
+        "cosine": {
+          "numerator": "80038847525486715933029176262021",
+          "denominator": "80038847525486715969060702806029"
+        },
+        "sine": {
+          "numerator": "75946321295588552464620",
+          "denominator": "80038847525486715969060702806029"
+        },
+        "angleRadiansApprox": 9.488682514001094e-10
+      }
+    },
+    {
+      "id": 23,
+      "center": {
+        "x": {
+          "numerator": "120000099036375143703",
+          "denominator": "80000000000000000000"
+        },
+        "y": {
+          "numerator": "19531266115301496353",
+          "denominator": "7812500000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "6080794",
+          "denominator": "7969289802276443"
+        },
+        "cosine": {
+          "numerator": "63509579952667307928568937061813",
+          "denominator": "63509579952667308002521048402685"
+        },
+        "sine": {
+          "numerator": "96919219227887561871484",
+          "denominator": "63509579952667308002521048402685"
+        },
+        "angleRadiansApprox": 1.5260566878275676e-09
+      }
+    },
+    {
+      "id": 24,
+      "center": {
+        "x": {
+          "numerator": "500000412856510859827",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "70000057729036023475283",
+          "denominator": "20000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "1078546",
+          "denominator": "2344027306661153"
+        },
+        "cosine": {
+          "numerator": "5494464014373139006161497815293",
+          "denominator": "5494464014373139008488020763525"
+        },
+        "sine": {
+          "numerator": "5056282550980319847076",
+          "denominator": "5494464014373139008488020763525"
+        },
+        "angleRadiansApprox": 9.202503716019312e-10
+      }
+    },
+    {
+      "id": 25,
+      "center": {
+        "x": {
+          "numerator": "16606293923270600438843",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "125000103099096238759",
+          "denominator": "250000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 2.0634499886742108e-17
+      }
+    },
+    {
+      "id": 26,
+      "center": {
+        "x": {
+          "numerator": "7302425992130690037391",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "250000206202366164717",
+          "denominator": "500000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "76420",
+          "denominator": "9155312082852697"
+        },
+        "cosine": {
+          "numerator": "83819739334428589017491560157409",
+          "denominator": "83819739334428589017503240190209"
+        },
+        "sine": {
+          "numerator": "1399297898743206209480",
+          "denominator": "83819739334428589017503240190209"
+        },
+        "angleRadiansApprox": 1.6694133265676367e-11
+      }
+    },
+    {
+      "id": 27,
+      "center": {
+        "x": {
+          "numerator": "62998915987403997011673",
+          "denominator": "10000000000000000000000"
+        },
+        "y": {
+          "numerator": "200202171042872540807",
+          "denominator": "400000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "2624521351609",
+          "denominator": "5587159907120060"
+        },
+        "cosine": {
+          "numerator": "31216348939617512434351047514719",
+          "denominator": "31216362715842162537415461292481"
+        },
+        "sine": {
+          "numerator": "29327240942180709547674353080",
+          "denominator": "31216362715842162537415461292481"
+        },
+        "angleRadiansApprox": 0.0009394831013247467
+      }
+    },
+    {
+      "id": 28,
+      "center": {
+        "x": {
+          "numerator": "8303279878000094410113",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "600000494878443993351",
+          "denominator": "400000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "44467",
+          "denominator": "6392255606655031"
+        },
+        "cosine": {
+          "numerator": "20430465870406339200067330148436",
+          "denominator": "20430465870406339200069307462525"
+        },
+        "sine": {
+          "numerator": "284244430061129263477",
+          "denominator": "20430465870406339200069307462525"
+        },
+        "angleRadiansApprox": 1.3912772810181443e-11
+      }
+    },
+    {
+      "id": 29,
+      "center": {
+        "x": {
+          "numerator": "14602750956004320521867",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "750000618594530774587",
+          "denominator": "500000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "263",
+          "denominator": "2739774284381890"
+        },
+        "cosine": {
+          "numerator": "7506363129360297458779359902931",
+          "denominator": "7506363129360297458779360041269"
+        },
+        "sine": {
+          "numerator": "1441121273584874140",
+          "denominator": "7506363129360297458779360041269"
+        },
+        "angleRadiansApprox": 1.919866183862182e-13
+      }
+    },
+    {
+      "id": 30,
+      "center": {
+        "x": {
+          "numerator": "125965016875828558080383",
+          "denominator": "20000000000000000000000"
+        },
+        "y": {
+          "numerator": "1501564406490136496707",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "1708168104991",
+          "denominator": "8775683975202260"
+        },
+        "cosine": {
+          "numerator": "77012626314783465398063909997519",
+          "denominator": "77012632150460015215151908217681"
+        },
+        "sine": {
+          "numerator": "29980686931842260600280959320",
+          "denominator": "77012632150460015215151908217681"
+        },
+        "angleRadiansApprox": 0.0003892957148969637
+      }
+    },
+    {
+      "id": 31,
+      "center": {
+        "x": {
+          "numerator": "8303389587600552345583",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "10000008247928175364119",
+          "denominator": "4000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "21957",
+          "denominator": "7171148917868149"
+        },
+        "cosine": {
+          "numerator": "25712688401120762206021233288176",
+          "denominator": "25712688401120762206021715398025"
+        },
+        "sine": {
+          "numerator": "157456916789630947593",
+          "denominator": "25712688401120762206021715398025"
+        },
+        "angleRadiansApprox": 6.123704932494252e-12
+      }
+    },
+    {
+      "id": 32,
+      "center": {
+        "x": {
+          "numerator": "14606777525626783030899",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "250000206197621137507",
+          "denominator": "100000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "7098",
+          "denominator": "1242180393304661"
+        },
+        "cosine": {
+          "numerator": "1543012129510522290516313943317",
+          "denominator": "1543012129510522290516414706525"
+        },
+        "sine": {
+          "numerator": "17633992863352967556",
+          "denominator": "1543012129510522290516414706525"
+        },
+        "angleRadiansApprox": 1.1428291797645727e-11
+      }
+    },
+    {
+      "id": 33,
+      "center": {
+        "x": {
+          "numerator": "16606744994144252618407",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "17500014433901053566791",
+          "denominator": "5000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "9489",
+          "denominator": "1775967442497746"
+        },
+        "cosine": {
+          "numerator": "3154060356811984745019125039395",
+          "denominator": "3154060356811984745019305121637"
+        },
+        "sine": {
+          "numerator": "33704310123722223588",
+          "denominator": "3154060356811984745019305121637"
+        },
+        "angleRadiansApprox": 1.0686006705905075e-11
+      }
+    },
+    {
+      "id": 34,
+      "center": {
+        "x": {
+          "numerator": "2075847396900903761241",
+          "denominator": "250000000000000000000"
+        },
+        "y": {
+          "numerator": "180000148463133014383019",
+          "denominator": "40000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 1.6336450627823327e-19
+      }
+    },
+    {
+      "id": 35,
+      "center": {
+        "x": {
+          "numerator": "168779336487188969789987",
+          "denominator": "40000000000000000000000"
+        },
+        "y": {
+          "numerator": "3321355835041446546189",
+          "denominator": "400000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 1.2592160997796908e-17
+      }
+    },
+    {
+      "id": 36,
+      "center": {
+        "x": {
+          "numerator": "92350552528757270326477",
+          "denominator": "20000000000000000000000"
+        },
+        "y": {
+          "numerator": "1000000824855475576703",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "228362",
+          "denominator": "7283739916825349"
+        },
+        "cosine": {
+          "numerator": "53052867175954941968490419768757",
+          "denominator": "53052867175954941968594718174845"
+        },
+        "sine": {
+          "numerator": "3326658829772140696676",
+          "denominator": "53052867175954941968594718174845"
+        },
+        "angleRadiansApprox": 6.27046002761539e-11
+      }
+    },
+    {
+      "id": 37,
+      "center": {
+        "x": {
+          "numerator": "458390658718643748108603",
+          "denominator": "100000000000000000000000"
+        },
+        "y": {
+          "numerator": "1500001237237755740281",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "56223",
+          "denominator": "4685877798040943"
+        },
+        "cosine": {
+          "numerator": "10978725369086518296682771651760",
+          "denominator": "10978725369086518296685932677489"
+        },
+        "sine": {
+          "numerator": "263454107439255938289",
+          "denominator": "10978725369086518296685932677489"
+        },
+        "angleRadiansApprox": 2.3996784561264288e-11
+      }
+    },
+    {
+      "id": 38,
+      "center": {
+        "x": {
+          "numerator": "540883421996660025057",
+          "denominator": "400000000000000000000"
+        },
+        "y": {
+          "numerator": "175384896518574512357063",
+          "denominator": "40000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5632156765291285",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "49408448585790290904118108192839",
+          "denominator": "112850828243423072487459902095289"
+        },
+        "sine": {
+          "numerator": "101459916437832196901056219709440",
+          "denominator": "112850828243423072487459902095289"
+        },
+        "angleRadiansApprox": 1.1176228612276604
+      }
+    },
+    {
+      "id": 39,
+      "center": {
+        "x": {
+          "numerator": "1990429047920960097683",
+          "denominator": "800000000000000000000"
+        },
+        "y": {
+          "numerator": "886599215686214988034031",
+          "denominator": "200000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5632156763536659",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "49408448605554948293951368261783",
+          "denominator": "112850828223658415097626642026345"
+        },
+        "sine": {
+          "numerator": "101459916406223664901957884051456",
+          "denominator": "112850828223658415097626642026345"
+        },
+        "angleRadiansApprox": 1.1176228609475691
+      }
+    },
+    {
+      "id": 40,
+      "center": {
+        "x": {
+          "numerator": "2049723469982517217717",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "35329236136195454334621",
+          "denominator": "10000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5632156764719243",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "49408448592233951344452390651015",
+          "denominator": "112850828236979412047125619637113"
+        },
+        "sine": {
+          "numerator": "101459916427527204348895126618112",
+          "denominator": "112850828236979412047125619637113"
+        },
+        "angleRadiansApprox": 1.1176228611363452
+      }
+    },
+    {
+      "id": 41,
+      "center": {
+        "x": {
+          "numerator": "36166568020594480648463",
+          "denominator": "10000000000000000000000"
+        },
+        "y": {
+          "numerator": "446656967831027327016643",
+          "denominator": "100000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5632156763404443",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "49408448607044270771229413003815",
+          "denominator": "112850828222169092620348597284313"
+        },
+        "sine": {
+          "numerator": "101459916403841873188628214054912",
+          "denominator": "112850828222169092620348597284313"
+        },
+        "angleRadiansApprox": 1.1176228609264636
+      }
+    },
+    {
+      "id": 42,
+      "center": {
+        "x": {
+          "numerator": "63576711274393756929897",
+          "denominator": "20000000000000000000000"
+        },
+        "y": {
+          "numerator": "17837533572587939737711",
+          "denominator": "5000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "2816078381761193",
+          "denominator": "4503599627370496"
+        },
+        "cosine": {
+          "numerator": "12352112151428930960230770502767",
+          "denominator": "28212707055874409887663732069265"
+        },
+        "sine": {
+          "numerator": "25364979101491636348008011923456",
+          "denominator": "28212707055874409887663732069265"
+        },
+        "angleRadiansApprox": 1.1176228609452907
+      }
+    },
+    {
+      "id": 43,
+      "center": {
+        "x": {
+          "numerator": "856566976717309893409",
+          "denominator": "312500000000000000000"
+        },
+        "y": {
+          "numerator": "2668443750665526197907",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5632156763337777",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "49408448607795217496803209842335",
+          "denominator": "112850828221418145894774800445793"
+        },
+        "sine": {
+          "numerator": "101459916402640925297595088109568",
+          "denominator": "112850828221418145894774800445793"
+        },
+        "angleRadiansApprox": 1.1176228609158216
+      }
+    },
+    {
+      "id": 44,
+      "center": {
+        "x": {
+          "numerator": "106875586246705254082861",
+          "denominator": "25000000000000000000000"
+        },
+        "y": {
+          "numerator": "17672400881659054642407",
+          "denominator": "5000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5632156762881879",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "49408448612930595504779698573423",
+          "denominator": "112850828216282767886798311714705"
+        },
+        "sine": {
+          "numerator": "101459916394428197045919270567936",
+          "denominator": "112850828216282767886798311714705"
+        },
+        "angleRadiansApprox": 1.1176228608430465
+      }
+    },
+    {
+      "id": 45,
+      "center": {
+        "x": {
+          "numerator": "19186011058711929351901",
+          "denominator": "5000000000000000000000"
+        },
+        "y": {
+          "numerator": "52708344248991820191413",
+          "denominator": "20000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "352009797681423",
+          "denominator": "562949953421312"
+        },
+        "cosine": {
+          "numerator": "193001752393340997107576496415",
+          "denominator": "440823547720773703640775106273"
+        },
+        "sine": {
+          "numerator": "396327798417205077407749373952",
+          "denominator": "440823547720773703640775106273"
+        },
+        "angleRadiansApprox": 1.117622860846381
+      }
+    },
+    {
+      "id": 46,
+      "center": {
+        "x": {
+          "numerator": "2931723003754241605559",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "106902764972921640516497",
+          "denominator": "20000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5464208213448957",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "51272067014683639273219760756215",
+          "denominator": "110987209814529724118358249531913"
+        },
+        "sine": {
+          "numerator": "98434424295854105659956095090688",
+          "denominator": "110987209814529724118358249531913"
+        },
+        "angleRadiansApprox": 1.090588232309155
+      }
+    },
+    {
+      "id": 47,
+      "center": {
+        "x": {
+          "numerator": "4484861070815480752179",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "12372954671962730476913",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5464208214015789",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "51272067008489063132807063851543",
+          "denominator": "110987209820724300258770946436585"
+        },
+        "sine": {
+          "numerator": "98434424306065243195882787045376",
+          "denominator": "110987209820724300258770946436585"
+        },
+        "angleRadiansApprox": 1.0905882324011578
+      }
+    },
+    {
+      "id": 48,
+      "center": {
+        "x": {
+          "numerator": "6701562966529022767183",
+          "denominator": "2500000000000000000000"
+        },
+        "y": {
+          "numerator": "1417618258060573256049",
+          "denominator": "200000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5464762968913821",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "51266004108194882350592480324023",
+          "denominator": "110993272721018481040985529964105"
+        },
+        "sine": {
+          "numerator": "98444417881873478686701848100864",
+          "denominator": "110993272721018481040985529964105"
+        },
+        "angleRadiansApprox": 1.0906782725317214
+      }
+    },
+    {
+      "id": 49,
+      "center": {
+        "x": {
+          "numerator": "34156382735875151257501",
+          "denominator": "10000000000000000000000"
+        },
+        "y": {
+          "numerator": "627872344777532875881",
+          "denominator": "100000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "43539620075845",
+          "denominator": "70368744177664"
+        },
+        "cosine": {
+          "numerator": "3056061640792596136044032871",
+          "denominator": "6847458673490446063148960921"
+        },
+        "sine": {
+          "numerator": "6127656773419640899669852160",
+          "denominator": "6847458673490446063148960921"
+        },
+        "angleRadiansApprox": 1.1081632240885906
+      }
+    },
+    {
+      "id": 50,
+      "center": {
+        "x": {
+          "numerator": "3960440707306688101431",
+          "denominator": "800000000000000000000"
+        },
+        "y": {
+          "numerator": "26252450030247848625397",
+          "denominator": "10000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "2786535685081993",
+          "denominator": "4503599627370496"
+        },
+        "cosine": {
+          "numerator": "12517628479416298358100118433967",
+          "denominator": "28047190727887042489794384138065"
+        },
+        "sine": {
+          "numerator": "25098882145979706928793498157056",
+          "denominator": "28047190727887042489794384138065"
+        },
+        "angleRadiansApprox": 1.1081632241617836
+      }
+    },
+    {
+      "id": 51,
+      "center": {
+        "x": {
+          "numerator": "167443265812385385693",
+          "denominator": "100000000000000000000"
+        },
+        "y": {
+          "numerator": "2677404082100034643047",
+          "denominator": "500000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "2732104107007903",
+          "denominator": "4503599627370496"
+        },
+        "cosine": {
+          "numerator": "12818016752122219337431946828607",
+          "denominator": "27746802455181121510462555743425"
+        },
+        "sine": {
+          "numerator": "24608606076516387360164362059776",
+          "denominator": "27746802455181121510462555743425"
+        },
+        "angleRadiansApprox": 1.0905882324011604
+      }
+    },
+    {
+      "id": 52,
+      "center": {
+        "x": {
+          "numerator": "94521494102994776308453",
+          "denominator": "20000000000000000000000"
+        },
+        "y": {
+          "numerator": "221905383049642280755561",
+          "denominator": "50000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "1376920440413251",
+          "denominator": "2251799813685248"
+        },
+        "cosine": {
+          "numerator": "3174692501685096508315156432503",
+          "denominator": "6966512300140738703658469210505"
+        },
+        "sine": {
+          "numerator": "6201098382363936444948724842496",
+          "denominator": "6966512300140738703658469210505"
+        },
+        "angleRadiansApprox": 1.0976293497560146
+      }
+    },
+    {
+      "id": 53,
+      "center": {
+        "x": {
+          "numerator": "14902362890409109223287",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "5418768412079866186741",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "2816078381678437",
+          "denominator": "4503599627370496"
+        },
+        "cosine": {
+          "numerator": "12352112151895025725345980523047",
+          "denominator": "28212707055408315122548522048985"
+        },
+        "sine": {
+          "numerator": "25364979100746236566482666389504",
+          "denominator": "28212707055408315122548522048985"
+        },
+        "angleRadiansApprox": 1.11762286091887
+      }
+    },
+    {
+      "id": 54,
+      "center": {
+        "x": {
+          "numerator": "25262814335387949844611",
+          "denominator": "4000000000000000000000"
+        },
+        "y": {
+          "numerator": "5371113250556831872973",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "1408039190806357",
+          "denominator": "2251799813685248"
+        },
+        "cosine": {
+          "numerator": "3088028038066296991074941210055",
+          "denominator": "7053176763759538220898684432953"
+        },
+        "sine": {
+          "numerator": "6341244775038564102465831043072",
+          "denominator": "7053176763759538220898684432953"
+        },
+        "angleRadiansApprox": 1.1176228608978873
+      }
+    },
+    {
+      "id": 55,
+      "center": {
+        "x": {
+          "numerator": "6753760971215900960201",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "125413222896673329519053",
+          "denominator": "20000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "2816078381475681",
+          "denominator": "4503599627370496"
+        },
+        "cosine": {
+          "numerator": "12352112153036979302016056872255",
+          "denominator": "28212707054266361545878445699777"
+        },
+        "sine": {
+          "numerator": "25364979098919972874388401815552",
+          "denominator": "28212707054266361545878445699777"
+        },
+        "angleRadiansApprox": 1.117622860854138
+      }
+    },
+    {
+      "id": 56,
+      "center": {
+        "x": {
+          "numerator": "20746932792399094096131",
+          "denominator": "4000000000000000000000"
+        },
+        "y": {
+          "numerator": "5336821146835956595487",
+          "denominator": "1000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5632156761192389",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "49408448631961540560567933616743",
+          "denominator": "112850828197251822831010076671385"
+        },
+        "sine": {
+          "numerator": "101459916363993050908134553419776",
+          "denominator": "112850828197251822831010076671385"
+        },
+        "angleRadiansApprox": 1.117622860573353
+      }
+    },
+    {
+      "id": 57,
+      "center": {
+        "x": {
+          "numerator": "22498217746053573040513",
+          "denominator": "4000000000000000000000"
+        },
+        "y": {
+          "numerator": "3117942055325115424977",
+          "denominator": "500000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5632156763220881",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "49408448609111970690803810727903",
+          "denominator": "112850828220101392700774199560225"
+        },
+        "sine": {
+          "numerator": "101459916400535114169430682107904",
+          "denominator": "112850828220101392700774199560225"
+        },
+        "angleRadiansApprox": 1.1176228608971615
+      }
+    },
+    {
+      "id": 58,
+      "center": {
+        "x": {
+          "numerator": "24249502700121161624713",
+          "denominator": "4000000000000000000000"
+        },
+        "y": {
+          "numerator": "14269894148106908274709",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5632156760814655",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "49408448636216454764489742375039",
+          "denominator": "112850828192996908627088267913089"
+        },
+        "sine": {
+          "numerator": "101459916357188400101553885675520",
+          "denominator": "112850828192996908627088267913089"
+        },
+        "angleRadiansApprox": 1.1176228605130551
+      }
+    },
+    {
+      "id": 59,
+      "center": {
+        "x": {
+          "numerator": "905673310081942452951347",
+          "denominator": "200000000000000000000000"
+        },
+        "y": {
+          "numerator": "62689106488827495562537",
+          "denominator": "10000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "2816078381313509",
+          "denominator": "4503599627370496"
+        },
+        "cosine": {
+          "numerator": "12352112153950357428551105392935",
+          "denominator": "28212707053352983419343397179097"
+        },
+        "sine": {
+          "numerator": "25364979097459257356848545660928",
+          "denominator": "28212707053352983419343397179097"
+        },
+        "angleRadiansApprox": 1.117622860802363
+      }
+    },
+    {
+      "id": 60,
+      "center": {
+        "x": {
+          "numerator": "6207734735594462114643",
+          "denominator": "1250000000000000000000"
+        },
+        "y": {
+          "numerator": "111999587707520204633",
+          "denominator": "15625000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "1408039192016765",
+          "denominator": "2251799813685248"
+        },
+        "cosine": {
+          "numerator": "3088028034657693187878771756279",
+          "denominator": "7053176767168142024094853886729"
+        },
+        "sine": {
+          "numerator": "6341244780489757120232098365440",
+          "denominator": "7053176767168142024094853886729"
+        },
+        "angleRadiansApprox": 1.117622861670758
+      }
+    },
+    {
+      "id": 61,
+      "center": {
+        "x": {
+          "numerator": "117444904813482245362213",
+          "denominator": "20000000000000000000000"
+        },
+        "y": {
+          "numerator": "89187254325809839921147",
+          "denominator": "20000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "1366052053884297",
+          "denominator": "2251799813685248"
+        },
+        "cosine": {
+          "numerator": "3204504186991411331581349637295",
+          "denominator": "6936700614834423880392276005713"
+        },
+        "sine": {
+          "numerator": "6152151520842020692113135501312",
+          "denominator": "6936700614834423880392276005713"
+        },
+        "angleRadiansApprox": 1.090588232648097
+      }
+    },
+    {
+      "id": 62,
+      "center": {
+        "x": {
+          "numerator": "65609594647342030193213",
+          "denominator": "10000000000000000000000"
+        },
+        "y": {
+          "numerator": "36169134893061189196487",
+          "denominator": "10000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "2732104107769391",
+          "denominator": "4503599627370496"
+        },
+        "cosine": {
+          "numerator": "12818016747961290352377614775135",
+          "denominator": "27746802459342050495516887796897"
+        },
+        "sine": {
+          "numerator": "24608606083375261506258570575872",
+          "denominator": "27746802459342050495516887796897"
+        },
+        "angleRadiansApprox": 1.0905882326483556
+      }
+    },
+    {
+      "id": 63,
+      "center": {
+        "x": {
+          "numerator": "12246589915802318849391",
+          "denominator": "2000000000000000000000"
+        },
+        "y": {
+          "numerator": "5432628519582636322369",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5464858645653259",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "51264958397635509483214147822983",
+          "denominator": "110994318431577853908363862465145"
+        },
+        "sine": {
+          "numerator": "98446141440785802690057371385856",
+          "denominator": "110994318431577853908363862465145"
+        },
+        "angleRadiansApprox": 1.090693800957463
+      }
+    },
+    {
+      "id": 64,
+      "center": {
+        "x": {
+          "numerator": "2155100690464442826381",
+          "denominator": "400000000000000000000"
+        },
+        "y": {
+          "numerator": "70493347528655967632999",
+          "denominator": "20000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5573071370159887",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "50070513917710881471493061291295",
+          "denominator": "112188762911502481920084948996833"
+        },
+        "sine": {
+          "numerator": "100395528583844986695683625975808",
+          "denominator": "112188762911502481920084948996833"
+        },
+        "angleRadiansApprox": 1.1081632241611254
+      }
+    },
+    {
+      "id": 65,
+      "center": {
+        "x": {
+          "numerator": "77057763730501133079487",
+          "denominator": "20000000000000000000000"
+        },
+        "y": {
+          "numerator": "14356242700304365054597",
+          "denominator": "2000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5573071395030533",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "50070513640499110492981002879975",
+          "denominator": "112188763188714252898597007408153"
+        },
+        "sine": {
+          "numerator": "100395529031874714927937693417472",
+          "denominator": "112188763188714252898597007408153"
+        },
+        "angleRadiansApprox": 1.1081632281546603
+      }
+    },
+    {
+      "id": 66,
+      "center": {
+        "x": {
+          "numerator": "7128957341944422594893",
+          "denominator": "1000000000000000000000"
+        },
+        "y": {
+          "numerator": "444858266120091005101327",
+          "denominator": "100000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5464208215995667",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "51272066986852131868188842369175",
+          "denominator": "110987209842361231523389167918953"
+        },
+        "sine": {
+          "numerator": "98434424341731554488038958563328",
+          "denominator": "110987209842361231523389167918953"
+        },
+        "angleRadiansApprox": 1.090588232722513
+      }
+    },
+    {
+      "id": 67,
+      "center": {
+        "x": {
+          "numerator": "81546305902067158856123",
+          "denominator": "20000000000000000000000"
+        },
+        "y": {
+          "numerator": "107305663285558943317927",
+          "denominator": "20000000000000000000000"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "5507681761897423",
+          "denominator": "9007199254740992"
+        },
+        "cosine": {
+          "numerator": "50795080024269179995979831103135",
+          "denominator": "111464196804944183395598179184993"
+        },
+        "sine": {
+          "numerator": "99217574122226044388468674527232",
+          "denominator": "111464196804944183395598179184993"
+        },
+        "angleRadiansApprox": 1.0976293497955165
+      }
+    }
+  ],
+  "certificate": {
+    "method": "exact-rational-separating-axis",
+    "minimumContainmentMargin": {
+      "numerator": "5154954767921",
+      "denominator": "12500000000000000000"
+    },
+    "minimumSeparationMargin": {
+      "numerator": "33790981694736752204335155020212988241185332741475120089719067611361669415006833",
+      "denominator": "41007952692274005840822014420944131162422155714664268782544826820000000000000000000000"
+    },
+    "orientationReconstruction": "rational tangent-half-angle with denominator at most 10^16"
+  },
+  "provenance": {
+    "source": "square-packing-research",
+    "sourceOptimizedContainerSide": "8.803382745920594",
+    "importedAt": "2026-08-16"
+  }
+}

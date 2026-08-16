@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.vite/
+.lake/
+build/
+lake-packages/
+apps/web/src/generated/archive.json
+playwright-report/
+test-results/
+__pycache__/
+*.pyc

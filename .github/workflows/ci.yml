@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  archive-and-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.22
+      - run: bun install --frozen-lockfile
+      - run: bun run archive:build
+      - run: bun run check
+      - run: bun run test
+      - run: bunx playwright install --with-deps chromium
+      - run: bun run test:e2e
+      - run: bun run format:check
+      - run: bun run build
+
+  lean:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: formal
+    steps:
+      - uses: actions/checkout@v5
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+      - name: Reject unfinished proofs
+        run: |
+          if grep -R --line-number --word-regexp sorry SquarePackingArchive SquarePackingArchive.lean; then
+            exit 1
+          fi

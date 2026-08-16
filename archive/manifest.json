@@ -1,0 +1,860 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-16",
+  "problem": {
+    "symbol": "s",
+    "name": "Packing unit squares in a square",
+    "definition": "s(n) is the infimum side length of a square container that can hold n pairwise interior-disjoint unit squares with arbitrary rotations."
+  },
+  "authors": [
+    { "id": "bentz", "name": "Wolfram Bentz" },
+    { "id": "brendberg", "name": "Sigvart Brendberg" },
+    { "id": "cantrell", "name": "David W. Cantrell" },
+    {
+      "id": "chelokot",
+      "name": "chelokot",
+      "links": [{ "label": "GitHub", "url": "https://github.com/chelokot" }]
+    },
+    {
+      "id": "ellsworth",
+      "name": "David Ellsworth",
+      "links": [{ "label": "GitHub", "url": "https://github.com/Davidebyzero" }]
+    },
+    {
+      "id": "friedman",
+      "name": "Erich Friedman",
+      "links": [
+        { "label": "Website", "url": "https://erich-friedman.github.io/" }
+      ]
+    },
+    { "id": "goebel", "name": "Frits Göbel" },
+    { "id": "hamalainen", "name": "Pertti Hämäläinen" },
+    { "id": "kearney", "name": "Michael Kearney" },
+    { "id": "morandi", "name": "Maurizio Morandi" },
+    { "id": "nagamochi", "name": "Hiroshi Nagamochi" },
+    {
+      "id": "schadt",
+      "name": "Thomas Schadt",
+      "links": [
+        { "label": "GitHub", "url": "https://github.com/BalthasarStrauss" }
+      ]
+    },
+    { "id": "shiu", "name": "Peter Shiu" },
+    { "id": "stromquist", "name": "Walter Stromquist" },
+    { "id": "trump", "name": "Walter Trump" }
+  ],
+  "sources": [
+    {
+      "id": "tracker-current",
+      "kind": "tracker",
+      "title": "Squares in Squares",
+      "authors": ["ellsworth", "friedman"],
+      "url": "https://kingbird.myphotos.cc/packing/squares_in_squares.html",
+      "accessedAt": "2026-08-16"
+    },
+    {
+      "id": "tracker-history",
+      "kind": "tracker",
+      "title": "Squares in Squares: Older and Alternative Packings",
+      "authors": ["ellsworth", "friedman"],
+      "url": "https://kingbird.myphotos.cc/packing/squares_in_squares__compared.html",
+      "accessedAt": "2026-08-16"
+    },
+    {
+      "id": "friedman-survey",
+      "kind": "publication",
+      "title": "Packing Unit Squares in Squares: A Survey and New Results",
+      "authors": ["friedman"],
+      "url": "https://doi.org/10.37236/28",
+      "publishedAt": "2005"
+    },
+    {
+      "id": "kearney-shiu-2002",
+      "kind": "publication",
+      "title": "Efficient Packing of Unit Squares in a Square",
+      "authors": ["kearney", "shiu"],
+      "url": "https://www.combinatorics.org/ojs/index.php/eljc/article/view/v9i1r14",
+      "publishedAt": "2002"
+    },
+    {
+      "id": "stromquist-2003",
+      "kind": "publication",
+      "title": "Packing 10 or 11 Unit Squares in a Square",
+      "authors": ["stromquist"],
+      "url": "https://www.combinatorics.org/ojs/index.php/eljc/article/view/v10i1r8",
+      "publishedAt": "2003"
+    },
+    {
+      "id": "nagamochi-2005",
+      "kind": "publication",
+      "title": "Packing Unit Squares in a Rectangle",
+      "authors": ["nagamochi"],
+      "url": "https://doi.org/10.37236/1934",
+      "publishedAt": "2005"
+    },
+    {
+      "id": "bentz-2010",
+      "kind": "publication",
+      "title": "Optimal Packings of 13 and 46 Unit Squares in a Square",
+      "authors": ["bentz"],
+      "url": "https://doi.org/10.37236/398",
+      "publishedAt": "2010"
+    },
+    {
+      "id": "bentz-2018",
+      "kind": "preprint",
+      "title": "Optimal Packings of 22 and 33 Unit Squares in a Square",
+      "authors": ["bentz"],
+      "url": "https://arxiv.org/abs/1606.03746",
+      "publishedAt": "2018"
+    },
+    {
+      "id": "archive-research-2026",
+      "kind": "repository",
+      "title": "Square packing research pipeline",
+      "authors": ["chelokot"],
+      "url": "https://github.com/chelokot/square-packing-archive/tree/main/archive/configurations",
+      "publishedAt": "2026"
+    }
+  ],
+  "claims": [
+    {
+      "id": "exact-1-grid",
+      "n": 1,
+      "relation": "exact",
+      "value": { "decimal": "1", "expression": "1" },
+      "announcedAt": "1975",
+      "contributors": [],
+      "evidence": [
+        {
+          "kind": "elementary-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Basic.lean",
+          "theorem": "SquarePackingArchive.Records.Basic.s1_eq_one"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-2-goebel",
+      "n": 2,
+      "relation": "exact",
+      "value": { "decimal": "2", "expression": "2" },
+      "announcedAt": "1979",
+      "contributors": [{ "author": "goebel", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-3-goebel",
+      "n": 3,
+      "relation": "exact",
+      "value": { "decimal": "2", "expression": "2" },
+      "announcedAt": "1979",
+      "contributors": [{ "author": "goebel", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-4-grid",
+      "n": 4,
+      "relation": "exact",
+      "value": { "decimal": "2", "expression": "2" },
+      "announcedAt": "1975",
+      "contributors": [],
+      "evidence": [
+        {
+          "kind": "elementary-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-5-goebel",
+      "n": 5,
+      "relation": "exact",
+      "value": { "decimal": "2.70710678118654", "expression": "2 + √2 / 2" },
+      "announcedAt": "1979",
+      "contributors": [{ "author": "goebel", "role": "discoverer-and-prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-6-kearney-shiu",
+      "n": 6,
+      "relation": "exact",
+      "value": { "decimal": "3", "expression": "3" },
+      "announcedAt": "2001-06",
+      "contributors": [
+        { "author": "kearney", "role": "prover" },
+        { "author": "shiu", "role": "prover" }
+      ],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "kearney-shiu-2002"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-7-friedman",
+      "n": 7,
+      "relation": "exact",
+      "value": { "decimal": "3", "expression": "3" },
+      "announcedAt": "1999",
+      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-8-friedman",
+      "n": 8,
+      "relation": "exact",
+      "value": { "decimal": "3", "expression": "3" },
+      "announcedAt": "1999",
+      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-9-grid",
+      "n": 9,
+      "relation": "exact",
+      "value": { "decimal": "3", "expression": "3" },
+      "announcedAt": "1975",
+      "contributors": [],
+      "evidence": [
+        {
+          "kind": "elementary-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-10-stromquist",
+      "n": 10,
+      "relation": "exact",
+      "value": { "decimal": "3.70710678118654", "expression": "3 + √2 / 2" },
+      "announcedAt": "2003",
+      "contributors": [
+        { "author": "goebel", "role": "discoverer" },
+        { "author": "stromquist", "role": "prover" }
+      ],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "stromquist-2003"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "upper-11-goebel",
+      "n": 11,
+      "relation": "upper",
+      "value": { "decimal": "3.91421356237309", "expression": "5 / 2 + √2" },
+      "announcedAt": "1979",
+      "contributors": [{ "author": "goebel", "role": "discoverer" }],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-history"
+        }
+      ],
+      "active": false
+    },
+    {
+      "id": "upper-11-hamalainen",
+      "n": 11,
+      "relation": "upper",
+      "value": { "decimal": "3.88561808316412", "expression": "2 + 4√2 / 3" },
+      "announcedAt": "1980",
+      "contributors": [{ "author": "hamalainen", "role": "discoverer" }],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-history"
+        }
+      ],
+      "supersedes": "upper-11-goebel",
+      "active": false
+    },
+    {
+      "id": "upper-11-trump",
+      "n": 11,
+      "relation": "upper",
+      "value": {
+        "decimal": "3.87708359002281",
+        "expression": "largest relevant root of degree-8 record polynomial",
+        "polynomial": "s^8 - 20s^7 + 178s^6 - 842s^5 + 1923s^4 - 496s^3 - 6754s^2 + 12420s - 6865"
+      },
+      "announcedAt": "1979",
+      "contributors": [{ "author": "trump", "role": "discoverer" }],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-current"
+        }
+      ],
+      "supersedes": "upper-11-hamalainen",
+      "active": true
+    },
+    {
+      "id": "upper-12-grid",
+      "n": 12,
+      "relation": "upper",
+      "value": { "decimal": "4", "expression": "4" },
+      "announcedAt": "1975",
+      "contributors": [],
+      "evidence": [
+        {
+          "kind": "elementary-construction",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-13-bentz",
+      "n": 13,
+      "relation": "exact",
+      "value": { "decimal": "4", "expression": "4" },
+      "announcedAt": "2009-08",
+      "contributors": [{ "author": "bentz", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "bentz-2010"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-14-friedman",
+      "n": 14,
+      "relation": "exact",
+      "value": { "decimal": "4", "expression": "4" },
+      "announcedAt": "1999",
+      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-15-friedman",
+      "n": 15,
+      "relation": "exact",
+      "value": { "decimal": "4", "expression": "4" },
+      "announcedAt": "1999",
+      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-16-grid",
+      "n": 16,
+      "relation": "exact",
+      "value": { "decimal": "4", "expression": "4" },
+      "announcedAt": "1975",
+      "contributors": [],
+      "evidence": [
+        {
+          "kind": "elementary-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-22-bentz",
+      "n": 22,
+      "relation": "exact",
+      "value": { "decimal": "5", "expression": "5" },
+      "announcedAt": "2018-10",
+      "contributors": [{ "author": "bentz", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "bentz-2018"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-23-nagamochi",
+      "n": 23,
+      "relation": "exact",
+      "value": { "decimal": "5", "expression": "5" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-24-friedman",
+      "n": 24,
+      "relation": "exact",
+      "value": { "decimal": "5", "expression": "5" },
+      "announcedAt": "1999",
+      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-25-grid",
+      "n": 25,
+      "relation": "exact",
+      "value": { "decimal": "5", "expression": "5" },
+      "announcedAt": "1975",
+      "contributors": [],
+      "evidence": [
+        {
+          "kind": "elementary-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-33-bentz",
+      "n": 33,
+      "relation": "exact",
+      "value": { "decimal": "6", "expression": "6" },
+      "announcedAt": "2018-10",
+      "contributors": [{ "author": "bentz", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "bentz-2018"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-34-nagamochi",
+      "n": 34,
+      "relation": "exact",
+      "value": { "decimal": "6", "expression": "6" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-35-nagamochi",
+      "n": 35,
+      "relation": "exact",
+      "value": { "decimal": "6", "expression": "6" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-36-grid",
+      "n": 36,
+      "relation": "exact",
+      "value": { "decimal": "6", "expression": "6" },
+      "announcedAt": "1975",
+      "contributors": [],
+      "evidence": [
+        {
+          "kind": "elementary-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-46-bentz",
+      "n": 46,
+      "relation": "exact",
+      "value": { "decimal": "7", "expression": "7" },
+      "announcedAt": "2009-08",
+      "contributors": [{ "author": "bentz", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "bentz-2010"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-47-nagamochi",
+      "n": 47,
+      "relation": "exact",
+      "value": { "decimal": "7", "expression": "7" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-48-nagamochi",
+      "n": 48,
+      "relation": "exact",
+      "value": { "decimal": "7", "expression": "7" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-49-grid",
+      "n": 49,
+      "relation": "exact",
+      "value": { "decimal": "7", "expression": "7" },
+      "announcedAt": "1975",
+      "contributors": [],
+      "evidence": [
+        {
+          "kind": "elementary-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-62-nagamochi",
+      "n": 62,
+      "relation": "exact",
+      "value": { "decimal": "8", "expression": "8" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-63-nagamochi",
+      "n": 63,
+      "relation": "exact",
+      "value": { "decimal": "8", "expression": "8" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-64-grid",
+      "n": 64,
+      "relation": "exact",
+      "value": { "decimal": "8", "expression": "8" },
+      "announcedAt": "1975",
+      "contributors": [],
+      "evidence": [
+        {
+          "kind": "elementary-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "upper-68-brendberg",
+      "n": 68,
+      "relation": "upper",
+      "value": { "decimal": "8.80357394752856" },
+      "announcedAt": "2023-06",
+      "contributors": [{ "author": "brendberg", "role": "discoverer" }],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-history"
+        }
+      ],
+      "active": false
+    },
+    {
+      "id": "upper-68-schadt-ellsworth",
+      "n": 68,
+      "relation": "upper",
+      "value": { "decimal": "8.80345993651653" },
+      "announcedAt": "2025-12",
+      "contributors": [
+        { "author": "schadt", "role": "optimizer" },
+        { "author": "ellsworth", "role": "optimizer" }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-current"
+        }
+      ],
+      "supersedes": "upper-68-brendberg",
+      "active": false
+    },
+    {
+      "id": "upper-68-archive",
+      "n": 68,
+      "relation": "upper",
+      "value": { "decimal": "8.80339" },
+      "announcedAt": "2026-08-16",
+      "contributors": [{ "author": "chelokot", "role": "optimizer" }],
+      "evidence": [
+        {
+          "kind": "interval-certificate",
+          "status": "computationally-checked",
+          "source": "archive-research-2026",
+          "artifact": "square-68"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square68.lean",
+          "theorem": "SquarePackingArchive.Records.Square68.s68_le_8_80339"
+        }
+      ],
+      "configuration": "square-68",
+      "supersedes": "upper-68-schadt-ellsworth",
+      "active": true
+    },
+    {
+      "id": "upper-69-morandi-cantrell",
+      "n": 69,
+      "relation": "upper",
+      "value": { "decimal": "8.82721205592900" },
+      "announcedAt": "2023-08",
+      "contributors": [
+        { "author": "morandi", "role": "discoverer" },
+        { "author": "cantrell", "role": "optimizer" }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-current"
+        }
+      ],
+      "active": false
+    },
+    {
+      "id": "upper-69-archive",
+      "n": 69,
+      "relation": "upper",
+      "value": { "decimal": "8.8272" },
+      "announcedAt": "2026-08-16",
+      "contributors": [{ "author": "chelokot", "role": "optimizer" }],
+      "evidence": [
+        {
+          "kind": "interval-certificate",
+          "status": "computationally-checked",
+          "source": "archive-research-2026",
+          "artifact": "square-69"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square69.lean",
+          "theorem": "SquarePackingArchive.Records.Square69.s69_le_8_8272"
+        }
+      ],
+      "configuration": "square-69",
+      "supersedes": "upper-69-morandi-cantrell",
+      "active": true
+    },
+    {
+      "id": "exact-79-nagamochi",
+      "n": 79,
+      "relation": "exact",
+      "value": { "decimal": "9", "expression": "9" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-80-nagamochi",
+      "n": 80,
+      "relation": "exact",
+      "value": { "decimal": "9", "expression": "9" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-81-grid",
+      "n": 81,
+      "relation": "exact",
+      "value": { "decimal": "9", "expression": "9" },
+      "announcedAt": "1975",
+      "contributors": [],
+      "evidence": [
+        {
+          "kind": "elementary-proof",
+          "status": "published",
+          "source": "friedman-survey"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-98-nagamochi",
+      "n": 98,
+      "relation": "exact",
+      "value": { "decimal": "10", "expression": "10" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "exact-99-nagamochi",
+      "n": 99,
+      "relation": "exact",
+      "value": { "decimal": "10", "expression": "10" },
+      "announcedAt": "2005",
+      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "evidence": [
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "nagamochi-2005"
+        }
+      ],
+      "active": true
+    }
+  ],
+  "configurations": [
+    { "id": "square-68", "path": "configurations/square-68.json" },
+    { "id": "square-69", "path": "configurations/square-69.json" }
+  ]
+}
