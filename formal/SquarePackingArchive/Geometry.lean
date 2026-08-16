@@ -12,6 +12,14 @@ structure Frame where
   sine : ℝ
   unit : cosine ^ 2 + sine ^ 2 = 1
 
+lemma Frame.cosine_le_one (frame : Frame) (cosine_nonnegative : 0 ≤ frame.cosine) :
+    frame.cosine ≤ 1 := by
+  nlinarith [frame.unit, sq_nonneg frame.sine]
+
+lemma Frame.sine_le_one (frame : Frame) (sine_nonnegative : 0 ≤ frame.sine) :
+    frame.sine ≤ 1 := by
+  nlinarith [frame.unit, sq_nonneg frame.cosine]
+
 def Frame.place (frame : Frame) (localX localY : ℝ) : Point :=
   ⟨localX * frame.cosine - localY * frame.sine,
     localX * frame.sine + localY * frame.cosine⟩

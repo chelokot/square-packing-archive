@@ -19,3 +19,20 @@ The archive does not mark the near-square family as verified until the full
 seven-case geometric score theorem is connected to these checked analytic
 lemmas. Intermediate reductions are intentionally not treated as proof of the
 historical claim.
+
+The current Case 3 layer now includes exact formulas for both kinds of
+opposite-edge horizontal chord, proofs that their open chords lie in the
+dilated square, and the score consequences used in the paper. Two distinct
+boundary-line chords of length at least the dilation factor have combined score
+greater than one. A single such chord together with at least half of the
+dilated square's area in the inner rectangle also has score greater than one.
+The remaining work is the exhaustive geometric classification that derives
+these measure hypotheses from the position of every admissible square, plus
+the corresponding Case 2 and Cases 4–7 bridges.
+
+For Case 2, the formal layer also contains the aggregate compensation theorem:
+if the central-area score plus a stated loss covers the full dilated-square
+area, and the boundary-line score covers that loss, then the total score is
+greater than one. The remaining Case 2 obligation is geometric: construct the
+finite family of cut-off triangles and derive those two inequalities from the
+strict chord-versus-triangle lemma.

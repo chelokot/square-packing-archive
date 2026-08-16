@@ -339,6 +339,14 @@ lemma NagamochiResource.boundaryLines_le_measure
     _ ≤ _ + NagamochiResource.edgePoints size region :=
       le_add_of_nonneg_right bot_le
 
+lemma NagamochiResource.innerArea_add_boundaryLines_le_measure
+    (size : ℕ) (region : Set Plane) :
+    NagamochiResource.innerArea size region +
+        NagamochiResource.boundaryLines size region ≤
+      NagamochiResource.measure size region := by
+  simp only [NagamochiResource.measure, Measure.coe_add, Pi.add_apply]
+  exact (le_add_of_nonneg_right bot_le).trans (le_add_of_nonneg_right bot_le)
+
 lemma NagamochiResource.cornerPoints_univ (size : ℕ) :
     NagamochiResource.cornerPoints size univ = 18 / 5 := by
   simp [NagamochiResource.cornerPoints]

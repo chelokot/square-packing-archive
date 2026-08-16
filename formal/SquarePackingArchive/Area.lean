@@ -343,6 +343,82 @@ noncomputable def PlacedSquare.horizontalAdjacentOtherUpper
     (factor / 2 - (height - factor * square.center.y) * square.frame.sine) /
       square.frame.cosine
 
+lemma PlacedSquare.horizontalChord_inside_dilatedInteriorRegion
+    (square : PlacedSquare) {factor height intervalStart intervalEnd : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (x_lower_at_most :
+      square.horizontalAdjacentChordStart factor height ≤ intervalStart)
+    (y_lower_at_most :
+      square.horizontalAdjacentOtherLower factor height ≤ intervalStart)
+    (end_at_most_x_upper :
+      intervalEnd ≤ square.horizontalAdjacentOtherUpper factor height)
+    (end_at_most_y_upper :
+      intervalEnd ≤ square.horizontalAdjacentChordEnd factor height) :
+    ∀ coordinate ∈ Ioo intervalStart intervalEnd,
+      ![coordinate, height] ∈ square.dilatedInteriorRegion factor := by
+  intro coordinate coordinate_mem
+  apply square.mem_dilatedInteriorRegion_of_inverse_bounds factor_positive
+  · rw [abs_lt]
+    constructor
+    · have lower_lt_coordinate :
+          square.horizontalAdjacentChordStart factor height < coordinate :=
+        x_lower_at_most.trans_lt coordinate_mem.1
+      have divided_bound :
+          (-factor / 2 -
+              (height - factor * square.center.y) * square.frame.sine) /
+              square.frame.cosine <
+            coordinate - factor * square.center.x := by
+        dsimp [PlacedSquare.horizontalAdjacentChordStart] at lower_lt_coordinate
+        linarith
+      have multiplied_bound := (div_lt_iff₀ cosine_positive).mp divided_bound
+      simp only [PlacedSquare.dilatedLocalX, Plane.toPoint, Matrix.cons_val_zero,
+        Matrix.cons_val_one]
+      linarith
+    · have coordinate_lt_upper :
+          coordinate < square.horizontalAdjacentOtherUpper factor height :=
+        coordinate_mem.2.trans_le end_at_most_x_upper
+      have divided_bound :
+          coordinate - factor * square.center.x <
+            (factor / 2 -
+              (height - factor * square.center.y) * square.frame.sine) /
+                square.frame.cosine := by
+        dsimp [PlacedSquare.horizontalAdjacentOtherUpper] at coordinate_lt_upper
+        linarith
+      have multiplied_bound := (lt_div_iff₀ cosine_positive).mp divided_bound
+      simp only [PlacedSquare.dilatedLocalX, Plane.toPoint, Matrix.cons_val_zero,
+        Matrix.cons_val_one]
+      linarith
+  · rw [abs_lt]
+    constructor
+    · have coordinate_lt_upper :
+          coordinate < square.horizontalAdjacentChordEnd factor height :=
+        coordinate_mem.2.trans_le end_at_most_y_upper
+      have divided_bound :
+          coordinate - factor * square.center.x <
+            ((height - factor * square.center.y) * square.frame.cosine + factor / 2) /
+              square.frame.sine := by
+        dsimp [PlacedSquare.horizontalAdjacentChordEnd] at coordinate_lt_upper
+        linarith
+      have multiplied_bound := (lt_div_iff₀ sine_positive).mp divided_bound
+      simp only [PlacedSquare.dilatedLocalY, Plane.toPoint, Matrix.cons_val_zero,
+        Matrix.cons_val_one]
+      linarith
+    · have lower_lt_coordinate :
+          square.horizontalAdjacentOtherLower factor height < coordinate :=
+        y_lower_at_most.trans_lt coordinate_mem.1
+      have divided_bound :
+          ((height - factor * square.center.y) * square.frame.cosine - factor / 2) /
+              square.frame.sine <
+            coordinate - factor * square.center.x := by
+        dsimp [PlacedSquare.horizontalAdjacentOtherLower] at lower_lt_coordinate
+        linarith
+      have multiplied_bound := (div_lt_iff₀ sine_positive).mp divided_bound
+      simp only [PlacedSquare.dilatedLocalY, Plane.toPoint, Matrix.cons_val_zero,
+        Matrix.cons_val_one]
+      linarith
+
 lemma PlacedSquare.horizontalAdjacentChord_inside_dilatedInteriorRegion
     (square : PlacedSquare) {factor height : ℝ}
     (factor_positive : 0 < factor)
@@ -358,60 +434,9 @@ lemma PlacedSquare.horizontalAdjacentChord_inside_dilatedInteriorRegion
         Ioo (square.horizontalAdjacentChordStart factor height)
           (square.horizontalAdjacentChordEnd factor height),
       ![coordinate, height] ∈ square.dilatedInteriorRegion factor := by
-  intro coordinate coordinate_mem
-  apply square.mem_dilatedInteriorRegion_of_inverse_bounds factor_positive
-  · rw [abs_lt]
-    constructor
-    · have divided_bound :
-          (-factor / 2 -
-              (height - factor * square.center.y) * square.frame.sine) /
-              square.frame.cosine <
-            coordinate - factor * square.center.x := by
-        dsimp [PlacedSquare.horizontalAdjacentChordStart] at coordinate_mem
-        linarith [coordinate_mem.1]
-      have multiplied_bound := (div_lt_iff₀ cosine_positive).mp divided_bound
-      simp only [PlacedSquare.dilatedLocalX, Plane.toPoint, Matrix.cons_val_zero,
-        Matrix.cons_val_one]
-      linarith
-    · have coordinate_lt_other_upper :
-          coordinate < square.horizontalAdjacentOtherUpper factor height :=
-        coordinate_mem.2.trans_le end_at_most_other_upper
-      have divided_bound :
-          coordinate - factor * square.center.x <
-            (factor / 2 -
-              (height - factor * square.center.y) * square.frame.sine) /
-                square.frame.cosine := by
-        dsimp [PlacedSquare.horizontalAdjacentOtherUpper] at coordinate_lt_other_upper
-        linarith
-      have multiplied_bound := (lt_div_iff₀ cosine_positive).mp divided_bound
-      simp only [PlacedSquare.dilatedLocalX, Plane.toPoint, Matrix.cons_val_zero,
-        Matrix.cons_val_one]
-      linarith
-  · rw [abs_lt]
-    constructor
-    · have divided_bound :
-          coordinate - factor * square.center.x <
-            ((height - factor * square.center.y) * square.frame.cosine + factor / 2) /
-              square.frame.sine := by
-        dsimp [PlacedSquare.horizontalAdjacentChordEnd] at coordinate_mem
-        linarith [coordinate_mem.2]
-      have multiplied_bound := (lt_div_iff₀ sine_positive).mp divided_bound
-      simp only [PlacedSquare.dilatedLocalY, Plane.toPoint, Matrix.cons_val_zero,
-        Matrix.cons_val_one]
-      linarith
-    · have other_lower_lt_coordinate :
-          square.horizontalAdjacentOtherLower factor height < coordinate :=
-        other_lower_at_most.trans_lt coordinate_mem.1
-      have divided_bound :
-          ((height - factor * square.center.y) * square.frame.cosine - factor / 2) /
-              square.frame.sine <
-            coordinate - factor * square.center.x := by
-        dsimp [PlacedSquare.horizontalAdjacentOtherLower] at other_lower_lt_coordinate
-        linarith
-      have multiplied_bound := (div_lt_iff₀ sine_positive).mp divided_bound
-      simp only [PlacedSquare.dilatedLocalY, Plane.toPoint, Matrix.cons_val_zero,
-        Matrix.cons_val_one]
-      linarith
+  exact square.horizontalChord_inside_dilatedInteriorRegion
+    factor_positive cosine_positive sine_positive le_rfl other_lower_at_most
+    end_at_most_other_upper le_rfl
 
 lemma PlacedSquare.horizontalAdjacentChord_length
     (square : PlacedSquare) {factor height : ℝ}
@@ -427,6 +452,88 @@ lemma PlacedSquare.horizontalAdjacentChord_length
   field_simp [cosine_nonzero, sine_nonzero]
   linear_combination
     2 * (height - factor * square.center.y) * square.frame.unit
+
+lemma PlacedSquare.horizontalCosineChord_length
+    (square : PlacedSquare) {factor height : ℝ}
+    (cosine_nonzero : square.frame.cosine ≠ 0) :
+    square.horizontalAdjacentOtherUpper factor height -
+        square.horizontalAdjacentChordStart factor height =
+      factor / square.frame.cosine := by
+  dsimp [PlacedSquare.horizontalAdjacentOtherUpper,
+    PlacedSquare.horizontalAdjacentChordStart]
+  field_simp [cosine_nonzero]
+  ring
+
+lemma PlacedSquare.horizontalSineChord_length
+    (square : PlacedSquare) {factor height : ℝ}
+    (sine_nonzero : square.frame.sine ≠ 0) :
+    square.horizontalAdjacentChordEnd factor height -
+        square.horizontalAdjacentOtherLower factor height =
+      factor / square.frame.sine := by
+  dsimp [PlacedSquare.horizontalAdjacentChordEnd,
+    PlacedSquare.horizontalAdjacentOtherLower]
+  field_simp [sine_nonzero]
+  ring
+
+lemma PlacedSquare.horizontalCosineChord_length_at_least_factor
+    (square : PlacedSquare) {factor height : ℝ}
+    (factor_nonnegative : 0 ≤ factor)
+    (cosine_positive : 0 < square.frame.cosine) :
+    factor ≤ square.horizontalAdjacentOtherUpper factor height -
+      square.horizontalAdjacentChordStart factor height := by
+  rw [square.horizontalCosineChord_length (ne_of_gt cosine_positive)]
+  apply (le_div_iff₀ cosine_positive).2
+  exact mul_le_of_le_one_right factor_nonnegative
+    (square.frame.cosine_le_one cosine_positive.le)
+
+lemma PlacedSquare.horizontalSineChord_length_at_least_factor
+    (square : PlacedSquare) {factor height : ℝ}
+    (factor_nonnegative : 0 ≤ factor)
+    (sine_positive : 0 < square.frame.sine) :
+    factor ≤ square.horizontalAdjacentChordEnd factor height -
+      square.horizontalAdjacentOtherLower factor height := by
+  rw [square.horizontalSineChord_length (ne_of_gt sine_positive)]
+  apply (le_div_iff₀ sine_positive).2
+  exact mul_le_of_le_one_right factor_nonnegative
+    (square.frame.sine_le_one sine_positive.le)
+
+lemma PlacedSquare.horizontalCosineChord_inside_dilatedInteriorRegion
+    (square : PlacedSquare) {factor height : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (y_lower_at_most_x_lower :
+      square.horizontalAdjacentOtherLower factor height ≤
+        square.horizontalAdjacentChordStart factor height)
+    (x_upper_at_most_y_upper :
+      square.horizontalAdjacentOtherUpper factor height ≤
+        square.horizontalAdjacentChordEnd factor height) :
+    ∀ coordinate ∈
+        Ioo (square.horizontalAdjacentChordStart factor height)
+          (square.horizontalAdjacentOtherUpper factor height),
+      ![coordinate, height] ∈ square.dilatedInteriorRegion factor := by
+  exact square.horizontalChord_inside_dilatedInteriorRegion
+    factor_positive cosine_positive sine_positive le_rfl y_lower_at_most_x_lower
+    le_rfl x_upper_at_most_y_upper
+
+lemma PlacedSquare.horizontalSineChord_inside_dilatedInteriorRegion
+    (square : PlacedSquare) {factor height : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (x_lower_at_most_y_lower :
+      square.horizontalAdjacentChordStart factor height ≤
+        square.horizontalAdjacentOtherLower factor height)
+    (y_upper_at_most_x_upper :
+      square.horizontalAdjacentChordEnd factor height ≤
+        square.horizontalAdjacentOtherUpper factor height) :
+    ∀ coordinate ∈
+        Ioo (square.horizontalAdjacentOtherLower factor height)
+          (square.horizontalAdjacentChordEnd factor height),
+      ![coordinate, height] ∈ square.dilatedInteriorRegion factor := by
+  exact square.horizontalChord_inside_dilatedInteriorRegion
+    factor_positive cosine_positive sine_positive x_lower_at_most_y_lower le_rfl
+    y_upper_at_most_x_upper le_rfl
 
 lemma PlacedSquare.isOpen_dilatedInteriorRegion
     (square : PlacedSquare) {factor : ℝ} (factor_nonzero : factor ≠ 0) :
