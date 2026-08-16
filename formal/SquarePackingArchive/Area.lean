@@ -15,6 +15,9 @@ def Plane.swap (point : Plane) : Plane :=
 def Plane.reflectX (coordinateSum : ℝ) (point : Plane) : Plane :=
   ![coordinateSum - point 0, point 1]
 
+def Plane.reflectY (coordinateSum : ℝ) (point : Plane) : Plane :=
+  ![point 0, coordinateSum - point 1]
+
 @[simp] lemma Plane.swap_swap (point : Plane) :
     point.swap.swap = point := by
   funext coordinate
@@ -24,6 +27,11 @@ def Plane.reflectX (coordinateSum : ℝ) (point : Plane) : Plane :=
     (point.reflectX coordinateSum).reflectX coordinateSum = point := by
   funext coordinate
   fin_cases coordinate <;> simp [Plane.reflectX]
+
+@[simp] lemma Plane.reflectY_reflectY (coordinateSum : ℝ) (point : Plane) :
+    (point.reflectY coordinateSum).reflectY coordinateSum = point := by
+  funext coordinate
+  fin_cases coordinate <;> simp [Plane.reflectY]
 
 def Frame.rotationMatrix (frame : Frame) : Matrix (Fin 2) (Fin 2) ℝ :=
   !![frame.cosine, -frame.sine; frame.sine, frame.cosine]
@@ -69,6 +77,11 @@ def Plane.toPoint (plane : Plane) : Point :=
 @[simp] lemma Plane.toPoint_reflectX (coordinateSum : ℝ) (plane : Plane) :
     (plane.reflectX coordinateSum).toPoint =
       plane.toPoint.reflectX coordinateSum := by
+  rfl
+
+@[simp] lemma Plane.toPoint_reflectY (coordinateSum : ℝ) (plane : Plane) :
+    (plane.reflectY coordinateSum).toPoint =
+      plane.toPoint.reflectY coordinateSum := by
   rfl
 
 @[simp] lemma Point.toPoint_toPlane (point : Point) :
@@ -358,6 +371,19 @@ lemma PlacedSquare.reflectX_dilatedPoint
   · simp [PlacedSquare.reflectX, Point.reflectX, Frame.reflectX,
       PlacedSquare.dilatedPoint, Frame.place]
 
+lemma PlacedSquare.reflectY_dilatedPoint
+    (square : PlacedSquare) (coordinateSum factor localX localY : ℝ) :
+    (square.reflectY coordinateSum).dilatedPoint factor localX localY =
+      (square.dilatedPoint factor localX (-localY)).reflectY
+        (factor * coordinateSum) := by
+  rw [Point.mk.injEq]
+  constructor
+  · simp [PlacedSquare.reflectY, Point.reflectY, Frame.reflectY,
+      PlacedSquare.dilatedPoint, Frame.place]
+  · simp [PlacedSquare.reflectY, Point.reflectY, Frame.reflectY,
+      PlacedSquare.dilatedPoint, Frame.place]
+    ring
+
 lemma PlacedSquare.dilatedInteriorContains_swap_iff
     (square : PlacedSquare) (factor : ℝ) (point : Point) :
     square.swap.DilatedInteriorContains factor point.swap ↔
@@ -406,6 +432,23 @@ lemma PlacedSquare.dilatedInteriorContains_reflectX_iff
     refine ⟨localX, -localY, localX_bound, ?_, ?_⟩
     · simpa only [abs_neg] using localY_bound
     · rw [square.reflectX_dilatedPoint, neg_neg, point_eq]
+
+lemma PlacedSquare.dilatedInteriorContains_reflectY_iff
+    (square : PlacedSquare) (coordinateSum factor : ℝ) (point : Point) :
+    (square.reflectY coordinateSum).DilatedInteriorContains factor
+        (point.reflectY (factor * coordinateSum)) ↔
+      square.DilatedInteriorContains factor point := by
+  constructor
+  · rintro ⟨localX, localY, localX_bound, localY_bound, point_eq⟩
+    refine ⟨localX, -localY, localX_bound, ?_, ?_⟩
+    · simpa only [abs_neg] using localY_bound
+    · apply Point.reflectY_injective (factor * coordinateSum)
+      rw [← square.reflectY_dilatedPoint]
+      exact point_eq
+  · rintro ⟨localX, localY, localX_bound, localY_bound, point_eq⟩
+    refine ⟨localX, -localY, localX_bound, ?_, ?_⟩
+    · simpa only [abs_neg] using localY_bound
+    · rw [square.reflectY_dilatedPoint, neg_neg, point_eq]
 
 lemma PlacedSquare.mem_dilatedInteriorRegion_iff
     (square : PlacedSquare) {factor : ℝ} (factor_positive : 0 < factor)
@@ -503,6 +546,19 @@ lemma PlacedSquare.mem_reflectX_dilatedInteriorRegion_iff
     square.mem_dilatedInteriorRegion_iff factor_positive,
     Plane.toPoint_reflectX]
   exact square.dilatedInteriorContains_reflectX_iff
+    coordinateSum factor point.toPoint
+
+lemma PlacedSquare.mem_reflectY_dilatedInteriorRegion_iff
+    (square : PlacedSquare) {coordinateSum factor : ℝ}
+    (factor_positive : 0 < factor) (point : Plane) :
+    point.reflectY (factor * coordinateSum) ∈
+        (square.reflectY coordinateSum).dilatedInteriorRegion factor ↔
+      point ∈ square.dilatedInteriorRegion factor := by
+  rw [(square.reflectY coordinateSum).mem_dilatedInteriorRegion_iff
+      factor_positive,
+    square.mem_dilatedInteriorRegion_iff factor_positive,
+    Plane.toPoint_reflectY]
+  exact square.dilatedInteriorContains_reflectY_iff
     coordinateSum factor point.toPoint
 
 lemma PlacedSquare.rotateQuarter_dilatedInteriorRegion_eq
@@ -990,6 +1046,32 @@ lemma Plane.reflectX_mem_containerRegion_iff
       simpa using horizontal
     · exact upper 1
 
+lemma Plane.reflectY_mem_containerRegion_iff
+    (side : ℝ) (point : Plane) :
+    point.reflectY side ∈ containerRegion side ↔
+      point ∈ containerRegion side := by
+  simp only [containerRegion, mem_Icc, Plane.reflectY]
+  constructor
+  · rintro ⟨lower, upper⟩
+    constructor <;> intro coordinate <;> fin_cases coordinate
+    · exact lower 0
+    · have vertical := upper 1
+      simp at vertical
+      simpa using vertical
+    · exact upper 0
+    · have vertical := lower 1
+      simp at vertical
+      simpa using vertical
+  · rintro ⟨lower, upper⟩
+    constructor <;> intro coordinate <;> fin_cases coordinate
+    · exact lower 0
+    · have vertical := upper 1
+      simp at vertical
+      simpa using vertical
+    · exact upper 0
+    · have vertical := lower 1
+      simp at vertical
+      simpa using vertical
 lemma PlacedSquare.swap_dilatedInteriorRegion_subset_containerRegion
     {square : PlacedSquare} {factor side : ℝ}
     (factor_positive : 0 < factor)
@@ -1021,6 +1103,24 @@ lemma PlacedSquare.reflectX_dilatedInteriorRegion_subset_containerRegion
     rw [coordinate_identity, Plane.reflectX_reflectX] at equivalence
     exact equivalence.mp point_mem
   exact (Plane.reflectX_mem_containerRegion_iff side point).mp
+    (inside_container reflected_mem)
+
+lemma PlacedSquare.reflectY_dilatedInteriorRegion_subset_containerRegion
+    {square : PlacedSquare} {coordinateSum factor side : ℝ}
+    (factor_positive : 0 < factor)
+    (coordinate_identity : factor * coordinateSum = side)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side) :
+    (square.reflectY coordinateSum).dilatedInteriorRegion factor ⊆
+      containerRegion side := by
+  intro point point_mem
+  have reflected_mem : point.reflectY side ∈
+      square.dilatedInteriorRegion factor := by
+    have equivalence := square.mem_reflectY_dilatedInteriorRegion_iff
+      (coordinateSum := coordinateSum) factor_positive (point.reflectY side)
+    rw [coordinate_identity, Plane.reflectY_reflectY] at equivalence
+    exact equivalence.mp point_mem
+  exact (Plane.reflectY_mem_containerRegion_iff side point).mp
     (inside_container reflected_mem)
 
 lemma PlacedSquare.dilatedCenterX_halfExtent_le
@@ -1577,6 +1677,82 @@ lemma PlacedSquare.horizontalCenterPoint_mem_dilatedInteriorRegion_any_frame
       normalized_center_y
   rw [region_eq] at normalized_point
   simpa using normalized_point
+
+lemma PlacedSquare.topHorizontalCenterPoint_mem_dilatedInteriorRegion_any_frame
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side)
+    (center_y_at_least_side_sub_one :
+      side - 1 ≤ factor * square.center.y) :
+    ![factor * square.center.x, side - 1] ∈
+      square.dilatedInteriorRegion factor := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  let reflected := square.reflectY (side / factor)
+  have coordinate_identity : factor * (side / factor) = side := by
+    field_simp
+  have reflected_inside :
+      reflected.dilatedInteriorRegion factor ⊆ containerRegion side := by
+    exact square.reflectY_dilatedInteriorRegion_subset_containerRegion
+      factor_positive coordinate_identity inside_container
+  have reflected_center_y_at_most_one :
+      factor * reflected.center.y ≤ 1 := by
+    dsimp [reflected, PlacedSquare.reflectY, Point.reflectY]
+    rw [mul_sub, coordinate_identity]
+    linarith
+  have reflected_point :=
+    reflected.horizontalCenterPoint_mem_dilatedInteriorRegion_any_frame
+      factor_gt_one reflected_inside reflected_center_y_at_most_one
+  have equivalence := square.mem_reflectY_dilatedInteriorRegion_iff
+    (coordinateSum := side / factor) factor_positive
+    ![factor * square.center.x, side - 1]
+  rw [coordinate_identity] at equivalence
+  have point_identity :
+      Plane.reflectY side (![factor * square.center.x, side - 1] : Plane) =
+        ![factor * reflected.center.x, (1 : ℝ)] := by
+    funext coordinate
+    fin_cases coordinate <;>
+      simp [Plane.reflectY, reflected, PlacedSquare.reflectY, Point.reflectY]
+  rw [point_identity] at equivalence
+  exact equivalence.mp reflected_point
+
+lemma PlacedSquare.verticalCenterPoint_mem_dilatedInteriorRegion_any_frame
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side)
+    (center_x_at_most_one : factor * square.center.x ≤ 1) :
+    ![(1 : ℝ), factor * square.center.y] ∈
+      square.dilatedInteriorRegion factor := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have swapped_inside := square.swap_dilatedInteriorRegion_subset_containerRegion
+    factor_positive inside_container
+  have swapped_point :=
+    square.swap.horizontalCenterPoint_mem_dilatedInteriorRegion_any_frame
+      factor_gt_one swapped_inside
+      (by simpa [PlacedSquare.swap, Point.swap] using center_x_at_most_one)
+  exact (square.horizontalPoint_mem_swap_iff factor_positive).mp
+    (by simpa [PlacedSquare.swap, Point.swap] using swapped_point)
+
+lemma PlacedSquare.rightVerticalCenterPoint_mem_dilatedInteriorRegion_any_frame
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side)
+    (center_x_at_least_side_sub_one :
+      side - 1 ≤ factor * square.center.x) :
+    ![side - 1, factor * square.center.y] ∈
+      square.dilatedInteriorRegion factor := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have swapped_inside := square.swap_dilatedInteriorRegion_subset_containerRegion
+    factor_positive inside_container
+  have swapped_point :=
+    square.swap.topHorizontalCenterPoint_mem_dilatedInteriorRegion_any_frame
+      factor_gt_one swapped_inside
+      (by simpa [PlacedSquare.swap, Point.swap] using
+        center_x_at_least_side_sub_one)
+  exact (square.horizontalPoint_mem_swap_iff factor_positive).mp
+    (by simpa [PlacedSquare.swap, Point.swap] using swapped_point)
 
 lemma PlacedSquare.case5RightPoints_mem_dilatedInteriorRegion_any_frame
     {square : PlacedSquare} {factor side : ℝ}

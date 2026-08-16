@@ -13,6 +13,9 @@ def Point.swap (point : Point) : Point :=
 def Point.reflectX (coordinateSum : ℝ) (point : Point) : Point :=
   ⟨coordinateSum - point.x, point.y⟩
 
+def Point.reflectY (coordinateSum : ℝ) (point : Point) : Point :=
+  ⟨point.x, coordinateSum - point.y⟩
+
 @[simp] lemma Point.swap_swap (point : Point) :
     point.swap.swap = point := by
   rfl
@@ -31,6 +34,17 @@ lemma Point.reflectX_injective (coordinateSum : ℝ) :
     Function.Injective (Point.reflectX coordinateSum) := by
   intro left right equality
   have := congrArg (Point.reflectX coordinateSum) equality
+  simpa using this
+
+@[simp] lemma Point.reflectY_reflectY (coordinateSum : ℝ) (point : Point) :
+    (point.reflectY coordinateSum).reflectY coordinateSum = point := by
+  cases point
+  simp [Point.reflectY]
+
+lemma Point.reflectY_injective (coordinateSum : ℝ) :
+    Function.Injective (Point.reflectY coordinateSum) := by
+  intro left right equality
+  have := congrArg (Point.reflectY coordinateSum) equality
   simpa using this
 
 structure Frame where
@@ -61,6 +75,11 @@ def Frame.reflectX (frame : Frame) : Frame where
   sine := frame.sine
   unit := by nlinarith [frame.unit]
 
+def Frame.reflectY (frame : Frame) : Frame where
+  cosine := frame.cosine
+  sine := -frame.sine
+  unit := by nlinarith [frame.unit]
+
 def Frame.place (frame : Frame) (localX localY : ℝ) : Point :=
   ⟨localX * frame.cosine - localY * frame.sine,
     localX * frame.sine + localY * frame.cosine⟩
@@ -86,6 +105,10 @@ def PlacedSquare.rotateThreeQuarter (square : PlacedSquare) : PlacedSquare :=
 def PlacedSquare.reflectX (coordinateSum : ℝ) (square : PlacedSquare) : PlacedSquare where
   center := square.center.reflectX coordinateSum
   frame := square.frame.reflectX
+
+def PlacedSquare.reflectY (coordinateSum : ℝ) (square : PlacedSquare) : PlacedSquare where
+  center := square.center.reflectY coordinateSum
+  frame := square.frame.reflectY
 
 noncomputable def PlacedSquare.firstQuadrant (square : PlacedSquare) : PlacedSquare :=
   if 0 ≤ square.frame.cosine then
