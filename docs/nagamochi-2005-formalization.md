@@ -67,3 +67,13 @@ dilated square's area in the inner rectangle. The witness implies score greater
 than one for every side orientation. The remaining Case 3 task is therefore a
 pure classification theorem deriving this witness from the paper's positional
 hypotheses.
+
+Case 5 is now fully proved for the lower-left corner in canonical orientation
+`0 ≤ sine ≤ cosine`. Container containment yields exact center half-extent
+bounds even though the square region is open. Those bounds force the two `Q`
+points `(0.9, 1)` and `(1, 0.9)` and the interior point `(1, 1)` into the
+dilated square. Convexity supplies the two intervening boundary chords, while
+openness supplies positive inner-area measure. Together these facts discharge
+the Case 5 score inequality without additional geometric hypotheses. Extending
+this result to every frame and every container corner still requires a formal
+dihedral normalization and resource-symmetry layer.

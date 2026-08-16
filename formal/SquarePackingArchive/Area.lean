@@ -9,6 +9,14 @@ open scoped Pointwise
 
 abbrev Plane := Fin 2 → ℝ
 
+def Plane.swap (point : Plane) : Plane :=
+  ![point 1, point 0]
+
+@[simp] lemma Plane.swap_swap (point : Plane) :
+    point.swap.swap = point := by
+  funext coordinate
+  fin_cases coordinate <;> rfl
+
 def Frame.rotationMatrix (frame : Frame) : Matrix (Fin 2) (Fin 2) ℝ :=
   !![frame.cosine, -frame.sine; frame.sine, frame.cosine]
 
@@ -46,6 +54,10 @@ def Point.toPlane (point : Point) : Plane :=
 def Plane.toPoint (plane : Plane) : Point :=
   ⟨plane 0, plane 1⟩
 
+@[simp] lemma Plane.toPoint_swap (plane : Plane) :
+    plane.swap.toPoint = plane.toPoint.swap := by
+  rfl
+
 @[simp] lemma Point.toPoint_toPlane (point : Point) :
     point.toPlane.toPoint = point := by
   rfl
@@ -61,6 +73,14 @@ lemma Plane.toPoint_injective : Function.Injective Plane.toPoint := by
 
 def PlacedSquare.transform (square : PlacedSquare) (point : Plane) : Plane :=
   square.center.toPlane + square.frame.rotation point
+
+def PlacedSquare.affineTransform (square : PlacedSquare) : Plane →ᵃ[ℝ] Plane where
+  toFun := square.transform
+  linear := square.frame.rotation
+  map_vadd' := by
+    intro point vector
+    simp [PlacedSquare.transform, map_add]
+    abel
 
 lemma Frame.measurable_rotation (frame : Frame) :
     Measurable frame.rotation := by
@@ -129,6 +149,12 @@ lemma volume_unitSquareInterior : volume unitSquareInterior = 1 := by
   rw [unitSquareInterior, Real.volume_pi_Ioo]
   norm_num
 
+lemma convex_unitSquareInterior : Convex ℝ unitSquareInterior := by
+  rw [unitSquareInterior]
+  apply convex_pi
+  intro coordinate coordinate_mem
+  exact convex_Ioo _ _
+
 def PlacedSquare.interiorRegion (square : PlacedSquare) : Set Plane :=
   square.transform '' unitSquareInterior
 
@@ -151,6 +177,11 @@ lemma PlacedSquare.volume_interiorRegion (square : PlacedSquare) :
   rw [square.transform_injective.preimage_image unitSquareInterior] at mapped
   rw [volume_unitSquareInterior] at mapped
   exact mapped.symm
+
+lemma PlacedSquare.convex_interiorRegion (square : PlacedSquare) :
+    Convex ℝ square.interiorRegion := by
+  simpa [PlacedSquare.interiorRegion, PlacedSquare.affineTransform] using
+    convex_unitSquareInterior.affine_image square.affineTransform
 
 lemma PlacedSquare.transform_toPoint (square : PlacedSquare) (coordinates : Plane) :
     (square.transform coordinates).toPoint =
@@ -203,6 +234,65 @@ lemma dilatePlane_injective {factor : ℝ} (factor_nonzero : factor ≠ 0) :
 def PlacedSquare.dilatedInteriorRegion
     (square : PlacedSquare) (factor : ℝ) : Set Plane :=
   dilatePlane factor '' square.interiorRegion
+
+lemma PlacedSquare.convex_dilatedInteriorRegion
+    (square : PlacedSquare) (factor : ℝ) :
+    Convex ℝ (square.dilatedInteriorRegion factor) := by
+  exact square.convex_interiorRegion.smul factor
+
+lemma horizontal_openSegment_subset_of_convex
+    {region : Set Plane} (region_convex : Convex ℝ region)
+    {left right height : ℝ} (left_lt_right : left < right)
+    (left_mem : ![left, height] ∈ region)
+    (right_mem : ![right, height] ∈ region) :
+    ∀ coordinate ∈ Ioo left right, ![coordinate, height] ∈ region := by
+  intro coordinate coordinate_mem
+  let ratio := (coordinate - left) / (right - left)
+  have denominator_positive : 0 < right - left := sub_pos.mpr left_lt_right
+  have ratio_mem : ratio ∈ Icc (0 : ℝ) 1 := by
+    constructor
+    · dsimp [ratio]
+      exact div_nonneg (sub_nonneg.mpr coordinate_mem.1.le)
+        denominator_positive.le
+    · dsimp [ratio]
+      rw [div_le_one denominator_positive]
+      linarith [coordinate_mem.2]
+  have line_mem := region_convex.lineMap_mem left_mem right_mem ratio_mem
+  convert line_mem using 1
+  funext index
+  fin_cases index
+  · simp [AffineMap.lineMap_apply_module, ratio]
+    field_simp [ne_of_gt denominator_positive]
+    ring
+  · simp [AffineMap.lineMap_apply_module]
+    ring
+
+lemma vertical_openSegment_subset_of_convex
+    {region : Set Plane} (region_convex : Convex ℝ region)
+    {bottom top width : ℝ} (bottom_lt_top : bottom < top)
+    (bottom_mem : ![width, bottom] ∈ region)
+    (top_mem : ![width, top] ∈ region) :
+    ∀ coordinate ∈ Ioo bottom top, ![width, coordinate] ∈ region := by
+  intro coordinate coordinate_mem
+  let ratio := (coordinate - bottom) / (top - bottom)
+  have denominator_positive : 0 < top - bottom := sub_pos.mpr bottom_lt_top
+  have ratio_mem : ratio ∈ Icc (0 : ℝ) 1 := by
+    constructor
+    · dsimp [ratio]
+      exact div_nonneg (sub_nonneg.mpr coordinate_mem.1.le)
+        denominator_positive.le
+    · dsimp [ratio]
+      rw [div_le_one denominator_positive]
+      linarith [coordinate_mem.2]
+  have line_mem := region_convex.lineMap_mem bottom_mem top_mem ratio_mem
+  convert line_mem using 1
+  funext index
+  fin_cases index
+  · simp [AffineMap.lineMap_apply_module]
+    ring
+  · simp [AffineMap.lineMap_apply_module, ratio]
+    field_simp [ne_of_gt denominator_positive]
+    ring
 
 def PlacedSquare.dilatedPoint
     (square : PlacedSquare) (factor localX localY : ℝ) : Point :=
@@ -319,6 +409,16 @@ lemma PlacedSquare.horizontalPoint_mem_swap_iff
   simpa [Plane.toPoint, Point.swap] using
     square.dilatedInteriorContains_swap_iff factor
       (Plane.toPoint ![height, coordinate])
+
+lemma PlacedSquare.mem_swap_dilatedInteriorRegion_iff
+    (square : PlacedSquare) {factor : ℝ} (factor_positive : 0 < factor)
+    (point : Plane) :
+    point.swap ∈ square.swap.dilatedInteriorRegion factor ↔
+      point ∈ square.dilatedInteriorRegion factor := by
+  rw [square.swap.mem_dilatedInteriorRegion_iff factor_positive,
+    square.mem_dilatedInteriorRegion_iff factor_positive]
+  rw [Plane.toPoint_swap]
+  exact square.dilatedInteriorContains_swap_iff factor point.toPoint
 
 def PlacedSquare.dilatedLocalX
     (square : PlacedSquare) (factor : ℝ) (point : Point) : ℝ :=
@@ -724,6 +824,429 @@ lemma mem_containerRegion_iff (side : ℝ) (point : Plane) :
     · exact y_lower
     · exact x_upper
     · exact y_upper
+
+lemma Plane.swap_mem_containerRegion_iff (side : ℝ) (point : Plane) :
+    point.swap ∈ containerRegion side ↔ point ∈ containerRegion side := by
+  simp only [containerRegion, mem_Icc, Plane.swap]
+  constructor
+  · rintro ⟨lower, upper⟩
+    constructor <;> intro coordinate <;> fin_cases coordinate
+    · exact lower 1
+    · exact lower 0
+    · exact upper 1
+    · exact upper 0
+  · rintro ⟨lower, upper⟩
+    constructor <;> intro coordinate <;> fin_cases coordinate
+    · exact lower 1
+    · exact lower 0
+    · exact upper 1
+    · exact upper 0
+
+lemma PlacedSquare.swap_dilatedInteriorRegion_subset_containerRegion
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_positive : 0 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side) :
+    square.swap.dilatedInteriorRegion factor ⊆ containerRegion side := by
+  intro point point_mem
+  have swapped_mem : point.swap ∈ square.dilatedInteriorRegion factor := by
+    have equivalence :=
+      square.mem_swap_dilatedInteriorRegion_iff factor_positive point.swap
+    rw [Plane.swap_swap] at equivalence
+    exact equivalence.mp point_mem
+  exact (point.swap_mem_containerRegion_iff side).mp
+    (inside_container swapped_mem)
+
+lemma PlacedSquare.dilatedCenterX_halfExtent_le
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_nonnegative : 0 ≤ square.frame.cosine)
+    (sine_nonnegative : 0 ≤ square.frame.sine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side) :
+    factor * (square.frame.cosine + square.frame.sine) / 2 ≤
+      factor * square.center.x := by
+  have component_sum_positive :
+      0 < square.frame.cosine + square.frame.sine := by
+    by_contra sum_not_positive
+    have sum_nonpositive := le_of_not_gt sum_not_positive
+    have cosine_zero : square.frame.cosine = 0 := by linarith
+    have sine_zero : square.frame.sine = 0 := by linarith
+    have unit := square.frame.unit
+    rw [cosine_zero, sine_zero] at unit
+    norm_num at unit
+  let centerPoint := (square.dilatedPoint factor 0 0).toPlane
+  have center_point_mem : centerPoint ∈ square.dilatedInteriorRegion factor := by
+    rw [square.mem_dilatedInteriorRegion_iff factor_positive]
+    refine ⟨0, 0, by simpa using (half_pos factor_positive),
+      by simpa using (half_pos factor_positive), ?_⟩
+    simp [centerPoint]
+  have center_x_nonnegative : 0 ≤ factor * square.center.x := by
+    have center_bounds :=
+      (mem_containerRegion_iff side centerPoint).mp
+        (inside_container center_point_mem)
+    simpa [centerPoint, PlacedSquare.dilatedPoint, Frame.place] using center_bounds.1
+  by_contra half_extent_not_le
+  have center_x_lt_half_extent :
+      factor * square.center.x <
+        factor * (square.frame.cosine + square.frame.sine) / 2 :=
+    lt_of_not_ge half_extent_not_le
+  let gap :=
+    factor * (square.frame.cosine + square.frame.sine) / 2 -
+      factor * square.center.x
+  have gap_positive : 0 < gap := by
+    dsimp [gap]
+    linarith
+  have gap_at_most_half_extent :
+      gap ≤ factor * (square.frame.cosine + square.frame.sine) / 2 := by
+    dsimp [gap]
+    linarith
+  let delta := gap / (2 * (square.frame.cosine + square.frame.sine))
+  have delta_positive : 0 < delta := by
+    dsimp [delta]
+    positivity
+  have delta_lt_half_factor : delta < factor / 2 := by
+    dsimp [delta]
+    rw [div_lt_iff₀ (by positivity :
+      0 < 2 * (square.frame.cosine + square.frame.sine))]
+    nlinarith
+  let edgeOffset := factor / 2 - delta
+  have edge_offset_positive : 0 < edgeOffset := by
+    dsimp [edgeOffset]
+    linarith
+  have edge_offset_lt_half_factor : edgeOffset < factor / 2 := by
+    dsimp [edgeOffset]
+    linarith
+  let testPoint :=
+    (square.dilatedPoint factor (-edgeOffset) edgeOffset).toPlane
+  have test_point_mem : testPoint ∈ square.dilatedInteriorRegion factor := by
+    rw [square.mem_dilatedInteriorRegion_iff factor_positive]
+    refine ⟨-edgeOffset, edgeOffset, ?_, ?_, ?_⟩
+    · rw [abs_neg, abs_of_pos edge_offset_positive]
+      exact edge_offset_lt_half_factor
+    · rw [abs_of_pos edge_offset_positive]
+      exact edge_offset_lt_half_factor
+    · simp [testPoint]
+  have test_x_nonnegative : 0 ≤ testPoint 0 := by
+    have test_bounds :=
+      (mem_containerRegion_iff side testPoint).mp
+        (inside_container test_point_mem)
+    exact test_bounds.1
+  have test_x_eq : testPoint 0 = -gap / 2 := by
+    dsimp [testPoint, edgeOffset, delta, gap, PlacedSquare.dilatedPoint,
+      Frame.place, Point.toPlane]
+    field_simp [ne_of_gt component_sum_positive]
+    ring
+  rw [test_x_eq] at test_x_nonnegative
+  linarith
+
+lemma PlacedSquare.dilatedCenterY_halfExtent_le
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_nonnegative : 0 ≤ square.frame.cosine)
+    (sine_nonnegative : 0 ≤ square.frame.sine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side) :
+    factor * (square.frame.cosine + square.frame.sine) / 2 ≤
+      factor * square.center.y := by
+  have swapped_inside :=
+    square.swap_dilatedInteriorRegion_subset_containerRegion
+      factor_positive inside_container
+  have swapped_bound := square.swap.dilatedCenterX_halfExtent_le
+    factor_positive sine_nonnegative cosine_nonnegative swapped_inside
+  simpa [PlacedSquare.swap, Point.swap, Frame.swap, add_comm] using swapped_bound
+
+lemma Frame.remainingHalfExtent_mul_componentSum_lt_half
+    (frame : Frame) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_nonnegative : 0 ≤ frame.cosine)
+    (sine_nonnegative : 0 ≤ frame.sine) :
+    (1 - factor * (frame.cosine + frame.sine) / 2) *
+        (frame.cosine + frame.sine) <
+      factor / 2 := by
+  let componentSum := frame.cosine + frame.sine
+  have component_sum_nonnegative : 0 ≤ componentSum := by
+    dsimp [componentSum]
+    linarith
+  have component_sum_sq : componentSum ^ 2 =
+      1 + 2 * frame.cosine * frame.sine := by
+    dsimp [componentSum]
+    nlinarith [frame.unit]
+  have component_sum_sq_at_least_one : 1 ≤ componentSum ^ 2 := by
+    rw [component_sum_sq]
+    nlinarith [mul_nonneg cosine_nonnegative sine_nonnegative]
+  have component_sum_positive : 0 < componentSum := by nlinarith
+  have twice_sum_at_most : 2 * componentSum ≤ componentSum ^ 2 + 1 := by
+    nlinarith [sq_nonneg (componentSum - 1)]
+  have sum_square_plus_one_positive : 0 < componentSum ^ 2 + 1 := by
+    nlinarith
+  have scaled_sum_square_gt :
+      componentSum ^ 2 + 1 < factor * (componentSum ^ 2 + 1) := by
+    simpa only [one_mul] using
+      mul_lt_mul_of_pos_right factor_gt_one sum_square_plus_one_positive
+  change (1 - factor * componentSum / 2) * componentSum < factor / 2
+  nlinarith
+
+lemma PlacedSquare.unitCornerPoint_mem_dilatedInteriorRegion_of_center_le_one
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_nonnegative : 0 ≤ square.frame.cosine)
+    (sine_nonnegative : 0 ≤ square.frame.sine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side)
+    (center_x_at_most_one : factor * square.center.x ≤ 1)
+    (center_y_at_most_one : factor * square.center.y ≤ 1) :
+    ![(1 : ℝ), 1] ∈ square.dilatedInteriorRegion factor := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  let componentSum := square.frame.cosine + square.frame.sine
+  have component_sum_nonnegative : 0 ≤ componentSum := by
+    dsimp [componentSum]
+    linarith
+  have center_x_at_least_half := square.dilatedCenterX_halfExtent_le
+    factor_positive cosine_nonnegative sine_nonnegative inside_container
+  have center_y_at_least_half := square.dilatedCenterY_halfExtent_le
+    factor_positive cosine_nonnegative sine_nonnegative inside_container
+  let remaining := 1 - factor * componentSum / 2
+  have remaining_nonnegative : 0 ≤ remaining := by
+    dsimp [remaining, componentSum]
+    linarith
+  have x_gap_nonnegative : 0 ≤ 1 - factor * square.center.x := by linarith
+  have y_gap_nonnegative : 0 ≤ 1 - factor * square.center.y := by linarith
+  have x_gap_at_most_remaining :
+      1 - factor * square.center.x ≤ remaining := by
+    dsimp [remaining, componentSum]
+    linarith
+  have y_gap_at_most_remaining :
+      1 - factor * square.center.y ≤ remaining := by
+    dsimp [remaining, componentSum]
+    linarith
+  have remaining_times_sum_lt_half : remaining * componentSum < factor / 2 := by
+    simpa [remaining, componentSum] using
+      square.frame.remainingHalfExtent_mul_componentSum_lt_half
+        factor_gt_one cosine_nonnegative sine_nonnegative
+  have x_cosine_at_most :
+      (1 - factor * square.center.x) * square.frame.cosine ≤
+        remaining * square.frame.cosine :=
+    mul_le_mul_of_nonneg_right x_gap_at_most_remaining cosine_nonnegative
+  have x_sine_at_most :
+      (1 - factor * square.center.x) * square.frame.sine ≤
+        remaining * square.frame.sine :=
+    mul_le_mul_of_nonneg_right x_gap_at_most_remaining sine_nonnegative
+  have y_cosine_at_most :
+      (1 - factor * square.center.y) * square.frame.cosine ≤
+        remaining * square.frame.cosine :=
+    mul_le_mul_of_nonneg_right y_gap_at_most_remaining cosine_nonnegative
+  have y_sine_at_most :
+      (1 - factor * square.center.y) * square.frame.sine ≤
+        remaining * square.frame.sine :=
+    mul_le_mul_of_nonneg_right y_gap_at_most_remaining sine_nonnegative
+  have remaining_cosine_at_most_sum :
+      remaining * square.frame.cosine ≤ remaining * componentSum := by
+    apply mul_le_mul_of_nonneg_left _ remaining_nonnegative
+    dsimp [componentSum]
+    linarith
+  have remaining_sine_at_most_sum :
+      remaining * square.frame.sine ≤ remaining * componentSum := by
+    apply mul_le_mul_of_nonneg_left _ remaining_nonnegative
+    dsimp [componentSum]
+    linarith
+  have x_sine_lt_half :
+      (1 - factor * square.center.x) * square.frame.sine < factor / 2 :=
+    x_sine_at_most.trans_lt
+      (remaining_sine_at_most_sum.trans_lt remaining_times_sum_lt_half)
+  have y_cosine_lt_half :
+      (1 - factor * square.center.y) * square.frame.cosine < factor / 2 :=
+    y_cosine_at_most.trans_lt
+      (remaining_cosine_at_most_sum.trans_lt remaining_times_sum_lt_half)
+  have x_cosine_nonnegative :
+      0 ≤ (1 - factor * square.center.x) * square.frame.cosine :=
+    mul_nonneg x_gap_nonnegative cosine_nonnegative
+  have x_sine_nonnegative :
+      0 ≤ (1 - factor * square.center.x) * square.frame.sine :=
+    mul_nonneg x_gap_nonnegative sine_nonnegative
+  have y_cosine_nonnegative :
+      0 ≤ (1 - factor * square.center.y) * square.frame.cosine :=
+    mul_nonneg y_gap_nonnegative cosine_nonnegative
+  have y_sine_nonnegative :
+      0 ≤ (1 - factor * square.center.y) * square.frame.sine :=
+    mul_nonneg y_gap_nonnegative sine_nonnegative
+  apply square.mem_dilatedInteriorRegion_of_inverse_bounds factor_positive
+  · rw [abs_lt]
+    constructor
+    · simp only [PlacedSquare.dilatedLocalX, Plane.toPoint, Matrix.cons_val_zero,
+        Matrix.cons_val_one]
+      linarith
+    · simp only [PlacedSquare.dilatedLocalX, Plane.toPoint, Matrix.cons_val_zero,
+        Matrix.cons_val_one]
+      dsimp [componentSum] at remaining_times_sum_lt_half
+      linarith
+  · rw [abs_lt]
+    constructor
+    · simp only [PlacedSquare.dilatedLocalY, Plane.toPoint, Matrix.cons_val_zero,
+        Matrix.cons_val_one]
+      linarith
+    · simp only [PlacedSquare.dilatedLocalY, Plane.toPoint, Matrix.cons_val_zero,
+        Matrix.cons_val_one]
+      linarith
+
+lemma PlacedSquare.case5CornerPoints_mem_dilatedInteriorRegion
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_nonnegative : 0 ≤ square.frame.cosine)
+    (sine_nonnegative : 0 ≤ square.frame.sine)
+    (sine_at_most_cosine : square.frame.sine ≤ square.frame.cosine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side)
+    (center_x_at_most_one : factor * square.center.x ≤ 1)
+    (center_y_at_most_one : factor * square.center.y ≤ 1) :
+    ![(9 / 10 : ℝ), 1] ∈ square.dilatedInteriorRegion factor ∧
+      ![(1 : ℝ), 9 / 10] ∈ square.dilatedInteriorRegion factor := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  let componentSum := square.frame.cosine + square.frame.sine
+  have component_sum_nonnegative : 0 ≤ componentSum := by
+    dsimp [componentSum]
+    linarith
+  have component_sum_sq : componentSum ^ 2 =
+      1 + 2 * square.frame.cosine * square.frame.sine := by
+    dsimp [componentSum]
+    nlinarith [square.frame.unit]
+  have component_sum_sq_at_least_one : 1 ≤ componentSum ^ 2 := by
+    rw [component_sum_sq]
+    nlinarith [mul_nonneg cosine_nonnegative sine_nonnegative]
+  have component_sum_at_least_one : 1 ≤ componentSum := by
+    nlinarith
+  have center_x_at_least_half := square.dilatedCenterX_halfExtent_le
+    factor_positive cosine_nonnegative sine_nonnegative inside_container
+  have center_y_at_least_half := square.dilatedCenterY_halfExtent_le
+    factor_positive cosine_nonnegative sine_nonnegative inside_container
+  let remaining := 1 - factor * componentSum / 2
+  have remaining_nonnegative : 0 ≤ remaining := by
+    dsimp [remaining, componentSum]
+    linarith
+  have remaining_lt_half : remaining < 1 / 2 := by
+    dsimp [remaining]
+    have factor_times_sum_gt_one : 1 < factor * componentSum := by
+      have component_sum_positive : 0 < componentSum :=
+        zero_lt_one.trans_le component_sum_at_least_one
+      have scaled :=
+        mul_lt_mul_of_pos_right factor_gt_one component_sum_positive
+      exact component_sum_at_least_one.trans_lt (by simpa only [one_mul] using scaled)
+    linarith
+  have remaining_times_sum_lt_half : remaining * componentSum < factor / 2 := by
+    simpa [remaining, componentSum] using
+      square.frame.remainingHalfExtent_mul_componentSum_lt_half
+        factor_gt_one cosine_nonnegative sine_nonnegative
+  have cosine_at_most_one :=
+    square.frame.cosine_le_one cosine_nonnegative
+  have sine_lt_four_fifths : square.frame.sine < 4 / 5 := by
+    by_contra sine_not_lt
+    have sine_at_least : 4 / 5 ≤ square.frame.sine := le_of_not_gt sine_not_lt
+    have component_difference_nonnegative :
+        0 ≤ square.frame.cosine - square.frame.sine :=
+      sub_nonneg.mpr sine_at_most_cosine
+    have component_sum_nonnegative' :
+        0 ≤ square.frame.cosine + square.frame.sine := by linarith
+    have cosine_sq_at_least_sine_sq :
+        square.frame.sine ^ 2 ≤ square.frame.cosine ^ 2 := by
+      nlinarith [mul_nonneg component_difference_nonnegative
+        component_sum_nonnegative']
+    nlinarith [square.frame.unit]
+  have cosine_at_least_fifth : 1 / 5 ≤ square.frame.cosine := by
+    by_contra cosine_not_ge
+    have cosine_lt : square.frame.cosine < 1 / 5 := lt_of_not_ge cosine_not_ge
+    nlinarith [square.frame.unit, sq_nonneg square.frame.cosine,
+      sq_nonneg square.frame.sine]
+  have easy_sine_bound :
+      remaining * square.frame.sine + square.frame.cosine / 10 < factor / 2 := by
+    have five_sine_add_cosine_lt_five :
+        5 * square.frame.sine + square.frame.cosine < 5 := by
+      linarith
+    have factor_half_gt_half : 1 / 2 < factor / 2 := by linarith
+    nlinarith [mul_nonneg (sub_nonneg.mpr remaining_lt_half.le)
+      sine_nonnegative]
+  have base_cosine_bound :
+      (1 - componentSum / 2) * square.frame.cosine +
+          square.frame.sine / 10 ≤
+        1 / 2 := by
+    have nonnegative_product :
+        0 ≤ square.frame.sine * (square.frame.cosine - 1 / 5) :=
+      mul_nonneg sine_nonnegative (sub_nonneg.mpr cosine_at_least_fifth)
+    dsimp [componentSum]
+    nlinarith [square.frame.unit, sq_nonneg (1 - square.frame.cosine)]
+  have scaled_cosine_bound :
+      remaining * square.frame.cosine + square.frame.sine / 10 < factor / 2 := by
+    have gain_positive :
+        0 < (factor - 1) * (1 + componentSum * square.frame.cosine) := by
+      apply mul_pos (sub_pos.mpr factor_gt_one)
+      have product_nonnegative :=
+        mul_nonneg component_sum_nonnegative cosine_nonnegative
+      linarith
+    dsimp [remaining]
+    nlinarith
+  have x_gap_nonnegative : 0 ≤ 1 - factor * square.center.x := by linarith
+  have y_gap_nonnegative : 0 ≤ 1 - factor * square.center.y := by linarith
+  have x_gap_at_most_remaining :
+      1 - factor * square.center.x ≤ remaining := by
+    dsimp [remaining, componentSum]
+    linarith
+  have y_gap_at_most_remaining :
+      1 - factor * square.center.y ≤ remaining := by
+    dsimp [remaining, componentSum]
+    linarith
+  have x_cosine_nonnegative := mul_nonneg x_gap_nonnegative cosine_nonnegative
+  have x_sine_nonnegative := mul_nonneg x_gap_nonnegative sine_nonnegative
+  have y_cosine_nonnegative := mul_nonneg y_gap_nonnegative cosine_nonnegative
+  have y_sine_nonnegative := mul_nonneg y_gap_nonnegative sine_nonnegative
+  have x_cosine_at_most :
+      (1 - factor * square.center.x) * square.frame.cosine ≤
+        remaining * square.frame.cosine :=
+    mul_le_mul_of_nonneg_right x_gap_at_most_remaining cosine_nonnegative
+  have x_sine_at_most :
+      (1 - factor * square.center.x) * square.frame.sine ≤
+        remaining * square.frame.sine :=
+    mul_le_mul_of_nonneg_right x_gap_at_most_remaining sine_nonnegative
+  have y_cosine_at_most :
+      (1 - factor * square.center.y) * square.frame.cosine ≤
+        remaining * square.frame.cosine :=
+    mul_le_mul_of_nonneg_right y_gap_at_most_remaining cosine_nonnegative
+  have y_sine_at_most :
+      (1 - factor * square.center.y) * square.frame.sine ≤
+        remaining * square.frame.sine :=
+    mul_le_mul_of_nonneg_right y_gap_at_most_remaining sine_nonnegative
+  have remaining_cosine_at_most_sum :
+      remaining * square.frame.cosine ≤ remaining * componentSum := by
+    apply mul_le_mul_of_nonneg_left _ remaining_nonnegative
+    dsimp [componentSum]
+    linarith
+  have remaining_sine_at_most_sum :
+      remaining * square.frame.sine ≤ remaining * componentSum := by
+    apply mul_le_mul_of_nonneg_left _ remaining_nonnegative
+    dsimp [componentSum]
+    linarith
+  have cosine_tenth_lt_half : square.frame.cosine / 10 < factor / 2 := by
+    nlinarith
+  have sine_tenth_lt_half : square.frame.sine / 10 < factor / 2 := by
+    have sine_at_most_one := square.frame.sine_le_one sine_nonnegative
+    nlinarith
+  constructor
+  · apply square.mem_dilatedInteriorRegion_of_inverse_bounds factor_positive
+    · rw [abs_lt]
+      constructor <;>
+        simp only [PlacedSquare.dilatedLocalX, Plane.toPoint,
+          Matrix.cons_val_zero, Matrix.cons_val_one] <;> linarith
+    · rw [abs_lt]
+      constructor <;>
+        simp only [PlacedSquare.dilatedLocalY, Plane.toPoint,
+          Matrix.cons_val_zero, Matrix.cons_val_one] <;> linarith
+  · apply square.mem_dilatedInteriorRegion_of_inverse_bounds factor_positive
+    · rw [abs_lt]
+      constructor <;>
+        simp only [PlacedSquare.dilatedLocalX, Plane.toPoint,
+          Matrix.cons_val_zero, Matrix.cons_val_one] <;> linarith
+    · rw [abs_lt]
+      constructor <;>
+        simp only [PlacedSquare.dilatedLocalY, Plane.toPoint,
+          Matrix.cons_val_zero, Matrix.cons_val_one] <;> linarith
 
 lemma volume_containerRegion_toReal
     {side : ℝ} (side_nonnegative : 0 ≤ side) :
