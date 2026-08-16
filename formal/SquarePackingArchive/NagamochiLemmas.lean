@@ -1139,6 +1139,124 @@ lemma score_gt_one_of_corner_chord_and_edge_point
   exact score_gt_one_of_positive_inner_and_two_half_resources
     inner_positive boundary_corner_half edge_half
 
+inductive Case7ResourceWitness
+    (size : ℕ) (region : Set Plane) : Prop
+  | oppositeAndEdge
+      (side : NagamochiResource.BoundarySide)
+      (coordinate : ℕ)
+      (kind : NagamochiResource.EdgePoint)
+      (minimumLength : ℝ)
+      (minimum_length_gt_one : 1 < minimumLength)
+      (chord :
+        NagamochiResource.HasBoundaryChord size side region minimumLength)
+      (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+      (point_mem :
+        NagamochiResource.edgePoint size coordinate kind ∈ region)
+  | cornerAndEdge
+      (side : NagamochiResource.BoundarySide)
+      (cornerKind : NagamochiResource.CornerPoint)
+      (coordinate : ℕ)
+      (edgeKind : NagamochiResource.EdgePoint)
+      (inner_positive : 0 < NagamochiResource.innerArea size region)
+      (chord :
+        NagamochiResource.HasBoundaryChord size side region (1 / 10))
+      (corner_point_mem :
+        NagamochiResource.cornerPoint size cornerKind ∈ region)
+      (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+      (edge_point_mem :
+        NagamochiResource.edgePoint size coordinate edgeKind ∈ region)
+  | twoCorners
+      (side : NagamochiResource.BoundarySide)
+      (firstKind secondKind : NagamochiResource.CornerPoint)
+      (inner_positive : 0 < NagamochiResource.innerArea size region)
+      (different_kinds : firstKind ≠ secondKind)
+      (chord :
+        NagamochiResource.HasBoundaryChord size side region (1 / 5))
+      (first_point_mem :
+        NagamochiResource.cornerPoint size firstKind ∈ region)
+      (second_point_mem :
+        NagamochiResource.cornerPoint size secondKind ∈ region)
+
+lemma score_gt_one_of_case7_resource_witness
+    {size : ℕ} {region : Set Plane}
+    (region_measurable : MeasurableSet region)
+    (witness : Case7ResourceWitness size region) :
+    1 < NagamochiResource.measure size region := by
+  cases witness with
+  | oppositeAndEdge side coordinate kind minimumLength minimum_length_gt_one
+      chord coordinate_mem point_mem =>
+      exact score_gt_one_of_boundary_chord_and_edge_point minimum_length_gt_one
+        region_measurable chord coordinate_mem point_mem
+  | cornerAndEdge side cornerKind coordinate edgeKind inner_positive chord
+      corner_point_mem coordinate_mem edge_point_mem =>
+      exact score_gt_one_of_corner_chord_and_edge_point region_measurable
+        inner_positive chord corner_point_mem coordinate_mem edge_point_mem
+  | twoCorners side firstKind secondKind inner_positive different_kinds chord
+      first_point_mem second_point_mem =>
+      exact score_gt_one_of_two_corner_points_and_long_chord
+        region_measurable inner_positive different_kinds chord
+        first_point_mem second_point_mem
+
+lemma case7ResourceWitness_of_two_boundary_corner_points
+    {size : ℕ} {region : Set Plane}
+    (size_at_least_three : 3 ≤ size)
+    (region_convex : Convex ℝ region)
+    (inner_positive : 0 < NagamochiResource.innerArea size region)
+    (side : NagamochiResource.BoundarySide)
+    (first_point_mem :
+      NagamochiResource.cornerPoint size side.firstCornerPoint ∈ region)
+    (second_point_mem :
+      NagamochiResource.cornerPoint size side.secondCornerPoint ∈ region) :
+    Case7ResourceWitness size region := by
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  have endpoints_ordered :
+      (9 / 10 : ℝ) < (size : ℝ) - 9 / 10 := by linarith
+  cases side with
+  | bottom =>
+      simp [NagamochiResource.BoundarySide.firstCornerPoint] at first_point_mem
+      simp [NagamochiResource.BoundarySide.secondCornerPoint] at second_point_mem
+      refine .twoCorners .bottom .bottomLeft .bottomRight inner_positive
+        (by decide) ?_ first_point_mem second_point_mem
+      refine ⟨9 / 10, (size : ℝ) - 9 / 10, by linarith,
+        fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩, ?_⟩
+      exact horizontal_openSegment_subset_of_convex region_convex
+        endpoints_ordered
+        (by simpa [NagamochiResource.cornerPoint] using first_point_mem)
+        (by simpa [NagamochiResource.cornerPoint] using second_point_mem)
+  | top =>
+      simp [NagamochiResource.BoundarySide.firstCornerPoint] at first_point_mem
+      simp [NagamochiResource.BoundarySide.secondCornerPoint] at second_point_mem
+      refine .twoCorners .top .topLeft .topRight inner_positive
+        (by decide) ?_ first_point_mem second_point_mem
+      refine ⟨9 / 10, (size : ℝ) - 9 / 10, by linarith,
+        fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩, ?_⟩
+      exact horizontal_openSegment_subset_of_convex region_convex
+        endpoints_ordered
+        (by simpa [NagamochiResource.cornerPoint] using first_point_mem)
+        (by simpa [NagamochiResource.cornerPoint] using second_point_mem)
+  | left =>
+      simp [NagamochiResource.BoundarySide.firstCornerPoint] at first_point_mem
+      simp [NagamochiResource.BoundarySide.secondCornerPoint] at second_point_mem
+      refine .twoCorners .left .leftBottom .leftTop inner_positive
+        (by decide) ?_ first_point_mem second_point_mem
+      refine ⟨9 / 10, (size : ℝ) - 9 / 10, by linarith,
+        fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩, ?_⟩
+      exact vertical_openSegment_subset_of_convex region_convex
+        endpoints_ordered
+        (by simpa [NagamochiResource.cornerPoint] using first_point_mem)
+        (by simpa [NagamochiResource.cornerPoint] using second_point_mem)
+  | right =>
+      simp [NagamochiResource.BoundarySide.firstCornerPoint] at first_point_mem
+      simp [NagamochiResource.BoundarySide.secondCornerPoint] at second_point_mem
+      refine .twoCorners .right .rightBottom .rightTop inner_positive
+        (by decide) ?_ first_point_mem second_point_mem
+      refine ⟨9 / 10, (size : ℝ) - 9 / 10, by linarith,
+        fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩, ?_⟩
+      exact vertical_openSegment_subset_of_convex region_convex
+        endpoints_ordered
+        (by simpa [NagamochiResource.cornerPoint] using first_point_mem)
+        (by simpa [NagamochiResource.cornerPoint] using second_point_mem)
+
 lemma innerArea_positive_of_inward_point_family
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
     (boundaryPoint : Plane) (inwardPoint : ℝ → Plane)
@@ -1208,6 +1326,34 @@ inductive InnerBoundarySide
   | top
   | left
   | right
+
+def InnerBoundarySide.toBoundarySide :
+    InnerBoundarySide → NagamochiResource.BoundarySide
+  | .bottom => .bottom
+  | .top => .top
+  | .left => .left
+  | .right => .right
+
+def InnerBoundarySide.centerInStrip
+    (side : InnerBoundarySide) (size : ℕ) (square : PlacedSquare)
+    (factor : ℝ) : Prop :=
+  match side with
+  | .bottom =>
+      1 ≤ factor * square.center.x ∧
+        factor * square.center.x ≤ (size : ℝ) - 1 ∧
+          factor * square.center.y ≤ 1
+  | .top =>
+      1 ≤ factor * square.center.x ∧
+        factor * square.center.x ≤ (size : ℝ) - 1 ∧
+          (size : ℝ) - 1 ≤ factor * square.center.y
+  | .left =>
+      factor * square.center.x ≤ 1 ∧
+        1 ≤ factor * square.center.y ∧
+          factor * square.center.y ≤ (size : ℝ) - 1
+  | .right =>
+      (size : ℝ) - 1 ≤ factor * square.center.x ∧
+        1 ≤ factor * square.center.y ∧
+          factor * square.center.y ≤ (size : ℝ) - 1
 
 def InnerBoundarySide.point
     (side : InnerBoundarySide) (size : ℕ) (coordinate : ℝ) : Plane :=
@@ -1475,6 +1621,34 @@ lemma innerArea_positive_of_right_edge_strip_geometry
     size_at_least_three factor_positive.ne' center_y_at_least_one
     center_y_at_most_size_sub_one
     (by simpa [InnerBoundarySide.point] using boundary_point_mem)
+
+lemma innerArea_positive_of_edge_strip_geometry
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (side : InnerBoundarySide)
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_in_strip : side.centerInStrip size square factor) :
+    0 < NagamochiResource.innerArea size
+      (square.dilatedInteriorRegion factor) := by
+  cases side with
+  | bottom =>
+      exact innerArea_positive_of_bottom_edge_strip_geometry square
+        size_at_least_three factor_gt_one inside_container
+        center_in_strip.1 center_in_strip.2.1 center_in_strip.2.2
+  | top =>
+      exact innerArea_positive_of_top_edge_strip_geometry square
+        size_at_least_three factor_gt_one inside_container
+        center_in_strip.1 center_in_strip.2.1 center_in_strip.2.2
+  | left =>
+      exact innerArea_positive_of_left_edge_strip_geometry square
+        size_at_least_three factor_gt_one inside_container
+        center_in_strip.1 center_in_strip.2.1 center_in_strip.2.2
+  | right =>
+      exact innerArea_positive_of_right_edge_strip_geometry square
+        size_at_least_three factor_gt_one inside_container
+        center_in_strip.1 center_in_strip.2.1 center_in_strip.2.2
 
 lemma score_gt_one_of_case5_geometry_and_corner_points
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
@@ -1834,9 +2008,10 @@ lemma score_gt_one_of_case7_bottom_opposite_and_edge_point
   have factor_nonzero : factor ≠ 0 := factor_positive.ne'
   have chord := bottomBoundaryChord_of_horizontalOpposite square
     factor_positive cosine_positive sine_positive opposite
-  exact score_gt_one_of_boundary_chord_and_edge_point factor_gt_one
-    (square.measurableSet_dilatedInteriorRegion factor_nonzero) chord
-    coordinate_mem edge_point_mem
+  apply score_gt_one_of_case7_resource_witness
+    (square.measurableSet_dilatedInteriorRegion factor_nonzero)
+  exact .oppositeAndEdge .bottom coordinate .bottom factor factor_gt_one
+    chord coordinate_mem edge_point_mem
 
 lemma score_gt_one_of_case7_bottom_corner_and_edge_point
     {size coordinate : ℕ} (square : PlacedSquare) {factor : ℝ}
@@ -1869,8 +2044,9 @@ lemma score_gt_one_of_case7_bottom_corner_and_edge_point
     · exact horizontal_openSegment_subset_of_convex
         (square.convex_dilatedInteriorRegion factor) (by norm_num)
         corner_mem unit_point_mem
-  exact score_gt_one_of_corner_chord_and_edge_point
+  apply score_gt_one_of_case7_resource_witness
     (square.measurableSet_dilatedInteriorRegion factor_nonzero)
+  exact .cornerAndEdge .bottom .bottomLeft coordinate .bottom
     inner_positive chord corner_point_mem coordinate_mem edge_point_mem
 
 lemma score_gt_one_of_case7_both_bottom_corner_points
@@ -1888,27 +2064,38 @@ lemma score_gt_one_of_case7_both_bottom_corner_points
         square.dilatedInteriorRegion factor) :
     1 < NagamochiResource.measure size
       (square.dilatedInteriorRegion factor) := by
-  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
-  have left_point_mem :
-      ![(9 / 10 : ℝ), 1] ∈ square.dilatedInteriorRegion factor := by
-    simpa [NagamochiResource.cornerPoint] using bottom_left_mem
-  have right_point_mem :
-      ![(size : ℝ) - 9 / 10, (1 : ℝ)] ∈
-        square.dilatedInteriorRegion factor := by
-    simpa [NagamochiResource.cornerPoint] using bottom_right_mem
-  have endpoints_ordered :
-      (9 / 10 : ℝ) < (size : ℝ) - 9 / 10 := by linarith
-  have chord :
-      NagamochiResource.HasBoundaryChord size .bottom
-        (square.dilatedInteriorRegion factor) (1 / 5) := by
-    refine ⟨9 / 10, (size : ℝ) - 9 / 10, by linarith,
-      fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩, ?_⟩
-    exact horizontal_openSegment_subset_of_convex
-      (square.convex_dilatedInteriorRegion factor) endpoints_ordered
-      left_point_mem right_point_mem
-  exact score_gt_one_of_two_corner_points_and_long_chord
+  apply score_gt_one_of_case7_resource_witness
     (square.measurableSet_dilatedInteriorRegion factor_nonzero)
-    inner_positive (by decide) chord bottom_left_mem bottom_right_mem
+  exact case7ResourceWitness_of_two_boundary_corner_points
+    size_at_least_three (square.convex_dilatedInteriorRegion factor)
+    inner_positive .bottom bottom_left_mem bottom_right_mem
+
+lemma score_gt_one_of_case7_two_boundary_corner_points_geometry
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (side : InnerBoundarySide)
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_in_strip : side.centerInStrip size square factor)
+    (first_point_mem :
+      NagamochiResource.cornerPoint size
+          side.toBoundarySide.firstCornerPoint ∈
+        square.dilatedInteriorRegion factor)
+    (second_point_mem :
+      NagamochiResource.cornerPoint size
+          side.toBoundarySide.secondCornerPoint ∈
+        square.dilatedInteriorRegion factor) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have inner_positive := innerArea_positive_of_edge_strip_geometry square side
+    size_at_least_three factor_gt_one inside_container center_in_strip
+  apply score_gt_one_of_case7_resource_witness
+    (square.measurableSet_dilatedInteriorRegion factor_positive.ne')
+  exact case7ResourceWitness_of_two_boundary_corner_points
+    size_at_least_three (square.convex_dilatedInteriorRegion factor)
+    inner_positive side.toBoundarySide first_point_mem second_point_mem
 
 lemma score_gt_one_of_case7_bottom_corner_and_edge_point_geometry
     {size coordinate : ℕ} (square : PlacedSquare) {factor : ℝ}
@@ -1957,12 +2144,10 @@ lemma score_gt_one_of_case7_both_bottom_corner_points_geometry
         square.dilatedInteriorRegion factor) :
     1 < NagamochiResource.measure size
       (square.dilatedInteriorRegion factor) := by
-  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
-  have inner_positive := innerArea_positive_of_bottom_edge_strip_geometry square
-    size_at_least_three factor_gt_one inside_container center_x_at_least_one
-    center_x_at_most_size_sub_one center_y_at_most_one
-  exact score_gt_one_of_case7_both_bottom_corner_points square
-    size_at_least_three factor_positive.ne' inner_positive
+  exact score_gt_one_of_case7_two_boundary_corner_points_geometry square .bottom
+    size_at_least_three factor_gt_one inside_container
+    ⟨center_x_at_least_one, center_x_at_most_size_sub_one,
+      center_y_at_most_one⟩
     bottom_left_mem bottom_right_mem
 
 lemma score_gt_one_of_two_boundaryLine_chords

@@ -186,6 +186,25 @@ inductive NagamochiResource.CornerPoint
   | rightTop
   deriving DecidableEq
 
+def NagamochiResource.BoundarySide.firstCornerPoint :
+    NagamochiResource.BoundarySide → NagamochiResource.CornerPoint
+  | .bottom => .bottomLeft
+  | .top => .topLeft
+  | .left => .leftBottom
+  | .right => .rightBottom
+
+def NagamochiResource.BoundarySide.secondCornerPoint :
+    NagamochiResource.BoundarySide → NagamochiResource.CornerPoint
+  | .bottom => .bottomRight
+  | .top => .topRight
+  | .left => .leftTop
+  | .right => .rightTop
+
+lemma NagamochiResource.BoundarySide.cornerPoints_ne
+    (side : NagamochiResource.BoundarySide) :
+    side.firstCornerPoint ≠ side.secondCornerPoint := by
+  cases side <;> decide
+
 def NagamochiResource.cornerPointKinds :
     Finset NagamochiResource.CornerPoint :=
   {.bottomLeft, .bottomRight, .topLeft, .topRight,

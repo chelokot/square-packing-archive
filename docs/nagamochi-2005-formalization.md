@@ -61,9 +61,11 @@ point, a boundary chord, and an inner-area lower bound. For the canonical bottom
 orientation of Case 7, Lean also closes the nonadjacent-chord-plus-`P` branch
 and the short-corner-chord-plus-`Q`-plus-`P` branch. If both extreme `Q` points
 on the boundary line are present, convexity supplies the whole chord between
-them and Lean closes that branch directly. The remaining obligation is the
-exhaustive geometric classification that produces one of these resource
-witnesses, including the reduction from the last Case 7 branch back to Case 6.
+them and Lean closes that branch directly. These alternatives are exposed as
+one typed Case 7 resource witness, so the score theorem is independent of the
+geometric classification that constructs it. The remaining obligation is that
+exhaustive classification, including the reduction from the last Case 7 branch
+back to Case 6.
 
 The positive-inner-area part of Nagamochi's Lemma 7(iv) is now proved for the
 entire set of four edge strips, not left as a witness. Container containment
@@ -73,6 +75,10 @@ reflections, coordinate swap, and an explicit inward-point family then enter
 the open inner rectangle from every side and either half of the container.
 Consequently the Case 7 `Q`/`P` and dual-`Q` branches derive their strict inner
 contribution directly from the stated center-strip geometry.
+The dual-`Q` constructor is side-independent: for any of the four edge strips,
+the two matching extreme `Q` points, convexity and the strip geometry produce
+the complete typed witness and hence score greater than one. The older
+bottom-side theorem is retained as a specialization of this common interface.
 
 Coordinate-swap symmetry is formalized as an involution on points, frames and
 placed squares. Lean proves that it preserves membership in dilated open square
