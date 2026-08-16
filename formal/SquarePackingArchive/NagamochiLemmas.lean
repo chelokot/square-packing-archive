@@ -255,6 +255,117 @@ lemma topBoundaryChord_of_horizontalOpposite
         factor_positive cosine_positive sine_positive
         x_lower_at_most_y_lower y_upper_at_most_x_upper⟩
 
+def HasVerticalOppositeChordWithin
+    (size : ℕ) (square : PlacedSquare) (factor width : ℝ) : Prop :=
+  (square.verticalAdjacentOtherLower factor width ≤
+      square.verticalAdjacentChordStart factor width ∧
+    square.verticalAdjacentOtherUpper factor width ≤
+      square.verticalAdjacentChordEnd factor width ∧
+    Ioo (square.verticalAdjacentChordStart factor width)
+        (square.verticalAdjacentOtherUpper factor width) ⊆
+      Icc (9 / 10) ((size : ℝ) - 9 / 10)) ∨
+  (square.verticalAdjacentChordStart factor width ≤
+      square.verticalAdjacentOtherLower factor width ∧
+    square.verticalAdjacentChordEnd factor width ≤
+      square.verticalAdjacentOtherUpper factor width ∧
+    Ioo (square.verticalAdjacentOtherLower factor width)
+        (square.verticalAdjacentChordEnd factor width) ⊆
+      Icc (9 / 10) ((size : ℝ) - 9 / 10))
+
+lemma leftBoundaryChord_of_verticalOpposite
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (opposite : HasVerticalOppositeChordWithin size square factor 1) :
+    NagamochiResource.HasBoundaryChord size .left
+      (square.dilatedInteriorRegion factor) factor := by
+  rcases opposite with
+    ⟨second_lower_at_most_first_lower, first_upper_at_most_second_upper,
+      chord_inside_segment⟩ |
+      ⟨first_lower_at_most_second_lower, second_upper_at_most_first_upper,
+        chord_inside_segment⟩
+  · exact ⟨square.verticalAdjacentChordStart factor 1,
+      square.verticalAdjacentOtherUpper factor 1,
+      square.verticalSineChord_length_at_least_factor
+        factor_positive.le sine_positive,
+      chord_inside_segment,
+      square.verticalSineChord_inside_dilatedInteriorRegion
+        factor_positive cosine_positive sine_positive
+        second_lower_at_most_first_lower first_upper_at_most_second_upper⟩
+  · exact ⟨square.verticalAdjacentOtherLower factor 1,
+      square.verticalAdjacentChordEnd factor 1,
+      square.verticalCosineChord_length_at_least_factor
+        factor_positive.le cosine_positive,
+      chord_inside_segment,
+      square.verticalCosineChord_inside_dilatedInteriorRegion
+        factor_positive cosine_positive sine_positive
+        first_lower_at_most_second_lower second_upper_at_most_first_upper⟩
+
+lemma rightBoundaryChord_of_verticalOpposite
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (opposite :
+      HasVerticalOppositeChordWithin size square factor ((size : ℝ) - 1)) :
+    NagamochiResource.HasBoundaryChord size .right
+      (square.dilatedInteriorRegion factor) factor := by
+  rcases opposite with
+    ⟨second_lower_at_most_first_lower, first_upper_at_most_second_upper,
+      chord_inside_segment⟩ |
+      ⟨first_lower_at_most_second_lower, second_upper_at_most_first_upper,
+        chord_inside_segment⟩
+  · exact ⟨square.verticalAdjacentChordStart factor ((size : ℝ) - 1),
+      square.verticalAdjacentOtherUpper factor ((size : ℝ) - 1),
+      square.verticalSineChord_length_at_least_factor
+        factor_positive.le sine_positive,
+      chord_inside_segment,
+      square.verticalSineChord_inside_dilatedInteriorRegion
+        factor_positive cosine_positive sine_positive
+        second_lower_at_most_first_lower first_upper_at_most_second_upper⟩
+  · exact ⟨square.verticalAdjacentOtherLower factor ((size : ℝ) - 1),
+      square.verticalAdjacentChordEnd factor ((size : ℝ) - 1),
+      square.verticalCosineChord_length_at_least_factor
+        factor_positive.le cosine_positive,
+      chord_inside_segment,
+      square.verticalCosineChord_inside_dilatedInteriorRegion
+        factor_positive cosine_positive sine_positive
+        first_lower_at_most_second_lower second_upper_at_most_first_upper⟩
+
+def HasOppositeBoundaryChord
+    (size : ℕ) (square : PlacedSquare) (factor : ℝ) :
+    NagamochiResource.BoundarySide → Prop
+  | .bottom => HasHorizontalOppositeChordWithin size square factor 1
+  | .top =>
+      HasHorizontalOppositeChordWithin size square factor ((size : ℝ) - 1)
+  | .left => HasVerticalOppositeChordWithin size square factor 1
+  | .right =>
+      HasVerticalOppositeChordWithin size square factor ((size : ℝ) - 1)
+
+lemma boundaryChord_of_opposite
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (side : NagamochiResource.BoundarySide)
+    (opposite : HasOppositeBoundaryChord size square factor side) :
+    NagamochiResource.HasBoundaryChord size side
+      (square.dilatedInteriorRegion factor) factor := by
+  cases side with
+  | bottom =>
+      exact bottomBoundaryChord_of_horizontalOpposite square factor_positive
+        cosine_positive sine_positive opposite
+  | top =>
+      exact topBoundaryChord_of_horizontalOpposite square factor_positive
+        cosine_positive sine_positive opposite
+  | left =>
+      exact leftBoundaryChord_of_verticalOpposite square factor_positive
+        cosine_positive sine_positive opposite
+  | right =>
+      exact rightBoundaryChord_of_verticalOpposite square factor_positive
+        cosine_positive sine_positive opposite
+
 noncomputable def cornerAdjacentChordLength (height tangentHalfAngle : ℝ) : ℝ :=
   -(height - 1) * (1 + tangentHalfAngle ^ 2) ^ 2 /
       (2 * tangentHalfAngle * (1 - tangentHalfAngle ^ 2)) +
@@ -855,6 +966,60 @@ lemma score_gt_one_of_half_area_and_boundary_chord
     _ ≤ NagamochiResource.measure size region :=
       NagamochiResource.innerArea_add_boundaryLines_le_measure size region
 
+lemma score_gt_one_of_two_opposite_boundary_chords
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    {firstSide secondSide : NagamochiResource.BoundarySide}
+    (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (different_sides : firstSide ≠ secondSide)
+    (first_opposite :
+      HasOppositeBoundaryChord size square factor firstSide)
+    (second_opposite :
+      HasOppositeBoundaryChord size square factor secondSide) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  apply score_gt_one_of_two_boundary_chords
+    (square.measurableSet_dilatedInteriorRegion factor_positive.ne')
+    factor_gt_one different_sides
+  · exact boundaryChord_of_opposite square factor_positive cosine_positive
+      sine_positive firstSide first_opposite
+  · exact boundaryChord_of_opposite square factor_positive cosine_positive
+      sine_positive secondSide second_opposite
+
+def HasCase3ResourceWitness
+    (size : ℕ) (square : PlacedSquare) (factor : ℝ) : Prop :=
+  (∃ firstSide secondSide : NagamochiResource.BoundarySide,
+    firstSide ≠ secondSide ∧
+      HasOppositeBoundaryChord size square factor firstSide ∧
+        HasOppositeBoundaryChord size square factor secondSide) ∨
+  (∃ side : NagamochiResource.BoundarySide,
+    HasOppositeBoundaryChord size square factor side ∧
+      (1 / 2 : ENNReal) * ENNReal.ofReal (factor ^ 2) ≤
+        NagamochiResource.innerArea size
+          (square.dilatedInteriorRegion factor))
+
+lemma score_gt_one_of_case3_resource_witness
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (witness : HasCase3ResourceWitness size square factor) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  rcases witness with
+    ⟨firstSide, secondSide, different_sides, first_opposite, second_opposite⟩ |
+      ⟨side, opposite, half_area⟩
+  · exact score_gt_one_of_two_opposite_boundary_chords square factor_gt_one
+      cosine_positive sine_positive different_sides first_opposite second_opposite
+  · apply score_gt_one_of_half_area_and_boundary_chord
+      (square.measurableSet_dilatedInteriorRegion factor_positive.ne')
+      factor_gt_one half_area
+    exact boundaryChord_of_opposite square factor_positive cosine_positive
+      sine_positive side opposite
+
 lemma score_gt_one_of_bottom_top_horizontalOpposite
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
     (factor_gt_one : 1 < factor)
@@ -865,15 +1030,9 @@ lemma score_gt_one_of_bottom_top_horizontalOpposite
       HasHorizontalOppositeChordWithin size square factor ((size : ℝ) - 1)) :
     1 < NagamochiResource.measure size
       (square.dilatedInteriorRegion factor) := by
-  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
-  apply score_gt_one_of_two_boundary_chords
-    (firstSide := .bottom) (secondSide := .top)
-    (square.measurableSet_dilatedInteriorRegion factor_positive.ne')
-    factor_gt_one (by decide)
-  · exact bottomBoundaryChord_of_horizontalOpposite square factor_positive
-      cosine_positive sine_positive bottom_opposite
-  · exact topBoundaryChord_of_horizontalOpposite square factor_positive
-      cosine_positive sine_positive top_opposite
+  exact score_gt_one_of_two_opposite_boundary_chords
+    (firstSide := .bottom) (secondSide := .top) square factor_gt_one
+    cosine_positive sine_positive (by decide) bottom_opposite top_opposite
 
 lemma score_gt_one_of_two_long_boundary_chords
     {size : ℕ} {region : Set Plane} {firstLength secondLength : ℝ}

@@ -53,3 +53,17 @@ real inequality lifts to an `ENNReal` score theorem once those two geometric
 lower bounds are supplied. A general nonnegative real-component compositor is
 used for this and the remaining subcases instead of repeating measure
 arithmetic.
+
+Coordinate-swap symmetry is formalized as an involution on points, frames and
+placed squares. Lean proves that it preserves membership in dilated open square
+regions, allowing the vertical chord theory to be derived from the horizontal
+theory without duplicating analytic formulas. Consequently, the two-chord
+branch of Case 3 now accepts any two distinct sides among bottom, top, left and
+right, rather than only the bottom/top pair.
+
+Both Case 3 branches are exposed through one typed witness: either two distinct
+opposite-edge boundary chords, or one such chord together with half of the
+dilated square's area in the inner rectangle. The witness implies score greater
+than one for every side orientation. The remaining Case 3 task is therefore a
+pure classification theorem deriving this witness from the paper's positional
+hypotheses.

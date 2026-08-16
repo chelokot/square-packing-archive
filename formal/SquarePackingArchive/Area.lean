@@ -217,6 +217,34 @@ def PlacedSquare.DilatedInteriorContains
       |localY| < factor / 2 ∧
         point = square.dilatedPoint factor localX localY
 
+lemma PlacedSquare.swap_dilatedPoint
+    (square : PlacedSquare) (factor localX localY : ℝ) :
+    square.swap.dilatedPoint factor localX localY =
+      (square.dilatedPoint factor localX (-localY)).swap := by
+  rw [Point.mk.injEq]
+  constructor
+  · simp [PlacedSquare.swap, Point.swap, Frame.swap,
+      PlacedSquare.dilatedPoint, Frame.place]
+    ring
+  · simp [PlacedSquare.swap, Point.swap, Frame.swap,
+      PlacedSquare.dilatedPoint, Frame.place]
+
+lemma PlacedSquare.dilatedInteriorContains_swap_iff
+    (square : PlacedSquare) (factor : ℝ) (point : Point) :
+    square.swap.DilatedInteriorContains factor point.swap ↔
+      square.DilatedInteriorContains factor point := by
+  constructor
+  · rintro ⟨localX, localY, localX_bound, localY_bound, point_eq⟩
+    refine ⟨localX, -localY, localX_bound, ?_, ?_⟩
+    · simpa only [abs_neg] using localY_bound
+    · apply Point.swap_injective
+      rw [← square.swap_dilatedPoint]
+      exact point_eq
+  · rintro ⟨localX, localY, localX_bound, localY_bound, point_eq⟩
+    refine ⟨localX, -localY, localX_bound, ?_, ?_⟩
+    · simpa only [abs_neg] using localY_bound
+    · rw [square.swap_dilatedPoint, neg_neg, point_eq]
+
 lemma PlacedSquare.mem_dilatedInteriorRegion_iff
     (square : PlacedSquare) {factor : ℝ} (factor_positive : 0 < factor)
     (point : Plane) :
@@ -280,6 +308,17 @@ lemma PlacedSquare.mem_dilatedInteriorRegion_iff
       rw [square.frame.rotation_apply_one]
       simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
       field_simp [factor_positive.ne']
+
+lemma PlacedSquare.horizontalPoint_mem_swap_iff
+    (square : PlacedSquare) {factor coordinate height : ℝ}
+    (factor_positive : 0 < factor) :
+    ![coordinate, height] ∈ square.swap.dilatedInteriorRegion factor ↔
+      ![height, coordinate] ∈ square.dilatedInteriorRegion factor := by
+  rw [square.swap.mem_dilatedInteriorRegion_iff factor_positive,
+    square.mem_dilatedInteriorRegion_iff factor_positive]
+  simpa [Plane.toPoint, Point.swap] using
+    square.dilatedInteriorContains_swap_iff factor
+      (Plane.toPoint ![height, coordinate])
 
 def PlacedSquare.dilatedLocalX
     (square : PlacedSquare) (factor : ℝ) (point : Point) : ℝ :=
@@ -534,6 +573,107 @@ lemma PlacedSquare.horizontalSineChord_inside_dilatedInteriorRegion
   exact square.horizontalChord_inside_dilatedInteriorRegion
     factor_positive cosine_positive sine_positive x_lower_at_most_y_lower le_rfl
     y_upper_at_most_x_upper le_rfl
+
+noncomputable def PlacedSquare.verticalAdjacentChordStart
+    (square : PlacedSquare) (factor width : ℝ) : ℝ :=
+  square.swap.horizontalAdjacentChordStart factor width
+
+noncomputable def PlacedSquare.verticalAdjacentChordEnd
+    (square : PlacedSquare) (factor width : ℝ) : ℝ :=
+  square.swap.horizontalAdjacentChordEnd factor width
+
+noncomputable def PlacedSquare.verticalAdjacentOtherLower
+    (square : PlacedSquare) (factor width : ℝ) : ℝ :=
+  square.swap.horizontalAdjacentOtherLower factor width
+
+noncomputable def PlacedSquare.verticalAdjacentOtherUpper
+    (square : PlacedSquare) (factor width : ℝ) : ℝ :=
+  square.swap.horizontalAdjacentOtherUpper factor width
+
+lemma PlacedSquare.verticalChord_inside_dilatedInteriorRegion
+    (square : PlacedSquare) {factor width intervalStart intervalEnd : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (first_lower_at_most :
+      square.verticalAdjacentChordStart factor width ≤ intervalStart)
+    (second_lower_at_most :
+      square.verticalAdjacentOtherLower factor width ≤ intervalStart)
+    (end_at_most_first_upper :
+      intervalEnd ≤ square.verticalAdjacentOtherUpper factor width)
+    (end_at_most_second_upper :
+      intervalEnd ≤ square.verticalAdjacentChordEnd factor width) :
+    ∀ coordinate ∈ Ioo intervalStart intervalEnd,
+      ![width, coordinate] ∈ square.dilatedInteriorRegion factor := by
+  intro coordinate coordinate_mem
+  apply (square.horizontalPoint_mem_swap_iff factor_positive).mp
+  apply square.swap.horizontalChord_inside_dilatedInteriorRegion
+    factor_positive sine_positive cosine_positive
+  · exact first_lower_at_most
+  · exact second_lower_at_most
+  · exact end_at_most_first_upper
+  · exact end_at_most_second_upper
+  · exact coordinate_mem
+
+lemma PlacedSquare.verticalSineChord_length_at_least_factor
+    (square : PlacedSquare) {factor width : ℝ}
+    (factor_nonnegative : 0 ≤ factor)
+    (sine_positive : 0 < square.frame.sine) :
+    factor ≤ square.verticalAdjacentOtherUpper factor width -
+      square.verticalAdjacentChordStart factor width := by
+  simpa [PlacedSquare.verticalAdjacentOtherUpper,
+    PlacedSquare.verticalAdjacentChordStart, PlacedSquare.swap, Frame.swap] using
+    square.swap.horizontalCosineChord_length_at_least_factor
+      factor_nonnegative sine_positive
+
+lemma PlacedSquare.verticalCosineChord_length_at_least_factor
+    (square : PlacedSquare) {factor width : ℝ}
+    (factor_nonnegative : 0 ≤ factor)
+    (cosine_positive : 0 < square.frame.cosine) :
+    factor ≤ square.verticalAdjacentChordEnd factor width -
+      square.verticalAdjacentOtherLower factor width := by
+  simpa [PlacedSquare.verticalAdjacentChordEnd,
+    PlacedSquare.verticalAdjacentOtherLower, PlacedSquare.swap, Frame.swap] using
+    square.swap.horizontalSineChord_length_at_least_factor
+      factor_nonnegative cosine_positive
+
+lemma PlacedSquare.verticalSineChord_inside_dilatedInteriorRegion
+    (square : PlacedSquare) {factor width : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (second_lower_at_most_first_lower :
+      square.verticalAdjacentOtherLower factor width ≤
+        square.verticalAdjacentChordStart factor width)
+    (first_upper_at_most_second_upper :
+      square.verticalAdjacentOtherUpper factor width ≤
+        square.verticalAdjacentChordEnd factor width) :
+    ∀ coordinate ∈
+        Ioo (square.verticalAdjacentChordStart factor width)
+          (square.verticalAdjacentOtherUpper factor width),
+      ![width, coordinate] ∈ square.dilatedInteriorRegion factor := by
+  exact square.verticalChord_inside_dilatedInteriorRegion
+    factor_positive cosine_positive sine_positive le_rfl
+    second_lower_at_most_first_lower le_rfl first_upper_at_most_second_upper
+
+lemma PlacedSquare.verticalCosineChord_inside_dilatedInteriorRegion
+    (square : PlacedSquare) {factor width : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (first_lower_at_most_second_lower :
+      square.verticalAdjacentChordStart factor width ≤
+        square.verticalAdjacentOtherLower factor width)
+    (second_upper_at_most_first_upper :
+      square.verticalAdjacentChordEnd factor width ≤
+        square.verticalAdjacentOtherUpper factor width) :
+    ∀ coordinate ∈
+        Ioo (square.verticalAdjacentOtherLower factor width)
+          (square.verticalAdjacentChordEnd factor width),
+      ![width, coordinate] ∈ square.dilatedInteriorRegion factor := by
+  exact square.verticalChord_inside_dilatedInteriorRegion
+    factor_positive cosine_positive sine_positive
+    first_lower_at_most_second_lower le_rfl second_upper_at_most_first_upper le_rfl
 
 lemma PlacedSquare.isOpen_dilatedInteriorRegion
     (square : PlacedSquare) {factor : ℝ} (factor_nonzero : factor ≠ 0) :

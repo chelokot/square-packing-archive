@@ -7,6 +7,18 @@ structure Point where
   x : ℝ
   y : ℝ
 
+def Point.swap (point : Point) : Point :=
+  ⟨point.y, point.x⟩
+
+@[simp] lemma Point.swap_swap (point : Point) :
+    point.swap.swap = point := by
+  rfl
+
+lemma Point.swap_injective : Function.Injective Point.swap := by
+  intro left right equality
+  have := congrArg Point.swap equality
+  simpa using this
+
 structure Frame where
   cosine : ℝ
   sine : ℝ
@@ -20,6 +32,11 @@ lemma Frame.sine_le_one (frame : Frame) (sine_nonnegative : 0 ≤ frame.sine) :
     frame.sine ≤ 1 := by
   nlinarith [frame.unit, sq_nonneg frame.cosine]
 
+def Frame.swap (frame : Frame) : Frame where
+  cosine := frame.sine
+  sine := frame.cosine
+  unit := by nlinarith [frame.unit]
+
 def Frame.place (frame : Frame) (localX localY : ℝ) : Point :=
   ⟨localX * frame.cosine - localY * frame.sine,
     localX * frame.sine + localY * frame.cosine⟩
@@ -27,6 +44,10 @@ def Frame.place (frame : Frame) (localX localY : ℝ) : Point :=
 structure PlacedSquare where
   center : Point
   frame : Frame
+
+def PlacedSquare.swap (square : PlacedSquare) : PlacedSquare where
+  center := square.center.swap
+  frame := square.frame.swap
 
 def PlacedSquare.point (square : PlacedSquare) (localX localY : ℝ) : Point :=
   let offset := square.frame.place localX localY
