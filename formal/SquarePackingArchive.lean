@@ -3,6 +3,7 @@ import SquarePackingArchive.Area
 import SquarePackingArchive.RationalCertificate
 import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers
+import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
 import SquarePackingArchive.Audit

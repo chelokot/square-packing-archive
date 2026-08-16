@@ -1,5 +1,6 @@
 import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers
+import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
 
@@ -13,5 +14,7 @@ import SquarePackingArchive.Records.Square69
 #print axioms SquarePackingArchive.Records.SquareNumbers.s49_eq_seven
 #print axioms SquarePackingArchive.Records.SquareNumbers.s64_eq_eight
 #print axioms SquarePackingArchive.Records.SquareNumbers.s81_eq_nine
+#print axioms SquarePackingArchive.Records.NearSquare.s2_eq_two
+#print axioms SquarePackingArchive.Records.NearSquare.s3_eq_two
 #print axioms SquarePackingArchive.Records.Square68.s68_le_8_80339
 #print axioms SquarePackingArchive.Records.Square69.s69_le_8_8272

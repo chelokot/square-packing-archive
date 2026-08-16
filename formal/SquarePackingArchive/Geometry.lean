@@ -81,6 +81,27 @@ def IsMinimumSide (squareCount : ℕ) (side : ℝ) : Prop :=
   HasPacking squareCount side ∧
     ∀ candidateSide, HasPacking squareCount candidateSide → side ≤ candidateSide
 
+def Packing.reindex
+    {sourceCount targetCount : ℕ} {side : ℝ}
+    (packing : Packing sourceCount side)
+    (embedding : Fin targetCount ↪ Fin sourceCount) :
+    Packing targetCount side where
+  squares := packing.squares ∘ embedding
+  side_nonnegative := packing.side_nonnegative
+  fits := fun index => packing.fits (embedding index)
+  disjoint := by
+    intro left right different
+    exact packing.disjoint (embedding left) (embedding right)
+      fun equality => different (embedding.injective equality)
+
+lemma HasPacking.mono
+    {sourceCount targetCount : ℕ} {side : ℝ}
+    (packing : HasPacking sourceCount side)
+    (count_le : targetCount ≤ sourceCount) :
+    HasPacking targetCount side := by
+  rcases packing with ⟨source⟩
+  exact ⟨source.reindex (Fin.castLEEmb count_le)⟩
+
 lemma abs_linearCombination_le
     {localX localY coefficientX coefficientY : ℝ}
     (localX_le : |localX| ≤ 1 / 2)

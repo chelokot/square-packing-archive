@@ -153,6 +153,13 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/NearSquare.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s2_eq_two"
         }
       ],
       "active": true
@@ -169,6 +176,13 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/NearSquare.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s3_eq_two"
         }
       ],
       "active": true
