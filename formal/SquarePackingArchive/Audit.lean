@@ -5,6 +5,7 @@ import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
+import SquarePackingArchive.NagamochiLemmas
 
 #print axioms SquarePackingArchive.Records.Basic.s1_eq_one
 #print axioms SquarePackingArchive.Records.SquareNumbers.squareNumber_isMinimumSide
@@ -22,3 +23,4 @@ import SquarePackingArchive.NagamochiResource
 #print axioms SquarePackingArchive.Records.Square69.s69_le_8_8272
 #print axioms SquarePackingArchive.Packing.squareCount_lt_resourceMass
 #print axioms SquarePackingArchive.NagamochiResource.measure_univ
+#print axioms SquarePackingArchive.Nagamochi.adjacentCut_triangleArea_lt_half_chord

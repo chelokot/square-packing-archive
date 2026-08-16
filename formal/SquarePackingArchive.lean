@@ -2,6 +2,7 @@ import SquarePackingArchive.Geometry
 import SquarePackingArchive.Area
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
+import SquarePackingArchive.NagamochiLemmas
 import SquarePackingArchive.RationalCertificate
 import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers

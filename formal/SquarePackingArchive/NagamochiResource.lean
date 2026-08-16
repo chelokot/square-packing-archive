@@ -174,4 +174,10 @@ lemma NagamochiResource.measure_univ
   push_cast
   ring
 
+lemma NagamochiResource.measure_univ_ne_top
+    {size : ℕ} (size_at_least_three : 3 ≤ size) :
+    NagamochiResource.measure size univ ≠ ⊤ := by
+  rw [NagamochiResource.measure_univ size_at_least_three]
+  finiteness
+
 end SquarePackingArchive
