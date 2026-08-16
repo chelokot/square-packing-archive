@@ -1255,6 +1255,67 @@ lemma PlacedSquare.unitCornerPoint_mem_dilatedInteriorRegion_of_center_le_one
         Matrix.cons_val_one]
       linarith
 
+lemma PlacedSquare.horizontalCenterPoint_mem_dilatedInteriorRegion
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_nonnegative : 0 ≤ square.frame.cosine)
+    (sine_nonnegative : 0 ≤ square.frame.sine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side)
+    (center_y_at_most_one : factor * square.center.y ≤ 1) :
+    ![factor * square.center.x, (1 : ℝ)] ∈
+      square.dilatedInteriorRegion factor := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  let componentSum := square.frame.cosine + square.frame.sine
+  have center_y_at_least_half := square.dilatedCenterY_halfExtent_le
+    factor_positive cosine_nonnegative sine_nonnegative inside_container
+  let remaining := 1 - factor * componentSum / 2
+  have remaining_nonnegative : 0 ≤ remaining := by
+    dsimp [remaining, componentSum]
+    linarith
+  have y_gap_nonnegative : 0 ≤ 1 - factor * square.center.y := by linarith
+  have y_gap_at_most_remaining :
+      1 - factor * square.center.y ≤ remaining := by
+    dsimp [remaining, componentSum]
+    linarith
+  have remaining_times_sum_lt_half : remaining * componentSum < factor / 2 := by
+    simpa [remaining, componentSum] using
+      square.frame.remainingHalfExtent_mul_componentSum_lt_half
+        factor_gt_one cosine_nonnegative sine_nonnegative
+  have y_sine_at_most :
+      (1 - factor * square.center.y) * square.frame.sine ≤
+        remaining * square.frame.sine :=
+    mul_le_mul_of_nonneg_right y_gap_at_most_remaining sine_nonnegative
+  have y_cosine_at_most :
+      (1 - factor * square.center.y) * square.frame.cosine ≤
+        remaining * square.frame.cosine :=
+    mul_le_mul_of_nonneg_right y_gap_at_most_remaining cosine_nonnegative
+  have remaining_sine_at_most_sum :
+      remaining * square.frame.sine ≤ remaining * componentSum := by
+    apply mul_le_mul_of_nonneg_left _ remaining_nonnegative
+    dsimp [componentSum]
+    linarith
+  have remaining_cosine_at_most_sum :
+      remaining * square.frame.cosine ≤ remaining * componentSum := by
+    apply mul_le_mul_of_nonneg_left _ remaining_nonnegative
+    dsimp [componentSum]
+    linarith
+  have y_sine_nonnegative :
+      0 ≤ (1 - factor * square.center.y) * square.frame.sine :=
+    mul_nonneg y_gap_nonnegative sine_nonnegative
+  have y_cosine_nonnegative :
+      0 ≤ (1 - factor * square.center.y) * square.frame.cosine :=
+    mul_nonneg y_gap_nonnegative cosine_nonnegative
+  apply square.mem_dilatedInteriorRegion_of_inverse_bounds factor_positive
+  · rw [abs_lt]
+    constructor <;>
+      simp only [PlacedSquare.dilatedLocalX, Plane.toPoint,
+        Matrix.cons_val_zero, Matrix.cons_val_one] <;> linarith
+  · rw [abs_lt]
+    constructor <;>
+      simp only [PlacedSquare.dilatedLocalY, Plane.toPoint,
+        Matrix.cons_val_zero, Matrix.cons_val_one] <;> linarith
+
 lemma PlacedSquare.case5CornerPoints_mem_dilatedInteriorRegion_of_sine_le_cosine
     {square : PlacedSquare} {factor side : ℝ}
     (factor_gt_one : 1 < factor)
@@ -1489,6 +1550,33 @@ lemma PlacedSquare.case5Points_mem_dilatedInteriorRegion_any_frame
       normalized_center_x normalized_center_y
   rw [region_eq] at unit_point corner_points
   exact ⟨unit_point, corner_points⟩
+
+lemma PlacedSquare.horizontalCenterPoint_mem_dilatedInteriorRegion_any_frame
+    {square : PlacedSquare} {factor side : ℝ}
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion side)
+    (center_y_at_most_one : factor * square.center.y ≤ 1) :
+    ![factor * square.center.x, (1 : ℝ)] ∈
+      square.dilatedInteriorRegion factor := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have region_eq :=
+    square.firstQuadrant_dilatedInteriorRegion_eq factor_positive
+  have normalized_inside :
+      square.firstQuadrant.dilatedInteriorRegion factor ⊆
+        containerRegion side := by
+    rw [region_eq]
+    exact inside_container
+  have normalized_center_y :
+      factor * square.firstQuadrant.center.y ≤ 1 := by
+    simpa using center_y_at_most_one
+  have normalized_point :=
+    square.firstQuadrant.horizontalCenterPoint_mem_dilatedInteriorRegion
+      factor_gt_one square.firstQuadrant_cosine_nonnegative
+      square.firstQuadrant_sine_nonnegative normalized_inside
+      normalized_center_y
+  rw [region_eq] at normalized_point
+  simpa using normalized_point
 
 lemma PlacedSquare.case5RightPoints_mem_dilatedInteriorRegion_any_frame
     {square : PlacedSquare} {factor side : ℝ}

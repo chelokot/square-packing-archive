@@ -65,6 +65,14 @@ them and Lean closes that branch directly. The remaining obligation is the
 exhaustive geometric classification that produces one of these resource
 witnesses, including the reduction from the last Case 7 branch back to Case 6.
 
+The positive-inner-area part of Nagamochi's Lemma 7(iv) is now proved for the
+entire canonical bottom edge strip, not left as a witness. Container containment
+forces the horizontal point above the square's scaled center at height `1` into
+the open dilated square. An explicit inward-point family then enters the open
+inner rectangle from either half of the container. Consequently the Case 7
+`Q`/`P` and dual-`Q` branches now derive their strict inner contribution directly
+from the stated center-strip geometry.
+
 Coordinate-swap symmetry is formalized as an involution on points, frames and
 placed squares. Lean proves that it preserves membership in dilated open square
 regions, allowing the vertical chord theory to be derived from the horizontal
