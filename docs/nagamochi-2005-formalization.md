@@ -80,6 +80,23 @@ the two matching extreme `Q` points, convexity and the strip geometry produce
 the complete typed witness and hence score greater than one. The older
 bottom-side theorem is retained as a specialization of this common interface.
 
+The discrete implication in Lemma 7(iii) is kernel-checked for every side. A
+typed long open chord on the corresponding `0.9` grid line contains a natural
+coordinate strictly between its endpoints. Coordinates `1` and `n − 1` become
+the correct endpoint `Q` constructors; every other coordinate is proved to lie
+in the finite `P` index range `2..n − 2`. Typed eliminators recover a `Q` under
+the assumption that no `P` is present, or a `P` when neither endpoint `Q` is
+present. The remaining Lemma 7 obligation is geometric: derive the long-grid-
+chord witness from the square position and the adjacent/nonadjacent edge split.
+
+Case 7 now has a single side-independent combinatorial classifier after that
+geometric input is supplied. A `P` combines with the long boundary chord. An
+endpoint `Q` combines with its perpendicular `0.1` chord, with separate typed
+constructors for the near and far endpoints. The latter score inequality—one
+long chord, one short chord and one `Q`—is also proved directly from the resource
+measure. What remains is to derive the endpoint-to-perpendicular connection and
+the final deformation into Case 6 from the paper's geometric hypotheses.
+
 Coordinate-swap symmetry is formalized as an involution on points, frames and
 placed squares. Lean proves that it preserves membership in dilated open square
 regions, allowing the vertical chord theory to be derived from the horizontal

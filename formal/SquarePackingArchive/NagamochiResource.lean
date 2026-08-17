@@ -200,6 +200,15 @@ def NagamochiResource.BoundarySide.secondCornerPoint :
   | .left => .leftTop
   | .right => .rightTop
 
+noncomputable def NagamochiResource.BoundarySide.pointAt
+    (side : NagamochiResource.BoundarySide) (size : ℕ)
+    (coordinate : ℝ) : Plane :=
+  match side with
+  | .bottom => ![coordinate, (1 : ℝ)]
+  | .top => ![coordinate, (size : ℝ) - 1]
+  | .left => ![(1 : ℝ), coordinate]
+  | .right => ![(size : ℝ) - 1, coordinate]
+
 lemma NagamochiResource.BoundarySide.cornerPoints_ne
     (side : NagamochiResource.BoundarySide) :
     side.firstCornerPoint ≠ side.secondCornerPoint := by
@@ -225,6 +234,24 @@ noncomputable def NagamochiResource.cornerPoint
   | .leftTop => ![1, (size : ℝ) - 9 / 10]
   | .rightBottom => ![(size : ℝ) - 1, (9 / 10 : ℝ)]
   | .rightTop => ![(size : ℝ) - 1, (size : ℝ) - 9 / 10]
+
+@[simp] lemma NagamochiResource.BoundarySide.pointAt_firstCorner
+    (side : NagamochiResource.BoundarySide) (size : ℕ) :
+    side.pointAt size (9 / 10) =
+      NagamochiResource.cornerPoint size side.firstCornerPoint := by
+  cases side <;>
+    simp [NagamochiResource.BoundarySide.pointAt,
+      NagamochiResource.BoundarySide.firstCornerPoint,
+      NagamochiResource.cornerPoint]
+
+@[simp] lemma NagamochiResource.BoundarySide.pointAt_secondCorner
+    (side : NagamochiResource.BoundarySide) (size : ℕ) :
+    side.pointAt size ((size : ℝ) - 9 / 10) =
+      NagamochiResource.cornerPoint size side.secondCornerPoint := by
+  cases side <;>
+    simp [NagamochiResource.BoundarySide.pointAt,
+      NagamochiResource.BoundarySide.secondCornerPoint,
+      NagamochiResource.cornerPoint]
 
 noncomputable def NagamochiResource.cornerPoints (size : ℕ) : Measure Plane :=
   (9 / 20 : ENNReal) •
@@ -307,6 +334,20 @@ inductive NagamochiResource.EdgePoint
   | right
   deriving DecidableEq
 
+def NagamochiResource.EdgePoint.firstCornerPoint :
+    NagamochiResource.EdgePoint → NagamochiResource.CornerPoint
+  | .bottom => .leftBottom
+  | .top => .leftTop
+  | .left => .bottomLeft
+  | .right => .bottomRight
+
+def NagamochiResource.EdgePoint.secondCornerPoint :
+    NagamochiResource.EdgePoint → NagamochiResource.CornerPoint
+  | .bottom => .rightBottom
+  | .top => .rightTop
+  | .left => .topLeft
+  | .right => .topRight
+
 def NagamochiResource.edgePointKinds : Finset NagamochiResource.EdgePoint :=
   {.bottom, .top, .left, .right}
 
@@ -321,6 +362,41 @@ noncomputable def NagamochiResource.edgePoint
   | .top => ![(coordinate : ℝ), (size : ℝ) - 9 / 10]
   | .left => ![(9 / 10 : ℝ), (coordinate : ℝ)]
   | .right => ![(size : ℝ) - 9 / 10, (coordinate : ℝ)]
+
+noncomputable def NagamochiResource.EdgePoint.pointAt
+    (kind : NagamochiResource.EdgePoint) (size : ℕ)
+    (coordinate : ℝ) : Plane :=
+  match kind with
+  | .bottom => ![coordinate, (9 / 10 : ℝ)]
+  | .top => ![coordinate, (size : ℝ) - 9 / 10]
+  | .left => ![(9 / 10 : ℝ), coordinate]
+  | .right => ![(size : ℝ) - 9 / 10, coordinate]
+
+@[simp] lemma NagamochiResource.EdgePoint.pointAt_nat
+    (kind : NagamochiResource.EdgePoint) (size coordinate : ℕ) :
+    kind.pointAt size coordinate =
+      NagamochiResource.edgePoint size coordinate kind := by
+  cases kind <;>
+    simp [NagamochiResource.EdgePoint.pointAt,
+      NagamochiResource.edgePoint]
+
+@[simp] lemma NagamochiResource.EdgePoint.pointAt_one
+    (kind : NagamochiResource.EdgePoint) (size : ℕ) :
+    kind.pointAt size 1 =
+      NagamochiResource.cornerPoint size kind.firstCornerPoint := by
+  cases kind <;>
+    simp [NagamochiResource.EdgePoint.pointAt,
+      NagamochiResource.EdgePoint.firstCornerPoint,
+      NagamochiResource.cornerPoint]
+
+@[simp] lemma NagamochiResource.EdgePoint.pointAt_size_sub_one
+    (kind : NagamochiResource.EdgePoint) (size : ℕ) :
+    kind.pointAt size ((size : ℝ) - 1) =
+      NagamochiResource.cornerPoint size kind.secondCornerPoint := by
+  cases kind <;>
+    simp [NagamochiResource.EdgePoint.pointAt,
+      NagamochiResource.EdgePoint.secondCornerPoint,
+      NagamochiResource.cornerPoint]
 
 noncomputable def NagamochiResource.edgePointCluster
     (size coordinate : ℕ) : Measure Plane :=

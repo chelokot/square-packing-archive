@@ -366,6 +366,84 @@ lemma boundaryChord_of_opposite
       exact rightBoundaryChord_of_verticalOpposite square factor_positive
         cosine_positive sine_positive opposite
 
+lemma boundaryChord_of_pointAt_mem
+    {size : ℕ} {region : Set Plane}
+    {intervalStart intervalEnd minimumLength : ℝ}
+    (side : NagamochiResource.BoundarySide)
+    (region_convex : Convex ℝ region)
+    (intervalStart_lt_intervalEnd : intervalStart < intervalEnd)
+    (minimum_length : minimumLength ≤ intervalEnd - intervalStart)
+    (inside_boundary_segment :
+      Ioo intervalStart intervalEnd ⊆
+        Icc (9 / 10) ((size : ℝ) - 9 / 10))
+    (start_mem : side.pointAt size intervalStart ∈ region)
+    (end_mem : side.pointAt size intervalEnd ∈ region) :
+    NagamochiResource.HasBoundaryChord size side region minimumLength := by
+  cases side with
+  | bottom =>
+      exact ⟨intervalStart, intervalEnd, minimum_length,
+        inside_boundary_segment,
+        horizontal_openSegment_subset_of_convex region_convex
+          intervalStart_lt_intervalEnd
+          (by simpa [NagamochiResource.BoundarySide.pointAt] using start_mem)
+          (by simpa [NagamochiResource.BoundarySide.pointAt] using end_mem)⟩
+  | top =>
+      exact ⟨intervalStart, intervalEnd, minimum_length,
+        inside_boundary_segment,
+        horizontal_openSegment_subset_of_convex region_convex
+          intervalStart_lt_intervalEnd
+          (by simpa [NagamochiResource.BoundarySide.pointAt] using start_mem)
+          (by simpa [NagamochiResource.BoundarySide.pointAt] using end_mem)⟩
+  | left =>
+      exact ⟨intervalStart, intervalEnd, minimum_length,
+        inside_boundary_segment,
+        vertical_openSegment_subset_of_convex region_convex
+          intervalStart_lt_intervalEnd
+          (by simpa [NagamochiResource.BoundarySide.pointAt] using start_mem)
+          (by simpa [NagamochiResource.BoundarySide.pointAt] using end_mem)⟩
+  | right =>
+      exact ⟨intervalStart, intervalEnd, minimum_length,
+        inside_boundary_segment,
+        vertical_openSegment_subset_of_convex region_convex
+          intervalStart_lt_intervalEnd
+          (by simpa [NagamochiResource.BoundarySide.pointAt] using start_mem)
+          (by simpa [NagamochiResource.BoundarySide.pointAt] using end_mem)⟩
+
+lemma firstBoundaryChord_of_corner_and_unit_point
+    {size : ℕ} {region : Set Plane}
+    (size_at_least_three : 3 ≤ size)
+    (side : NagamochiResource.BoundarySide)
+    (region_convex : Convex ℝ region)
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size side.firstCornerPoint ∈ region)
+    (unit_point_mem : side.pointAt size 1 ∈ region) :
+    NagamochiResource.HasBoundaryChord size side region (1 / 10) := by
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  have corner_point_at_mem : side.pointAt size (9 / 10) ∈ region := by
+    simpa using corner_point_mem
+  exact boundaryChord_of_pointAt_mem side region_convex (by norm_num)
+    (by norm_num)
+    (fun _ point_mem => ⟨point_mem.1.le, by linarith [point_mem.2]⟩)
+    corner_point_at_mem unit_point_mem
+
+lemma secondBoundaryChord_of_unit_and_corner_point
+    {size : ℕ} {region : Set Plane}
+    (size_at_least_three : 3 ≤ size)
+    (side : NagamochiResource.BoundarySide)
+    (region_convex : Convex ℝ region)
+    (unit_point_mem : side.pointAt size ((size : ℝ) - 1) ∈ region)
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size side.secondCornerPoint ∈ region) :
+    NagamochiResource.HasBoundaryChord size side region (1 / 10) := by
+  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
+  have corner_point_at_mem :
+      side.pointAt size ((size : ℝ) - 9 / 10) ∈ region := by
+    simpa using corner_point_mem
+  exact boundaryChord_of_pointAt_mem side region_convex (by norm_num)
+    (by norm_num)
+    (fun _ point_mem => ⟨by linarith [point_mem.1], point_mem.2.le⟩)
+    unit_point_mem corner_point_at_mem
+
 noncomputable def cornerAdjacentChordLength (height tangentHalfAngle : ℝ) : ℝ :=
   -(height - 1) * (1 + tangentHalfAngle ^ 2) ^ 2 /
       (2 * tangentHalfAngle * (1 - tangentHalfAngle ^ 2)) +
@@ -758,6 +836,72 @@ lemma score_gt_one_of_boundary_chord_and_edge_point
             NagamochiResource.edgePoints size region :=
           add_le_add (le_add_of_nonneg_right bot_le) le_rfl
 
+lemma score_gt_one_of_long_and_short_boundary_chords_and_corner_point
+    {size : ℕ} {region : Set Plane} {factor : ℝ}
+    {longSide shortSide : NagamochiResource.BoundarySide}
+    {cornerKind : NagamochiResource.CornerPoint}
+    (factor_gt_one : 1 < factor)
+    (different_sides : longSide ≠ shortSide)
+    (region_measurable : MeasurableSet region)
+    (long_chord :
+      NagamochiResource.HasBoundaryChord size longSide region factor)
+    (short_chord :
+      NagamochiResource.HasBoundaryChord size shortSide region (1 / 10))
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size cornerKind ∈ region) :
+    1 < NagamochiResource.measure size region := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have long_line_bound :=
+    NagamochiResource.boundaryLine_lower_bound_of_chord
+      region_measurable long_chord
+  have short_line_bound :=
+    NagamochiResource.boundaryLine_lower_bound_of_chord
+      region_measurable short_chord
+  have pair_subset :
+      ({longSide, shortSide} : Finset NagamochiResource.BoundarySide) ⊆
+        NagamochiResource.boundarySides := by
+    intro side side_mem
+    exact NagamochiResource.mem_boundarySides side
+  have pair_bound := NagamochiResource.boundaryLines_subset_lower_bound
+    (size := size) (region := region) pair_subset
+  rw [Finset.sum_pair different_sides] at pair_bound
+  have boundary_bound :
+      (1 / 2 : ENNReal) *
+          (ENNReal.ofReal factor + ENNReal.ofReal (1 / 10 : ℝ)) ≤
+        NagamochiResource.boundaryLines size region :=
+    (mul_le_mul le_rfl (add_le_add long_line_bound short_line_bound)
+      bot_le bot_le).trans pair_bound
+  have corner_bound := NagamochiResource.cornerPoints_lower_bound_of_mem
+    cornerKind region_measurable corner_point_mem
+  have encoded_score_eq :
+      ENNReal.ofReal (factor / 2 + 1 / 2) =
+        (1 / 2 : ENNReal) *
+            (ENNReal.ofReal factor + ENNReal.ofReal (1 / 10 : ℝ)) +
+          9 / 20 := by
+    apply (ENNReal.toReal_eq_toReal_iff' (by finiteness) (by finiteness)).mp
+    rw [ENNReal.toReal_add (by finiteness) (by finiteness),
+      ENNReal.toReal_mul, ENNReal.toReal_add (by finiteness) (by finiteness)]
+    rw [ENNReal.toReal_ofReal (by positivity),
+      ENNReal.toReal_ofReal factor_positive.le]
+    norm_num
+    ring
+  have boundary_corner_bound :
+      ENNReal.ofReal (factor / 2 + 1 / 2) ≤
+        NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region := by
+    rw [encoded_score_eq]
+    exact add_le_add boundary_bound corner_bound
+  apply score_gt_one_of_real_grouped_bounds
+    (innerScore := 0) (boundaryCornerScore := factor / 2 + 1 / 2)
+    (edgeScore := 0)
+  · norm_num
+  · positivity
+  · norm_num
+  · linarith
+  · simp
+  · exact boundary_corner_bound
+  · simp
+
 lemma score_gt_one_of_area_chord_and_edge_point
     {size coordinate : ℕ} {region : Set Plane} {area chordLength : ℝ}
     {side : NagamochiResource.BoundarySide}
@@ -1139,6 +1283,131 @@ lemma score_gt_one_of_corner_chord_and_edge_point
   exact score_gt_one_of_positive_inner_and_two_half_resources
     inner_positive boundary_corner_half edge_half
 
+lemma exists_nat_in_open_interval_of_length_gt_one
+    {size : ℕ} {intervalStart intervalEnd : ℝ}
+    (start_nonnegative : 0 ≤ intervalStart)
+    (end_at_most_size : intervalEnd ≤ size)
+    (length_gt_one : 1 < intervalEnd - intervalStart) :
+    ∃ coordinate ∈ Finset.Icc 1 (size - 1),
+      (coordinate : ℝ) ∈ Ioo intervalStart intervalEnd := by
+  let coordinate := ⌊intervalStart⌋₊ + 1
+  have start_lt_coordinate : intervalStart < (coordinate : ℝ) := by
+    dsimp [coordinate]
+    simpa only [Nat.cast_add, Nat.cast_one] using
+      Nat.lt_floor_add_one intervalStart
+  have floor_le_start : (⌊intervalStart⌋₊ : ℝ) ≤ intervalStart :=
+    Nat.floor_le start_nonnegative
+  have coordinate_lt_end : (coordinate : ℝ) < intervalEnd := by
+    dsimp [coordinate]
+    push_cast
+    linarith
+  have coordinate_lt_size : coordinate < size := by
+    exact_mod_cast coordinate_lt_end.trans_le end_at_most_size
+  refine ⟨coordinate, (by simp only [Finset.mem_Icc]; omega),
+    start_lt_coordinate, coordinate_lt_end⟩
+
+inductive GridPointWitness
+    (size : ℕ) (region : Set Plane)
+    (kind : NagamochiResource.EdgePoint) : Prop
+  | firstCorner
+      (point_mem :
+        NagamochiResource.cornerPoint size kind.firstCornerPoint ∈ region)
+  | secondCorner
+      (point_mem :
+        NagamochiResource.cornerPoint size kind.secondCornerPoint ∈ region)
+  | edge
+      (coordinate : ℕ)
+      (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+      (point_mem :
+        NagamochiResource.edgePoint size coordinate kind ∈ region)
+
+def LongGridChordWitness
+    (size : ℕ) (region : Set Plane)
+    (kind : NagamochiResource.EdgePoint) : Prop :=
+  ∃ intervalStart intervalEnd : ℝ,
+    0 ≤ intervalStart ∧
+      intervalEnd ≤ size ∧
+        1 < intervalEnd - intervalStart ∧
+          ∀ coordinate ∈ Ioo intervalStart intervalEnd,
+            kind.pointAt size coordinate ∈ region
+
+lemma gridPointWitness_of_open_grid_chord
+    {size : ℕ} {region : Set Plane}
+    (kind : NagamochiResource.EdgePoint)
+    (size_at_least_three : 3 ≤ size)
+    (chord : LongGridChordWitness size region kind) :
+    GridPointWitness size region kind := by
+  rcases chord with
+    ⟨intervalStart, intervalEnd, start_nonnegative, end_at_most_size,
+      length_gt_one, chord_inside_region⟩
+  obtain ⟨coordinate, coordinate_mem, coordinate_in_chord⟩ :=
+    exists_nat_in_open_interval_of_length_gt_one start_nonnegative
+      end_at_most_size length_gt_one
+  have coordinate_bounds : 1 ≤ coordinate ∧ coordinate ≤ size - 1 := by
+    simpa only [Finset.mem_Icc] using coordinate_mem
+  have point_mem := chord_inside_region coordinate coordinate_in_chord
+  by_cases coordinate_is_first : coordinate = 1
+  · refine .firstCorner ?_
+    simpa [coordinate_is_first] using point_mem
+  by_cases coordinate_is_second : coordinate = size - 1
+  · have one_le_size : 1 ≤ size := by omega
+    have coordinate_cast :
+        (coordinate : ℝ) = (size : ℝ) - 1 := by
+      rw [coordinate_is_second, Nat.cast_sub one_le_size]
+      norm_num
+    refine .secondCorner ?_
+    simpa [coordinate_cast] using point_mem
+  · refine .edge coordinate (by simp only [Finset.mem_Icc]; omega) ?_
+    simpa using point_mem
+
+lemma bottomGridPointWitness_of_open_chord
+    {size : ℕ} {region : Set Plane} {intervalStart intervalEnd : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (start_nonnegative : 0 ≤ intervalStart)
+    (end_at_most_size : intervalEnd ≤ size)
+    (length_gt_one : 1 < intervalEnd - intervalStart)
+    (chord_inside_region :
+      ∀ coordinate ∈ Ioo intervalStart intervalEnd,
+        ![coordinate, (9 / 10 : ℝ)] ∈ region) :
+    GridPointWitness size region .bottom := by
+  exact gridPointWitness_of_open_grid_chord .bottom
+    size_at_least_three
+    ⟨intervalStart, intervalEnd, start_nonnegative, end_at_most_size,
+      length_gt_one, chord_inside_region⟩
+
+lemma corner_mem_of_gridPointWitness_of_no_edge_points
+    {size : ℕ} {region : Set Plane}
+    (kind : NagamochiResource.EdgePoint)
+    (witness : GridPointWitness size region kind)
+    (no_edge_points :
+      ∀ coordinate,
+        coordinate ∈ Finset.Icc 2 (size - 2) →
+          NagamochiResource.edgePoint size coordinate kind ∉ region) :
+    NagamochiResource.cornerPoint size kind.firstCornerPoint ∈ region ∨
+      NagamochiResource.cornerPoint size kind.secondCornerPoint ∈ region := by
+  cases witness with
+  | firstCorner point_mem => exact Or.inl point_mem
+  | secondCorner point_mem => exact Or.inr point_mem
+  | edge coordinate coordinate_mem point_mem =>
+      exact False.elim (no_edge_points coordinate coordinate_mem point_mem)
+
+lemma edge_mem_of_gridPointWitness_of_no_corner_points
+    {size : ℕ} {region : Set Plane}
+    (kind : NagamochiResource.EdgePoint)
+    (witness : GridPointWitness size region kind)
+    (first_corner_not_mem :
+      NagamochiResource.cornerPoint size kind.firstCornerPoint ∉ region)
+    (second_corner_not_mem :
+      NagamochiResource.cornerPoint size kind.secondCornerPoint ∉ region) :
+    ∃ coordinate,
+      coordinate ∈ Finset.Icc 2 (size - 2) ∧
+        NagamochiResource.edgePoint size coordinate kind ∈ region := by
+  cases witness with
+  | firstCorner point_mem => exact False.elim (first_corner_not_mem point_mem)
+  | secondCorner point_mem => exact False.elim (second_corner_not_mem point_mem)
+  | edge coordinate coordinate_mem point_mem =>
+      exact ⟨coordinate, coordinate_mem, point_mem⟩
+
 inductive Case7ResourceWitness
     (size : ℕ) (region : Set Plane) : Prop
   | oppositeAndEdge
@@ -1176,6 +1445,34 @@ inductive Case7ResourceWitness
         NagamochiResource.cornerPoint size firstKind ∈ region)
       (second_point_mem :
         NagamochiResource.cornerPoint size secondKind ∈ region)
+  | longAndShortAndCorner
+      (factor : ℝ)
+      (factor_gt_one : 1 < factor)
+      (longSide shortSide : NagamochiResource.BoundarySide)
+      (different_sides : longSide ≠ shortSide)
+      (long_chord :
+        NagamochiResource.HasBoundaryChord size longSide region factor)
+      (short_chord :
+        NagamochiResource.HasBoundaryChord size shortSide region (1 / 10))
+      (cornerKind : NagamochiResource.CornerPoint)
+      (corner_point_mem :
+        NagamochiResource.cornerPoint size cornerKind ∈ region)
+
+inductive BoundaryCornerConnection
+    (size : ℕ) (region : Set Plane)
+    (longSide : NagamochiResource.BoundarySide)
+    (cornerKind : NagamochiResource.CornerPoint) : Prop
+  | first
+      (shortSide : NagamochiResource.BoundarySide)
+      (different_sides : longSide ≠ shortSide)
+      (corner_eq : cornerKind = shortSide.firstCornerPoint)
+      (unit_point_mem : shortSide.pointAt size 1 ∈ region)
+  | second
+      (shortSide : NagamochiResource.BoundarySide)
+      (different_sides : longSide ≠ shortSide)
+      (corner_eq : cornerKind = shortSide.secondCornerPoint)
+      (unit_point_mem :
+        shortSide.pointAt size ((size : ℝ) - 1) ∈ region)
 
 lemma score_gt_one_of_case7_resource_witness
     {size : ℕ} {region : Set Plane}
@@ -1196,6 +1493,11 @@ lemma score_gt_one_of_case7_resource_witness
       exact score_gt_one_of_two_corner_points_and_long_chord
         region_measurable inner_positive different_kinds chord
         first_point_mem second_point_mem
+  | longAndShortAndCorner factor factor_gt_one longSide shortSide
+      different_sides long_chord short_chord cornerKind corner_point_mem =>
+      exact score_gt_one_of_long_and_short_boundary_chords_and_corner_point
+        factor_gt_one different_sides region_measurable long_chord short_chord
+        corner_point_mem
 
 lemma case7ResourceWitness_of_two_boundary_corner_points
     {size : ℕ} {region : Set Plane}
@@ -1211,51 +1513,140 @@ lemma case7ResourceWitness_of_two_boundary_corner_points
   have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
   have endpoints_ordered :
       (9 / 10 : ℝ) < (size : ℝ) - 9 / 10 := by linarith
-  cases side with
-  | bottom =>
-      simp [NagamochiResource.BoundarySide.firstCornerPoint] at first_point_mem
-      simp [NagamochiResource.BoundarySide.secondCornerPoint] at second_point_mem
-      refine .twoCorners .bottom .bottomLeft .bottomRight inner_positive
-        (by decide) ?_ first_point_mem second_point_mem
-      refine ⟨9 / 10, (size : ℝ) - 9 / 10, by linarith,
-        fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩, ?_⟩
-      exact horizontal_openSegment_subset_of_convex region_convex
-        endpoints_ordered
-        (by simpa [NagamochiResource.cornerPoint] using first_point_mem)
-        (by simpa [NagamochiResource.cornerPoint] using second_point_mem)
-  | top =>
-      simp [NagamochiResource.BoundarySide.firstCornerPoint] at first_point_mem
-      simp [NagamochiResource.BoundarySide.secondCornerPoint] at second_point_mem
-      refine .twoCorners .top .topLeft .topRight inner_positive
-        (by decide) ?_ first_point_mem second_point_mem
-      refine ⟨9 / 10, (size : ℝ) - 9 / 10, by linarith,
-        fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩, ?_⟩
-      exact horizontal_openSegment_subset_of_convex region_convex
-        endpoints_ordered
-        (by simpa [NagamochiResource.cornerPoint] using first_point_mem)
-        (by simpa [NagamochiResource.cornerPoint] using second_point_mem)
-  | left =>
-      simp [NagamochiResource.BoundarySide.firstCornerPoint] at first_point_mem
-      simp [NagamochiResource.BoundarySide.secondCornerPoint] at second_point_mem
-      refine .twoCorners .left .leftBottom .leftTop inner_positive
-        (by decide) ?_ first_point_mem second_point_mem
-      refine ⟨9 / 10, (size : ℝ) - 9 / 10, by linarith,
-        fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩, ?_⟩
-      exact vertical_openSegment_subset_of_convex region_convex
-        endpoints_ordered
-        (by simpa [NagamochiResource.cornerPoint] using first_point_mem)
-        (by simpa [NagamochiResource.cornerPoint] using second_point_mem)
-  | right =>
-      simp [NagamochiResource.BoundarySide.firstCornerPoint] at first_point_mem
-      simp [NagamochiResource.BoundarySide.secondCornerPoint] at second_point_mem
-      refine .twoCorners .right .rightBottom .rightTop inner_positive
-        (by decide) ?_ first_point_mem second_point_mem
-      refine ⟨9 / 10, (size : ℝ) - 9 / 10, by linarith,
-        fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩, ?_⟩
-      exact vertical_openSegment_subset_of_convex region_convex
-        endpoints_ordered
-        (by simpa [NagamochiResource.cornerPoint] using first_point_mem)
-        (by simpa [NagamochiResource.cornerPoint] using second_point_mem)
+  have first_point_at_mem : side.pointAt size (9 / 10) ∈ region := by
+    simpa using first_point_mem
+  have second_point_at_mem :
+      side.pointAt size ((size : ℝ) - 9 / 10) ∈ region := by
+    simpa using second_point_mem
+  have chord : NagamochiResource.HasBoundaryChord size side region (1 / 5) :=
+    boundaryChord_of_pointAt_mem side region_convex endpoints_ordered
+      (by linarith) (fun _ point_mem => ⟨point_mem.1.le, point_mem.2.le⟩)
+      first_point_at_mem second_point_at_mem
+  exact .twoCorners side side.firstCornerPoint side.secondCornerPoint
+    inner_positive side.cornerPoints_ne chord first_point_mem second_point_mem
+
+lemma case7ResourceWitness_of_first_boundary_corner_and_edge_point
+    {size coordinate : ℕ} {region : Set Plane}
+    (size_at_least_three : 3 ≤ size)
+    (region_convex : Convex ℝ region)
+    (inner_positive : 0 < NagamochiResource.innerArea size region)
+    (side : NagamochiResource.BoundarySide)
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size side.firstCornerPoint ∈ region)
+    (unit_point_mem : side.pointAt size 1 ∈ region)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (kind : NagamochiResource.EdgePoint)
+    (edge_point_mem :
+      NagamochiResource.edgePoint size coordinate kind ∈ region) :
+    Case7ResourceWitness size region := by
+  have chord : NagamochiResource.HasBoundaryChord size side region (1 / 10) :=
+    firstBoundaryChord_of_corner_and_unit_point size_at_least_three side
+      region_convex corner_point_mem unit_point_mem
+  exact .cornerAndEdge side side.firstCornerPoint coordinate kind
+    inner_positive chord corner_point_mem coordinate_mem edge_point_mem
+
+lemma case7ResourceWitness_of_second_boundary_corner_and_edge_point
+    {size coordinate : ℕ} {region : Set Plane}
+    (size_at_least_three : 3 ≤ size)
+    (region_convex : Convex ℝ region)
+    (inner_positive : 0 < NagamochiResource.innerArea size region)
+    (side : NagamochiResource.BoundarySide)
+    (unit_point_mem : side.pointAt size ((size : ℝ) - 1) ∈ region)
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size side.secondCornerPoint ∈ region)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (kind : NagamochiResource.EdgePoint)
+    (edge_point_mem :
+      NagamochiResource.edgePoint size coordinate kind ∈ region) :
+    Case7ResourceWitness size region := by
+  have chord : NagamochiResource.HasBoundaryChord size side region (1 / 10) :=
+    secondBoundaryChord_of_unit_and_corner_point size_at_least_three side
+      region_convex unit_point_mem corner_point_mem
+  exact .cornerAndEdge side side.secondCornerPoint coordinate kind
+    inner_positive chord corner_point_mem coordinate_mem edge_point_mem
+
+lemma case7ResourceWitness_of_long_chord_and_first_boundary_corner
+    {size : ℕ} {region : Set Plane} {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (region_convex : Convex ℝ region)
+    (factor_gt_one : 1 < factor)
+    (longSide shortSide : NagamochiResource.BoundarySide)
+    (different_sides : longSide ≠ shortSide)
+    (long_chord :
+      NagamochiResource.HasBoundaryChord size longSide region factor)
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size shortSide.firstCornerPoint ∈ region)
+    (unit_point_mem : shortSide.pointAt size 1 ∈ region) :
+    Case7ResourceWitness size region := by
+  have short_chord := firstBoundaryChord_of_corner_and_unit_point
+    size_at_least_three shortSide region_convex corner_point_mem unit_point_mem
+  exact .longAndShortAndCorner factor factor_gt_one longSide shortSide
+    different_sides long_chord short_chord shortSide.firstCornerPoint
+    corner_point_mem
+
+lemma case7ResourceWitness_of_long_chord_and_second_boundary_corner
+    {size : ℕ} {region : Set Plane} {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (region_convex : Convex ℝ region)
+    (factor_gt_one : 1 < factor)
+    (longSide shortSide : NagamochiResource.BoundarySide)
+    (different_sides : longSide ≠ shortSide)
+    (long_chord :
+      NagamochiResource.HasBoundaryChord size longSide region factor)
+    (unit_point_mem :
+      shortSide.pointAt size ((size : ℝ) - 1) ∈ region)
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size shortSide.secondCornerPoint ∈ region) :
+    Case7ResourceWitness size region := by
+  have short_chord := secondBoundaryChord_of_unit_and_corner_point
+    size_at_least_three shortSide region_convex unit_point_mem corner_point_mem
+  exact .longAndShortAndCorner factor factor_gt_one longSide shortSide
+    different_sides long_chord short_chord shortSide.secondCornerPoint
+    corner_point_mem
+
+lemma case7ResourceWitness_of_long_chord_and_grid_point
+    {size : ℕ} {region : Set Plane} {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (region_convex : Convex ℝ region)
+    (factor_gt_one : 1 < factor)
+    (longSide : NagamochiResource.BoundarySide)
+    (long_chord :
+      NagamochiResource.HasBoundaryChord size longSide region factor)
+    (gridKind : NagamochiResource.EdgePoint)
+    (grid_point : GridPointWitness size region gridKind)
+    (connect_first_corner : BoundaryCornerConnection size region longSide
+      gridKind.firstCornerPoint)
+    (connect_second_corner : BoundaryCornerConnection size region longSide
+      gridKind.secondCornerPoint) :
+    Case7ResourceWitness size region := by
+  cases grid_point with
+  | edge coordinate coordinate_mem point_mem =>
+      exact .oppositeAndEdge longSide coordinate gridKind factor factor_gt_one
+        long_chord coordinate_mem point_mem
+  | firstCorner corner_point_mem =>
+      cases connect_first_corner with
+      | first shortSide different_sides corner_eq unit_point_mem =>
+          rw [corner_eq] at corner_point_mem
+          exact case7ResourceWitness_of_long_chord_and_first_boundary_corner
+            size_at_least_three region_convex factor_gt_one longSide shortSide
+            different_sides long_chord corner_point_mem unit_point_mem
+      | second shortSide different_sides corner_eq unit_point_mem =>
+          rw [corner_eq] at corner_point_mem
+          exact case7ResourceWitness_of_long_chord_and_second_boundary_corner
+            size_at_least_three region_convex factor_gt_one longSide shortSide
+            different_sides long_chord unit_point_mem corner_point_mem
+  | secondCorner corner_point_mem =>
+      cases connect_second_corner with
+      | first shortSide different_sides corner_eq unit_point_mem =>
+          rw [corner_eq] at corner_point_mem
+          exact case7ResourceWitness_of_long_chord_and_first_boundary_corner
+            size_at_least_three region_convex factor_gt_one longSide shortSide
+            different_sides long_chord corner_point_mem unit_point_mem
+      | second shortSide different_sides corner_eq unit_point_mem =>
+          rw [corner_eq] at corner_point_mem
+          exact case7ResourceWitness_of_long_chord_and_second_boundary_corner
+            size_at_least_three region_convex factor_gt_one longSide shortSide
+            different_sides long_chord unit_point_mem corner_point_mem
 
 lemma innerArea_positive_of_inward_point_family
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
@@ -1992,6 +2383,29 @@ lemma score_gt_one_of_case5
     · exact score_gt_one_of_case5_top_right square size_at_least_three
         factor_gt_one inside_container center_x_high center_y_high
 
+lemma score_gt_one_of_case7_opposite_and_edge_point
+    {size coordinate : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (side : NagamochiResource.BoundarySide)
+    (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (opposite : HasOppositeBoundaryChord size square factor side)
+    (kind : NagamochiResource.EdgePoint)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (edge_point_mem :
+      NagamochiResource.edgePoint size coordinate kind ∈
+        square.dilatedInteriorRegion factor) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have factor_nonzero : factor ≠ 0 := factor_positive.ne'
+  have chord := boundaryChord_of_opposite square factor_positive
+    cosine_positive sine_positive side opposite
+  apply score_gt_one_of_case7_resource_witness
+    (square.measurableSet_dilatedInteriorRegion factor_nonzero)
+  exact .oppositeAndEdge side coordinate kind factor factor_gt_one
+    chord coordinate_mem edge_point_mem
+
 lemma score_gt_one_of_case7_bottom_opposite_and_edge_point
     {size coordinate : ℕ} (square : PlacedSquare) {factor : ℝ}
     (factor_gt_one : 1 < factor)
@@ -2004,14 +2418,64 @@ lemma score_gt_one_of_case7_bottom_opposite_and_edge_point
         square.dilatedInteriorRegion factor) :
     1 < NagamochiResource.measure size
       (square.dilatedInteriorRegion factor) := by
-  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
-  have factor_nonzero : factor ≠ 0 := factor_positive.ne'
-  have chord := bottomBoundaryChord_of_horizontalOpposite square
-    factor_positive cosine_positive sine_positive opposite
+  exact score_gt_one_of_case7_opposite_and_edge_point square .bottom
+    factor_gt_one cosine_positive sine_positive opposite .bottom
+    coordinate_mem edge_point_mem
+
+lemma score_gt_one_of_case7_first_boundary_corner_and_edge_point
+    {size coordinate : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (side : NagamochiResource.BoundarySide)
+    (size_at_least_three : 3 ≤ size)
+    (factor_nonzero : factor ≠ 0)
+    (inner_positive :
+      0 < NagamochiResource.innerArea size
+        (square.dilatedInteriorRegion factor))
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size side.firstCornerPoint ∈
+        square.dilatedInteriorRegion factor)
+    (unit_point_mem :
+      side.pointAt size 1 ∈ square.dilatedInteriorRegion factor)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (kind : NagamochiResource.EdgePoint)
+    (edge_point_mem :
+      NagamochiResource.edgePoint size coordinate kind ∈
+        square.dilatedInteriorRegion factor) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
   apply score_gt_one_of_case7_resource_witness
     (square.measurableSet_dilatedInteriorRegion factor_nonzero)
-  exact .oppositeAndEdge .bottom coordinate .bottom factor factor_gt_one
-    chord coordinate_mem edge_point_mem
+  exact case7ResourceWitness_of_first_boundary_corner_and_edge_point
+    size_at_least_three (square.convex_dilatedInteriorRegion factor)
+    inner_positive side corner_point_mem unit_point_mem coordinate_mem kind
+    edge_point_mem
+
+lemma score_gt_one_of_case7_second_boundary_corner_and_edge_point
+    {size coordinate : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (side : NagamochiResource.BoundarySide)
+    (size_at_least_three : 3 ≤ size)
+    (factor_nonzero : factor ≠ 0)
+    (inner_positive :
+      0 < NagamochiResource.innerArea size
+        (square.dilatedInteriorRegion factor))
+    (unit_point_mem :
+      side.pointAt size ((size : ℝ) - 1) ∈
+        square.dilatedInteriorRegion factor)
+    (corner_point_mem :
+      NagamochiResource.cornerPoint size side.secondCornerPoint ∈
+        square.dilatedInteriorRegion factor)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (kind : NagamochiResource.EdgePoint)
+    (edge_point_mem :
+      NagamochiResource.edgePoint size coordinate kind ∈
+        square.dilatedInteriorRegion factor) :
+    1 < NagamochiResource.measure size
+      (square.dilatedInteriorRegion factor) := by
+  apply score_gt_one_of_case7_resource_witness
+    (square.measurableSet_dilatedInteriorRegion factor_nonzero)
+  exact case7ResourceWitness_of_second_boundary_corner_and_edge_point
+    size_at_least_three (square.convex_dilatedInteriorRegion factor)
+    inner_positive side unit_point_mem corner_point_mem coordinate_mem kind
+    edge_point_mem
 
 lemma score_gt_one_of_case7_bottom_corner_and_edge_point
     {size coordinate : ℕ} (square : PlacedSquare) {factor : ℝ}
@@ -2031,23 +2495,10 @@ lemma score_gt_one_of_case7_bottom_corner_and_edge_point
         square.dilatedInteriorRegion factor) :
     1 < NagamochiResource.measure size
       (square.dilatedInteriorRegion factor) := by
-  have size_real : (3 : ℝ) ≤ size := by exact_mod_cast size_at_least_three
-  have corner_mem :
-      ![(9 / 10 : ℝ), 1] ∈ square.dilatedInteriorRegion factor := by
-    simpa [NagamochiResource.cornerPoint] using corner_point_mem
-  have chord :
-      NagamochiResource.HasBoundaryChord size .bottom
-        (square.dilatedInteriorRegion factor) (1 / 10) := by
-    refine ⟨9 / 10, 1, by norm_num, ?_, ?_⟩
-    · intro coordinate coordinate_mem
-      exact ⟨coordinate_mem.1.le, by linarith [coordinate_mem.2]⟩
-    · exact horizontal_openSegment_subset_of_convex
-        (square.convex_dilatedInteriorRegion factor) (by norm_num)
-        corner_mem unit_point_mem
-  apply score_gt_one_of_case7_resource_witness
-    (square.measurableSet_dilatedInteriorRegion factor_nonzero)
-  exact .cornerAndEdge .bottom .bottomLeft coordinate .bottom
-    inner_positive chord corner_point_mem coordinate_mem edge_point_mem
+  exact score_gt_one_of_case7_first_boundary_corner_and_edge_point square
+    .bottom size_at_least_three factor_nonzero inner_positive corner_point_mem
+    (by simpa [NagamochiResource.BoundarySide.pointAt] using unit_point_mem)
+    coordinate_mem .bottom edge_point_mem
 
 lemma score_gt_one_of_case7_both_bottom_corner_points
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
