@@ -22,6 +22,13 @@ Tracker records, publications, computational certificates, and Lean proofs are
 different evidence kinds. Derived verification status is a pure function of this
 evidence, with `lean-proof` as the only verified state.
 
+Historical provenance and present-day verification remain separate. A later,
+stronger kernel-checked packing may prove an older upper-bound claim without
+being attributed to the historical discoverer or presented as a reconstruction
+of the original coordinates. The original tracker or publication evidence stays
+on the claim, while the later Lean evidence names the theorem that now proves
+the same mathematical inequality.
+
 ## Configuration
 
 A configuration stores unit-square centers in physical Cartesian coordinates.

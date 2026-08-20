@@ -385,6 +385,13 @@
           "kind": "elementary-construction",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s12_le_four"
         }
       ],
       "active": true
@@ -740,6 +747,13 @@
           "kind": "tracker-record",
           "status": "reported",
           "source": "tracker-history"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_brendberg_2023"
         }
       ],
       "active": false
@@ -759,6 +773,13 @@
           "kind": "tracker-record",
           "status": "reported",
           "source": "tracker-current"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_ellsworth_2025"
         }
       ],
       "supersedes": "upper-68-brendberg",
@@ -805,6 +826,13 @@
           "kind": "tracker-record",
           "status": "reported",
           "source": "tracker-current"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s69_le_morandi_cantrell_2023"
         }
       ],
       "active": false

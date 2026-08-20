@@ -229,6 +229,25 @@ lemma HasPacking.mono
   rcases packing with ⟨source⟩
   exact ⟨source.reindex (Fin.castLEEmb count_le)⟩
 
+def Packing.enlarge
+    {squareCount : ℕ} {side largerSide : ℝ}
+    (packing : Packing squareCount side) (side_le : side ≤ largerSide) :
+    Packing squareCount largerSide where
+  squares := packing.squares
+  side_nonnegative := packing.side_nonnegative.trans side_le
+  fits := by
+    intro index point point_mem
+    have contained := packing.fits index point_mem
+    exact ⟨contained.1, contained.2.1.trans side_le,
+      contained.2.2.1, contained.2.2.2.trans side_le⟩
+  disjoint := packing.disjoint
+
+lemma HasPacking.enlarge
+    {squareCount : ℕ} {side largerSide : ℝ}
+    (packing : HasPacking squareCount side) (side_le : side ≤ largerSide) :
+    HasPacking squareCount largerSide :=
+  ⟨packing.some.enlarge side_le⟩
+
 lemma abs_linearCombination_le
     {localX localY coefficientX coefficientY : ℝ}
     (localX_le : |localX| ≤ 1 / 2)
