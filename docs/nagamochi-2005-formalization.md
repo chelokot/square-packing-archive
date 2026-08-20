@@ -96,13 +96,19 @@ sine chord has length at least the dilation factor. For the first adjacent
 pairing, the paper's Lemma 2 inequality is connected to the exact chord of the
 dilated square. For the second adjacent pairing, the missing chord-membership
 and chord-length identities are formalized, and the corrected Lemma 3
-inequality proves the chord longer than one when the dilated square touches the
-bottom side. A tangent-half-angle witness, including its
+inequality proves the chord longer than one. Instead of the paper's informal
+step that translates the square until it touches the bottom side, container
+containment supplies the weaker half-extent inequality needed by monotonicity,
+so the theorem applies directly to the original square. A tangent-half-angle
+witness, including its
 `t ≤ √2 − 1` bound, is derived directly from any positive frame with
-`sin θ ≤ cos θ`; callers do not supply the trigonometric parametrization.
-The remaining geometric obligation is the exhaustive ordering and deformation
-argument that sends every admissible square to one of these constructors, then
-transports the canonical bottom result to all four sides.
+`sin θ ≤ cos θ`; the complementary angle ordering is reduced to it by
+an exact frame swap. Lean exhausts all four linear orderings of the chord
+endpoints, separates centers below and above `y = 0.9`, and handles axis-aligned
+frames without division. Consequently Lemma 7(i), followed by its discrete
+Lemma 7(iii) consequence, is now proved for every frame in the canonical bottom
+strip. The remaining symmetry obligation is to transport this result to the
+top, left and right strips.
 
 Case 7 now has a single side-independent combinatorial classifier after that
 geometric input is supplied. A `P` combines with the long boundary chord. An

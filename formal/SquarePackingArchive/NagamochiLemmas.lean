@@ -182,6 +182,100 @@ lemma horizontalAdjacentChord_length_gt_one
     · exact denominator_positive.le
   exact base_gt_one.trans_le base_le_scaled
 
+lemma horizontalAdjacentChord_length_gt_one_of_center_at_most_line
+    (square : PlacedSquare) {factor height : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (center_at_most_line : factor * square.center.y ≤ height) :
+    1 <
+      square.horizontalAdjacentChordEnd factor height -
+        square.horizontalAdjacentChordStart factor height := by
+  have cosine_at_most_one : square.frame.cosine ≤ 1 := by
+    nlinarith [square.frame.unit]
+  have sine_at_most_one : square.frame.sine ≤ 1 := by
+    nlinarith [square.frame.unit]
+  have first_product_nonnegative :
+      0 ≤ square.frame.cosine * (1 - square.frame.sine) := by
+    positivity
+  have second_product_nonnegative :
+      0 ≤ square.frame.sine * (1 - square.frame.cosine) := by
+    positivity
+  have twice_product_at_most_sum :
+      2 * square.frame.sine * square.frame.cosine ≤
+        square.frame.cosine + square.frame.sine := by
+    nlinarith
+  have component_sum_positive :
+      0 < square.frame.cosine + square.frame.sine := by linarith
+  have scaled_sum_gt_denominator :
+      2 * square.frame.sine * square.frame.cosine <
+        factor * (square.frame.cosine + square.frame.sine) := by
+    nlinarith
+  rw [square.horizontalAdjacentChord_length
+    cosine_positive.ne' sine_positive.ne']
+  rw [lt_div_iff₀ (by positivity :
+    0 < 2 * square.frame.sine * square.frame.cosine)]
+  nlinarith
+
+lemma horizontalAdjacentChord_length_gt_one_any_positive_frame
+    (square : PlacedSquare) {factor height offset : ℝ}
+    (factor_at_least_one : 1 ≤ factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (vertical_offset : height - factor * square.center.y = -offset)
+    (offset_nonnegative : 0 ≤ offset)
+    (offset_lt : offset < (Real.sqrt 2 - 1) / 2) :
+    1 <
+      square.horizontalAdjacentChordEnd factor height -
+        square.horizontalAdjacentChordStart factor height := by
+  by_cases sine_le_cosine : square.frame.sine ≤ square.frame.cosine
+  · obtain ⟨tangentHalfAngle, tangent_positive, tangent_at_most,
+        cosine_eq, sine_eq⟩ :=
+      Frame.exists_tangentHalfAngle_of_sine_le_cosine square.frame
+        cosine_positive sine_positive sine_le_cosine
+    exact horizontalAdjacentChord_length_gt_one square factor_at_least_one
+      cosine_positive sine_positive cosine_eq sine_eq vertical_offset
+      offset_nonnegative offset_lt tangent_positive tangent_at_most
+  · have cosine_le_sine : square.frame.cosine ≤ square.frame.sine :=
+      le_of_not_ge sine_le_cosine
+    let swappedFrameSquare : PlacedSquare :=
+      { center := square.center, frame := square.frame.swap }
+    have swapped_cosine_positive :
+        0 < swappedFrameSquare.frame.cosine := by
+      simpa [swappedFrameSquare, Frame.swap] using sine_positive
+    have swapped_sine_positive :
+        0 < swappedFrameSquare.frame.sine := by
+      simpa [swappedFrameSquare, Frame.swap] using cosine_positive
+    have swapped_sine_le_cosine :
+        swappedFrameSquare.frame.sine ≤
+          swappedFrameSquare.frame.cosine := by
+      simpa [swappedFrameSquare, Frame.swap] using cosine_le_sine
+    obtain ⟨tangentHalfAngle, tangent_positive, tangent_at_most,
+        cosine_eq, sine_eq⟩ :=
+      Frame.exists_tangentHalfAngle_of_sine_le_cosine
+        swappedFrameSquare.frame swapped_cosine_positive
+        swapped_sine_positive swapped_sine_le_cosine
+    have swapped_vertical_offset :
+        height - factor * swappedFrameSquare.center.y = -offset := by
+      simpa [swappedFrameSquare] using vertical_offset
+    have swapped_length_gt_one := horizontalAdjacentChord_length_gt_one
+      swappedFrameSquare factor_at_least_one swapped_cosine_positive
+      swapped_sine_positive cosine_eq sine_eq swapped_vertical_offset
+      offset_nonnegative offset_lt tangent_positive tangent_at_most
+    have chord_lengths_eq :
+        square.horizontalAdjacentChordEnd factor height -
+            square.horizontalAdjacentChordStart factor height =
+          swappedFrameSquare.horizontalAdjacentChordEnd factor height -
+            swappedFrameSquare.horizontalAdjacentChordStart factor height := by
+      rw [square.horizontalAdjacentChord_length cosine_positive.ne'
+        sine_positive.ne']
+      rw [swappedFrameSquare.horizontalAdjacentChord_length
+        swapped_cosine_positive.ne' swapped_sine_positive.ne']
+      simp only [swappedFrameSquare, Frame.swap]
+      ring
+    rw [chord_lengths_eq]
+    exact swapped_length_gt_one
+
 lemma bottomBoundaryChord_of_horizontalAdjacent
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
     (factor_positive : 0 < factor)
@@ -574,6 +668,73 @@ lemma cornerAdjacentChordLength_gt_one
   rw [chord_difference]
   positivity
 
+lemma horizontalOtherAdjacentChord_length_gt_one_of_bottom_contained
+    (square : PlacedSquare) {factor height tangentHalfAngle : ℝ}
+    (factor_at_least_one : 1 ≤ factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (cosine_eq :
+      square.frame.cosine =
+        (1 - tangentHalfAngle ^ 2) / (1 + tangentHalfAngle ^ 2))
+    (sine_eq :
+      square.frame.sine =
+        2 * tangentHalfAngle / (1 + tangentHalfAngle ^ 2))
+    (bottom_contained :
+      factor * (square.frame.cosine + square.frame.sine) / 2 ≤
+        factor * square.center.y)
+    (height_gt_half : 1 / 2 < height)
+    (height_lt : height < Real.sqrt 2 - 1 / 2)
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_at_most : tangentHalfAngle ≤ Real.sqrt 2 - 1) :
+    1 <
+      square.horizontalAdjacentOtherUpper factor height -
+        square.horizontalAdjacentOtherLower factor height := by
+  have sqrt_two_nonnegative : 0 ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  have sqrt_two_sq : (Real.sqrt 2) ^ 2 = 2 :=
+    Real.sq_sqrt (by norm_num)
+  have sqrt_two_lt_two : Real.sqrt 2 < 2 := by nlinarith
+  have tangent_lt_one : tangentHalfAngle < 1 := by linarith
+  have tangent_sq_lt_one : tangentHalfAngle ^ 2 < 1 := by nlinarith
+  have one_add_tangent_sq_positive : 0 < 1 + tangentHalfAngle ^ 2 := by
+    positivity
+  have cosine_add_sine_positive :
+      0 < square.frame.cosine + square.frame.sine := by linarith
+  have base_expression_eq :
+      (square.frame.cosine + square.frame.sine - height) /
+          (square.frame.sine * square.frame.cosine) =
+        cornerAdjacentChordLength height tangentHalfAngle := by
+    rw [cosine_eq, sine_eq]
+    dsimp [cornerAdjacentChordLength]
+    field_simp [tangent_positive.ne', ne_of_gt one_add_tangent_sq_positive,
+      ne_of_gt (sub_pos.mpr tangent_sq_lt_one)]
+    ring
+  have base_gt_one :
+      1 <
+        (square.frame.cosine + square.frame.sine - height) /
+          (square.frame.sine * square.frame.cosine) := by
+    rw [base_expression_eq]
+    exact cornerAdjacentChordLength_gt_one height_gt_half height_lt
+      tangent_positive tangent_at_most
+  rw [square.horizontalOtherAdjacentChord_length
+    cosine_positive.ne' sine_positive.ne']
+  have base_common_denominator :
+      (square.frame.cosine + square.frame.sine - height) /
+          (square.frame.sine * square.frame.cosine) =
+        (2 * (square.frame.cosine + square.frame.sine - height)) /
+          (2 * square.frame.sine * square.frame.cosine) := by
+    field_simp [cosine_positive.ne', sine_positive.ne']
+  rw [base_common_denominator] at base_gt_one
+  have base_le_actual :
+      (2 * (square.frame.cosine + square.frame.sine - height)) /
+          (2 * square.frame.sine * square.frame.cosine) ≤
+        (factor * (square.frame.cosine + square.frame.sine) -
+          2 * (height - factor * square.center.y)) /
+            (2 * square.frame.sine * square.frame.cosine) := by
+    apply div_le_div_of_nonneg_right
+    · nlinarith
+    · positivity
+  exact base_gt_one.trans_le base_le_actual
+
 lemma horizontalOtherAdjacentChord_length_gt_one
     (square : PlacedSquare) {factor height tangentHalfAngle : ℝ}
     (factor_at_least_one : 1 ≤ factor)
@@ -595,55 +756,73 @@ lemma horizontalOtherAdjacentChord_length_gt_one
     1 <
       square.horizontalAdjacentOtherUpper factor height -
         square.horizontalAdjacentOtherLower factor height := by
-  have sqrt_two_nonnegative : 0 ≤ Real.sqrt 2 := Real.sqrt_nonneg _
-  have sqrt_two_sq : (Real.sqrt 2) ^ 2 = 2 :=
-    Real.sq_sqrt (by norm_num)
-  have sqrt_two_lt_two : Real.sqrt 2 < 2 := by nlinarith
-  have tangent_lt_one : tangentHalfAngle < 1 := by linarith
-  have tangent_sq_lt_one : tangentHalfAngle ^ 2 < 1 := by nlinarith
-  have one_add_tangent_sq_positive : 0 < 1 + tangentHalfAngle ^ 2 := by
-    positivity
-  have cosine_add_sine_positive :
-      0 < square.frame.cosine + square.frame.sine := by linarith
-  have denominator_positive :
-      0 < square.frame.sine * square.frame.cosine := by positivity
-  have base_expression_eq :
-      (square.frame.cosine + square.frame.sine - height) /
-          (square.frame.sine * square.frame.cosine) =
-        cornerAdjacentChordLength height tangentHalfAngle := by
-    rw [cosine_eq, sine_eq]
-    dsimp [cornerAdjacentChordLength]
-    field_simp [tangent_positive.ne', ne_of_gt one_add_tangent_sq_positive,
-      ne_of_gt (sub_pos.mpr tangent_sq_lt_one)]
-    ring
-  have base_gt_one :
-      1 <
-        (square.frame.cosine + square.frame.sine - height) /
-          (square.frame.sine * square.frame.cosine) := by
-    rw [base_expression_eq]
-    exact cornerAdjacentChordLength_gt_one height_gt_half height_lt
-      tangent_positive tangent_at_most
-  rw [square.horizontalOtherAdjacentChord_length
-    cosine_positive.ne' sine_positive.ne']
-  have actual_expression_eq :
-      (factor * (square.frame.cosine + square.frame.sine) -
-          2 * (height - factor * square.center.y)) /
-            (2 * square.frame.sine * square.frame.cosine) =
-        (factor * (square.frame.cosine + square.frame.sine) - height) /
-          (square.frame.sine * square.frame.cosine) := by
-    rw [bottom_touch]
-    field_simp [cosine_positive.ne', sine_positive.ne']
-    ring
-  rw [actual_expression_eq]
-  have base_le_scaled :
-      (square.frame.cosine + square.frame.sine - height) /
-          (square.frame.sine * square.frame.cosine) ≤
-        (factor * (square.frame.cosine + square.frame.sine) - height) /
-          (square.frame.sine * square.frame.cosine) := by
-    apply div_le_div_of_nonneg_right
-    · nlinarith
-    · exact denominator_positive.le
-  exact base_gt_one.trans_le base_le_scaled
+  exact horizontalOtherAdjacentChord_length_gt_one_of_bottom_contained square
+    factor_at_least_one cosine_positive sine_positive cosine_eq sine_eq
+    bottom_touch.ge height_gt_half height_lt tangent_positive tangent_at_most
+
+lemma horizontalOtherAdjacentChord_length_gt_one_any_positive_frame
+    (square : PlacedSquare) {factor height : ℝ}
+    (factor_at_least_one : 1 ≤ factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (bottom_contained :
+      factor * (square.frame.cosine + square.frame.sine) / 2 ≤
+        factor * square.center.y)
+    (height_gt_half : 1 / 2 < height)
+    (height_lt : height < Real.sqrt 2 - 1 / 2) :
+    1 <
+      square.horizontalAdjacentOtherUpper factor height -
+        square.horizontalAdjacentOtherLower factor height := by
+  by_cases sine_le_cosine : square.frame.sine ≤ square.frame.cosine
+  · obtain ⟨tangentHalfAngle, tangent_positive, tangent_at_most,
+        cosine_eq, sine_eq⟩ :=
+      Frame.exists_tangentHalfAngle_of_sine_le_cosine square.frame
+        cosine_positive sine_positive sine_le_cosine
+    exact horizontalOtherAdjacentChord_length_gt_one_of_bottom_contained square
+      factor_at_least_one cosine_positive sine_positive cosine_eq sine_eq
+      bottom_contained height_gt_half height_lt tangent_positive tangent_at_most
+  · have cosine_le_sine : square.frame.cosine ≤ square.frame.sine :=
+      le_of_not_ge sine_le_cosine
+    let swappedFrameSquare : PlacedSquare :=
+      { center := square.center, frame := square.frame.swap }
+    have swapped_cosine_positive :
+        0 < swappedFrameSquare.frame.cosine := by
+      simpa [swappedFrameSquare, Frame.swap] using sine_positive
+    have swapped_sine_positive :
+        0 < swappedFrameSquare.frame.sine := by
+      simpa [swappedFrameSquare, Frame.swap] using cosine_positive
+    have swapped_sine_le_cosine :
+        swappedFrameSquare.frame.sine ≤
+          swappedFrameSquare.frame.cosine := by
+      simpa [swappedFrameSquare, Frame.swap] using cosine_le_sine
+    have swapped_bottom_contained :
+        factor * (swappedFrameSquare.frame.cosine +
+            swappedFrameSquare.frame.sine) / 2 ≤
+          factor * swappedFrameSquare.center.y := by
+      simpa [swappedFrameSquare, Frame.swap, add_comm] using bottom_contained
+    obtain ⟨tangentHalfAngle, tangent_positive, tangent_at_most,
+        cosine_eq, sine_eq⟩ :=
+      Frame.exists_tangentHalfAngle_of_sine_le_cosine
+        swappedFrameSquare.frame swapped_cosine_positive
+        swapped_sine_positive swapped_sine_le_cosine
+    have swapped_length_gt_one :=
+      horizontalOtherAdjacentChord_length_gt_one_of_bottom_contained
+        swappedFrameSquare factor_at_least_one swapped_cosine_positive
+        swapped_sine_positive cosine_eq sine_eq swapped_bottom_contained
+        height_gt_half height_lt tangent_positive tangent_at_most
+    have chord_lengths_eq :
+        square.horizontalAdjacentOtherUpper factor height -
+            square.horizontalAdjacentOtherLower factor height =
+          swappedFrameSquare.horizontalAdjacentOtherUpper factor height -
+            swappedFrameSquare.horizontalAdjacentOtherLower factor height := by
+      rw [square.horizontalOtherAdjacentChord_length cosine_positive.ne'
+        sine_positive.ne']
+      rw [swappedFrameSquare.horizontalOtherAdjacentChord_length
+        swapped_cosine_positive.ne' swapped_sine_positive.ne']
+      simp only [swappedFrameSquare, Frame.swap]
+      ring
+    rw [chord_lengths_eq]
+    exact swapped_length_gt_one
 
 noncomputable def cornerCutAreaCoefficient (tangentHalfAngle : ℝ) : ℝ :=
   tangentHalfAngle * (1 - tangentHalfAngle ^ 2) /
@@ -1659,6 +1838,66 @@ lemma bottomLongGridChordWitness_of_horizontalAdjacent_center_in_boundary_band
     other_lower_at_most end_at_most_other_upper (by dsimp [offset]; ring)
     offset_nonnegative offset_lt
 
+lemma bottomLongGridChordWitness_of_horizontalAdjacent_center_in_boundary_band_any_positive_frame
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (other_lower_at_most :
+      square.horizontalAdjacentOtherLower factor (9 / 10) ≤
+        square.horizontalAdjacentChordStart factor (9 / 10))
+    (end_at_most_other_upper :
+      square.horizontalAdjacentChordEnd factor (9 / 10) ≤
+        square.horizontalAdjacentOtherUpper factor (9 / 10))
+    (center_y_at_least_grid : 9 / 10 ≤ factor * square.center.y)
+    (center_y_at_most_boundary : factor * square.center.y ≤ 1) :
+    LongGridChordWitness size (square.dilatedInteriorRegion factor) .bottom := by
+  have sqrt_two_nonnegative : 0 ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  have sqrt_two_sq : (Real.sqrt 2) ^ 2 = 2 :=
+    Real.sq_sqrt (by norm_num)
+  have sqrt_two_gt_six_fifths : (6 / 5 : ℝ) < Real.sqrt 2 := by
+    nlinarith
+  let offset := factor * square.center.y - 9 / 10
+  have offset_nonnegative : 0 ≤ offset := by
+    dsimp [offset]
+    linarith
+  have offset_lt : offset < (Real.sqrt 2 - 1) / 2 := by
+    dsimp [offset]
+    linarith
+  have length_gt_one :=
+    horizontalAdjacentChord_length_gt_one_any_positive_frame
+      (factor := factor) (height := 9 / 10) (offset := offset) square
+      factor_gt_one.le cosine_positive sine_positive
+      (by dsimp [offset]; ring) offset_nonnegative offset_lt
+  exact bottomLongGridChordWitness_of_horizontalAdjacent square
+    (zero_lt_one.trans factor_gt_one) cosine_positive sine_positive
+    inside_container other_lower_at_most end_at_most_other_upper length_gt_one
+
+lemma bottomLongGridChordWitness_of_horizontalAdjacent_center_at_most_grid
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (other_lower_at_most :
+      square.horizontalAdjacentOtherLower factor (9 / 10) ≤
+        square.horizontalAdjacentChordStart factor (9 / 10))
+    (end_at_most_other_upper :
+      square.horizontalAdjacentChordEnd factor (9 / 10) ≤
+        square.horizontalAdjacentOtherUpper factor (9 / 10))
+    (center_y_at_most_grid : factor * square.center.y ≤ 9 / 10) :
+    LongGridChordWitness size (square.dilatedInteriorRegion factor) .bottom := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have length_gt_one :=
+    horizontalAdjacentChord_length_gt_one_of_center_at_most_line square
+      factor_gt_one cosine_positive sine_positive center_y_at_most_grid
+  exact bottomLongGridChordWitness_of_horizontalAdjacent square factor_positive
+    cosine_positive sine_positive inside_container other_lower_at_most
+    end_at_most_other_upper length_gt_one
+
 lemma bottomLongGridChordWitness_of_horizontalOtherAdjacent
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
     (factor_positive : 0 < factor)
@@ -1750,6 +1989,73 @@ lemma bottomLongGridChordWitness_of_bottom_touching_horizontalOtherAdjacent
     chord_start_at_most_other_lower other_upper_at_most_chord_end
     cosine_eq sine_eq bottom_touch tangent_positive tangent_at_most
 
+lemma bottomLongGridChordWitness_of_contained_horizontalOtherAdjacent
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (sine_le_cosine : square.frame.sine ≤ square.frame.cosine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (chord_start_at_most_other_lower :
+      square.horizontalAdjacentChordStart factor (9 / 10) ≤
+        square.horizontalAdjacentOtherLower factor (9 / 10))
+    (other_upper_at_most_chord_end :
+      square.horizontalAdjacentOtherUpper factor (9 / 10) ≤
+        square.horizontalAdjacentChordEnd factor (9 / 10)) :
+    LongGridChordWitness size (square.dilatedInteriorRegion factor) .bottom := by
+  have sqrt_two_nonnegative : 0 ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  have sqrt_two_sq : (Real.sqrt 2) ^ 2 = 2 :=
+    Real.sq_sqrt (by norm_num)
+  have height_gt_half : (1 / 2 : ℝ) < 9 / 10 := by norm_num
+  have height_lt : (9 / 10 : ℝ) < Real.sqrt 2 - 1 / 2 := by
+    nlinarith
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have bottom_contained := square.dilatedCenterY_halfExtent_le
+    factor_positive cosine_positive.le sine_positive.le inside_container
+  obtain ⟨tangentHalfAngle, tangent_positive, tangent_at_most,
+      cosine_eq, sine_eq⟩ :=
+    Frame.exists_tangentHalfAngle_of_sine_le_cosine square.frame
+      cosine_positive sine_positive sine_le_cosine
+  have length_gt_one :=
+    horizontalOtherAdjacentChord_length_gt_one_of_bottom_contained square
+      factor_gt_one.le cosine_positive sine_positive cosine_eq sine_eq
+      bottom_contained height_gt_half height_lt tangent_positive tangent_at_most
+  exact bottomLongGridChordWitness_of_horizontalOtherAdjacent square
+    factor_positive cosine_positive sine_positive inside_container
+    chord_start_at_most_other_lower other_upper_at_most_chord_end length_gt_one
+
+lemma bottomLongGridChordWitness_of_contained_horizontalOtherAdjacent_any_positive_frame
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (chord_start_at_most_other_lower :
+      square.horizontalAdjacentChordStart factor (9 / 10) ≤
+        square.horizontalAdjacentOtherLower factor (9 / 10))
+    (other_upper_at_most_chord_end :
+      square.horizontalAdjacentOtherUpper factor (9 / 10) ≤
+        square.horizontalAdjacentChordEnd factor (9 / 10)) :
+    LongGridChordWitness size (square.dilatedInteriorRegion factor) .bottom := by
+  have sqrt_two_nonnegative : 0 ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  have sqrt_two_sq : (Real.sqrt 2) ^ 2 = 2 :=
+    Real.sq_sqrt (by norm_num)
+  have height_gt_half : (1 / 2 : ℝ) < 9 / 10 := by norm_num
+  have height_lt : (9 / 10 : ℝ) < Real.sqrt 2 - 1 / 2 := by
+    nlinarith
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have bottom_contained := square.dilatedCenterY_halfExtent_le
+    factor_positive cosine_positive.le sine_positive.le inside_container
+  have length_gt_one :=
+    horizontalOtherAdjacentChord_length_gt_one_any_positive_frame square
+      factor_gt_one.le cosine_positive sine_positive bottom_contained
+      height_gt_half height_lt
+  exact bottomLongGridChordWitness_of_horizontalOtherAdjacent square
+    factor_positive cosine_positive sine_positive inside_container
+    chord_start_at_most_other_lower other_upper_at_most_chord_end length_gt_one
+
 lemma bottomLongGridChordWitness_of_horizontalCosineChord
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
     (factor_gt_one : 1 < factor)
@@ -1822,6 +2128,171 @@ lemma bottomLongGridChordWitness_of_horizontalOpposite
       factor_gt_one cosine_positive sine_positive inside_container
       chord_start_at_most_other_lower chord_end_at_most_other_upper
 
+lemma bottomLongGridChordWitness_of_axis_aligned
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_nonnegative : 0 ≤ square.frame.cosine)
+    (sine_nonnegative : 0 ≤ square.frame.sine)
+    (axis_aligned : square.frame.cosine = 0 ∨ square.frame.sine = 0)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_y_at_most_boundary : factor * square.center.y ≤ 1) :
+    LongGridChordWitness size (square.dilatedInteriorRegion factor) .bottom := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have axis_values :
+      (square.frame.cosine = 0 ∧ square.frame.sine = 1) ∨
+        (square.frame.cosine = 1 ∧ square.frame.sine = 0) := by
+    rcases axis_aligned with cosine_zero | sine_zero
+    · left
+      refine ⟨cosine_zero, ?_⟩
+      have frame_unit := square.frame.unit
+      rw [cosine_zero] at frame_unit
+      nlinarith
+    · right
+      refine ⟨?_, sine_zero⟩
+      have frame_unit := square.frame.unit
+      rw [sine_zero] at frame_unit
+      nlinarith
+  have component_sum_eq_one :
+      square.frame.cosine + square.frame.sine = 1 := by
+    rcases axis_values with ⟨cosine_zero, sine_one⟩ |
+      ⟨cosine_one, sine_zero⟩
+    · rw [cosine_zero, sine_one]
+      norm_num
+    · rw [cosine_one, sine_zero]
+      norm_num
+  have center_y_at_least_half_factor :
+      factor / 2 ≤ factor * square.center.y := by
+    have half_extent_bound := square.dilatedCenterY_halfExtent_le
+      factor_positive cosine_nonnegative sine_nonnegative inside_container
+    rw [component_sum_eq_one] at half_extent_bound
+    norm_num at half_extent_bound ⊢
+    exact half_extent_bound
+  have vertical_offset_bound :
+      |(9 / 10 : ℝ) - factor * square.center.y| < factor / 2 := by
+    rw [abs_lt]
+    constructor <;> nlinarith
+  let intervalStart := factor * square.center.x - factor / 2
+  let intervalEnd := factor * square.center.x + factor / 2
+  apply longGridChordWitness_of_open_chord .bottom
+      (intervalStart := intervalStart) (intervalEnd := intervalEnd)
+  · dsimp [intervalStart, intervalEnd]
+    linarith
+  · intro coordinate coordinate_mem
+    have horizontal_offset_bound :
+        |coordinate - factor * square.center.x| < factor / 2 := by
+      rw [abs_lt]
+      dsimp [intervalStart, intervalEnd] at coordinate_mem
+      exact ⟨by linarith [coordinate_mem.1],
+        by linarith [coordinate_mem.2]⟩
+    rcases axis_values with ⟨cosine_zero, sine_one⟩ |
+      ⟨cosine_one, sine_zero⟩
+    · apply square.mem_dilatedInteriorRegion_of_inverse_bounds factor_positive
+      · simpa [NagamochiResource.EdgePoint.pointAt,
+          PlacedSquare.dilatedLocalX, Plane.toPoint, cosine_zero,
+          sine_one] using vertical_offset_bound
+      · simpa [NagamochiResource.EdgePoint.pointAt,
+          PlacedSquare.dilatedLocalY, Plane.toPoint, cosine_zero,
+          sine_one, abs_neg, abs_sub_comm] using horizontal_offset_bound
+    · apply square.mem_dilatedInteriorRegion_of_inverse_bounds factor_positive
+      · simpa [NagamochiResource.EdgePoint.pointAt,
+          PlacedSquare.dilatedLocalX, Plane.toPoint, cosine_one,
+          sine_zero] using horizontal_offset_bound
+      · simpa [NagamochiResource.EdgePoint.pointAt,
+          PlacedSquare.dilatedLocalY, Plane.toPoint, cosine_one,
+          sine_zero] using vertical_offset_bound
+  · exact inside_container
+
+lemma bottomLongGridChordWitness_of_center_in_bottom_strip_positive_frame
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_y_at_most_boundary : factor * square.center.y ≤ 1) :
+    LongGridChordWitness size (square.dilatedInteriorRegion factor) .bottom := by
+  rcases le_total
+      (square.horizontalAdjacentOtherLower factor (9 / 10))
+      (square.horizontalAdjacentChordStart factor (9 / 10)) with
+    other_lower_at_most | chord_start_at_most_other_lower
+  · rcases le_total
+        (square.horizontalAdjacentChordEnd factor (9 / 10))
+        (square.horizontalAdjacentOtherUpper factor (9 / 10)) with
+      chord_end_at_most_other_upper | other_upper_at_most_chord_end
+    · by_cases center_y_at_most_grid :
+          factor * square.center.y ≤ 9 / 10
+      · exact
+          bottomLongGridChordWitness_of_horizontalAdjacent_center_at_most_grid
+            square factor_gt_one cosine_positive sine_positive inside_container
+            other_lower_at_most chord_end_at_most_other_upper
+            center_y_at_most_grid
+      · exact
+          bottomLongGridChordWitness_of_horizontalAdjacent_center_in_boundary_band_any_positive_frame
+            square factor_gt_one cosine_positive sine_positive
+            inside_container other_lower_at_most chord_end_at_most_other_upper
+            (le_of_not_ge center_y_at_most_grid) center_y_at_most_boundary
+    · exact bottomLongGridChordWitness_of_horizontalCosineChord square
+        factor_gt_one cosine_positive sine_positive inside_container
+        other_lower_at_most other_upper_at_most_chord_end
+  · rcases le_total
+        (square.horizontalAdjacentOtherUpper factor (9 / 10))
+        (square.horizontalAdjacentChordEnd factor (9 / 10)) with
+      other_upper_at_most_chord_end | chord_end_at_most_other_upper
+    · exact
+        bottomLongGridChordWitness_of_contained_horizontalOtherAdjacent_any_positive_frame
+          square factor_gt_one cosine_positive sine_positive
+          inside_container chord_start_at_most_other_lower
+          other_upper_at_most_chord_end
+    · exact bottomLongGridChordWitness_of_horizontalSineChord square
+        factor_gt_one cosine_positive sine_positive inside_container
+        chord_start_at_most_other_lower chord_end_at_most_other_upper
+
+lemma bottomLongGridChordWitness_of_center_in_bottom_strip
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_y_at_most_boundary : factor * square.center.y ≤ 1) :
+    LongGridChordWitness size (square.dilatedInteriorRegion factor) .bottom := by
+  let normalizedSquare := square.firstQuadrant
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have region_eq :
+      normalizedSquare.dilatedInteriorRegion factor =
+        square.dilatedInteriorRegion factor := by
+    exact square.firstQuadrant_dilatedInteriorRegion_eq factor_positive
+  have normalized_inside :
+      normalizedSquare.dilatedInteriorRegion factor ⊆ containerRegion size := by
+    rw [region_eq]
+    exact inside_container
+  have normalized_center_y_at_most_boundary :
+      factor * normalizedSquare.center.y ≤ 1 := by
+    simpa [normalizedSquare] using center_y_at_most_boundary
+  have cosine_nonnegative : 0 ≤ normalizedSquare.frame.cosine := by
+    simpa [normalizedSquare] using square.firstQuadrant_cosine_nonnegative
+  have sine_nonnegative : 0 ≤ normalizedSquare.frame.sine := by
+    simpa [normalizedSquare] using square.firstQuadrant_sine_nonnegative
+  have normalized_witness :
+      LongGridChordWitness size
+        (normalizedSquare.dilatedInteriorRegion factor) .bottom := by
+    by_cases cosine_zero : normalizedSquare.frame.cosine = 0
+    · exact bottomLongGridChordWitness_of_axis_aligned normalizedSquare
+        factor_gt_one cosine_nonnegative sine_nonnegative (Or.inl cosine_zero)
+        normalized_inside normalized_center_y_at_most_boundary
+    by_cases sine_zero : normalizedSquare.frame.sine = 0
+    · exact bottomLongGridChordWitness_of_axis_aligned normalizedSquare
+        factor_gt_one cosine_nonnegative sine_nonnegative (Or.inr sine_zero)
+        normalized_inside normalized_center_y_at_most_boundary
+    · have cosine_positive : 0 < normalizedSquare.frame.cosine :=
+        lt_of_le_of_ne cosine_nonnegative (Ne.symm cosine_zero)
+      have sine_positive : 0 < normalizedSquare.frame.sine :=
+        lt_of_le_of_ne sine_nonnegative (Ne.symm sine_zero)
+      exact bottomLongGridChordWitness_of_center_in_bottom_strip_positive_frame
+        normalizedSquare factor_gt_one cosine_positive sine_positive
+        normalized_inside normalized_center_y_at_most_boundary
+  rw [region_eq] at normalized_witness
+  exact normalized_witness
+
 lemma gridPointWitness_of_open_grid_chord
     {size : ℕ} {region : Set Plane}
     (kind : NagamochiResource.EdgePoint)
@@ -1850,6 +2321,18 @@ lemma gridPointWitness_of_open_grid_chord
     simpa [coordinate_cast] using point_mem
   · refine .edge coordinate (by simp only [Finset.mem_Icc]; omega) ?_
     simpa using point_mem
+
+lemma bottomGridPointWitness_of_center_in_bottom_strip_geometry
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_y_at_most_boundary : factor * square.center.y ≤ 1) :
+    GridPointWitness size (square.dilatedInteriorRegion factor) .bottom := by
+  exact gridPointWitness_of_open_grid_chord .bottom size_at_least_three
+    (bottomLongGridChordWitness_of_center_in_bottom_strip square factor_gt_one
+      inside_container center_y_at_most_boundary)
 
 lemma bottomGridPointWitness_of_open_chord
     {size : ℕ} {region : Set Plane} {intervalStart intervalEnd : ℝ}
