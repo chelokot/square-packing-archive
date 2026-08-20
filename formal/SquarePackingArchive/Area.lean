@@ -288,6 +288,7 @@ lemma translatedRightTriangleRegion_subset_of_vertices_mem
   have weights_sum : ∑ index, weights index = 1 := by
     simp [weights, Fin.sum_univ_three, origin_weight]
     ring
+
   have vertices_mem :
       ∀ index ∈ (Finset.univ : Finset (Fin 3)), vertices index ∈ region := by
     intro index _
@@ -306,6 +307,23 @@ lemma translatedRightTriangleRegion_subset_of_vertices_mem
       horizontal_weight, vertical_weight, origin_head, origin_tail_head] <;>
     field_simp [ne_of_gt width_positive, ne_of_gt height_positive] <;>
     ring
+
+lemma rightTriangleRegion_subset_of_vertices_mem
+    {region : Set Plane} {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_positive : 0 < height)
+    (region_convex : Convex ℝ region)
+    (origin_mem : (0 : Plane) ∈ region)
+    (horizontal_vertex_mem : ![width, 0] ∈ region)
+    (vertical_vertex_mem : ![0, height] ∈ region) :
+    rightTriangleRegion width height ⊆ region := by
+  have translated_subset := translatedRightTriangleRegion_subset_of_vertices_mem
+    (origin := (0 : Plane)) width_positive height_positive region_convex
+    origin_mem (by simpa using horizontal_vertex_mem)
+    (by simpa using vertical_vertex_mem)
+  intro point point_mem
+  apply translated_subset
+  exact ⟨point, point_mem, by simp⟩
 
 lemma convex_translatedRightTriangleRegion
     (origin : Plane) {width height : ℝ} (width_positive : 0 < width) :
@@ -473,6 +491,11 @@ lemma Frame.rotation_injective (frame : Frame) :
       -frame.sine * horizontal + frame.cosine * vertical -
         (left 1 - right 1) * frame.unit
 
+noncomputable def Frame.rotationEquiv (frame : Frame) : Plane ≃ₗ[ℝ] Plane :=
+  LinearEquiv.ofBijective frame.rotation
+    ⟨frame.rotation_injective,
+      LinearMap.injective_iff_surjective.mp frame.rotation_injective⟩
+
 lemma Frame.isOpenMap_rotation (frame : Frame) :
     IsOpenMap frame.rotation := by
   apply LinearMap.isOpenMap_of_finiteDimensional
@@ -488,13 +511,24 @@ lemma PlacedSquare.transform_injective (square : PlacedSquare) :
   apply square.frame.rotation_injective
   exact add_left_cancel equality
 
-lemma PlacedSquare.isOpenMap_transform (square : PlacedSquare) :
-    IsOpenMap square.transform := by
-  rw [show square.transform =
-      (fun point => square.center.toPlane + point) ∘ square.frame.rotation by
-        funext point
-        rfl]
-  exact (isOpenMap_add_left square.center.toPlane).comp square.frame.isOpenMap_rotation
+noncomputable def PlacedSquare.transformHomeomorph
+    (square : PlacedSquare) : Plane ≃ₜ Plane :=
+  square.frame.rotationEquiv.toContinuousLinearEquiv.toHomeomorph.trans
+    (Homeomorph.addLeft square.center.toPlane)
+
+lemma PlacedSquare.transformHomeomorph_apply
+    (square : PlacedSquare) (point : Plane) :
+    square.transformHomeomorph point = square.transform point := by
+  rfl
+
+lemma PlacedSquare.measurableEmbedding_transform (square : PlacedSquare) :
+    MeasurableEmbedding square.transform := by
+  have transform_eq :
+      (square.transformHomeomorph : Plane → Plane) = square.transform := by
+    funext point
+    exact square.transformHomeomorph_apply point
+  rw [← transform_eq]
+  exact square.transformHomeomorph.measurableEmbedding
 
 lemma PlacedSquare.map_transform_volume (square : PlacedSquare) :
     Measure.map square.transform volume = volume := by
@@ -508,8 +542,148 @@ lemma PlacedSquare.map_transform_volume (square : PlacedSquare) :
   · exact measurable_const.add measurable_id
   · exact square.frame.measurable_rotation
 
+def PlacedSquare.fromPlaneCenter (center : Plane) (frame : Frame) : PlacedSquare :=
+  ⟨center.toPoint, frame⟩
+
+@[simp] lemma PlacedSquare.fromPlaneCenter_transform
+    (center : Plane) (frame : Frame) (point : Plane) :
+    (PlacedSquare.fromPlaneCenter center frame).transform point =
+      center + frame.rotation point := by
+  simp [PlacedSquare.fromPlaneCenter, PlacedSquare.transform]
+
+def orientedTranslatedRightTriangleRegion
+    (origin : Plane) (frame : Frame) (width height : ℝ) : Set Plane :=
+  (PlacedSquare.fromPlaneCenter origin frame).transform ''
+    rightTriangleRegion width height
+
+lemma measurableSet_orientedTranslatedRightTriangleRegion
+    (origin : Plane) (frame : Frame) (width height : ℝ) :
+    MeasurableSet
+      (orientedTranslatedRightTriangleRegion origin frame width height) := by
+  exact (PlacedSquare.fromPlaneCenter origin frame).measurableEmbedding_transform
+    |>.measurableSet_image'
+    (measurableSet_rightTriangleRegion width height)
+
+lemma volume_orientedTranslatedRightTriangleRegion
+    (origin : Plane) (frame : Frame) {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_nonnegative : 0 ≤ height) :
+    volume (orientedTranslatedRightTriangleRegion origin frame width height) =
+      ENNReal.ofReal (width * height / 2) := by
+  let placement := PlacedSquare.fromPlaneCenter origin frame
+  rw [orientedTranslatedRightTriangleRegion]
+  have mapped := congrArg
+    (fun measure : Measure Plane =>
+      measure (placement.transform '' rightTriangleRegion width height))
+    placement.map_transform_volume
+  rw [Measure.map_apply placement.measurable_transform
+    (placement.measurableEmbedding_transform.measurableSet_image'
+      (measurableSet_rightTriangleRegion width height))] at mapped
+  rw [placement.transform_injective.preimage_image] at mapped
+  rw [← mapped]
+  exact volume_rightTriangleRegion width_positive height_nonnegative
+
+lemma convex_orientedTranslatedRightTriangleRegion
+    (origin : Plane) (frame : Frame) {width height : ℝ}
+    (width_positive : 0 < width) :
+    Convex ℝ (orientedTranslatedRightTriangleRegion origin frame width height) := by
+  let placement := PlacedSquare.fromPlaneCenter origin frame
+  rw [orientedTranslatedRightTriangleRegion]
+  exact (convex_rightTriangleRegion width_positive).affine_image
+    placement.affineTransform
+
+lemma orientedTranslatedRightTriangleRegion_subset_of_vertices_mem
+    {region : Set Plane} (origin : Plane) (frame : Frame) {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_positive : 0 < height)
+    (region_convex : Convex ℝ region)
+    (origin_mem : origin ∈ region)
+    (horizontal_vertex_mem :
+      origin + frame.rotation ![width, 0] ∈ region)
+    (vertical_vertex_mem :
+      origin + frame.rotation ![0, height] ∈ region) :
+    orientedTranslatedRightTriangleRegion origin frame width height ⊆
+      region := by
+  let placement := PlacedSquare.fromPlaneCenter origin frame
+  rw [orientedTranslatedRightTriangleRegion]
+  rintro _ ⟨point, point_mem, rfl⟩
+  apply rightTriangleRegion_subset_of_vertices_mem width_positive
+    height_positive (region_convex.affine_preimage placement.affineTransform)
+  · simpa [placement, PlacedSquare.affineTransform] using origin_mem
+  · simpa [placement, PlacedSquare.affineTransform] using horizontal_vertex_mem
+  · simpa [placement, PlacedSquare.affineTransform] using vertical_vertex_mem
+  · exact point_mem
+
+def openOrientedTranslatedRightTriangleRegion
+    (origin : Plane) (frame : Frame) (width height : ℝ) : Set Plane :=
+  interior (orientedTranslatedRightTriangleRegion origin frame width height)
+
+lemma volume_openOrientedTranslatedRightTriangleRegion
+    (origin : Plane) (frame : Frame) {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_nonnegative : 0 ≤ height) :
+    volume (openOrientedTranslatedRightTriangleRegion origin frame width height) =
+      ENNReal.ofReal (width * height / 2) := by
+  rw [openOrientedTranslatedRightTriangleRegion,
+    measure_interior_of_null_frontier
+      ((convex_orientedTranslatedRightTriangleRegion origin frame
+        width_positive).addHaar_frontier volume)]
+  exact volume_orientedTranslatedRightTriangleRegion origin frame
+    width_positive height_nonnegative
+
+lemma openOrientedTranslatedRightTriangleRegion_subset_of_vertices_mem_closure
+    {region : Set Plane} (origin : Plane) (frame : Frame) {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_positive : 0 < height)
+    (region_convex : Convex ℝ region)
+    (region_open : IsOpen region)
+    (region_nonempty : region.Nonempty)
+    (origin_mem : origin ∈ closure region)
+    (horizontal_vertex_mem :
+      origin + frame.rotation ![width, 0] ∈ closure region)
+    (vertical_vertex_mem :
+      origin + frame.rotation ![0, height] ∈ closure region) :
+    openOrientedTranslatedRightTriangleRegion origin frame width height ⊆
+      region := by
+  have triangle_subset_closure :
+      orientedTranslatedRightTriangleRegion origin frame width height ⊆
+        closure region :=
+    orientedTranslatedRightTriangleRegion_subset_of_vertices_mem origin frame
+      width_positive height_positive region_convex.closure origin_mem
+      horizontal_vertex_mem vertical_vertex_mem
+  have interior_subset :
+      interior (orientedTranslatedRightTriangleRegion origin frame width height) ⊆
+        interior (closure region) := interior_mono triangle_subset_closure
+  have interior_closure_eq : interior (closure region) = region := by
+    calc
+      interior (closure region) = interior region :=
+        region_convex.interior_closure_eq_interior_of_nonempty_interior
+          (by simpa [region_open.interior_eq] using region_nonempty)
+      _ = region := region_open.interior_eq
+  simpa [openOrientedTranslatedRightTriangleRegion, interior_closure_eq] using
+    interior_subset
+
+lemma PlacedSquare.isOpenMap_transform (square : PlacedSquare) :
+    IsOpenMap square.transform := by
+  rw [show square.transform =
+      (fun point => square.center.toPlane + point) ∘ square.frame.rotation by
+        funext point
+        rfl]
+  exact (isOpenMap_add_left square.center.toPlane).comp square.frame.isOpenMap_rotation
+
 def unitSquareInterior : Set Plane :=
   Set.pi univ fun _ => Ioo (-(1 / 2)) (1 / 2)
+
+def unitSquareClosure : Set Plane :=
+  Set.pi univ fun _ => Icc (-(1 / 2)) (1 / 2)
+
+lemma closure_unitSquareInterior :
+    closure unitSquareInterior = unitSquareClosure := by
+  rw [unitSquareInterior, closure_pi_set]
+  unfold unitSquareClosure
+  congr 1
+  funext coordinate
+  exact closure_Ioo (by norm_num)
 
 lemma isOpen_unitSquareInterior : IsOpen unitSquareInterior := by
   exact isOpen_set_pi Set.finite_univ fun _ _ => isOpen_Ioo
@@ -530,6 +704,39 @@ def PlacedSquare.interiorRegion (square : PlacedSquare) : Set Plane :=
 lemma PlacedSquare.isOpen_interiorRegion (square : PlacedSquare) :
     IsOpen square.interiorRegion := by
   exact square.isOpenMap_transform unitSquareInterior isOpen_unitSquareInterior
+
+lemma PlacedSquare.nonempty_interiorRegion (square : PlacedSquare) :
+    square.interiorRegion.Nonempty := by
+  refine ⟨square.transform 0, 0, ?_, rfl⟩
+  intro coordinate _
+  norm_num [unitSquareInterior]
+
+lemma PlacedSquare.closure_interiorRegion (square : PlacedSquare) :
+    closure square.interiorRegion = square.transform '' unitSquareClosure := by
+  calc
+    closure square.interiorRegion =
+        closure (square.transformHomeomorph '' unitSquareInterior) := by
+      rfl
+    _ = square.transformHomeomorph '' closure unitSquareInterior :=
+      (square.transformHomeomorph.image_closure unitSquareInterior).symm
+    _ = square.transformHomeomorph '' unitSquareClosure := by
+      rw [closure_unitSquareInterior]
+    _ = square.transform '' unitSquareClosure := by
+      ext point
+      constructor
+      · rintro ⟨coordinates, coordinates_mem, rfl⟩
+        exact ⟨coordinates, coordinates_mem,
+          square.transformHomeomorph_apply coordinates⟩
+      · rintro ⟨coordinates, coordinates_mem, rfl⟩
+        exact ⟨coordinates, coordinates_mem,
+          (square.transformHomeomorph_apply coordinates).symm⟩
+
+lemma PlacedSquare.transform_mem_closure_interiorRegion
+    (square : PlacedSquare) {coordinates : Plane}
+    (coordinates_mem : coordinates ∈ unitSquareClosure) :
+    square.transform coordinates ∈ closure square.interiorRegion := by
+  rw [square.closure_interiorRegion]
+  exact ⟨coordinates, coordinates_mem, rfl⟩
 
 lemma PlacedSquare.measurableSet_interiorRegion (square : PlacedSquare) :
     MeasurableSet square.interiorRegion :=

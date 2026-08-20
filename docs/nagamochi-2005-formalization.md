@@ -59,17 +59,26 @@ The inner-area premise of that pinned subcase is no longer an opaque numerical
 bound. Lean computes the exact Lebesgue measure of a right triangle by Tonelli's
 theorem and the fundamental theorem of calculus, transports the result from
 `ℝ × ℝ` to the archive's `Fin 2 → ℝ` plane, and proves that translations preserve
-the area. The pinned triangle has width `2t`, height `(1 − t) / (1 + t)`, and
-therefore area `t(1 − t) / (1 + t)`, exactly the corrected Lemma 6 term. Its
-open interior has the same area because the frontier of a convex set has zero
-Lebesgue measure. A typed witness records convexity and openness of the dilated
-square, the three triangle vertices in its closure, and those vertices in the
+the area. The pinned triangle's perpendicular edge lengths are `1 − t` and
+`2t / (1 + t)`, so its area is `t(1 − t) / (1 + t)`, exactly the corrected
+Lemma 6 term. Its open interior has the same area because the frontier of a convex set has zero
+Lebesgue measure. The two legs are oriented by the square's orthonormal frame,
+and Lean proves that this rotation and translation preserve volume. A typed
+witness records convexity and openness of the dilated square, the three
+frame-oriented triangle vertices in its closure, and those vertices in the
 closed inner rectangle. Convexity then puts the complete open triangle in both
 resource regions, even when a contact vertex lies on the square boundary, and
 a kernel-checked bridge feeds the resulting `innerArea` bound directly into
 the pinned score theorem. The remaining geometric work is to construct that
 witness from the terminal placed-square configuration and to derive its
 boundary-line/`Q` contribution.
+
+The formal model also constructs this cut directly at a square vertex. The
+first endpoint has local coordinates `(t − 1/2, 1/2)` and the second has local
+coordinates `(1/2, 1/2 − 2t/(1+t))`. For `0 < t < 1`, Lean checks that both
+belong to the closed unit square and proves that the complete open cut triangle
+is contained in the square interior. This rules out a merely area-equivalent,
+but geometrically misoriented, triangle certificate.
 
 The Lemma 5 branch of Case 6 is connected too. Its checked
 triangle-area-plus-half-chord inequality now composes directly with a typed `P`
