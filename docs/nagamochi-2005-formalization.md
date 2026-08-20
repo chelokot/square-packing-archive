@@ -121,6 +121,19 @@ long chord, one short chord and one `Q`—is also proved directly from the resou
 measure. What remains is to derive the endpoint-to-perpendicular connection and
 the final deformation into Case 6 from the paper's geometric hypotheses.
 
+The Case 7 bridge now consumes the actual edge-strip geometry rather than a
+caller-supplied grid witness. Given the long chord on the inner boundary line,
+it constructs the matching `Q`-or-`P` witness on the `0.9` grid line and feeds
+both into the side-independent resource classifier. In particular, if neither
+endpoint `Q` is present, Lean extracts an indexed `P` and closes the score
+inequality immediately. The two perpendicular connection points and their
+short boundary sides are now typed uniformly for all four edge strips. If the
+matching connection point is present, convexity supplies the short chord and
+Lean closes the endpoint-`Q` branch. The exhaustive Case 7 theorem therefore
+returns either a proved score or one of exactly two typed disconnected-endpoint
+outcomes. Proving that those remaining outcomes reduce to Case 6 under the
+paper's terminal deformation is the sole remaining Case 7 obligation.
+
 Coordinate-swap symmetry is formalized as an involution on points, frames and
 placed squares. Lean proves that it preserves membership in dilated open square
 regions, allowing the vertical chord theory to be derived from the horizontal
