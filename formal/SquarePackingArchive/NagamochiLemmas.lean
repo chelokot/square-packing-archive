@@ -986,6 +986,26 @@ lemma innerArea_lower_bound_of_translatedRightTriangle
   intro point point_mem
   exact ⟨triangle_inside_region point_mem, triangle_inside_inner point_mem⟩
 
+lemma innerArea_lower_bound_of_openTranslatedRightTriangle
+    {size : ℕ} {region : Set Plane}
+    (origin : Plane) {width height : ℝ}
+    (region_measurable : MeasurableSet region)
+    (width_positive : 0 < width)
+    (height_nonnegative : 0 ≤ height)
+    (triangle_inside_inner :
+      openTranslatedRightTriangleRegion origin width height ⊆
+        Icc (fun _ => 1) (fun _ => (size : ℝ) - 1))
+    (triangle_inside_region :
+      openTranslatedRightTriangleRegion origin width height ⊆ region) :
+    ENNReal.ofReal (width * height / 2) ≤
+      NagamochiResource.innerArea size region := by
+  rw [NagamochiResource.innerArea, Measure.restrict_apply region_measurable]
+  rw [← volume_openTranslatedRightTriangleRegion origin
+    width_positive height_nonnegative]
+  apply measure_mono
+  intro point point_mem
+  exact ⟨triangle_inside_region point_mem, triangle_inside_inner point_mem⟩
+
 lemma pinnedCutArea_eq_rightTriangleArea
     (tangentHalfAngle : ℝ) :
     pinnedCutArea tangentHalfAngle =
@@ -996,8 +1016,29 @@ lemma pinnedCutArea_eq_rightTriangleArea
 
 def pinnedCutTriangleRegion
     (origin : Plane) (tangentHalfAngle : ℝ) : Set Plane :=
-  translatedRightTriangleRegion origin (2 * tangentHalfAngle)
+  openTranslatedRightTriangleRegion origin (2 * tangentHalfAngle)
     ((1 - tangentHalfAngle) / (1 + tangentHalfAngle))
+
+structure PinnedCutTriangleWitness
+    (size : ℕ) (region : Set Plane) (origin : Plane)
+    (tangentHalfAngle : ℝ) : Prop where
+  region_convex : Convex ℝ region
+  region_open : IsOpen region
+  region_nonempty : region.Nonempty
+  origin_mem_closure : origin ∈ closure region
+  horizontal_vertex_mem_closure :
+    origin + ![2 * tangentHalfAngle, 0] ∈ closure region
+  vertical_vertex_mem_closure :
+    origin + ![0, (1 - tangentHalfAngle) / (1 + tangentHalfAngle)] ∈
+      closure region
+  origin_mem_inner :
+    origin ∈ Icc (fun _ => 1) (fun _ => (size : ℝ) - 1)
+  horizontal_vertex_mem_inner :
+    origin + ![2 * tangentHalfAngle, 0] ∈
+      Icc (fun _ => 1) (fun _ => (size : ℝ) - 1)
+  vertical_vertex_mem_inner :
+    origin + ![0, (1 - tangentHalfAngle) / (1 + tangentHalfAngle)] ∈
+      Icc (fun _ => 1) (fun _ => (size : ℝ) - 1)
 
 lemma pinnedCut_innerArea_lower_bound_of_triangle
     {size : ℕ} {region : Set Plane} {tangentHalfAngle : ℝ}
@@ -1016,7 +1057,7 @@ lemma pinnedCut_innerArea_lower_bound_of_triangle
   have triangle_height_nonnegative :
       0 ≤ (1 - tangentHalfAngle) / (1 + tangentHalfAngle) := by
     positivity
-  have triangleBound := innerArea_lower_bound_of_translatedRightTriangle
+  have triangleBound := innerArea_lower_bound_of_openTranslatedRightTriangle
     (size := size) (width := 2 * tangentHalfAngle)
     (height := (1 - tangentHalfAngle) / (1 + tangentHalfAngle))
     origin region_measurable (by positivity) triangle_height_nonnegative
@@ -1024,6 +1065,69 @@ lemma pinnedCut_innerArea_lower_bound_of_triangle
     (by simpa [pinnedCutTriangleRegion] using triangle_inside_region)
   rw [pinnedCutArea_eq_rightTriangleArea]
   exact triangleBound
+
+lemma pinnedCut_innerArea_lower_bound_of_vertices
+    {size : ℕ} {region : Set Plane} {tangentHalfAngle : ℝ}
+    (origin : Plane)
+    (region_measurable : MeasurableSet region)
+    (region_convex : Convex ℝ region)
+    (region_open : IsOpen region)
+    (region_nonempty : region.Nonempty)
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_lt_one : tangentHalfAngle < 1)
+    (origin_mem_closure : origin ∈ closure region)
+    (horizontal_vertex_mem_closure :
+      origin + ![2 * tangentHalfAngle, 0] ∈ closure region)
+    (vertical_vertex_mem_closure :
+      origin + ![0, (1 - tangentHalfAngle) / (1 + tangentHalfAngle)] ∈
+        closure region)
+    (origin_mem_inner :
+      origin ∈ Icc (fun _ => 1) (fun _ => (size : ℝ) - 1))
+    (horizontal_vertex_mem_inner :
+      origin + ![2 * tangentHalfAngle, 0] ∈
+        Icc (fun _ => 1) (fun _ => (size : ℝ) - 1))
+    (vertical_vertex_mem_inner :
+      origin + ![0, (1 - tangentHalfAngle) / (1 + tangentHalfAngle)] ∈
+        Icc (fun _ => 1) (fun _ => (size : ℝ) - 1)) :
+    ENNReal.ofReal (pinnedCutArea tangentHalfAngle) ≤
+      NagamochiResource.innerArea size region := by
+  have one_add_tangent_positive : 0 < 1 + tangentHalfAngle := by linarith
+  have triangle_height_positive :
+      0 < (1 - tangentHalfAngle) / (1 + tangentHalfAngle) := by
+    positivity
+  have triangle_inside_region :=
+    openTranslatedRightTriangleRegion_subset_of_vertices_mem_closure
+      origin (by positivity) triangle_height_positive region_convex region_open
+      region_nonempty origin_mem_closure horizontal_vertex_mem_closure
+      vertical_vertex_mem_closure
+  have closed_triangle_inside_inner :=
+    translatedRightTriangleRegion_subset_of_vertices_mem
+      origin (by positivity) triangle_height_positive (convex_Icc _ _)
+      origin_mem_inner horizontal_vertex_mem_inner vertical_vertex_mem_inner
+  have triangle_inside_inner :
+      pinnedCutTriangleRegion origin tangentHalfAngle ⊆
+        Icc (fun _ => 1) (fun _ => (size : ℝ) - 1) := by
+    intro point point_mem
+    apply closed_triangle_inside_inner
+    exact interior_subset (by simpa [pinnedCutTriangleRegion,
+      openTranslatedRightTriangleRegion] using point_mem)
+  exact pinnedCut_innerArea_lower_bound_of_triangle origin region_measurable
+    tangent_positive tangent_lt_one triangle_inside_inner
+    (by simpa [pinnedCutTriangleRegion] using triangle_inside_region)
+
+lemma PinnedCutTriangleWitness.innerArea_lower_bound
+    {size : ℕ} {region : Set Plane} {origin : Plane} {tangentHalfAngle : ℝ}
+    (witness : PinnedCutTriangleWitness size region origin tangentHalfAngle)
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_lt_one : tangentHalfAngle < 1) :
+    ENNReal.ofReal (pinnedCutArea tangentHalfAngle) ≤
+      NagamochiResource.innerArea size region := by
+  exact pinnedCut_innerArea_lower_bound_of_vertices origin
+    witness.region_open.measurableSet witness.region_convex witness.region_open
+    witness.region_nonempty tangent_positive tangent_lt_one
+    witness.origin_mem_closure witness.horizontal_vertex_mem_closure
+    witness.vertical_vertex_mem_closure witness.origin_mem_inner
+    witness.horizontal_vertex_mem_inner witness.vertical_vertex_mem_inner
 
 noncomputable def pinnedCutChord (tangentHalfAngle : ℝ) : ℝ :=
   (1 + tangentHalfAngle ^ 2) / (1 + tangentHalfAngle)
@@ -1164,6 +1268,27 @@ lemma score_gt_one_of_pinned_cut_triangle_and_boundary_bound
     boundary_corner_nonnegative
   · exact pinnedCut_innerArea_lower_bound_of_triangle origin region_measurable
       tangent_positive tangent_lt_one triangle_inside_inner triangle_inside_region
+  · exact boundary_corner_bound
+
+lemma score_gt_one_of_pinned_cut_witness_and_boundary_bound
+    {size : ℕ} {region : Set Plane} {origin : Plane}
+    {tangentHalfAngle : ℝ}
+    (witness : PinnedCutTriangleWitness size region origin tangentHalfAngle)
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_lt : tangentHalfAngle < 1 - Real.sqrt (1 / 5))
+    (boundary_corner_nonnegative :
+      0 ≤ pinnedBoundaryCornerScore tangentHalfAngle)
+    (boundary_corner_bound :
+      ENNReal.ofReal (pinnedBoundaryCornerScore tangentHalfAngle) ≤
+        NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region) :
+    1 < NagamochiResource.measure size region := by
+  have tangent_lt_one : tangentHalfAngle < 1 := by
+    have sqrt_fifth_nonnegative : 0 ≤ Real.sqrt (1 / 5) := Real.sqrt_nonneg _
+    linarith
+  apply score_gt_one_of_pinned_cut_bounds tangent_positive tangent_lt
+    boundary_corner_nonnegative
+  · exact witness.innerArea_lower_bound tangent_positive tangent_lt_one
   · exact boundary_corner_bound
 
 lemma score_gt_one_of_boundary_chord_and_edge_point

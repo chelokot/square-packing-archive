@@ -1,6 +1,8 @@
 import SquarePackingArchive.Geometry
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Convex.Combination
+import Mathlib.Analysis.Convex.Measure
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
@@ -129,6 +131,76 @@ lemma measurableSet_rightTriangleRegion (width height : ℝ) :
   exact (measurableSet_rightTriangleProductRegion width height).preimage
     (volume_preserving_finTwoArrow ℝ).measurable
 
+lemma convex_rightTriangleRegion
+    {width height : ℝ} (width_positive : 0 < width) :
+    Convex ℝ (rightTriangleRegion width height) := by
+  intro first first_mem second second_mem first_weight second_weight
+    first_weight_nonnegative second_weight_nonnegative weights_sum
+  have horizontal_positive :
+      0 < first_weight * first 0 + second_weight * second 0 := by
+    have first_horizontal_positive : 0 < first 0 := first_mem.1.1
+    have second_horizontal_positive : 0 < second 0 := second_mem.1.1
+    have weight_positive : 0 < first_weight ∨ 0 < second_weight := by
+      rcases first_weight_nonnegative.eq_or_lt with rfl | first_weight_positive
+      · right
+        linarith
+      · exact Or.inl first_weight_positive
+    rcases weight_positive with first_weight_positive | second_weight_positive
+    · exact add_pos_of_pos_of_nonneg
+        (mul_pos first_weight_positive first_horizontal_positive)
+        (mul_nonneg second_weight_nonnegative second_horizontal_positive.le)
+    · exact add_pos_of_nonneg_of_pos
+        (mul_nonneg first_weight_nonnegative first_horizontal_positive.le)
+        (mul_pos second_weight_positive second_horizontal_positive)
+  have horizontal_at_most :
+      first_weight * first 0 + second_weight * second 0 ≤ width := by
+    have first_horizontal_at_most : first 0 ≤ width := first_mem.1.2
+    have second_horizontal_at_most : second 0 ≤ width := second_mem.1.2
+    nlinarith
+  have vertical_positive :
+      0 < first_weight * first 1 + second_weight * second 1 := by
+    have first_vertical_positive : 0 < first 1 := first_mem.2.1
+    have second_vertical_positive : 0 < second 1 := second_mem.2.1
+    have weight_positive : 0 < first_weight ∨ 0 < second_weight := by
+      rcases first_weight_nonnegative.eq_or_lt with rfl | first_weight_positive
+      · right
+        linarith
+      · exact Or.inl first_weight_positive
+    rcases weight_positive with first_weight_positive | second_weight_positive
+    · exact add_pos_of_pos_of_nonneg
+        (mul_pos first_weight_positive first_vertical_positive)
+        (mul_nonneg second_weight_nonnegative second_vertical_positive.le)
+    · exact add_pos_of_nonneg_of_pos
+        (mul_nonneg first_weight_nonnegative first_vertical_positive.le)
+        (mul_pos second_weight_positive second_vertical_positive)
+  have vertical_at_most :
+      first_weight * first 1 + second_weight * second 1 ≤
+        height *
+          (1 - (first_weight * first 0 + second_weight * second 0) / width) := by
+    have first_vertical_at_most := first_mem.2.2
+    have second_vertical_at_most := second_mem.2.2
+    have weighted_bound :
+        first_weight * first 1 + second_weight * second 1 ≤
+          first_weight * (height * (1 - first 0 / width)) +
+            second_weight * (height * (1 - second 0 / width)) :=
+      add_le_add
+        (mul_le_mul_of_nonneg_left first_vertical_at_most first_weight_nonnegative)
+        (mul_le_mul_of_nonneg_left second_vertical_at_most second_weight_nonnegative)
+    calc
+      _ ≤ first_weight * (height * (1 - first 0 / width)) +
+            second_weight * (height * (1 - second 0 / width)) := weighted_bound
+      _ = height *
+          (1 - (first_weight * first 0 + second_weight * second 0) / width) := by
+        field_simp [ne_of_gt width_positive]
+        linear_combination height * width * weights_sum
+  change
+    (first_weight * first 0 + second_weight * second 0 ∈ Ioc 0 width) ∧
+      first_weight * first 1 + second_weight * second 1 ∈
+        Ioc 0 (height *
+          (1 - (first_weight * first 0 + second_weight * second 0) / width))
+  exact ⟨⟨horizontal_positive, horizontal_at_most⟩,
+    ⟨vertical_positive, vertical_at_most⟩⟩
+
 lemma volume_rightTriangleRegion
     {width height : ℝ}
     (width_positive : 0 < width)
@@ -171,6 +243,114 @@ lemma volume_translatedRightTriangleRegion
       ENNReal.ofReal (width * height / 2) := by
   rw [translatedRightTriangleRegion_eq_preimage, measure_preimage_add]
   exact volume_rightTriangleRegion width_positive height_nonnegative
+
+lemma translatedRightTriangleRegion_subset_of_vertices_mem
+    {region : Set Plane} (origin : Plane) {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_positive : 0 < height)
+    (region_convex : Convex ℝ region)
+    (origin_mem : origin ∈ region)
+    (horizontal_vertex_mem : origin + ![width, 0] ∈ region)
+    (vertical_vertex_mem : origin + ![0, height] ∈ region) :
+    translatedRightTriangleRegion origin width height ⊆ region := by
+  rintro point ⟨coordinates, coordinates_mem, rfl⟩
+  have horizontal_positive : 0 < coordinates 0 := coordinates_mem.1.1
+  have horizontal_at_most : coordinates 0 ≤ width := coordinates_mem.1.2
+  have vertical_positive : 0 < coordinates 1 := coordinates_mem.2.1
+  have vertical_at_most :
+      coordinates 1 ≤ height * (1 - coordinates 0 / width) := coordinates_mem.2.2
+  let horizontal_weight := coordinates 0 / width
+  let vertical_weight := coordinates 1 / height
+  let origin_weight := 1 - horizontal_weight - vertical_weight
+  have horizontal_weight_nonnegative : 0 ≤ horizontal_weight := by
+    dsimp [horizontal_weight]
+    positivity
+  have vertical_weight_nonnegative : 0 ≤ vertical_weight := by
+    dsimp [vertical_weight]
+    positivity
+  have vertical_weight_at_most : vertical_weight ≤ 1 - horizontal_weight := by
+    dsimp [vertical_weight, horizontal_weight]
+    rw [div_le_iff₀ height_positive]
+    simpa [mul_comm] using vertical_at_most
+  have origin_weight_nonnegative : 0 ≤ origin_weight := by
+    dsimp [origin_weight]
+    linarith
+  let weights : Fin 3 → ℝ := ![origin_weight, horizontal_weight, vertical_weight]
+  let vertices : Fin 3 → Plane :=
+    ![origin, origin + ![width, 0], origin + ![0, height]]
+  have weights_nonnegative :
+      ∀ index ∈ (Finset.univ : Finset (Fin 3)), 0 ≤ weights index := by
+    intro index _
+    fin_cases index
+    · exact origin_weight_nonnegative
+    · exact horizontal_weight_nonnegative
+    · exact vertical_weight_nonnegative
+  have weights_sum : ∑ index, weights index = 1 := by
+    simp [weights, Fin.sum_univ_three, origin_weight]
+    ring
+  have vertices_mem :
+      ∀ index ∈ (Finset.univ : Finset (Fin 3)), vertices index ∈ region := by
+    intro index _
+    fin_cases index
+    · exact origin_mem
+    · exact horizontal_vertex_mem
+    · exact vertical_vertex_mem
+  have weighted_sum_mem := region_convex.sum_mem
+    weights_nonnegative weights_sum vertices_mem
+  have origin_head : Matrix.vecHead origin = origin 0 := rfl
+  have origin_tail_head : Matrix.vecHead (Matrix.vecTail origin) = origin 1 := rfl
+  convert weighted_sum_mem using 1
+  funext coordinate
+  fin_cases coordinate <;>
+    simp [weights, vertices, Fin.sum_univ_three, origin_weight,
+      horizontal_weight, vertical_weight, origin_head, origin_tail_head] <;>
+    field_simp [ne_of_gt width_positive, ne_of_gt height_positive] <;>
+    ring
+
+lemma convex_translatedRightTriangleRegion
+    (origin : Plane) {width height : ℝ} (width_positive : 0 < width) :
+    Convex ℝ (translatedRightTriangleRegion origin width height) :=
+  (convex_rightTriangleRegion width_positive).translate origin
+
+def openTranslatedRightTriangleRegion
+    (origin : Plane) (width height : ℝ) : Set Plane :=
+  interior (translatedRightTriangleRegion origin width height)
+
+lemma volume_openTranslatedRightTriangleRegion
+    (origin : Plane) {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_nonnegative : 0 ≤ height) :
+    volume (openTranslatedRightTriangleRegion origin width height) =
+      ENNReal.ofReal (width * height / 2) := by
+  rw [openTranslatedRightTriangleRegion,
+    measure_interior_of_null_frontier
+      ((convex_translatedRightTriangleRegion origin width_positive).addHaar_frontier volume)]
+  exact volume_translatedRightTriangleRegion origin width_positive height_nonnegative
+
+lemma openTranslatedRightTriangleRegion_subset_of_vertices_mem_closure
+    {region : Set Plane} (origin : Plane) {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_positive : 0 < height)
+    (region_convex : Convex ℝ region)
+    (region_open : IsOpen region)
+    (region_nonempty : region.Nonempty)
+    (origin_mem : origin ∈ closure region)
+    (horizontal_vertex_mem : origin + ![width, 0] ∈ closure region)
+    (vertical_vertex_mem : origin + ![0, height] ∈ closure region) :
+    openTranslatedRightTriangleRegion origin width height ⊆ region := by
+  have triangle_subset_closure := translatedRightTriangleRegion_subset_of_vertices_mem
+    origin width_positive height_positive region_convex.closure origin_mem
+    horizontal_vertex_mem vertical_vertex_mem
+  have interior_subset :
+      interior (translatedRightTriangleRegion origin width height) ⊆
+        interior (closure region) := interior_mono triangle_subset_closure
+  have interior_closure_eq : interior (closure region) = region := by
+    calc
+      interior (closure region) = interior region :=
+        region_convex.interior_closure_eq_interior_of_nonempty_interior
+          (by simpa [region_open.interior_eq] using region_nonempty)
+      _ = region := region_open.interior_eq
+  simpa [openTranslatedRightTriangleRegion, interior_closure_eq] using interior_subset
 
 def Plane.swap (point : Plane) : Plane :=
   ![point 1, point 0]
