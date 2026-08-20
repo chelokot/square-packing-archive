@@ -131,7 +131,9 @@ short boundary sides are now typed uniformly for all four edge strips. If the
 matching connection point is present, convexity supplies the short chord and
 Lean closes the endpoint-`Q` branch. The exhaustive Case 7 theorem therefore
 returns either a proved score or one of exactly two typed disconnected-endpoint
-outcomes. Proving that those remaining outcomes reduce to Case 6 under the
+outcomes; each such outcome additionally certifies that no indexed `P` is
+present, since any `P` would already close the long-chord branch. Proving that
+those remaining outcomes reduce to Case 6 under the
 paper's terminal deformation is the sole remaining Case 7 obligation.
 
 Coordinate-swap symmetry is formalized as an involution on points, frames and

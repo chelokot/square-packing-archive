@@ -3043,11 +3043,21 @@ inductive Case7EdgeStripOutcome
   | scored
       (score : 1 < NagamochiResource.measure size region)
   | firstDisconnected
+      (no_edge_points :
+        ∀ coordinate,
+          coordinate ∈ Finset.Icc 2 (size - 2) →
+            NagamochiResource.edgePoint size coordinate side.toEdgePoint ∉
+              region)
       (corner_point_mem :
         NagamochiResource.cornerPoint size side.toEdgePoint.firstCornerPoint ∈
           region)
       (connection_point_not_mem : side.firstConnectionPoint size ∉ region)
   | secondDisconnected
+      (no_edge_points :
+        ∀ coordinate,
+          coordinate ∈ Finset.Icc 2 (size - 2) →
+            NagamochiResource.edgePoint size coordinate side.toEdgePoint ∉
+              region)
       (corner_point_mem :
         NagamochiResource.cornerPoint size side.toEdgePoint.secondCornerPoint ∈
           region)
@@ -3072,16 +3082,30 @@ lemma case7EdgeStripOutcome_of_long_chord
   have grid_point := gridPointWitness_of_center_in_edge_strip_geometry
     square side size_at_least_three factor_gt_one inside_container
     center_in_strip
-  cases grid_point with
-  | edge coordinate coordinate_mem edge_point_mem =>
-      have score :
-          1 < NagamochiResource.measure size
-            (square.dilatedInteriorRegion factor) := by
-        apply score_gt_one_of_case7_resource_witness region_measurable
-        exact .oppositeAndEdge side.toBoundarySide coordinate side.toEdgePoint
-          factor factor_gt_one long_chord coordinate_mem edge_point_mem
-      exact Case7EdgeStripOutcome.scored score
-  | firstCorner corner_point_mem =>
+  by_cases has_edge_point :
+      ∃ coordinate,
+        coordinate ∈ Finset.Icc 2 (size - 2) ∧
+          NagamochiResource.edgePoint size coordinate side.toEdgePoint ∈
+            square.dilatedInteriorRegion factor
+  · obtain ⟨coordinate, coordinate_mem, edge_point_mem⟩ := has_edge_point
+    have score :
+        1 < NagamochiResource.measure size
+          (square.dilatedInteriorRegion factor) := by
+      apply score_gt_one_of_case7_resource_witness region_measurable
+      exact .oppositeAndEdge side.toBoundarySide coordinate side.toEdgePoint
+        factor factor_gt_one long_chord coordinate_mem edge_point_mem
+    exact Case7EdgeStripOutcome.scored score
+  · have no_edge_points :
+        ∀ coordinate,
+          coordinate ∈ Finset.Icc 2 (size - 2) →
+            NagamochiResource.edgePoint size coordinate side.toEdgePoint ∉
+              square.dilatedInteriorRegion factor := by
+      intro coordinate coordinate_mem edge_point_mem
+      exact has_edge_point ⟨coordinate, coordinate_mem, edge_point_mem⟩
+    rcases corner_mem_of_gridPointWitness_of_no_edge_points side.toEdgePoint
+        grid_point no_edge_points with
+      first_corner_mem | second_corner_mem
+    ·
       by_cases connection_point_mem :
           side.firstConnectionPoint size ∈ square.dilatedInteriorRegion factor
       · have score :
@@ -3090,11 +3114,12 @@ lemma case7EdgeStripOutcome_of_long_chord
           apply score_gt_one_of_case7_resource_witness region_measurable
           exact case7ResourceWitness_of_long_chord_and_boundary_connection
             size_at_least_three region_convex factor_gt_one side.toBoundarySide
-            long_chord side.toEdgePoint.firstCornerPoint corner_point_mem
+            long_chord side.toEdgePoint.firstCornerPoint first_corner_mem
             (firstBoundaryCornerConnection_of_mem side connection_point_mem)
         exact Case7EdgeStripOutcome.scored score
-      · exact .firstDisconnected corner_point_mem connection_point_mem
-  | secondCorner corner_point_mem =>
+      · exact .firstDisconnected no_edge_points first_corner_mem
+          connection_point_mem
+    ·
       by_cases connection_point_mem :
           side.secondConnectionPoint size ∈ square.dilatedInteriorRegion factor
       · have score :
@@ -3103,10 +3128,11 @@ lemma case7EdgeStripOutcome_of_long_chord
           apply score_gt_one_of_case7_resource_witness region_measurable
           exact case7ResourceWitness_of_long_chord_and_boundary_connection
             size_at_least_three region_convex factor_gt_one side.toBoundarySide
-            long_chord side.toEdgePoint.secondCornerPoint corner_point_mem
+            long_chord side.toEdgePoint.secondCornerPoint second_corner_mem
             (secondBoundaryCornerConnection_of_mem side connection_point_mem)
         exact Case7EdgeStripOutcome.scored score
-      · exact .secondDisconnected corner_point_mem connection_point_mem
+      · exact .secondDisconnected no_edge_points second_corner_mem
+          connection_point_mem
 
 def InnerBoundarySide.point
     (side : InnerBoundarySide) (size : ℕ) (coordinate : ℝ) : Plane :=
