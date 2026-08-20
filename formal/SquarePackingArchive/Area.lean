@@ -1,4 +1,8 @@
 import SquarePackingArchive.Geometry
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 
@@ -8,6 +12,165 @@ open Function MeasureTheory Set
 open scoped Pointwise
 
 abbrev Plane := Fin 2 → ℝ
+
+def rightTriangleProductRegion (width height : ℝ) : Set (ℝ × ℝ) :=
+  {point |
+    point.1 ∈ Ioc 0 width ∧
+      point.2 ∈ Ioc 0 (height * (1 - point.1 / width))}
+
+lemma measurableSet_rightTriangleProductRegion (width height : ℝ) :
+    MeasurableSet (rightTriangleProductRegion width height) := by
+  rw [rightTriangleProductRegion]
+  simp only [mem_Ioc]
+  have first_measurable : Measurable (fun point : ℝ × ℝ => point.1) := measurable_fst
+  have second_measurable : Measurable (fun point : ℝ × ℝ => point.2) := measurable_snd
+  have upper_measurable :
+      Measurable (fun point : ℝ × ℝ => height * (1 - point.1 / width)) :=
+    measurable_const.mul
+      (measurable_const.sub (first_measurable.div measurable_const))
+  exact
+    ((measurableSet_lt measurable_const first_measurable).inter
+      (measurableSet_le first_measurable measurable_const)).inter
+        ((measurableSet_lt measurable_const second_measurable).inter
+          (measurableSet_le second_measurable upper_measurable))
+
+lemma volume_rightTriangleProductRegion
+    {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_nonnegative : 0 ≤ height) :
+    volume (rightTriangleProductRegion width height) =
+      ENNReal.ofReal (width * height / 2) := by
+  have vertical_height_nonnegative :
+      ∀ horizontal ∈ Ioc (0 : ℝ) width,
+        0 ≤ height * (1 - horizontal / width) := by
+    intro horizontal horizontal_mem
+    apply mul_nonneg height_nonnegative
+    rw [sub_nonneg, div_le_one width_positive]
+    exact horizontal_mem.2
+  rw [Measure.volume_eq_prod,
+    Measure.prod_apply (measurableSet_rightTriangleProductRegion width height)]
+  have section_identity :
+      ∀ horizontal : ℝ,
+        Prod.mk horizontal ⁻¹' rightTriangleProductRegion width height =
+          if horizontal ∈ Ioc 0 width then
+            Ioc 0 (height * (1 - horizontal / width))
+          else ∅ := by
+    intro horizontal
+    split_ifs with horizontal_mem
+    · ext vertical
+      change
+        (horizontal ∈ Ioc 0 width ∧
+          vertical ∈ Ioc 0 (height * (1 - horizontal / width))) ↔ _
+      simp [horizontal_mem]
+    · ext vertical
+      change
+        (horizontal ∈ Ioc 0 width ∧
+          vertical ∈ Ioc 0 (height * (1 - horizontal / width))) ↔ _
+      simp [horizontal_mem]
+  simp_rw [section_identity, apply_ite volume, measure_empty, Real.volume_Ioc]
+  simp only [sub_zero]
+  have integrand_identity :
+      (fun horizontal : ℝ =>
+        if horizontal ∈ Ioc 0 width then
+          ENNReal.ofReal (height * (1 - horizontal / width))
+        else 0) =
+      (Ioc 0 width).indicator
+        (fun horizontal => ENNReal.ofReal (height * (1 - horizontal / width))) := by
+    funext horizontal
+    by_cases horizontal_mem : horizontal ∈ Ioc (0 : ℝ) width <;>
+      simp [horizontal_mem]
+  rw [integrand_identity, lintegral_indicator measurableSet_Ioc]
+  have integrable_height :
+      IntegrableOn (fun horizontal : ℝ => height * (1 - horizontal / width))
+        (Ioc 0 width) volume := by
+    apply IntegrableOn.mono_set
+      ((continuous_const.mul
+        (continuous_const.sub (continuous_id.div_const width))).integrableOn_Icc)
+    exact Ioc_subset_Icc_self
+  rw [← ofReal_integral_eq_lintegral_ofReal integrable_height]
+  · rw [← intervalIntegral.integral_of_le width_positive.le]
+    have integral_value :
+        (∫ horizontal in (0 : ℝ)..width,
+          height * (1 - horizontal / width)) = width * height / 2 := by
+      rw [intervalIntegral.integral_eq_sub_of_hasDerivAt
+        (f := fun horizontal : ℝ =>
+          height * (horizontal - horizontal ^ 2 / (2 * width)))]
+      · field_simp [ne_of_gt width_positive]
+        ring
+      · intro horizontal _
+        have raw_derivative := (hasDerivAt_id horizontal |>.sub
+          ((hasDerivAt_pow 2 horizontal).div_const (2 * width))).const_mul height
+        have derivative_identity :
+            height * (1 - ↑2 * horizontal ^ (2 - 1) / (2 * width)) =
+              height * (1 - horizontal / width) := by
+          field_simp [ne_of_gt width_positive]
+          ring
+        exact raw_derivative.congr_deriv derivative_identity
+      · exact (continuous_const.mul
+          (continuous_const.sub (continuous_id.div_const width))).intervalIntegrable _ _
+    rw [integral_value]
+  · filter_upwards [ae_restrict_mem measurableSet_Ioc] with horizontal horizontal_mem
+    exact vertical_height_nonnegative horizontal horizontal_mem
+
+def rightTriangleRegion (width height : ℝ) : Set Plane :=
+  {point |
+    point 0 ∈ Ioc 0 width ∧
+      point 1 ∈ Ioc 0 (height * (1 - point 0 / width))}
+
+lemma rightTriangleRegion_eq_preimage (width height : ℝ) :
+    rightTriangleRegion width height =
+      MeasurableEquiv.finTwoArrow ⁻¹' rightTriangleProductRegion width height := by
+  ext point
+  rfl
+
+lemma measurableSet_rightTriangleRegion (width height : ℝ) :
+    MeasurableSet (rightTriangleRegion width height) := by
+  rw [rightTriangleRegion_eq_preimage]
+  exact (measurableSet_rightTriangleProductRegion width height).preimage
+    (volume_preserving_finTwoArrow ℝ).measurable
+
+lemma volume_rightTriangleRegion
+    {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_nonnegative : 0 ≤ height) :
+    volume (rightTriangleRegion width height) =
+      ENNReal.ofReal (width * height / 2) := by
+  rw [rightTriangleRegion_eq_preimage]
+  rw [(volume_preserving_finTwoArrow ℝ).measure_preimage
+    (measurableSet_rightTriangleProductRegion width height).nullMeasurableSet]
+  exact volume_rightTriangleProductRegion width_positive height_nonnegative
+
+def translatedRightTriangleRegion
+    (origin : Plane) (width height : ℝ) : Set Plane :=
+  (fun point => origin + point) '' rightTriangleRegion width height
+
+lemma translatedRightTriangleRegion_eq_preimage
+    (origin : Plane) (width height : ℝ) :
+    translatedRightTriangleRegion origin width height =
+      (fun point => -origin + point) ⁻¹' rightTriangleRegion width height := by
+  ext point
+  constructor
+  · rintro ⟨source, source_mem, rfl⟩
+    simpa using source_mem
+  · intro point_mem
+    refine ⟨-origin + point, point_mem, ?_⟩
+    simp
+
+lemma measurableSet_translatedRightTriangleRegion
+    (origin : Plane) (width height : ℝ) :
+    MeasurableSet (translatedRightTriangleRegion origin width height) := by
+  rw [translatedRightTriangleRegion_eq_preimage]
+  exact (measurableSet_rightTriangleRegion width height).preimage
+    (Measurable.neg measurable_const |>.add measurable_id)
+
+lemma volume_translatedRightTriangleRegion
+    (origin : Plane) {width height : ℝ}
+    (width_positive : 0 < width)
+    (height_nonnegative : 0 ≤ height) :
+    volume (translatedRightTriangleRegion origin width height) =
+      ENNReal.ofReal (width * height / 2) := by
+  rw [translatedRightTriangleRegion_eq_preimage, measure_preimage_add]
+  exact volume_rightTriangleRegion width_positive height_nonnegative
 
 def Plane.swap (point : Plane) : Plane :=
   ![point 1, point 0]

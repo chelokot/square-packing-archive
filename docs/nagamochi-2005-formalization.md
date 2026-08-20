@@ -55,6 +55,17 @@ lower bounds are supplied. A general nonnegative real-component compositor is
 used for this and the remaining subcases instead of repeating measure
 arithmetic.
 
+The inner-area premise of that pinned subcase is no longer an opaque numerical
+bound. Lean computes the exact Lebesgue measure of a right triangle by Tonelli's
+theorem and the fundamental theorem of calculus, transports the result from
+`ℝ × ℝ` to the archive's `Fin 2 → ℝ` plane, and proves that translations preserve
+the area. The pinned triangle has width `2t`, height `(1 − t) / (1 + t)`, and
+therefore area `t(1 − t) / (1 + t)`, exactly the corrected Lemma 6 term. A
+kernel-checked bridge now derives the required `innerArea` lower bound from two
+set inclusions and feeds it directly into the pinned score theorem. The
+remaining geometric work is to construct those inclusions from the terminal
+placed-square configuration and to derive its boundary-line/`Q` contribution.
+
 The Lemma 5 branch of Case 6 is connected too. Its checked
 triangle-area-plus-half-chord inequality now composes directly with a typed `P`
 point, a boundary chord, and an inner-area lower bound. For the canonical bottom
@@ -118,8 +129,9 @@ geometric input is supplied. A `P` combines with the long boundary chord. An
 endpoint `Q` combines with its perpendicular `0.1` chord, with separate typed
 constructors for the near and far endpoints. The latter score inequality—one
 long chord, one short chord and one `Q`—is also proved directly from the resource
-measure. What remains is to derive the endpoint-to-perpendicular connection and
-the final deformation into Case 6 from the paper's geometric hypotheses.
+measure. The endpoint-to-perpendicular connection is constructed whenever its
+second endpoint lies in the dilated square. The remaining branch is the final
+deformation into Case 6 from the paper's geometric hypotheses.
 
 The Case 7 bridge now consumes the actual edge-strip geometry rather than a
 caller-supplied grid witness. Given the long chord on the inner boundary line,

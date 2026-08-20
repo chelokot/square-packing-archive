@@ -967,6 +967,64 @@ lemma pinnedCutPolynomial_positive
 noncomputable def pinnedCutArea (tangentHalfAngle : ℝ) : ℝ :=
   tangentHalfAngle * (1 - tangentHalfAngle) / (1 + tangentHalfAngle)
 
+lemma innerArea_lower_bound_of_translatedRightTriangle
+    {size : ℕ} {region : Set Plane}
+    (origin : Plane) {width height : ℝ}
+    (region_measurable : MeasurableSet region)
+    (width_positive : 0 < width)
+    (height_nonnegative : 0 ≤ height)
+    (triangle_inside_inner :
+      translatedRightTriangleRegion origin width height ⊆
+        Icc (fun _ => 1) (fun _ => (size : ℝ) - 1))
+    (triangle_inside_region :
+      translatedRightTriangleRegion origin width height ⊆ region) :
+    ENNReal.ofReal (width * height / 2) ≤
+      NagamochiResource.innerArea size region := by
+  rw [NagamochiResource.innerArea, Measure.restrict_apply region_measurable]
+  rw [← volume_translatedRightTriangleRegion origin width_positive height_nonnegative]
+  apply measure_mono
+  intro point point_mem
+  exact ⟨triangle_inside_region point_mem, triangle_inside_inner point_mem⟩
+
+lemma pinnedCutArea_eq_rightTriangleArea
+    (tangentHalfAngle : ℝ) :
+    pinnedCutArea tangentHalfAngle =
+      (2 * tangentHalfAngle) *
+        ((1 - tangentHalfAngle) / (1 + tangentHalfAngle)) / 2 := by
+  dsimp [pinnedCutArea]
+  field_simp
+
+def pinnedCutTriangleRegion
+    (origin : Plane) (tangentHalfAngle : ℝ) : Set Plane :=
+  translatedRightTriangleRegion origin (2 * tangentHalfAngle)
+    ((1 - tangentHalfAngle) / (1 + tangentHalfAngle))
+
+lemma pinnedCut_innerArea_lower_bound_of_triangle
+    {size : ℕ} {region : Set Plane} {tangentHalfAngle : ℝ}
+    (origin : Plane)
+    (region_measurable : MeasurableSet region)
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_lt_one : tangentHalfAngle < 1)
+    (triangle_inside_inner :
+      pinnedCutTriangleRegion origin tangentHalfAngle ⊆
+        Icc (fun _ => 1) (fun _ => (size : ℝ) - 1))
+    (triangle_inside_region :
+      pinnedCutTriangleRegion origin tangentHalfAngle ⊆ region) :
+    ENNReal.ofReal (pinnedCutArea tangentHalfAngle) ≤
+      NagamochiResource.innerArea size region := by
+  have one_add_tangent_positive : 0 < 1 + tangentHalfAngle := by linarith
+  have triangle_height_nonnegative :
+      0 ≤ (1 - tangentHalfAngle) / (1 + tangentHalfAngle) := by
+    positivity
+  have triangleBound := innerArea_lower_bound_of_translatedRightTriangle
+    (size := size) (width := 2 * tangentHalfAngle)
+    (height := (1 - tangentHalfAngle) / (1 + tangentHalfAngle))
+    origin region_measurable (by positivity) triangle_height_nonnegative
+    (by simpa [pinnedCutTriangleRegion] using triangle_inside_inner)
+    (by simpa [pinnedCutTriangleRegion] using triangle_inside_region)
+  rw [pinnedCutArea_eq_rightTriangleArea]
+  exact triangleBound
+
 noncomputable def pinnedCutChord (tangentHalfAngle : ℝ) : ℝ :=
   (1 + tangentHalfAngle ^ 2) / (1 + tangentHalfAngle)
 
@@ -1080,6 +1138,33 @@ lemma score_gt_one_of_pinned_cut_bounds
     (by simpa using pinnedCut_score_gt_one tangent_positive tangent_lt)
     inner_bound boundary_corner_bound
   simp
+
+lemma score_gt_one_of_pinned_cut_triangle_and_boundary_bound
+    {size : ℕ} {region : Set Plane} {tangentHalfAngle : ℝ}
+    (origin : Plane)
+    (region_measurable : MeasurableSet region)
+    (tangent_positive : 0 < tangentHalfAngle)
+    (tangent_lt : tangentHalfAngle < 1 - Real.sqrt (1 / 5))
+    (boundary_corner_nonnegative :
+      0 ≤ pinnedBoundaryCornerScore tangentHalfAngle)
+    (triangle_inside_inner :
+      pinnedCutTriangleRegion origin tangentHalfAngle ⊆
+        Icc (fun _ => 1) (fun _ => (size : ℝ) - 1))
+    (triangle_inside_region :
+      pinnedCutTriangleRegion origin tangentHalfAngle ⊆ region)
+    (boundary_corner_bound :
+      ENNReal.ofReal (pinnedBoundaryCornerScore tangentHalfAngle) ≤
+        NagamochiResource.boundaryLines size region +
+          NagamochiResource.cornerPoints size region) :
+    1 < NagamochiResource.measure size region := by
+  have tangent_lt_one : tangentHalfAngle < 1 := by
+    have sqrt_fifth_nonnegative : 0 ≤ Real.sqrt (1 / 5) := Real.sqrt_nonneg _
+    linarith
+  apply score_gt_one_of_pinned_cut_bounds tangent_positive tangent_lt
+    boundary_corner_nonnegative
+  · exact pinnedCut_innerArea_lower_bound_of_triangle origin region_measurable
+      tangent_positive tangent_lt_one triangle_inside_inner triangle_inside_region
+  · exact boundary_corner_bound
 
 lemma score_gt_one_of_boundary_chord_and_edge_point
     {size coordinate : ℕ} {region : Set Plane} {factor : ℝ}
