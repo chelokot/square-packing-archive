@@ -107,8 +107,11 @@ an exact frame swap. Lean exhausts all four linear orderings of the chord
 endpoints, separates centers below and above `y = 0.9`, and handles axis-aligned
 frames without division. Consequently Lemma 7(i), followed by its discrete
 Lemma 7(iii) consequence, is now proved for every frame in the canonical bottom
-strip. The remaining symmetry obligation is to transport this result to the
-top, left and right strips.
+strip. Exact reflection and coordinate-swap transports carry the open chord to
+the top, left and right grid lines. A single side-independent theorem now turns
+the paper's `centerInStrip` hypothesis into the correctly typed `Q`-or-`P`
+witness on any of the four sides; no long-grid-chord premise remains for callers
+of Lemma 7(iii).
 
 Case 7 now has a single side-independent combinatorial classifier after that
 geometric input is supplied. A `P` combines with the long boundary chord. An

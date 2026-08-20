@@ -2293,6 +2293,110 @@ lemma bottomLongGridChordWitness_of_center_in_bottom_strip
   rw [region_eq] at normalized_witness
   exact normalized_witness
 
+lemma topLongGridChordWitness_of_center_in_top_strip
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_y_at_least_boundary :
+      (size : ℝ) - 1 ≤ factor * square.center.y) :
+    LongGridChordWitness size (square.dilatedInteriorRegion factor) .top := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  let coordinateSum := (size : ℝ) / factor
+  have coordinate_identity : factor * coordinateSum = size := by
+    dsimp [coordinateSum]
+    field_simp [factor_positive.ne']
+  let reflectedSquare := square.reflectY coordinateSum
+  have reflected_inside :
+      reflectedSquare.dilatedInteriorRegion factor ⊆ containerRegion size := by
+    exact square.reflectY_dilatedInteriorRegion_subset_containerRegion
+      factor_positive coordinate_identity inside_container
+  have reflected_center_y_at_most_boundary :
+      factor * reflectedSquare.center.y ≤ 1 := by
+    change factor * (coordinateSum - square.center.y) ≤ 1
+    rw [mul_sub, coordinate_identity]
+    linarith
+  rcases bottomLongGridChordWitness_of_center_in_bottom_strip reflectedSquare
+      factor_gt_one reflected_inside reflected_center_y_at_most_boundary with
+    ⟨intervalStart, intervalEnd, start_nonnegative, end_at_most_size,
+      length_gt_one, chord_inside_reflected⟩
+  refine ⟨intervalStart, intervalEnd, start_nonnegative, end_at_most_size,
+    length_gt_one, ?_⟩
+  intro coordinate coordinate_mem
+  apply (square.mem_reflectY_dilatedInteriorRegion_iff
+    (coordinateSum := coordinateSum) factor_positive
+    (NagamochiResource.EdgePoint.top.pointAt size coordinate)).mp
+  have reflected_point_mem := chord_inside_reflected coordinate coordinate_mem
+  simpa [reflectedSquare, NagamochiResource.EdgePoint.pointAt,
+    Plane.reflectY, coordinate_identity] using reflected_point_mem
+
+lemma leftLongGridChordWitness_of_center_in_left_strip
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_x_at_most_boundary : factor * square.center.x ≤ 1) :
+    LongGridChordWitness size (square.dilatedInteriorRegion factor) .left := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  let swappedSquare := square.swap
+  have swapped_inside :
+      swappedSquare.dilatedInteriorRegion factor ⊆ containerRegion size := by
+    exact square.swap_dilatedInteriorRegion_subset_containerRegion
+      factor_positive inside_container
+  have swapped_center_y_at_most_boundary :
+      factor * swappedSquare.center.y ≤ 1 := by
+    simpa [swappedSquare, PlacedSquare.swap, Point.swap] using
+      center_x_at_most_boundary
+  rcases bottomLongGridChordWitness_of_center_in_bottom_strip swappedSquare
+      factor_gt_one swapped_inside swapped_center_y_at_most_boundary with
+    ⟨intervalStart, intervalEnd, start_nonnegative, end_at_most_size,
+      length_gt_one, chord_inside_swapped⟩
+  refine ⟨intervalStart, intervalEnd, start_nonnegative, end_at_most_size,
+    length_gt_one, ?_⟩
+  intro coordinate coordinate_mem
+  apply (square.mem_swap_dilatedInteriorRegion_iff factor_positive
+    (NagamochiResource.EdgePoint.left.pointAt size coordinate)).mp
+  have swapped_point_mem := chord_inside_swapped coordinate coordinate_mem
+  simpa [swappedSquare, NagamochiResource.EdgePoint.pointAt,
+    Plane.swap] using swapped_point_mem
+
+lemma rightLongGridChordWitness_of_center_in_right_strip
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_x_at_least_boundary :
+      (size : ℝ) - 1 ≤ factor * square.center.x) :
+    LongGridChordWitness size (square.dilatedInteriorRegion factor) .right := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  let coordinateSum := (size : ℝ) / factor
+  have coordinate_identity : factor * coordinateSum = size := by
+    dsimp [coordinateSum]
+    field_simp [factor_positive.ne']
+  let reflectedSquare := square.reflectX coordinateSum
+  have reflected_inside :
+      reflectedSquare.dilatedInteriorRegion factor ⊆ containerRegion size := by
+    exact square.reflectX_dilatedInteriorRegion_subset_containerRegion
+      factor_positive coordinate_identity inside_container
+  have reflected_center_x_at_most_boundary :
+      factor * reflectedSquare.center.x ≤ 1 := by
+    change factor * (coordinateSum - square.center.x) ≤ 1
+    rw [mul_sub, coordinate_identity]
+    linarith
+  rcases leftLongGridChordWitness_of_center_in_left_strip reflectedSquare
+      factor_gt_one reflected_inside reflected_center_x_at_most_boundary with
+    ⟨intervalStart, intervalEnd, start_nonnegative, end_at_most_size,
+      length_gt_one, chord_inside_reflected⟩
+  refine ⟨intervalStart, intervalEnd, start_nonnegative, end_at_most_size,
+    length_gt_one, ?_⟩
+  intro coordinate coordinate_mem
+  apply (square.mem_reflectX_dilatedInteriorRegion_iff
+    (coordinateSum := coordinateSum) factor_positive
+    (NagamochiResource.EdgePoint.right.pointAt size coordinate)).mp
+  have reflected_point_mem := chord_inside_reflected coordinate coordinate_mem
+  simpa [reflectedSquare, NagamochiResource.EdgePoint.pointAt,
+    Plane.reflectX, coordinate_identity] using reflected_point_mem
+
 lemma gridPointWitness_of_open_grid_chord
     {size : ℕ} {region : Set Plane}
     (kind : NagamochiResource.EdgePoint)
@@ -2333,6 +2437,44 @@ lemma bottomGridPointWitness_of_center_in_bottom_strip_geometry
   exact gridPointWitness_of_open_grid_chord .bottom size_at_least_three
     (bottomLongGridChordWitness_of_center_in_bottom_strip square factor_gt_one
       inside_container center_y_at_most_boundary)
+
+lemma topGridPointWitness_of_center_in_top_strip_geometry
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_y_at_least_boundary :
+      (size : ℝ) - 1 ≤ factor * square.center.y) :
+    GridPointWitness size (square.dilatedInteriorRegion factor) .top := by
+  exact gridPointWitness_of_open_grid_chord .top size_at_least_three
+    (topLongGridChordWitness_of_center_in_top_strip square factor_gt_one
+      inside_container center_y_at_least_boundary)
+
+lemma leftGridPointWitness_of_center_in_left_strip_geometry
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_x_at_most_boundary : factor * square.center.x ≤ 1) :
+    GridPointWitness size (square.dilatedInteriorRegion factor) .left := by
+  exact gridPointWitness_of_open_grid_chord .left size_at_least_three
+    (leftLongGridChordWitness_of_center_in_left_strip square factor_gt_one
+      inside_container center_x_at_most_boundary)
+
+lemma rightGridPointWitness_of_center_in_right_strip_geometry
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_x_at_least_boundary :
+      (size : ℝ) - 1 ≤ factor * square.center.x) :
+    GridPointWitness size (square.dilatedInteriorRegion factor) .right := by
+  exact gridPointWitness_of_open_grid_chord .right size_at_least_three
+    (rightLongGridChordWitness_of_center_in_right_strip square factor_gt_one
+      inside_container center_x_at_least_boundary)
 
 lemma bottomGridPointWitness_of_open_chord
     {size : ℕ} {region : Set Plane} {intervalStart intervalEnd : ℝ}
@@ -2699,6 +2841,13 @@ def InnerBoundarySide.toBoundarySide :
   | .left => .left
   | .right => .right
 
+def InnerBoundarySide.toEdgePoint :
+    InnerBoundarySide → NagamochiResource.EdgePoint
+  | .bottom => .bottom
+  | .top => .top
+  | .left => .left
+  | .right => .right
+
 def InnerBoundarySide.centerInStrip
     (side : InnerBoundarySide) (size : ℕ) (square : PlacedSquare)
     (factor : ℝ) : Prop :=
@@ -2719,6 +2868,30 @@ def InnerBoundarySide.centerInStrip
       (size : ℝ) - 1 ≤ factor * square.center.x ∧
         1 ≤ factor * square.center.y ∧
           factor * square.center.y ≤ (size : ℝ) - 1
+
+lemma gridPointWitness_of_center_in_edge_strip_geometry
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (side : InnerBoundarySide)
+    (size_at_least_three : 3 ≤ size)
+    (factor_gt_one : 1 < factor)
+    (inside_container :
+      square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_in_strip : side.centerInStrip size square factor) :
+    GridPointWitness size (square.dilatedInteriorRegion factor)
+      side.toEdgePoint := by
+  cases side with
+  | bottom =>
+      exact bottomGridPointWitness_of_center_in_bottom_strip_geometry square
+        size_at_least_three factor_gt_one inside_container center_in_strip.2.2
+  | top =>
+      exact topGridPointWitness_of_center_in_top_strip_geometry square
+        size_at_least_three factor_gt_one inside_container center_in_strip.2.2
+  | left =>
+      exact leftGridPointWitness_of_center_in_left_strip_geometry square
+        size_at_least_three factor_gt_one inside_container center_in_strip.1
+  | right =>
+      exact rightGridPointWitness_of_center_in_right_strip_geometry square
+        size_at_least_three factor_gt_one inside_container center_in_strip.1
 
 def InnerBoundarySide.point
     (side : InnerBoundarySide) (size : ℕ) (coordinate : ℝ) : Plane :=
