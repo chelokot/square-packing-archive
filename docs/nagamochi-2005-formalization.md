@@ -86,8 +86,23 @@ coordinate strictly between its endpoints. Coordinates `1` and `n − 1` become
 the correct endpoint `Q` constructors; every other coordinate is proved to lie
 in the finite `P` index range `2..n − 2`. Typed eliminators recover a `Q` under
 the assumption that no `P` is present, or a `P` when neither endpoint `Q` is
-present. The remaining Lemma 7 obligation is geometric: derive the long-grid-
-chord witness from the square position and the adjacent/nonadjacent edge split.
+present. Endpoint bounds no longer have to be supplied by a geometric caller:
+Lean derives them from the fact that every point of the open chord lies in the
+closed container.
+
+The canonical bottom-side geometric constructors for that long-grid-chord
+witness are now checked as well. For a nonadjacent cut, either full cosine or
+sine chord has length at least the dilation factor. For the first adjacent
+pairing, the paper's Lemma 2 inequality is connected to the exact chord of the
+dilated square. For the second adjacent pairing, the missing chord-membership
+and chord-length identities are formalized, and the corrected Lemma 3
+inequality proves the chord longer than one when the dilated square touches the
+bottom side. A tangent-half-angle witness, including its
+`t ≤ √2 − 1` bound, is derived directly from any positive frame with
+`sin θ ≤ cos θ`; callers do not supply the trigonometric parametrization.
+The remaining geometric obligation is the exhaustive ordering and deformation
+argument that sends every admissible square to one of these constructors, then
+transports the canonical bottom result to all four sides.
 
 Case 7 now has a single side-independent combinatorial classifier after that
 geometric input is supplied. A `P` combines with the long boundary chord. An

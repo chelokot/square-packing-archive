@@ -754,6 +754,26 @@ lemma PlacedSquare.horizontalAdjacentChord_inside_dilatedInteriorRegion
     factor_positive cosine_positive sine_positive le_rfl other_lower_at_most
     end_at_most_other_upper le_rfl
 
+lemma PlacedSquare.horizontalOtherAdjacentChord_inside_dilatedInteriorRegion
+    (square : PlacedSquare) {factor height : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (chord_start_at_most_other_lower :
+      square.horizontalAdjacentChordStart factor height ≤
+        square.horizontalAdjacentOtherLower factor height)
+    (other_upper_at_most_chord_end :
+      square.horizontalAdjacentOtherUpper factor height ≤
+        square.horizontalAdjacentChordEnd factor height) :
+    ∀ coordinate ∈
+        Ioo (square.horizontalAdjacentOtherLower factor height)
+          (square.horizontalAdjacentOtherUpper factor height),
+      ![coordinate, height] ∈ square.dilatedInteriorRegion factor := by
+  exact square.horizontalChord_inside_dilatedInteriorRegion
+    factor_positive cosine_positive sine_positive
+    chord_start_at_most_other_lower le_rfl le_rfl
+    other_upper_at_most_chord_end
+
 lemma PlacedSquare.horizontalAdjacentChord_length
     (square : PlacedSquare) {factor height : ℝ}
     (cosine_nonzero : square.frame.cosine ≠ 0)
@@ -768,6 +788,21 @@ lemma PlacedSquare.horizontalAdjacentChord_length
   field_simp [cosine_nonzero, sine_nonzero]
   linear_combination
     2 * (height - factor * square.center.y) * square.frame.unit
+
+lemma PlacedSquare.horizontalOtherAdjacentChord_length
+    (square : PlacedSquare) {factor height : ℝ}
+    (cosine_nonzero : square.frame.cosine ≠ 0)
+    (sine_nonzero : square.frame.sine ≠ 0) :
+    square.horizontalAdjacentOtherUpper factor height -
+        square.horizontalAdjacentOtherLower factor height =
+      (factor * (square.frame.cosine + square.frame.sine) -
+        2 * (height - factor * square.center.y)) /
+          (2 * square.frame.sine * square.frame.cosine) := by
+  dsimp [PlacedSquare.horizontalAdjacentOtherUpper,
+    PlacedSquare.horizontalAdjacentOtherLower]
+  field_simp [cosine_nonzero, sine_nonzero]
+  linear_combination
+    2 * (factor * square.center.y - height) * square.frame.unit
 
 lemma PlacedSquare.horizontalCosineChord_length
     (square : PlacedSquare) {factor height : ℝ}
