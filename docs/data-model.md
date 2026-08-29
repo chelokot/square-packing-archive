@@ -15,6 +15,10 @@ s(n) = value
 Its `active` flag indicates the current curated claim for that `n`; it does not
 erase older records. `supersedes` forms an explicit record lineage.
 
+`value.lean` is the exact formal value used by verified claims; the decimal is
+display data and may be rounded. The evidence generator combines that value
+with the claim's `n` and relation to check the complete expected theorem type.
+
 ## Evidence
 
 Evidence describes why a claim is present. It never changes the relation itself.
@@ -46,7 +50,7 @@ separating-axis comparison rational. Decimal angles exist only as display data.
 
 The TypeScript domain package validates references and derives dashboard views.
 The web build receives one compiled JSON artifact. The Lean generator emits
-record-specific certificate modules. A second generator emits `#check` commands
-for every `lean-proof` theorem named by the manifest, so CI also rejects stale or
-invented links between claims and formal artifacts. CI fails if any consumer
-disagrees with the canonical archive.
+record-specific certificate modules. A second generator emits a typed `example`
+for every `lean-proof` theorem named by the manifest, so CI rejects stale names
+and theorems whose `n`, relation, or exact value differs from the claim. CI fails
+if any consumer disagrees with the canonical archive.

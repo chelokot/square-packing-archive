@@ -204,9 +204,12 @@ structure Packing (squareCount : ℕ) (side : ℝ) where
 def HasPacking (squareCount : ℕ) (side : ℝ) : Prop :=
   Nonempty (Packing squareCount side)
 
+def IsLowerBound (squareCount : ℕ) (side : ℝ) : Prop :=
+  ∀ candidateSide, HasPacking squareCount candidateSide → side ≤ candidateSide
+
 def IsMinimumSide (squareCount : ℕ) (side : ℝ) : Prop :=
   HasPacking squareCount side ∧
-    ∀ candidateSide, HasPacking squareCount candidateSide → side ≤ candidateSide
+    IsLowerBound squareCount side
 
 def Packing.reindex
     {sourceCount targetCount : ℕ} {side : ℝ}

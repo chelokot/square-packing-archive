@@ -28,16 +28,35 @@ describe("verificationLevel", () => {
   test("reserves verified status for Lean evidence", () => {
     const leanClaim = claimSchema.parse({
       ...claim,
+      value: { decimal: "1", lean: "1" },
       evidence: [
         {
           kind: "lean-proof",
           status: "lean-checked",
           source: "example-source",
+          artifact: "formal/SquarePackingArchive/Example.lean",
           theorem: "SquarePackingArchive.Example",
         },
       ],
     });
     expect(verificationLevel(leanClaim)).toBe("lean-verified");
     expect(isVerified(leanClaim)).toBeTrue();
+  });
+
+  test("rejects Lean evidence without a formal target", () => {
+    expect(() =>
+      claimSchema.parse({
+        ...claim,
+        evidence: [
+          {
+            kind: "lean-proof",
+            status: "lean-checked",
+            source: "example-source",
+            artifact: "formal/SquarePackingArchive/Example.lean",
+            theorem: "SquarePackingArchive.Example",
+          },
+        ],
+      }),
+    ).toThrow();
   });
 });

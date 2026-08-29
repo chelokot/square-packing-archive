@@ -122,7 +122,7 @@
       "id": "exact-1-grid",
       "n": 1,
       "relation": "exact",
-      "value": { "decimal": "1", "expression": "1" },
+      "value": { "decimal": "1", "expression": "1", "lean": "1" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -145,7 +145,7 @@
       "id": "exact-2-goebel",
       "n": 2,
       "relation": "exact",
-      "value": { "decimal": "2", "expression": "2" },
+      "value": { "decimal": "2", "expression": "2", "lean": "2" },
       "announcedAt": "1979",
       "contributors": [{ "author": "goebel", "role": "prover" }],
       "evidence": [
@@ -168,7 +168,7 @@
       "id": "exact-3-goebel",
       "n": 3,
       "relation": "exact",
-      "value": { "decimal": "2", "expression": "2" },
+      "value": { "decimal": "2", "expression": "2", "lean": "2" },
       "announcedAt": "1979",
       "contributors": [{ "author": "goebel", "role": "prover" }],
       "evidence": [
@@ -191,7 +191,7 @@
       "id": "exact-4-grid",
       "n": 4,
       "relation": "exact",
-      "value": { "decimal": "2", "expression": "2" },
+      "value": { "decimal": "2", "expression": "2", "lean": "2" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -281,7 +281,7 @@
       "id": "exact-9-grid",
       "n": 9,
       "relation": "exact",
-      "value": { "decimal": "3", "expression": "3" },
+      "value": { "decimal": "3", "expression": "3", "lean": "3" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -323,7 +323,11 @@
       "id": "upper-11-goebel",
       "n": 11,
       "relation": "upper",
-      "value": { "decimal": "3.91421356237309", "expression": "5 / 2 + √2" },
+      "value": {
+        "decimal": "3.91421356237309",
+        "expression": "5 / 2 + √2",
+        "lean": "5 / 2 + Real.sqrt 2"
+      },
       "announcedAt": "1979",
       "contributors": [{ "author": "goebel", "role": "discoverer" }],
       "evidence": [
@@ -346,7 +350,11 @@
       "id": "upper-11-hamalainen",
       "n": 11,
       "relation": "upper",
-      "value": { "decimal": "3.88561808316412", "expression": "2 + 4√2 / 3" },
+      "value": {
+        "decimal": "3.88561808316412",
+        "expression": "2 + 4√2 / 3",
+        "lean": "2 + 4 * Real.sqrt 2 / 3"
+      },
       "announcedAt": "1980",
       "contributors": [{ "author": "hamalainen", "role": "discoverer" }],
       "evidence": [
@@ -391,7 +399,11 @@
       "id": "upper-11-trump-rationalized",
       "n": 11,
       "relation": "upper",
-      "value": { "decimal": "3.88", "expression": "97 / 25" },
+      "value": {
+        "decimal": "3.88",
+        "expression": "97 / 25",
+        "lean": "((97 : ℚ) / 25 : ℝ)"
+      },
       "announcedAt": "2026-08-29",
       "contributors": [
         { "author": "trump", "role": "discoverer" },
@@ -418,7 +430,7 @@
       "id": "upper-12-grid",
       "n": 12,
       "relation": "upper",
-      "value": { "decimal": "4", "expression": "4" },
+      "value": { "decimal": "4", "expression": "4", "lean": "4" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -489,7 +501,7 @@
       "id": "exact-16-grid",
       "n": 16,
       "relation": "exact",
-      "value": { "decimal": "4", "expression": "4" },
+      "value": { "decimal": "4", "expression": "4", "lean": "4" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -560,7 +572,7 @@
       "id": "exact-25-grid",
       "n": 25,
       "relation": "exact",
-      "value": { "decimal": "5", "expression": "5" },
+      "value": { "decimal": "5", "expression": "5", "lean": "5" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -631,7 +643,7 @@
       "id": "exact-36-grid",
       "n": 36,
       "relation": "exact",
-      "value": { "decimal": "6", "expression": "6" },
+      "value": { "decimal": "6", "expression": "6", "lean": "6" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -702,7 +714,7 @@
       "id": "exact-49-grid",
       "n": 49,
       "relation": "exact",
-      "value": { "decimal": "7", "expression": "7" },
+      "value": { "decimal": "7", "expression": "7", "lean": "7" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -757,7 +769,7 @@
       "id": "exact-64-grid",
       "n": 64,
       "relation": "exact",
-      "value": { "decimal": "8", "expression": "8" },
+      "value": { "decimal": "8", "expression": "8", "lean": "8" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -780,7 +792,10 @@
       "id": "upper-68-brendberg",
       "n": 68,
       "relation": "upper",
-      "value": { "decimal": "8.80357394752856" },
+      "value": {
+        "decimal": "8.80357394752856",
+        "lean": "((880357394752856 : ℚ) / 100000000000000 : ℝ)"
+      },
       "announcedAt": "2023-06",
       "contributors": [{ "author": "brendberg", "role": "discoverer" }],
       "evidence": [
@@ -803,7 +818,10 @@
       "id": "upper-68-schadt-ellsworth",
       "n": 68,
       "relation": "upper",
-      "value": { "decimal": "8.80345993651653" },
+      "value": {
+        "decimal": "8.80345993651653",
+        "lean": "((880345993651653 : ℚ) / 100000000000000 : ℝ)"
+      },
       "announcedAt": "2025-12",
       "contributors": [
         { "author": "schadt", "role": "optimizer" },
@@ -830,7 +848,10 @@
       "id": "upper-68-archive",
       "n": 68,
       "relation": "upper",
-      "value": { "decimal": "8.80339" },
+      "value": {
+        "decimal": "8.80339",
+        "lean": "((880339 : ℚ) / 100000 : ℝ)"
+      },
       "announcedAt": "2026-08-16",
       "contributors": [{ "author": "chelokot", "role": "optimizer" }],
       "evidence": [
@@ -856,7 +877,10 @@
       "id": "upper-69-morandi-cantrell",
       "n": 69,
       "relation": "upper",
-      "value": { "decimal": "8.82721205592900" },
+      "value": {
+        "decimal": "8.82721205592900",
+        "lean": "((882721205592900 : ℚ) / 100000000000000 : ℝ)"
+      },
       "announcedAt": "2023-08",
       "contributors": [
         { "author": "morandi", "role": "discoverer" },
@@ -882,7 +906,10 @@
       "id": "upper-69-archive",
       "n": 69,
       "relation": "upper",
-      "value": { "decimal": "8.8272" },
+      "value": {
+        "decimal": "8.8272",
+        "lean": "((5517 : ℚ) / 625 : ℝ)"
+      },
       "announcedAt": "2026-08-16",
       "contributors": [{ "author": "chelokot", "role": "optimizer" }],
       "evidence": [
@@ -940,7 +967,7 @@
       "id": "exact-81-grid",
       "n": 81,
       "relation": "exact",
-      "value": { "decimal": "9", "expression": "9" },
+      "value": { "decimal": "9", "expression": "9", "lean": "9" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [

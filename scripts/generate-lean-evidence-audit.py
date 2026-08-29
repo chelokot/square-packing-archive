@@ -21,9 +21,11 @@ ARTIFACT_PATTERN = re.compile(
 THEOREM_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_']*(?:\.[A-Za-z_][A-Za-z0-9_']*)*$")
 
 
-def lean_evidence(manifest: dict[str, Any]) -> tuple[dict[str, Any], ...]:
+def lean_evidence(
+    manifest: dict[str, Any],
+) -> tuple[tuple[dict[str, Any], dict[str, Any]], ...]:
     return tuple(
-        evidence
+        (claim, evidence)
         for claim in manifest["claims"]
         for evidence in claim["evidence"]
         if evidence["kind"] == "lean-proof"
@@ -46,12 +48,31 @@ def theorem_name(evidence: dict[str, Any]) -> str:
     return theorem
 
 
+def expected_type(claim: dict[str, Any]) -> str:
+    relation = claim["relation"]
+    predicate = {
+        "exact": "SquarePackingArchive.IsMinimumSide",
+        "lower": "SquarePackingArchive.IsLowerBound",
+        "upper": "SquarePackingArchive.HasPacking",
+    }[relation]
+    value = claim["value"].get("lean")
+    if not isinstance(value, str) or not value or any(
+        forbidden in value for forbidden in ("\n", "\r", ";", "#")
+    ):
+        raise ValueError(f"invalid Lean value for {claim['id']}: {value}")
+    return f"{predicate} {claim['n']} ({value})"
+
+
 def render(manifest: dict[str, Any]) -> str:
     evidence = lean_evidence(manifest)
-    modules = sorted({module_name(item.get("artifact", "")) for item in evidence})
-    theorems = sorted({theorem_name(item) for item in evidence})
+    modules = sorted(
+        {module_name(item.get("artifact", "")) for _, item in evidence}
+    )
     imports = "\n".join(f"import {module}" for module in modules)
-    checks = "\n".join(f"#check {theorem}" for theorem in theorems)
+    checks = "\n\n".join(
+        f"example : {expected_type(claim)} :=\n  {theorem_name(item)}"
+        for claim, item in evidence
+    )
     return f"{imports}\n\n{checks}\n"
 
 
