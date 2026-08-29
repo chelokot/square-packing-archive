@@ -1,6 +1,7 @@
 import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.NearSquare
+import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
 import SquarePackingArchive.Records.HistoricalUpperBounds
@@ -22,10 +23,13 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.SquareNumbers.s81_eq_nine
 #print axioms SquarePackingArchive.Records.NearSquare.s2_eq_two
 #print axioms SquarePackingArchive.Records.NearSquare.s3_eq_two
+#print axioms SquarePackingArchive.Records.Square11TrumpRationalized.s11_le_3_88
 #print axioms SquarePackingArchive.Records.Square68.s68_le_8_80339
 #print axioms SquarePackingArchive.Records.Square69.s69_le_8_8272
 #print axioms SquarePackingArchive.HasPacking.enlarge
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s12_le_four
+#print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_goebel_1979
+#print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_hamalainen_1980
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_brendberg_2023
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_ellsworth_2025
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s69_le_morandi_cantrell_2023

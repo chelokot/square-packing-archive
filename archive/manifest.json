@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-16",
+  "updatedAt": "2026-08-29",
   "problem": {
     "symbol": "s",
     "name": "Packing unit squares in a square",
@@ -50,7 +50,7 @@
       "title": "Squares in Squares",
       "authors": ["ellsworth", "friedman"],
       "url": "https://kingbird.myphotos.cc/packing/squares_in_squares.html",
-      "accessedAt": "2026-08-16"
+      "accessedAt": "2026-08-29"
     },
     {
       "id": "tracker-history",
@@ -58,7 +58,7 @@
       "title": "Squares in Squares: Older and Alternative Packings",
       "authors": ["ellsworth", "friedman"],
       "url": "https://kingbird.myphotos.cc/packing/squares_in_squares__compared.html",
-      "accessedAt": "2026-08-16"
+      "accessedAt": "2026-08-29"
     },
     {
       "id": "friedman-survey",
@@ -331,6 +331,13 @@
           "kind": "tracker-record",
           "status": "reported",
           "source": "tracker-history"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_goebel_1979"
         }
       ],
       "active": false
@@ -347,6 +354,13 @@
           "kind": "tracker-record",
           "status": "reported",
           "source": "tracker-history"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_hamalainen_1980"
         }
       ],
       "supersedes": "upper-11-goebel",
@@ -372,6 +386,33 @@
       ],
       "supersedes": "upper-11-hamalainen",
       "active": true
+    },
+    {
+      "id": "upper-11-trump-rationalized",
+      "n": 11,
+      "relation": "upper",
+      "value": { "decimal": "3.88", "expression": "97 / 25" },
+      "announcedAt": "2026-08-29",
+      "contributors": [
+        { "author": "trump", "role": "discoverer" },
+        { "author": "chelokot", "role": "prover" }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-current"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square11.lean",
+          "theorem": "SquarePackingArchive.Records.Square11TrumpRationalized.s11_le_3_88"
+        }
+      ],
+      "configuration": "square-11-trump-rationalized",
+      "active": false
     },
     {
       "id": "upper-12-grid",
@@ -952,6 +993,10 @@
     }
   ],
   "configurations": [
+    {
+      "id": "square-11-trump-rationalized",
+      "path": "configurations/square-11-trump-rationalized.json"
+    },
     { "id": "square-68", "path": "configurations/square-68.json" },
     { "id": "square-69", "path": "configurations/square-69.json" }
   ]
