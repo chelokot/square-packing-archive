@@ -303,7 +303,7 @@
       "id": "exact-8-friedman",
       "n": 8,
       "relation": "exact",
-      "value": { "decimal": "3", "expression": "3" },
+      "value": { "decimal": "3", "expression": "3", "lean": "3" },
       "announcedAt": "1999",
       "contributors": [{ "author": "friedman", "role": "prover" }],
       "evidence": [
@@ -311,6 +311,13 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square8.lean",
+          "theorem": "SquarePackingArchive.Records.Square8.s8_eq_three"
         }
       ],
       "active": true

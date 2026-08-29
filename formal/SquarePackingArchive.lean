@@ -1,6 +1,7 @@
 import SquarePackingArchive.Geometry
 import SquarePackingArchive.Area
 import SquarePackingArchive.Unavoidable
+import SquarePackingArchive.Triangle
 import SquarePackingArchive.Friedman
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
@@ -12,6 +13,7 @@ import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
+import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69

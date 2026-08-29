@@ -1,6 +1,42 @@
 import SquarePackingArchive.Unavoidable
+import SquarePackingArchive.Triangle
 
 namespace SquarePackingArchive
+
+lemma Frame.height_add_gap_product_le_sum_of_gap_le_three_quarters
+    (frame : Frame) {height gap : ℝ}
+    (cosine_nonnegative : 0 ≤ frame.cosine)
+    (sine_nonnegative : 0 ≤ frame.sine)
+    (height_upper : height ≤ 1)
+    (gap_upper : gap ≤ 3 / 4) :
+    height + gap * (frame.cosine * frame.sine) ≤
+      frame.cosine + frame.sine := by
+  have component_product_nonnegative :
+      0 ≤ frame.cosine * frame.sine :=
+    mul_nonneg cosine_nonnegative sine_nonnegative
+  have component_sum_at_least_one :
+      1 ≤ frame.cosine + frame.sine := by
+    nlinarith [frame.unit]
+  have component_sum_at_most_three_halves :
+      frame.cosine + frame.sine ≤ 3 / 2 := by
+    have sum_sq_at_most_two :
+        (frame.cosine + frame.sine) ^ 2 ≤ 2 := by
+      nlinarith [frame.unit, sq_nonneg (frame.cosine - frame.sine)]
+    nlinarith
+  have rational_component_product_bound :
+      3 / 4 * (frame.cosine * frame.sine) ≤
+        frame.cosine + frame.sine - 1 := by
+    have product_nonpositive :
+        (frame.cosine + frame.sine - 1) *
+            (3 * (frame.cosine + frame.sine) - 5) ≤ 0 :=
+      mul_nonpos_of_nonneg_of_nonpos (by linarith) (by linarith)
+    nlinarith [frame.unit]
+  have gap_component_product_bound :
+      gap * (frame.cosine * frame.sine) ≤
+        frame.cosine + frame.sine - 1 :=
+    (mul_le_mul_of_nonneg_right gap_upper component_product_nonnegative).trans
+      rational_component_product_bound
+  linarith
 
 set_option maxHeartbeats 1000000 in
 lemma PlacedSquare.contains_bottomPairWith_of_nonnegative_frame
@@ -260,34 +296,11 @@ lemma PlacedSquare.contains_bottomPair
   apply square.contains_bottomPairWith fits (by norm_num)
     gap_positive gap_upper
   · intro frame cosine_nonnegative sine_nonnegative
-    have component_product_nonnegative :
-        0 ≤ frame.cosine * frame.sine :=
-      mul_nonneg cosine_nonnegative sine_nonnegative
-    have component_sum_at_least_one :
-        1 ≤ frame.cosine + frame.sine := by
-      nlinarith [frame.unit]
-    have component_sum_at_most_three_halves :
-        frame.cosine + frame.sine ≤ 3 / 2 := by
-      have sum_sq_at_most_two :
-          (frame.cosine + frame.sine) ^ 2 ≤ 2 := by
-        nlinarith [frame.unit, sq_nonneg (frame.cosine - frame.sine)]
-      nlinarith
     have gap_at_most_three_quarters : gap ≤ 3 / 4 := by
       nlinarith [gap_sq]
-    have rational_component_product_bound :
-        3 / 4 * (frame.cosine * frame.sine) ≤
-          frame.cosine + frame.sine - 1 := by
-      have product_nonpositive :
-          (frame.cosine + frame.sine - 1) *
-              (3 * (frame.cosine + frame.sine) - 5) ≤ 0 :=
-        mul_nonpos_of_nonneg_of_nonpos (by linarith) (by linarith)
-      nlinarith [frame.unit]
-    have gap_component_product_bound :
-        gap * (frame.cosine * frame.sine) ≤
-          frame.cosine + frame.sine - 1 :=
-      (mul_le_mul_of_nonneg_right gap_at_most_three_quarters
-        component_product_nonnegative).trans rational_component_product_bound
-    linarith
+    exact frame.height_add_gap_product_le_sum_of_gap_le_three_quarters
+      cosine_nonnegative sine_nonnegative (by norm_num)
+      gap_at_most_three_quarters
   · exact center_x_lower
   · exact center_x_upper
   · exact center_y_upper

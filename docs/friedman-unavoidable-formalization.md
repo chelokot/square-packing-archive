@@ -10,12 +10,15 @@ Lean checks this reduction in `SquarePackingArchive.Unavoidable`, including the
 strict inequalities introduced by scaling. No discretization or numerical
 tolerance is involved.
 
-The geometric layer now covers the three ingredients used by Friedman's proof
-of `s(5)`. The corner lemma normalizes arbitrary frame signs by quarter
+The geometric layer covers the three ingredients used by Friedman's proofs of
+`s(5)` and `s(8)`. The corner lemma normalizes arbitrary frame signs by quarter
 rotations and checks inverse frame coordinates algebraically. The side-strip
 lemma excludes every way both adjacent piercing points could lie outside a
-rotated square. The triangle lemma checks the 27 possible combinations of
-three vertices escaping through the four local sides.
+rotated square. The reusable triangle theorem proves Friedman's Lemma 3: when
+the center lies in a triangle whose three sides have length at most one, the
+square contains a triangle vertex. Its proof classifies points by the four
+closed regions cut out by the square diagonals, derives an opposite pair from
+the barycentric center equation, and closes the metric contradiction exactly.
 
 The corner and side-strip lemmas are parameterized rather than tied to the
 four-point example. A corner target may have any coordinates at most one. A
@@ -30,3 +33,12 @@ central square are therefore unavoidable. Scaling and finite pigeonhole give
 the matching lower bound for five squares. Together with the separately
 verified Göbel construction, this proves
 `IsMinimumSide 5 (2 + Real.sqrt 2 / 2)` without numerical tolerances.
+
+For `s(8)`, Lean checks Friedman's seven rational piercing points at
+`(0.9,1)`, `(1.5,1)`, `(2.1,1)`, `(1.5,1.5)`, `(0.9,2)`, `(1.5,2)`, and
+`(2.1,2)`. The proof exhaustively partitions every possible center into four
+corners, six perimeter strips, and six internal triangles. The unavoidable
+set and finite pigeonhole theorem give `IsLowerBound 8 3`; the ordinary
+three-by-three grid with one square removed supplies the matching packing.
+Thus `SquarePackingArchive.Records.Square8.s8_eq_three` kernel-checks the exact
+historical result.
