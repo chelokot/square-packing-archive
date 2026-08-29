@@ -1,4 +1,4 @@
-import SquarePackingArchive.Geometry
+import SquarePackingArchive.Friedman
 
 namespace SquarePackingArchive.Records.Square5
 
@@ -201,5 +201,97 @@ noncomputable def packing : Packing 5 side where
 
 theorem s5_le_goebel : HasPacking 5 (2 + Real.sqrt 2 / 2) := by
   exact ⟨packing⟩
+
+noncomputable def unavoidablePoints : Fin 4 → Point := ![
+  ⟨1, 1⟩,
+  ⟨1, 1 + diagonal⟩,
+  ⟨1 + diagonal, 1⟩,
+  ⟨1 + diagonal, 1 + diagonal⟩
+]
+
+@[simp] lemma unavoidablePoints_zero :
+    unavoidablePoints 0 = ⟨1, 1⟩ := by rfl
+
+@[simp] lemma unavoidablePoints_one :
+    unavoidablePoints 1 = ⟨1, 1 + diagonal⟩ := by rfl
+
+@[simp] lemma unavoidablePoints_two :
+    unavoidablePoints 2 = ⟨1 + diagonal, 1⟩ := by rfl
+
+@[simp] lemma unavoidablePoints_three :
+    unavoidablePoints 3 = ⟨1 + diagonal, 1 + diagonal⟩ := by rfl
+
+theorem unavoidable_points : Unavoidable unavoidablePoints side := by
+  intro square fits
+  change square.Fits (2 + diagonal) at fits
+  by_cases center_x_left : square.center.x ≤ 1
+  · by_cases center_y_bottom : square.center.y ≤ 1
+    · exact ⟨0, by
+        simpa using square.contains_unitCorner fits center_x_left center_y_bottom⟩
+    · by_cases center_y_top : 1 + diagonal ≤ square.center.y
+      · exact ⟨1, by
+          simpa using square.contains_topLeftCorner fits center_x_left center_y_top⟩
+      · have center_y_lower : 1 ≤ square.center.y := by linarith
+        have center_y_upper : square.center.y ≤ 1 + diagonal := by linarith
+        rcases square.contains_leftPair fits diagonal_positive diagonal_sq
+            center_x_left center_y_lower center_y_upper with
+          bottom_mem | top_mem
+        · exact ⟨0, by simpa using bottom_mem⟩
+        · exact ⟨1, by simpa using top_mem⟩
+  · by_cases center_x_right : 1 + diagonal ≤ square.center.x
+    · by_cases center_y_bottom : square.center.y ≤ 1
+      · exact ⟨2, by
+          simpa using square.contains_bottomRightCorner fits center_x_right
+            center_y_bottom⟩
+      · by_cases center_y_top : 1 + diagonal ≤ square.center.y
+        · exact ⟨3, by
+            simpa using square.contains_topRightCorner fits center_x_right
+              center_y_top⟩
+        · have center_y_lower : 1 ≤ square.center.y := by linarith
+          have center_y_upper : square.center.y ≤ 1 + diagonal := by linarith
+          rcases square.contains_rightPair fits diagonal_positive diagonal_sq
+              center_x_right center_y_lower center_y_upper with
+            bottom_mem | top_mem
+          · exact ⟨2, by simpa using bottom_mem⟩
+          · exact ⟨3, by simpa using top_mem⟩
+    · have center_x_lower : 1 ≤ square.center.x := by linarith
+      have center_x_upper : square.center.x ≤ 1 + diagonal := by linarith
+      by_cases center_y_bottom : square.center.y ≤ 1
+      · rcases square.contains_bottomPair fits diagonal_positive diagonal_sq
+            center_x_lower center_x_upper center_y_bottom with
+          left_mem | right_mem
+        · exact ⟨0, by simpa using left_mem⟩
+        · exact ⟨2, by simpa using right_mem⟩
+      · by_cases center_y_top : 1 + diagonal ≤ square.center.y
+        · rcases square.contains_topPair fits diagonal_positive diagonal_sq
+              center_x_lower center_x_upper center_y_top with
+            left_mem | right_mem
+          · exact ⟨1, by simpa using left_mem⟩
+          · exact ⟨3, by simpa using right_mem⟩
+        · have center_y_lower : 1 ≤ square.center.y := by linarith
+          have center_y_upper : square.center.y ≤ 1 + diagonal := by linarith
+          by_cases below_diagonal : square.center.y ≤ square.center.x
+          · rcases square.contains_lowerRightTriangle diagonal_positive
+                diagonal_sq center_x_lower center_x_upper center_y_lower
+                below_diagonal with
+              bottom_left_mem | bottom_right_mem | top_right_mem
+            · exact ⟨0, by simpa using bottom_left_mem⟩
+            · exact ⟨2, by simpa using bottom_right_mem⟩
+            · exact ⟨3, by simpa using top_right_mem⟩
+          · have above_diagonal : square.center.x ≤ square.center.y := by
+              linarith
+            rcases square.contains_upperLeftTriangle diagonal_positive
+                diagonal_sq center_x_lower center_y_lower center_y_upper
+                above_diagonal with
+              bottom_left_mem | top_left_mem | top_right_mem
+            · exact ⟨0, by simpa using bottom_left_mem⟩
+            · exact ⟨1, by simpa using top_left_mem⟩
+            · exact ⟨3, by simpa using top_right_mem⟩
+
+theorem s5_ge_goebel : IsLowerBound 5 (2 + Real.sqrt 2 / 2) := by
+  simpa [side, diagonal] using lowerBound_succ_of_unavoidable unavoidable_points
+
+theorem s5_eq_goebel : IsMinimumSide 5 (2 + Real.sqrt 2 / 2) :=
+  ⟨s5_le_goebel, s5_ge_goebel⟩
 
 end SquarePackingArchive.Records.Square5

@@ -241,7 +241,11 @@
       "id": "exact-5-goebel",
       "n": 5,
       "relation": "exact",
-      "value": { "decimal": "2.70710678118654", "expression": "2 + √2 / 2" },
+      "value": {
+        "decimal": "2.70710678118654",
+        "expression": "2 + √2 / 2",
+        "lean": "2 + Real.sqrt 2 / 2"
+      },
       "announcedAt": "1979",
       "contributors": [{ "author": "goebel", "role": "discoverer-and-prover" }],
       "evidence": [
@@ -249,6 +253,13 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square5.lean",
+          "theorem": "SquarePackingArchive.Records.Square5.s5_eq_goebel"
         }
       ],
       "active": true

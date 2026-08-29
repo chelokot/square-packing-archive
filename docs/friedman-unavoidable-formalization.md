@@ -10,14 +10,16 @@ Lean checks this reduction in `SquarePackingArchive.Unavoidable`, including the
 strict inequalities introduced by scaling. No discretization or numerical
 tolerance is involved.
 
-The first geometric lemma from Friedman's survey is also connected. A unit
-square contained in the first quadrant whose center lies in the unit corner
-region contains the point `(1, 1)`. The proof normalizes arbitrary frame signs
-by quarter rotations, derives center bounds from container containment, and
-checks the inverse frame coordinates algebraically.
+The geometric layer now covers the three ingredients used by Friedman's proof
+of `s(5)`. The corner lemma normalizes arbitrary frame signs by quarter
+rotations and checks inverse frame coordinates algebraically. The side-strip
+lemma excludes every way both adjacent piercing points could lie outside a
+rotated square. The triangle lemma checks the 27 possible combinations of
+three vertices escaping through the four local sides.
 
-For `s(5)`, the exact Göbel construction is verified separately. Completing
-the exact result still requires formal versions of the survey's side-strip and
-triangle lemmas and the exhaustive partition of the container center region.
-The manifest therefore exposes the construction as a verified upper bound but
-does not yet mark the historical exact claim as Lean-verified.
+Lean partitions the container center region into four corners, four side
+strips, and two central triangles. The four points at the corners of the
+central square are therefore unavoidable. Scaling and finite pigeonhole give
+the matching lower bound for five squares. Together with the separately
+verified Göbel construction, this proves
+`IsMinimumSide 5 (2 + Real.sqrt 2 / 2)` without numerical tolerances.

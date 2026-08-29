@@ -1,6 +1,7 @@
 import SquarePackingArchive.Geometry
 import SquarePackingArchive.Area
 import SquarePackingArchive.Unavoidable
+import SquarePackingArchive.Friedman
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
 import SquarePackingArchive.NagamochiLemmas

@@ -163,6 +163,119 @@ def PlacedSquare.InteriorContains (square : PlacedSquare) (point : Point) : Prop
       |localY| < 1 / 2 ∧
         point = square.point localX localY
 
+def PlacedSquare.localX (square : PlacedSquare) (point : Point) : ℝ :=
+  (point.x - square.center.x) * square.frame.cosine +
+    (point.y - square.center.y) * square.frame.sine
+
+def PlacedSquare.localY (square : PlacedSquare) (point : Point) : ℝ :=
+  -(point.x - square.center.x) * square.frame.sine +
+    (point.y - square.center.y) * square.frame.cosine
+
+lemma PlacedSquare.contains_iff_localCoordinates
+    (square : PlacedSquare) (point : Point) :
+    square.Contains point ↔
+      |square.localX point| ≤ 1 / 2 ∧
+        |square.localY point| ≤ 1 / 2 := by
+  constructor
+  · rintro ⟨localX, localY, localX_le, localY_le, rfl⟩
+    have recovered_localX :
+        square.localX (square.point localX localY) = localX := by
+      dsimp [PlacedSquare.localX, PlacedSquare.point, Frame.place]
+      linear_combination localX * square.frame.unit
+    have recovered_localY :
+        square.localY (square.point localX localY) = localY := by
+      dsimp [PlacedSquare.localY, PlacedSquare.point, Frame.place]
+      linear_combination localY * square.frame.unit
+    rw [recovered_localX, recovered_localY]
+    exact ⟨localX_le, localY_le⟩
+  · rintro ⟨localX_le, localY_le⟩
+    refine ⟨square.localX point, square.localY point,
+      localX_le, localY_le, ?_⟩
+    rw [Point.mk.injEq]
+    constructor
+    · dsimp [PlacedSquare.localX, PlacedSquare.localY,
+        PlacedSquare.point, Frame.place]
+      linear_combination
+        -(point.x - square.center.x) * square.frame.unit
+    · dsimp [PlacedSquare.localX, PlacedSquare.localY,
+        PlacedSquare.point, Frame.place]
+      linear_combination
+        -(point.y - square.center.y) * square.frame.unit
+
+@[simp] lemma PlacedSquare.swap_contains_iff
+    (square : PlacedSquare) (point : Point) :
+    square.swap.Contains point.swap ↔ square.Contains point := by
+  constructor
+  · rintro ⟨localX, localY, localX_le, localY_le, point_eq⟩
+    refine ⟨localX, -localY, localX_le, by simpa using localY_le, ?_⟩
+    apply Point.swap_injective
+    rw [point_eq, Point.mk.injEq]
+    constructor
+    · simp [PlacedSquare.swap, PlacedSquare.point, Frame.swap,
+        Frame.place, Point.swap]
+      ring
+    · simp [PlacedSquare.swap, PlacedSquare.point, Frame.swap,
+        Frame.place, Point.swap]
+  · rintro ⟨localX, localY, localX_le, localY_le, point_eq⟩
+    refine ⟨localX, -localY, localX_le, by simpa using localY_le, ?_⟩
+    rw [point_eq, Point.mk.injEq]
+    constructor
+    · simp [PlacedSquare.swap, PlacedSquare.point, Frame.swap,
+        Frame.place, Point.swap]
+    · simp [PlacedSquare.swap, PlacedSquare.point, Frame.swap,
+        Frame.place, Point.swap]
+      ring
+
+@[simp] lemma PlacedSquare.reflectX_contains_iff
+    (square : PlacedSquare) (coordinateSum : ℝ) (point : Point) :
+    (square.reflectX coordinateSum).Contains (point.reflectX coordinateSum) ↔
+      square.Contains point := by
+  constructor
+  · rintro ⟨localX, localY, localX_le, localY_le, point_eq⟩
+    refine ⟨localX, -localY, localX_le, by simpa using localY_le, ?_⟩
+    apply Point.reflectX_injective coordinateSum
+    rw [point_eq, Point.mk.injEq]
+    constructor
+    · simp [PlacedSquare.reflectX, PlacedSquare.point,
+        Frame.reflectX, Frame.place, Point.reflectX]
+      ring
+    · simp [PlacedSquare.reflectX, PlacedSquare.point,
+        Frame.reflectX, Frame.place, Point.reflectX]
+  · rintro ⟨localX, localY, localX_le, localY_le, point_eq⟩
+    refine ⟨localX, -localY, localX_le, by simpa using localY_le, ?_⟩
+    rw [point_eq, Point.mk.injEq]
+    constructor
+    · simp [PlacedSquare.reflectX, PlacedSquare.point,
+        Frame.reflectX, Frame.place, Point.reflectX]
+      ring
+    · simp [PlacedSquare.reflectX, PlacedSquare.point,
+        Frame.reflectX, Frame.place, Point.reflectX]
+
+@[simp] lemma PlacedSquare.reflectY_contains_iff
+    (square : PlacedSquare) (coordinateSum : ℝ) (point : Point) :
+    (square.reflectY coordinateSum).Contains (point.reflectY coordinateSum) ↔
+      square.Contains point := by
+  constructor
+  · rintro ⟨localX, localY, localX_le, localY_le, point_eq⟩
+    refine ⟨localX, -localY, localX_le, by simpa using localY_le, ?_⟩
+    apply Point.reflectY_injective coordinateSum
+    rw [point_eq, Point.mk.injEq]
+    constructor
+    · simp [PlacedSquare.reflectY, PlacedSquare.point,
+        Frame.reflectY, Frame.place, Point.reflectY]
+    · simp [PlacedSquare.reflectY, PlacedSquare.point,
+        Frame.reflectY, Frame.place, Point.reflectY]
+      ring
+  · rintro ⟨localX, localY, localX_le, localY_le, point_eq⟩
+    refine ⟨localX, -localY, localX_le, by simpa using localY_le, ?_⟩
+    rw [point_eq, Point.mk.injEq]
+    constructor
+    · simp [PlacedSquare.reflectY, PlacedSquare.point,
+        Frame.reflectY, Frame.place, Point.reflectY]
+    · simp [PlacedSquare.reflectY, PlacedSquare.point,
+        Frame.reflectY, Frame.place, Point.reflectY]
+      ring
+
 @[simp] lemma PlacedSquare.rotateQuarter_contains_iff
     (square : PlacedSquare) (point : Point) :
     square.rotateQuarter.Contains point ↔ square.Contains point := by
@@ -196,8 +309,69 @@ def PlacedSquare.InteriorContains (square : PlacedSquare) (point : Point) : Prop
 def Container.Contains (side : ℝ) (point : Point) : Prop :=
   0 ≤ point.x ∧ point.x ≤ side ∧ 0 ≤ point.y ∧ point.y ≤ side
 
+@[simp] lemma Container.swap_contains_iff (side : ℝ) (point : Point) :
+    Container.Contains side point.swap ↔ Container.Contains side point := by
+  simp only [Container.Contains, Point.swap]
+  tauto
+
+@[simp] lemma Container.reflectX_contains_iff (side : ℝ) (point : Point) :
+    Container.Contains side (point.reflectX side) ↔
+      Container.Contains side point := by
+  simp only [Container.Contains, Point.reflectX]
+  constructor <;> rintro ⟨left, right, bottom, top⟩ <;>
+    exact ⟨by linarith, by linarith, bottom, top⟩
+
+@[simp] lemma Container.reflectY_contains_iff (side : ℝ) (point : Point) :
+    Container.Contains side (point.reflectY side) ↔
+      Container.Contains side point := by
+  simp only [Container.Contains, Point.reflectY]
+  constructor <;> rintro ⟨left, right, bottom, top⟩ <;>
+    exact ⟨left, right, by linarith, by linarith⟩
+
 def PlacedSquare.Fits (square : PlacedSquare) (side : ℝ) : Prop :=
   ∀ ⦃point⦄, square.Contains point → Container.Contains side point
+
+@[simp] lemma PlacedSquare.swap_fits_iff
+    (square : PlacedSquare) (side : ℝ) :
+    square.swap.Fits side ↔ square.Fits side := by
+  constructor
+  · intro fits point point_mem
+    have swapped_bounds := fits
+      ((square.swap_contains_iff point).2 point_mem)
+    exact (Container.swap_contains_iff side point).1 swapped_bounds
+  · intro fits point point_mem
+    have source_mem := (square.swap_contains_iff point.swap).1 (by
+      simpa using point_mem)
+    have source_bounds := fits source_mem
+    exact (Container.swap_contains_iff side point).1 source_bounds
+
+@[simp] lemma PlacedSquare.reflectX_fits_iff
+    (square : PlacedSquare) (side : ℝ) :
+    (square.reflectX side).Fits side ↔ square.Fits side := by
+  constructor
+  · intro fits point point_mem
+    have reflected_bounds := fits
+      ((square.reflectX_contains_iff side point).2 point_mem)
+    exact (Container.reflectX_contains_iff side point).1 reflected_bounds
+  · intro fits point point_mem
+    have source_mem := (square.reflectX_contains_iff side
+      (point.reflectX side)).1 (by simpa using point_mem)
+    have source_bounds := fits source_mem
+    exact (Container.reflectX_contains_iff side point).1 source_bounds
+
+@[simp] lemma PlacedSquare.reflectY_fits_iff
+    (square : PlacedSquare) (side : ℝ) :
+    (square.reflectY side).Fits side ↔ square.Fits side := by
+  constructor
+  · intro fits point point_mem
+    have reflected_bounds := fits
+      ((square.reflectY_contains_iff side point).2 point_mem)
+    exact (Container.reflectY_contains_iff side point).1 reflected_bounds
+  · intro fits point point_mem
+    have source_mem := (square.reflectY_contains_iff side
+      (point.reflectY side)).1 (by simpa using point_mem)
+    have source_bounds := fits source_mem
+    exact (Container.reflectY_contains_iff side point).1 source_bounds
 
 @[simp] lemma PlacedSquare.firstQuadrant_fits_iff
     (square : PlacedSquare) (side : ℝ) :

@@ -22,6 +22,9 @@ example : SquarePackingArchive.IsMinimumSide 4 (2) :=
 example : SquarePackingArchive.HasPacking 5 (2 + Real.sqrt 2 / 2) :=
   SquarePackingArchive.Records.Square5.s5_le_goebel
 
+example : SquarePackingArchive.IsMinimumSide 5 (2 + Real.sqrt 2 / 2) :=
+  SquarePackingArchive.Records.Square5.s5_eq_goebel
+
 example : SquarePackingArchive.IsMinimumSide 9 (3) :=
   SquarePackingArchive.Records.SquareNumbers.s9_eq_three
 
