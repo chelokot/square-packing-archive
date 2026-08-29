@@ -41,6 +41,7 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.NagamochiResource.innerArea_add_boundaryLines_le_measure
 #print axioms SquarePackingArchive.NagamochiResource.cornerPoints_lower_bound_of_two_mem
 #print axioms SquarePackingArchive.NagamochiResource.edgePoints_lower_bound_of_mem
+#print axioms SquarePackingArchive.NagamochiResource.EdgePoint.cornerPoints_ne
 #print axioms SquarePackingArchive.volume_rightTriangleProductRegion
 #print axioms SquarePackingArchive.volume_rightTriangleRegion
 #print axioms SquarePackingArchive.volume_translatedRightTriangleRegion

@@ -169,8 +169,12 @@ matching connection point is present, convexity supplies the short chord and
 Lean closes the endpoint-`Q` branch. The exhaustive Case 7 theorem therefore
 returns either a proved score or one of exactly two typed disconnected-endpoint
 outcomes; each such outcome additionally certifies that no indexed `P` is
-present, since any `P` would already close the long-chord branch. Proving that
-those remaining outcomes reduce to Case 6 under the
+present, since any `P` would already close the long-chord branch. The classifier
+also checks the opposite endpoint `Q`: if both endpoints are present, their
+combined point mass, the long boundary chord, and positive inner area close the
+score directly. A surviving disconnected outcome therefore carries a proof
+that the opposite `Q` is absent as well. Proving that those remaining outcomes
+reduce to Case 6 under the
 paper's terminal deformation is the sole remaining Case 7 obligation.
 
 Coordinate-swap symmetry is formalized as an involution on points, frames and

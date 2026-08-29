@@ -348,6 +348,11 @@ def NagamochiResource.EdgePoint.secondCornerPoint :
   | .left => .topLeft
   | .right => .topRight
 
+lemma NagamochiResource.EdgePoint.cornerPoints_ne
+    (kind : NagamochiResource.EdgePoint) :
+    kind.firstCornerPoint ≠ kind.secondCornerPoint := by
+  cases kind <;> decide
+
 def NagamochiResource.edgePointKinds : Finset NagamochiResource.EdgePoint :=
   {.bottom, .top, .left, .right}
 
