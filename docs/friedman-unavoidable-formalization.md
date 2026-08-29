@@ -42,3 +42,11 @@ set and finite pigeonhole theorem give `IsLowerBound 8 3`; the ordinary
 three-by-three grid with one square removed supplies the matching packing.
 Thus `SquarePackingArchive.Records.Square8.s8_eq_three` kernel-checks the exact
 historical result.
+
+The formal geometry library also checks Friedman's Lemma 4. A unit square
+whose center lies in a `1 × 0.4` rectangle contains one of the four rectangle
+vertices. The proof normalizes the frame orientation and exhausts the 81
+possible triples of escape directions for the four vertices. Translation
+invariance is proved separately, so the theorem applies to such a rectangle
+at arbitrary real coordinates. This is the additional geometric ingredient
+needed by Friedman's historical `s(15)=4` construction.

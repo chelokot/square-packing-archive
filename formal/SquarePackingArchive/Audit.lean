@@ -9,6 +9,7 @@ import SquarePackingArchive.Records.Square69
 import SquarePackingArchive.Records.HistoricalUpperBounds
 import SquarePackingArchive.Unavoidable
 import SquarePackingArchive.Friedman
+import SquarePackingArchive.Rectangle
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
 import SquarePackingArchive.NagamochiLemmas
@@ -35,6 +36,8 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.Square8.contains_bottomRightPair
 #print axioms SquarePackingArchive.Records.Square8.contains_leftPair
 #print axioms SquarePackingArchive.PlacedSquare.contains_triangleVertex
+#print axioms SquarePackingArchive.PlacedSquare.contains_shortRectangleVertex
+#print axioms SquarePackingArchive.PlacedSquare.contains_translatedShortRectangleVertex
 #print axioms SquarePackingArchive.Records.Square8.points_unavoidable
 #print axioms SquarePackingArchive.Records.Square8.s8_lower_bound
 #print axioms SquarePackingArchive.Records.Square8.s8_eq_three

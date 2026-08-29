@@ -7,6 +7,9 @@ structure Point where
   x : ℝ
   y : ℝ
 
+def Point.translate (horizontal vertical : ℝ) (point : Point) : Point :=
+  ⟨point.x + horizontal, point.y + vertical⟩
+
 def Point.swap (point : Point) : Point :=
   ⟨point.y, point.x⟩
 
@@ -87,6 +90,11 @@ def Frame.place (frame : Frame) (localX localY : ℝ) : Point :=
 structure PlacedSquare where
   center : Point
   frame : Frame
+
+def PlacedSquare.translate
+    (horizontal vertical : ℝ) (square : PlacedSquare) : PlacedSquare where
+  center := square.center.translate horizontal vertical
+  frame := square.frame
 
 def PlacedSquare.swap (square : PlacedSquare) : PlacedSquare where
   center := square.center.swap
@@ -201,6 +209,17 @@ lemma PlacedSquare.contains_iff_localCoordinates
         PlacedSquare.point, Frame.place]
       linear_combination
         -(point.y - square.center.y) * square.frame.unit
+
+@[simp] lemma PlacedSquare.translate_contains_iff
+    (square : PlacedSquare) (horizontal vertical : ℝ) (point : Point) :
+    (square.translate horizontal vertical).Contains
+        (point.translate horizontal vertical) ↔
+      square.Contains point := by
+  rw [(square.translate horizontal vertical).contains_iff_localCoordinates,
+    square.contains_iff_localCoordinates]
+  constructor <;> intro coordinates <;> convert coordinates using 1 <;>
+    simp [PlacedSquare.translate, Point.translate, PlacedSquare.localX,
+      PlacedSquare.localY]
 
 @[simp] lemma PlacedSquare.swap_contains_iff
     (square : PlacedSquare) (point : Point) :

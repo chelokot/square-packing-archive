@@ -33,7 +33,7 @@ lemma bottom_row_weight_bound
     (sine_nonnegative : 0 ≤ frame.sine) :
     1 + 3 / 5 * (frame.cosine * frame.sine) ≤
       frame.cosine + frame.sine := by
-  exact frame.height_add_gap_product_le_sum_of_gap_le_three_quarters
+  exact frame.height_add_gap_product_le_sum_of_gap_le_four_fifths
     cosine_nonnegative sine_nonnegative (by norm_num) (by norm_num)
 
 lemma side_row_weight_bound

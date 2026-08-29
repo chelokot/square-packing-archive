@@ -2,6 +2,7 @@ import SquarePackingArchive.Geometry
 import SquarePackingArchive.Area
 import SquarePackingArchive.Unavoidable
 import SquarePackingArchive.Triangle
+import SquarePackingArchive.Rectangle
 import SquarePackingArchive.Friedman
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource

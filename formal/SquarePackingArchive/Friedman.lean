@@ -3,12 +3,12 @@ import SquarePackingArchive.Triangle
 
 namespace SquarePackingArchive
 
-lemma Frame.height_add_gap_product_le_sum_of_gap_le_three_quarters
+lemma Frame.height_add_gap_product_le_sum_of_gap_le_four_fifths
     (frame : Frame) {height gap : ℝ}
     (cosine_nonnegative : 0 ≤ frame.cosine)
     (sine_nonnegative : 0 ≤ frame.sine)
     (height_upper : height ≤ 1)
-    (gap_upper : gap ≤ 3 / 4) :
+    (gap_upper : gap ≤ 4 / 5) :
     height + gap * (frame.cosine * frame.sine) ≤
       frame.cosine + frame.sine := by
   have component_product_nonnegative :
@@ -24,11 +24,11 @@ lemma Frame.height_add_gap_product_le_sum_of_gap_le_three_quarters
       nlinarith [frame.unit, sq_nonneg (frame.cosine - frame.sine)]
     nlinarith
   have rational_component_product_bound :
-      3 / 4 * (frame.cosine * frame.sine) ≤
+      4 / 5 * (frame.cosine * frame.sine) ≤
         frame.cosine + frame.sine - 1 := by
     have product_nonpositive :
         (frame.cosine + frame.sine - 1) *
-            (3 * (frame.cosine + frame.sine) - 5) ≤ 0 :=
+            (2 * (frame.cosine + frame.sine) - 3) ≤ 0 :=
       mul_nonpos_of_nonneg_of_nonpos (by linarith) (by linarith)
     nlinarith [frame.unit]
   have gap_component_product_bound :
@@ -298,9 +298,9 @@ lemma PlacedSquare.contains_bottomPair
   · intro frame cosine_nonnegative sine_nonnegative
     have gap_at_most_three_quarters : gap ≤ 3 / 4 := by
       nlinarith [gap_sq]
-    exact frame.height_add_gap_product_le_sum_of_gap_le_three_quarters
+    exact frame.height_add_gap_product_le_sum_of_gap_le_four_fifths
       cosine_nonnegative sine_nonnegative (by norm_num)
-      gap_at_most_three_quarters
+      (by linarith)
   · exact center_x_lower
   · exact center_x_upper
   · exact center_y_upper
