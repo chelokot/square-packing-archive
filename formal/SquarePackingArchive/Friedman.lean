@@ -3,17 +3,22 @@ import SquarePackingArchive.Unavoidable
 namespace SquarePackingArchive
 
 set_option maxHeartbeats 1000000 in
-lemma PlacedSquare.contains_bottomPair_of_nonnegative_frame
-    {square : PlacedSquare} {side gap : ℝ}
+lemma PlacedSquare.contains_bottomPairWith_of_nonnegative_frame
+    {square : PlacedSquare} {side left targetHeight gap : ℝ}
     (fits : square.Fits side)
+    (target_height_upper : targetHeight ≤ 1)
     (gap_positive : 0 < gap)
-    (gap_sq : gap ^ 2 = 1 / 2)
+    (gap_upper : gap ≤ 1)
     (cosine_nonnegative : 0 ≤ square.frame.cosine)
     (sine_nonnegative : 0 ≤ square.frame.sine)
-    (center_x_lower : 1 ≤ square.center.x)
-    (center_x_upper : square.center.x ≤ 1 + gap)
-    (center_y_upper : square.center.y ≤ 1) :
-    square.Contains ⟨1, 1⟩ ∨ square.Contains ⟨1 + gap, 1⟩ := by
+    (weighted_bound :
+      targetHeight + gap * (square.frame.cosine * square.frame.sine) ≤
+        square.frame.cosine + square.frame.sine)
+    (center_x_lower : left ≤ square.center.x)
+    (center_x_upper : square.center.x ≤ left + gap)
+    (center_y_upper : square.center.y ≤ targetHeight) :
+    square.Contains ⟨left, targetHeight⟩ ∨
+      square.Contains ⟨left + gap, targetHeight⟩ := by
   have lower_corner_bounds := fits
     (point := square.point (-1 / 2) (-1 / 2))
     ⟨-1 / 2, -1 / 2, by norm_num, by norm_num, rfl⟩
@@ -22,8 +27,8 @@ lemma PlacedSquare.contains_bottomPair_of_nonnegative_frame
     have := lower_corner_bounds.2.2.1
     simp [PlacedSquare.point, Frame.place] at this
     linarith
-  let horizontalOffset := square.center.x - 1
-  let verticalOffset := 1 - square.center.y
+  let horizontalOffset := square.center.x - left
+  let verticalOffset := targetHeight - square.center.y
   let leftLocalX :=
     -horizontalOffset * square.frame.cosine +
       verticalOffset * square.frame.sine
@@ -45,6 +50,12 @@ lemma PlacedSquare.contains_bottomPair_of_nonnegative_frame
   have vertical_offset_nonnegative : 0 ≤ verticalOffset := by
     dsimp [verticalOffset]
     linarith
+  have vertical_offset_weighted_upper :
+      verticalOffset ≤
+        targetHeight -
+          (square.frame.cosine + square.frame.sine) / 2 := by
+    dsimp [verticalOffset]
+    linarith
   have vertical_offset_upper :
       verticalOffset ≤
         1 - (square.frame.cosine + square.frame.sine) / 2 := by
@@ -54,37 +65,6 @@ lemma PlacedSquare.contains_bottomPair_of_nonnegative_frame
     square.frame.cosine_le_one cosine_nonnegative
   have sine_at_most_one :=
     square.frame.sine_le_one sine_nonnegative
-  have component_product_nonnegative :
-      0 ≤ square.frame.cosine * square.frame.sine :=
-    mul_nonneg cosine_nonnegative sine_nonnegative
-  have component_sum_at_least_one :
-      1 ≤ square.frame.cosine + square.frame.sine := by
-    nlinarith [square.frame.unit]
-  have component_sum_at_most_three_halves :
-      square.frame.cosine + square.frame.sine ≤ 3 / 2 := by
-    have sum_sq_at_most_two :
-        (square.frame.cosine + square.frame.sine) ^ 2 ≤ 2 := by
-      nlinarith [square.frame.unit,
-        sq_nonneg (square.frame.cosine - square.frame.sine)]
-    nlinarith
-  have gap_at_most_three_quarters : gap ≤ 3 / 4 := by
-    nlinarith [gap_sq]
-  have gap_lt_one : gap < 1 := by
-    nlinarith [gap_sq]
-  have rational_component_product_bound :
-      3 / 4 * (square.frame.cosine * square.frame.sine) ≤
-        square.frame.cosine + square.frame.sine - 1 := by
-    have product_nonpositive :
-        (square.frame.cosine + square.frame.sine - 1) *
-            (3 * (square.frame.cosine + square.frame.sine) - 5) ≤ 0 :=
-      mul_nonpos_of_nonneg_of_nonpos
-        (by linarith) (by linarith)
-    nlinarith [square.frame.unit]
-  have gap_component_product_bound :
-      gap * (square.frame.cosine * square.frame.sine) ≤
-        square.frame.cosine + square.frame.sine - 1 := by
-    exact (mul_le_mul_of_nonneg_right gap_at_most_three_quarters
-      component_product_nonnegative).trans rational_component_product_bound
   have vertical_sine_upper :
       verticalOffset * square.frame.sine ≤
         (1 - (square.frame.cosine + square.frame.sine) / 2) *
@@ -126,18 +106,20 @@ lemma PlacedSquare.contains_bottomPair_of_nonnegative_frame
         sq_nonneg (1 - square.frame.cosine)]
     dsimp [rightLocalY]
     linarith
-  have left_local_x_eq : square.localX ⟨1, 1⟩ = leftLocalX := by
+  have left_local_x_eq :
+      square.localX ⟨left, targetHeight⟩ = leftLocalX := by
     dsimp [PlacedSquare.localX, leftLocalX, horizontalOffset, verticalOffset]
     ring
-  have left_local_y_eq : square.localY ⟨1, 1⟩ = leftLocalY := by
+  have left_local_y_eq :
+      square.localY ⟨left, targetHeight⟩ = leftLocalY := by
     dsimp [PlacedSquare.localY, leftLocalY, horizontalOffset, verticalOffset]
     ring
   have right_local_x_eq :
-      square.localX ⟨1 + gap, 1⟩ = rightLocalX := by
+      square.localX ⟨left + gap, targetHeight⟩ = rightLocalX := by
     dsimp [PlacedSquare.localX, rightLocalX, horizontalOffset, verticalOffset]
     ring
   have right_local_y_eq :
-      square.localY ⟨1 + gap, 1⟩ = rightLocalY := by
+      square.localY ⟨left + gap, targetHeight⟩ = rightLocalY := by
     dsimp [PlacedSquare.localY, rightLocalY, horizontalOffset, verticalOffset]
     ring
   by_contra neither_point
@@ -226,7 +208,7 @@ lemma PlacedSquare.contains_bottomPair_of_nonnegative_frame
           verticalOffset +
               gap * (square.frame.cosine * square.frame.sine) ≤
             (square.frame.cosine + square.frame.sine) / 2 := by
-        linarith
+        linarith [vertical_offset_weighted_upper, weighted_bound]
       rw [weighted_coordinates_eq] at weighted_coordinates_gt
       linarith
     · have gap_sine_gt_one : 1 < gap * square.frame.sine := by
@@ -235,6 +217,35 @@ lemma PlacedSquare.contains_bottomPair_of_nonnegative_frame
       have gap_sine_le_gap : gap * square.frame.sine ≤ gap :=
         mul_le_of_le_one_right gap_positive.le sine_at_most_one
       linarith
+
+lemma PlacedSquare.contains_bottomPairWith
+    {square : PlacedSquare} {side left targetHeight gap : ℝ}
+    (fits : square.Fits side)
+    (target_height_upper : targetHeight ≤ 1)
+    (gap_positive : 0 < gap)
+    (gap_upper : gap ≤ 1)
+    (weighted_bound : ∀ frame : Frame,
+      0 ≤ frame.cosine → 0 ≤ frame.sine →
+        targetHeight + gap * (frame.cosine * frame.sine) ≤
+          frame.cosine + frame.sine)
+    (center_x_lower : left ≤ square.center.x)
+    (center_x_upper : square.center.x ≤ left + gap)
+    (center_y_upper : square.center.y ≤ targetHeight) :
+    square.Contains ⟨left, targetHeight⟩ ∨
+      square.Contains ⟨left + gap, targetHeight⟩ := by
+  have normalized_result :=
+    square.firstQuadrant.contains_bottomPairWith_of_nonnegative_frame
+      ((square.firstQuadrant_fits_iff side).2 fits)
+      target_height_upper gap_positive gap_upper
+      square.firstQuadrant_cosine_nonnegative
+      square.firstQuadrant_sine_nonnegative
+      (weighted_bound square.firstQuadrant.frame
+        square.firstQuadrant_cosine_nonnegative
+        square.firstQuadrant_sine_nonnegative)
+      (by simpa using center_x_lower)
+      (by simpa using center_x_upper)
+      (by simpa using center_y_upper)
+  simpa using normalized_result
 
 lemma PlacedSquare.contains_bottomPair
     {square : PlacedSquare} {side gap : ℝ}
@@ -245,15 +256,41 @@ lemma PlacedSquare.contains_bottomPair
     (center_x_upper : square.center.x ≤ 1 + gap)
     (center_y_upper : square.center.y ≤ 1) :
     square.Contains ⟨1, 1⟩ ∨ square.Contains ⟨1 + gap, 1⟩ := by
-  have normalized_result :=
-    square.firstQuadrant.contains_bottomPair_of_nonnegative_frame
-      ((square.firstQuadrant_fits_iff side).2 fits)
-      gap_positive gap_sq square.firstQuadrant_cosine_nonnegative
-      square.firstQuadrant_sine_nonnegative
-      (by simpa using center_x_lower)
-      (by simpa using center_x_upper)
-      (by simpa using center_y_upper)
-  simpa using normalized_result
+  have gap_upper : gap ≤ 1 := by nlinarith [gap_sq]
+  apply square.contains_bottomPairWith fits (by norm_num)
+    gap_positive gap_upper
+  · intro frame cosine_nonnegative sine_nonnegative
+    have component_product_nonnegative :
+        0 ≤ frame.cosine * frame.sine :=
+      mul_nonneg cosine_nonnegative sine_nonnegative
+    have component_sum_at_least_one :
+        1 ≤ frame.cosine + frame.sine := by
+      nlinarith [frame.unit]
+    have component_sum_at_most_three_halves :
+        frame.cosine + frame.sine ≤ 3 / 2 := by
+      have sum_sq_at_most_two :
+          (frame.cosine + frame.sine) ^ 2 ≤ 2 := by
+        nlinarith [frame.unit, sq_nonneg (frame.cosine - frame.sine)]
+      nlinarith
+    have gap_at_most_three_quarters : gap ≤ 3 / 4 := by
+      nlinarith [gap_sq]
+    have rational_component_product_bound :
+        3 / 4 * (frame.cosine * frame.sine) ≤
+          frame.cosine + frame.sine - 1 := by
+      have product_nonpositive :
+          (frame.cosine + frame.sine - 1) *
+              (3 * (frame.cosine + frame.sine) - 5) ≤ 0 :=
+        mul_nonpos_of_nonneg_of_nonpos (by linarith) (by linarith)
+      nlinarith [frame.unit]
+    have gap_component_product_bound :
+        gap * (frame.cosine * frame.sine) ≤
+          frame.cosine + frame.sine - 1 :=
+      (mul_le_mul_of_nonneg_right gap_at_most_three_quarters
+        component_product_nonnegative).trans rational_component_product_bound
+    linarith
+  · exact center_x_lower
+  · exact center_x_upper
+  · exact center_y_upper
 
 lemma PlacedSquare.contains_topPair
     {square : PlacedSquare} {gap : ℝ}

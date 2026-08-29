@@ -48,7 +48,9 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.lowerBound_succ_of_interiorUnavoidable_below
 #print axioms SquarePackingArchive.lowerBound_succ_of_unavoidable
 #print axioms SquarePackingArchive.PlacedSquare.contains_unitCorner
+#print axioms SquarePackingArchive.PlacedSquare.contains_cornerPoint
 #print axioms SquarePackingArchive.PlacedSquare.contains_bottomPair
+#print axioms SquarePackingArchive.PlacedSquare.contains_bottomPairWith
 #print axioms SquarePackingArchive.Packing.squareCount_lt_resourceMass
 #print axioms SquarePackingArchive.finiteFamily_card_lt_resourceMass
 #print axioms SquarePackingArchive.NagamochiResource.measure_univ

@@ -17,6 +17,13 @@ lemma excludes every way both adjacent piercing points could lie outside a
 rotated square. The triangle lemma checks the 27 possible combinations of
 three vertices escaping through the four local sides.
 
+The corner and side-strip lemmas are parameterized rather than tied to the
+four-point example. A corner target may have any coordinates at most one. A
+side strip carries its row origin, height, gap, and a frame inequality that
+can be discharged exactly for the rational grids used by later historical
+claims. This shared interface is intended for the `s(8)`, `s(15)`, `s(24)`,
+and `s(35)` unavoidable configurations.
+
 Lean partitions the container center region into four corners, four side
 strips, and two central triangles. The four points at the corners of the
 central square are therefore unavoidable. Scaling and finite pigeonhole give

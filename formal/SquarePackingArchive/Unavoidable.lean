@@ -105,14 +105,16 @@ theorem Unavoidable.interior_scaled
     square.interiorContains_scaled_of_scaleCenter_contains
       factor_gt_one point_mem⟩
 
-lemma PlacedSquare.contains_unitCorner_of_nonnegative_frame
-    {square : PlacedSquare} {side : ℝ}
+lemma PlacedSquare.contains_cornerPoint_of_nonnegative_frame
+    {square : PlacedSquare} {side targetX targetY : ℝ}
     (fits : square.Fits side)
     (cosine_nonnegative : 0 ≤ square.frame.cosine)
     (sine_nonnegative : 0 ≤ square.frame.sine)
-    (center_x_at_most_one : square.center.x ≤ 1)
-    (center_y_at_most_one : square.center.y ≤ 1) :
-    square.Contains ⟨1, 1⟩ := by
+    (target_x_upper : targetX ≤ 1)
+    (target_y_upper : targetY ≤ 1)
+    (center_x_upper : square.center.x ≤ targetX)
+    (center_y_upper : square.center.y ≤ targetY) :
+    square.Contains ⟨targetX, targetY⟩ := by
   have lower_x_corner := fits (point := square.point (-1 / 2) (1 / 2))
     ⟨-1 / 2, 1 / 2, by norm_num, by norm_num, rfl⟩
   have lower_y_corner := fits (point := square.point (-1 / 2) (-1 / 2))
@@ -127,8 +129,8 @@ lemma PlacedSquare.contains_unitCorner_of_nonnegative_frame
     have := lower_y_corner.2.2.1
     simp [PlacedSquare.point, Frame.place] at this
     linarith
-  let horizontalDelta := 1 - square.center.x
-  let verticalDelta := 1 - square.center.y
+  let horizontalDelta := targetX - square.center.x
+  let verticalDelta := targetY - square.center.y
   let localX :=
     horizontalDelta * square.frame.cosine +
       verticalDelta * square.frame.sine
@@ -215,11 +217,29 @@ lemma PlacedSquare.contains_unitCorner_of_nonnegative_frame
     · dsimp [localX, localY, horizontalDelta, verticalDelta,
         PlacedSquare.point, Frame.place]
       linear_combination
-        -(1 - square.center.x) * square.frame.unit
+        -(targetX - square.center.x) * square.frame.unit
     · dsimp [localX, localY, horizontalDelta, verticalDelta,
         PlacedSquare.point, Frame.place]
       linear_combination
-        -(1 - square.center.y) * square.frame.unit
+        -(targetY - square.center.y) * square.frame.unit
+
+lemma PlacedSquare.contains_cornerPoint
+    {square : PlacedSquare} {side targetX targetY : ℝ}
+    (fits : square.Fits side)
+    (target_x_upper : targetX ≤ 1)
+    (target_y_upper : targetY ≤ 1)
+    (center_x_upper : square.center.x ≤ targetX)
+    (center_y_upper : square.center.y ≤ targetY) :
+    square.Contains ⟨targetX, targetY⟩ := by
+  have normalized_contains :=
+    square.firstQuadrant.contains_cornerPoint_of_nonnegative_frame
+      ((square.firstQuadrant_fits_iff side).2 fits)
+      square.firstQuadrant_cosine_nonnegative
+      square.firstQuadrant_sine_nonnegative target_x_upper target_y_upper
+      (by simpa using center_x_upper)
+      (by simpa using center_y_upper)
+  exact (square.firstQuadrant_contains_iff ⟨targetX, targetY⟩).1
+    normalized_contains
 
 lemma PlacedSquare.contains_unitCorner
     {square : PlacedSquare} {side : ℝ}
@@ -227,15 +247,8 @@ lemma PlacedSquare.contains_unitCorner
     (center_x_at_most_one : square.center.x ≤ 1)
     (center_y_at_most_one : square.center.y ≤ 1) :
     square.Contains ⟨1, 1⟩ := by
-  have normalized_fits : square.firstQuadrant.Fits side :=
-    (square.firstQuadrant_fits_iff side).2 fits
-  have normalized_contains :=
-    square.firstQuadrant.contains_unitCorner_of_nonnegative_frame
-      normalized_fits square.firstQuadrant_cosine_nonnegative
-      square.firstQuadrant_sine_nonnegative
-      (by simpa using center_x_at_most_one)
-      (by simpa using center_y_at_most_one)
-  exact (square.firstQuadrant_contains_iff ⟨1, 1⟩).1 normalized_contains
+  exact square.contains_cornerPoint fits (by norm_num) (by norm_num)
+    center_x_at_most_one center_y_at_most_one
 
 theorem Packing.squareCount_le_of_interiorUnavoidable
     {squareCount pointCount : ℕ} {side : ℝ}
