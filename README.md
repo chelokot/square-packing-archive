@@ -119,7 +119,9 @@ date, and source roles where available.
 
 See [ATTRIBUTION.md](ATTRIBUTION.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 Source-specific corrections discovered during formalization are recorded in
-[the Nagamochi 2005 notes](docs/nagamochi-2005-formalization.md).
+[the Nagamochi 2005 notes](docs/nagamochi-2005-formalization.md). The reusable
+finite-piercing reduction and its current geometric coverage are tracked in
+[the Friedman unavoidable-point notes](docs/friedman-unavoidable-formalization.md).
 
 ## License
 

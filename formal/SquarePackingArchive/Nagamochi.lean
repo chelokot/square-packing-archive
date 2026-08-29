@@ -13,19 +13,6 @@ def NagamochiResource.ScoresDilatedSquares (size : ℕ) : Prop :=
           1 < NagamochiResource.measure size
             (square.dilatedInteriorRegion factor)
 
-lemma Packing.side_positive
-    {squareCount : ℕ} {side : ℝ} (packing : Packing squareCount side)
-    (squareCount_positive : 0 < squareCount) :
-    0 < side := by
-  have positive_real : (0 : ℝ) < squareCount := by exact_mod_cast squareCount_positive
-  have side_sq_positive : 0 < side ^ 2 :=
-    positive_real.trans_le packing.squareCount_le_side_sq
-  have side_nonzero : side ≠ 0 := by
-    intro side_zero
-    rw [side_zero] at side_sq_positive
-    norm_num at side_sq_positive
-  exact lt_of_le_of_ne packing.side_nonnegative (Ne.symm side_nonzero)
-
 theorem Packing.squareCount_lt_nagamochiMass
     {squareCount size : ℕ} {side : ℝ}
     (packing : Packing squareCount side)

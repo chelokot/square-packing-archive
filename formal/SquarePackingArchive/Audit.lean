@@ -6,6 +6,7 @@ import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
 import SquarePackingArchive.Records.HistoricalUpperBounds
+import SquarePackingArchive.Unavoidable
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
 import SquarePackingArchive.NagamochiLemmas
@@ -35,6 +36,14 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_brendberg_2023
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_ellsworth_2025
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s69_le_morandi_cantrell_2023
+#print axioms SquarePackingArchive.PlacedSquare.rotateQuarter_contains_iff
+#print axioms SquarePackingArchive.PlacedSquare.firstQuadrant_contains_iff
+#print axioms SquarePackingArchive.Packing.side_positive
+#print axioms SquarePackingArchive.Unavoidable.interior_scaled
+#print axioms SquarePackingArchive.Packing.squareCount_le_of_interiorUnavoidable
+#print axioms SquarePackingArchive.lowerBound_succ_of_interiorUnavoidable_below
+#print axioms SquarePackingArchive.lowerBound_succ_of_unavoidable
+#print axioms SquarePackingArchive.PlacedSquare.contains_unitCorner
 #print axioms SquarePackingArchive.Packing.squareCount_lt_resourceMass
 #print axioms SquarePackingArchive.finiteFamily_card_lt_resourceMass
 #print axioms SquarePackingArchive.NagamochiResource.measure_univ

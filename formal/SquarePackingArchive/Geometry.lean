@@ -163,11 +163,50 @@ def PlacedSquare.InteriorContains (square : PlacedSquare) (point : Point) : Prop
       |localY| < 1 / 2 ∧
         point = square.point localX localY
 
+@[simp] lemma PlacedSquare.rotateQuarter_contains_iff
+    (square : PlacedSquare) (point : Point) :
+    square.rotateQuarter.Contains point ↔ square.Contains point := by
+  constructor
+  · rintro ⟨localX, localY, localX_le, localY_le, point_eq⟩
+    refine ⟨-localY, localX, ?_, ?_, ?_⟩
+    · simpa using localY_le
+    · simpa using localX_le
+    · rw [point_eq, Point.mk.injEq]
+      constructor <;>
+        simp [PlacedSquare.rotateQuarter, PlacedSquare.point,
+          Frame.rotateQuarter, Frame.place] <;>
+        ring
+  · rintro ⟨localX, localY, localX_le, localY_le, point_eq⟩
+    refine ⟨localY, -localX, ?_, ?_, ?_⟩
+    · simpa using localY_le
+    · simpa using localX_le
+    · rw [point_eq, Point.mk.injEq]
+      constructor <;>
+        simp [PlacedSquare.rotateQuarter, PlacedSquare.point,
+          Frame.rotateQuarter, Frame.place] <;>
+        ring
+
+@[simp] lemma PlacedSquare.firstQuadrant_contains_iff
+    (square : PlacedSquare) (point : Point) :
+    square.firstQuadrant.Contains point ↔ square.Contains point := by
+  simp only [PlacedSquare.firstQuadrant]
+  split_ifs <;>
+    simp [PlacedSquare.rotateHalf, PlacedSquare.rotateThreeQuarter]
+
 def Container.Contains (side : ℝ) (point : Point) : Prop :=
   0 ≤ point.x ∧ point.x ≤ side ∧ 0 ≤ point.y ∧ point.y ≤ side
 
 def PlacedSquare.Fits (square : PlacedSquare) (side : ℝ) : Prop :=
   ∀ ⦃point⦄, square.Contains point → Container.Contains side point
+
+@[simp] lemma PlacedSquare.firstQuadrant_fits_iff
+    (square : PlacedSquare) (side : ℝ) :
+    square.firstQuadrant.Fits side ↔ square.Fits side := by
+  constructor
+  · intro fits point point_mem
+    exact fits ((square.firstQuadrant_contains_iff point).2 point_mem)
+  · intro fits point point_mem
+    exact fits ((square.firstQuadrant_contains_iff point).1 point_mem)
 
 def PlacedSquare.InteriorDisjoint (left right : PlacedSquare) : Prop :=
   ∀ point, ¬(left.InteriorContains point ∧ right.InteriorContains point)
