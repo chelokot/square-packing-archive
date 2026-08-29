@@ -13,4 +13,5 @@ import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
 import SquarePackingArchive.Records.HistoricalUpperBounds
+import SquarePackingArchive.ManifestEvidence
 import SquarePackingArchive.Audit

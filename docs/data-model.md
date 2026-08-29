@@ -46,5 +46,7 @@ separating-axis comparison rational. Decimal angles exist only as display data.
 
 The TypeScript domain package validates references and derives dashboard views.
 The web build receives one compiled JSON artifact. The Lean generator emits
-record-specific certificate modules. CI fails if either consumer disagrees with
-the canonical archive.
+record-specific certificate modules. A second generator emits `#check` commands
+for every `lean-proof` theorem named by the manifest, so CI also rejects stale or
+invented links between claims and formal artifacts. CI fails if any consumer
+disagrees with the canonical archive.
