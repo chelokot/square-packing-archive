@@ -3,6 +3,7 @@ import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square8
+import SquarePackingArchive.Records.Square15
 import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
@@ -41,6 +42,9 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.Square8.points_unavoidable
 #print axioms SquarePackingArchive.Records.Square8.s8_lower_bound
 #print axioms SquarePackingArchive.Records.Square8.s8_eq_three
+#print axioms SquarePackingArchive.Records.Square15.contains_bottomBand
+#print axioms SquarePackingArchive.Records.Square15.contains_middleBand
+#print axioms SquarePackingArchive.Records.Square15.contains_topBand
 #print axioms SquarePackingArchive.Records.Square11TrumpRationalized.s11_le_3_88
 #print axioms SquarePackingArchive.Records.Square68.s68_le_8_80339
 #print axioms SquarePackingArchive.Records.Square69.s69_le_8_8272

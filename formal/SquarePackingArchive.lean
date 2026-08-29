@@ -15,6 +15,7 @@ import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square8
+import SquarePackingArchive.Records.Square15
 import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69

@@ -50,3 +50,11 @@ possible triples of escape directions for the four vertices. Translation
 invariance is proved separately, so the theorem applies to such a rectangle
 at arbitrary real coordinates. This is the additional geometric ingredient
 needed by Friedman's historical `s(15)=4` construction.
+
+The `s(15)` formalization now includes the fourteen rational historical points
+and all ten interior triangles, reduced by horizontal and vertical
+reflections to three barycentric base cases. The two remaining central cells
+are discharged by the translated rectangle theorem. This proves coverage of
+the full inner square `[1,3]²`; the perimeter partition remains separate and
+the archive claim is intentionally not marked Lean-checked until that final
+exhaustive layer is complete.
