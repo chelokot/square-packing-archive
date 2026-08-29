@@ -69,9 +69,20 @@ frame-oriented triangle vertices in its closure, and those vertices in the
 closed inner rectangle. Convexity then puts the complete open triangle in both
 resource regions, even when a contact vertex lies on the square boundary, and
 a kernel-checked bridge feeds the resulting `innerArea` bound directly into
-the pinned score theorem. The remaining geometric work is to construct that
-witness from the terminal placed-square configuration and to derive its
-boundary-line/`Q` contribution.
+the pinned score theorem.
+
+That canonical placed-square certificate is now complete. Lean constructs the
+square from a tangent-half-angle frame, pins its lower vertex to the container
+bottom, and places `(2, 0.9)` on the required edge. It proves that the exact
+horizontal cut of length `(1+t²)/(1+t)` and the vertical cut of length
+`0.1-c′` lie in the open square, that `(1, 0.9)` contributes the corresponding
+`Q` mass, and that the oriented cut triangle lies in both the square and the
+closed inner rectangle. These three contributions compose to a kernel-checked
+theorem that the canonical terminal square has resource score greater than
+one. The remaining Case 7 obligation is therefore the deformation bridge:
+derive the original square's score bound from each typed disconnected endpoint
+outcome through a formal resource-preserving deformation or an equivalent
+direct dominance lemma, including the appropriate container symmetries.
 
 The formal model also constructs this cut directly at a square vertex. The
 first endpoint has local coordinates `(t − 1/2, 1/2)` and the second has local

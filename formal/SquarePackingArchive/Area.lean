@@ -545,11 +545,45 @@ lemma PlacedSquare.map_transform_volume (square : PlacedSquare) :
 def PlacedSquare.fromPlaneCenter (center : Plane) (frame : Frame) : PlacedSquare :=
   ⟨center.toPoint, frame⟩
 
+@[simp] lemma PlacedSquare.fromPlaneCenter_center_toPlane
+    (center : Plane) (frame : Frame) :
+    (PlacedSquare.fromPlaneCenter center frame).center.toPlane = center := by
+  simp [PlacedSquare.fromPlaneCenter]
+
+@[simp] lemma PlacedSquare.fromPlaneCenter_frame
+    (center : Plane) (frame : Frame) :
+    (PlacedSquare.fromPlaneCenter center frame).frame = frame := by
+  rfl
+
 @[simp] lemma PlacedSquare.fromPlaneCenter_transform
     (center : Plane) (frame : Frame) (point : Plane) :
     (PlacedSquare.fromPlaneCenter center frame).transform point =
       center + frame.rotation point := by
   simp [PlacedSquare.fromPlaneCenter, PlacedSquare.transform]
+
+noncomputable def PlacedSquare.fromNegativeVertex
+    (vertex : Plane) (frame : Frame) : PlacedSquare :=
+  PlacedSquare.fromPlaneCenter
+    (vertex + frame.rotation ![1 / 2, 1 / 2]) frame
+
+@[simp] lemma PlacedSquare.fromNegativeVertex_center_toPlane
+    (vertex : Plane) (frame : Frame) :
+    (PlacedSquare.fromNegativeVertex vertex frame).center.toPlane =
+      vertex + frame.rotation ![1 / 2, 1 / 2] := by
+  simp [PlacedSquare.fromNegativeVertex]
+
+@[simp] lemma PlacedSquare.fromNegativeVertex_frame
+    (vertex : Plane) (frame : Frame) :
+    (PlacedSquare.fromNegativeVertex vertex frame).frame = frame := by
+  rfl
+
+@[simp] lemma PlacedSquare.fromNegativeVertex_transform
+    (vertex : Plane) (frame : Frame) (coordinates : Plane) :
+    (PlacedSquare.fromNegativeVertex vertex frame).transform coordinates =
+      vertex + frame.rotation (coordinates + ![1 / 2, 1 / 2]) := by
+  rw [PlacedSquare.fromNegativeVertex, PlacedSquare.fromPlaneCenter_transform,
+    map_add]
+  abel
 
 def orientedTranslatedRightTriangleRegion
     (origin : Plane) (frame : Frame) (width height : ℝ) : Set Plane :=
@@ -1184,6 +1218,15 @@ lemma PlacedSquare.mem_dilatedInteriorRegion_of_inverse_bounds
     square.dilatedLocalY factor point.toPoint,
     localX_bound, localY_bound,
     (square.dilatedPoint_inverseCoordinates factor point.toPoint).symm⟩
+
+lemma PlacedSquare.dilatedInteriorRegion_one (square : PlacedSquare) :
+    square.dilatedInteriorRegion 1 = square.interiorRegion := by
+  ext point
+  constructor
+  · rintro ⟨source, source_mem, rfl⟩
+    simpa [dilatePlane] using source_mem
+  · intro point_mem
+    exact ⟨point, point_mem, by simp [dilatePlane]⟩
 
 noncomputable def PlacedSquare.horizontalAdjacentChordStart
     (square : PlacedSquare) (factor height : ℝ) : ℝ :=

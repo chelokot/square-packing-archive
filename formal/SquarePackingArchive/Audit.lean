@@ -7,6 +7,7 @@ import SquarePackingArchive.Records.HistoricalUpperBounds
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
 import SquarePackingArchive.NagamochiLemmas
+import SquarePackingArchive.NagamochiCanonicalTerminal
 import SquarePackingArchive.Nagamochi
 
 #print axioms SquarePackingArchive.Records.Basic.s1_eq_one
@@ -86,6 +87,7 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Nagamochi.score_gt_one_of_pinned_cut_bounds
 #print axioms SquarePackingArchive.Nagamochi.score_gt_one_of_pinned_cut_triangle_and_boundary_bound
 #print axioms SquarePackingArchive.Nagamochi.score_gt_one_of_pinned_cut_witness_and_boundary_bound
+#print axioms SquarePackingArchive.Nagamochi.canonicalPinned_score_gt_one
 #print axioms SquarePackingArchive.Nagamochi.score_gt_one_of_case6_corner_cut_and_edge_point
 #print axioms SquarePackingArchive.Nagamochi.boundaryChord_of_pointAt_mem
 #print axioms SquarePackingArchive.Nagamochi.score_gt_one_of_long_and_short_boundary_chords_and_corner_point

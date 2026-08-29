@@ -4,6 +4,23 @@ namespace SquarePackingArchive.Nagamochi
 
 open MeasureTheory Set
 
+noncomputable def Frame.ofTangentHalfAngle
+    (tangentHalfAngle : ℝ) : Frame where
+  cosine := (1 - tangentHalfAngle ^ 2) / (1 + tangentHalfAngle ^ 2)
+  sine := 2 * tangentHalfAngle / (1 + tangentHalfAngle ^ 2)
+  unit := by
+    have denominator_ne : 1 + tangentHalfAngle ^ 2 ≠ 0 := by positivity
+    field_simp [denominator_ne]
+    ring
+
+@[simp] lemma Frame.ofTangentHalfAngle_cosine (tangentHalfAngle : ℝ) :
+    (Frame.ofTangentHalfAngle tangentHalfAngle).cosine =
+      (1 - tangentHalfAngle ^ 2) / (1 + tangentHalfAngle ^ 2) := rfl
+
+@[simp] lemma Frame.ofTangentHalfAngle_sine (tangentHalfAngle : ℝ) :
+    (Frame.ofTangentHalfAngle tangentHalfAngle).sine =
+      2 * tangentHalfAngle / (1 + tangentHalfAngle ^ 2) := rfl
+
 noncomputable def centeredAdjacentChordLength (offset tangentHalfAngle : ℝ) : ℝ :=
   -offset * (1 + tangentHalfAngle ^ 2) ^ 2 /
       (2 * tangentHalfAngle * (1 - tangentHalfAngle ^ 2)) +
