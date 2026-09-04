@@ -4,12 +4,16 @@ import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.Square15
+import SquarePackingArchive.Records.Square24
+import SquarePackingArchive.Records.Square46
 import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
 import SquarePackingArchive.Records.HistoricalUpperBounds
 import SquarePackingArchive.Unavoidable
 import SquarePackingArchive.Friedman
+import SquarePackingArchive.FriedmanStrip
+import SquarePackingArchive.MovingUnavoidable
 import SquarePackingArchive.Rectangle
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
@@ -49,6 +53,14 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.Square15.points_unavoidable
 #print axioms SquarePackingArchive.Records.Square15.s15_lower_bound
 #print axioms SquarePackingArchive.Records.Square15.s15_eq_four
+#print axioms SquarePackingArchive.Records.Square24.points_unavoidable
+#print axioms SquarePackingArchive.Records.Square24.s24_lower_bound
+#print axioms SquarePackingArchive.Records.Square24.s24_eq_five
+#print axioms SquarePackingArchive.PlacedSquare.scaleCenter_strictFits
+#print axioms SquarePackingArchive.lowerBound_succ_of_strict_unavoidable
+#print axioms SquarePackingArchive.Records.Square46.s46_eq_seven
+#print axioms SquarePackingArchive.Records.Square46.s47_eq_seven
+#print axioms SquarePackingArchive.Records.Square46.s48_eq_seven
 #print axioms SquarePackingArchive.Records.Square11TrumpRationalized.s11_le_3_88
 #print axioms SquarePackingArchive.Records.Square68.s68_le_8_80339
 #print axioms SquarePackingArchive.Records.Square69.s69_le_8_8272
@@ -70,6 +82,10 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.PlacedSquare.contains_cornerPoint
 #print axioms SquarePackingArchive.PlacedSquare.contains_bottomPair
 #print axioms SquarePackingArchive.PlacedSquare.contains_bottomPairWith
+#print axioms SquarePackingArchive.PlacedSquare.contains_bottomBoundaryPair
+#print axioms SquarePackingArchive.Frame.height_add_product_le_sum_of_height_le_sqrt_two_sub_half
+#print axioms SquarePackingArchive.PlacedSquare.contains_bottomUnitPair
+#print axioms SquarePackingArchive.moving_unavoidable_preserves_assignment
 #print axioms SquarePackingArchive.Packing.squareCount_lt_resourceMass
 #print axioms SquarePackingArchive.finiteFamily_card_lt_resourceMass
 #print axioms SquarePackingArchive.NagamochiResource.measure_univ

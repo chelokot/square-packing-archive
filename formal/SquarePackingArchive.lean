@@ -4,6 +4,8 @@ import SquarePackingArchive.Unavoidable
 import SquarePackingArchive.Triangle
 import SquarePackingArchive.Rectangle
 import SquarePackingArchive.Friedman
+import SquarePackingArchive.FriedmanStrip
+import SquarePackingArchive.MovingUnavoidable
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
 import SquarePackingArchive.NagamochiLemmas
@@ -17,6 +19,8 @@ import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.Square15
+import SquarePackingArchive.Records.Square24
+import SquarePackingArchive.Records.Square46
 import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69

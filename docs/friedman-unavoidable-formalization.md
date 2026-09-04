@@ -62,3 +62,9 @@ frame, while the corner lemma covers the four corners. Exact index permutations
 transport both edge arguments to the opposite sides. The resulting unavoidable
 set yields `IsLowerBound 15 4`; the grid construction proves the matching upper
 bound, completing `SquarePackingArchive.Records.Square15.s15_eq_four`.
+
+For `s(24)`, the formalization uses Friedman's twenty-three rational points
+from Theorem 5. Eight base triangles and exact index permutations cover the
+interior by reflections; the shared boundary-pair theorem covers the side
+strips, and the corner lemma completes the partition. The resulting
+`SquarePackingArchive.Records.Square24.s24_eq_five` proves `IsMinimumSide 24 5`.

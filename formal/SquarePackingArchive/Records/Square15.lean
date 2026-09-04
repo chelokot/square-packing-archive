@@ -296,24 +296,6 @@ lemma reflected_x_point (index : Fin 14) :
     (points (reflectXIndex index)).reflectX 4 = points index := by
   fin_cases index <;> simp [reflectXIndex, points, Point.reflectX] <;> norm_num
 
-lemma contains_bottomBoundaryPair
-    {square : PlacedSquare} {left gap : ℝ}
-    (fits : square.Fits 4)
-    (gap_positive : 0 < gap)
-    (gap_upper : gap ≤ 4 / 5)
-    (center_x_lower : left ≤ square.center.x)
-    (center_x_upper : square.center.x ≤ left + gap)
-    (center_y_upper : square.center.y ≤ 1) :
-    square.Contains ⟨left, 1⟩ ∨ square.Contains ⟨left + gap, 1⟩ := by
-  apply square.contains_bottomPairWith fits (by norm_num)
-    gap_positive (by linarith)
-  · intro frame cosine_nonnegative sine_nonnegative
-    exact frame.height_add_gap_product_le_sum_of_gap_le_four_fifths
-      cosine_nonnegative sine_nonnegative (by norm_num) gap_upper
-  · exact center_x_lower
-  · exact center_x_upper
-  · exact center_y_upper
-
 lemma contains_bottomPerimeter
     {square : PlacedSquare} (fits : square.Fits 4)
     (center_y_upper : square.center.y ≤ 1) :
@@ -331,18 +313,18 @@ lemma contains_bottomPerimeter
       (square.reflectX_contains_iff 4 (points (reflectXIndex 0))).1
         (by rw [reflected_x_point]; exact reflected_mem)⟩
   by_cases center_first : square.center.x ≤ 8 / 5
-  · rcases contains_bottomBoundaryPair (left := 1) (gap := 3 / 5) fits
+  · rcases square.contains_bottomBoundaryPair (left := 1) (gap := 3 / 5) fits
         (by norm_num) (by norm_num) (by linarith) (by linarith)
         center_y_upper with left_mem | right_mem
     · exact ⟨0, left_mem⟩
     · exact ⟨1, by rw [points_one]; convert right_mem using 1; norm_num⟩
   by_cases center_second : square.center.x ≤ 12 / 5
-  · rcases contains_bottomBoundaryPair (left := 8 / 5) (gap := 4 / 5) fits
+  · rcases square.contains_bottomBoundaryPair (left := 8 / 5) (gap := 4 / 5) fits
         (by norm_num) (by norm_num) (by linarith) (by linarith)
         center_y_upper with left_mem | right_mem
     · exact ⟨1, left_mem⟩
     · exact ⟨2, by rw [points_two]; convert right_mem using 1; norm_num⟩
-  · rcases contains_bottomBoundaryPair (left := 12 / 5) (gap := 3 / 5) fits
+  · rcases square.contains_bottomBoundaryPair (left := 12 / 5) (gap := 3 / 5) fits
         (by norm_num) (by norm_num) (by linarith) (by linarith)
         center_y_upper with left_mem | right_mem
     · exact ⟨2, left_mem⟩
@@ -368,7 +350,7 @@ lemma contains_leftPerimeter
   have swapped_fits := (square.swap_fits_iff 4).2 fits
   have swapped_height : square.swap.center.y ≤ 1 := center_x_upper
   by_cases center_first : square.center.y ≤ 9 / 5
-  · rcases contains_bottomBoundaryPair (square := square.swap)
+  · rcases square.swap.contains_bottomBoundaryPair
         (left := 1) (gap := 4 / 5) swapped_fits (by norm_num) (by norm_num)
         center_y_lower (by change square.center.y ≤ 1 + 4 / 5; linarith)
         swapped_height with bottom_mem | top_mem
@@ -376,7 +358,7 @@ lemma contains_leftPerimeter
     · exact ⟨4, (square.swap_contains_iff (points 4)).1 (by
         rw [points_four]; convert top_mem using 1; norm_num [Point.swap])⟩
   by_cases center_second : square.center.y ≤ 11 / 5
-  · rcases contains_bottomBoundaryPair (square := square.swap)
+  · rcases square.swap.contains_bottomBoundaryPair
         (left := 9 / 5) (gap := 2 / 5) swapped_fits (by norm_num) (by norm_num)
         (by change 9 / 5 ≤ square.center.y; linarith)
         (by change square.center.y ≤ 9 / 5 + 2 / 5; linarith)
@@ -384,7 +366,7 @@ lemma contains_leftPerimeter
     · exact ⟨4, (square.swap_contains_iff (points 4)).1 bottom_mem⟩
     · exact ⟨7, (square.swap_contains_iff (points 7)).1 (by
         rw [points_seven]; convert top_mem using 1; norm_num [Point.swap])⟩
-  · rcases contains_bottomBoundaryPair (square := square.swap)
+  · rcases square.swap.contains_bottomBoundaryPair
         (left := 11 / 5) (gap := 4 / 5) swapped_fits (by norm_num) (by norm_num)
         (by change 11 / 5 ≤ square.center.y; linarith)
         (by change square.center.y ≤ 11 / 5 + 4 / 5; linarith)

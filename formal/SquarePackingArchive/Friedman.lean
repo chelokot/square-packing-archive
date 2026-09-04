@@ -636,4 +636,22 @@ lemma PlacedSquare.contains_topRightCorner
       convert reflected_mem using 1
       all_goals norm_num [Point.reflectX])
 
+lemma PlacedSquare.contains_bottomBoundaryPair
+    {square : PlacedSquare} {side left gap : ℝ}
+    (fits : square.Fits side)
+    (gap_positive : 0 < gap)
+    (gap_upper : gap ≤ 4 / 5)
+    (center_x_lower : left ≤ square.center.x)
+    (center_x_upper : square.center.x ≤ left + gap)
+    (center_y_upper : square.center.y ≤ 1) :
+    square.Contains ⟨left, 1⟩ ∨ square.Contains ⟨left + gap, 1⟩ := by
+  apply square.contains_bottomPairWith fits (by norm_num)
+    gap_positive (by linarith)
+  · intro frame cosine_nonnegative sine_nonnegative
+    exact frame.height_add_gap_product_le_sum_of_gap_le_four_fifths
+      cosine_nonnegative sine_nonnegative (by norm_num) gap_upper
+  · exact center_x_lower
+  · exact center_x_upper
+  · exact center_y_upper
+
 end SquarePackingArchive

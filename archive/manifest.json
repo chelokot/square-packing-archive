@@ -622,14 +622,31 @@
       "id": "exact-24-friedman",
       "n": 24,
       "relation": "exact",
-      "value": { "decimal": "5", "expression": "5" },
+      "value": {
+        "decimal": "5",
+        "expression": "5",
+        "lean": "5"
+      },
       "announcedAt": "1999",
-      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "friedman",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square24.lean",
+          "theorem": "SquarePackingArchive.Records.Square24.s24_eq_five",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -734,14 +751,31 @@
       "id": "exact-46-bentz",
       "n": 46,
       "relation": "exact",
-      "value": { "decimal": "7", "expression": "7" },
+      "value": {
+        "decimal": "7",
+        "expression": "7",
+        "lean": "7"
+      },
       "announcedAt": "2009-08",
-      "contributors": [{ "author": "bentz", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "bentz",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "bentz-2010"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square46.lean",
+          "theorem": "SquarePackingArchive.Records.Square46.s46_eq_seven",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -750,14 +784,31 @@
       "id": "exact-47-nagamochi",
       "n": 47,
       "relation": "exact",
-      "value": { "decimal": "7", "expression": "7" },
+      "value": {
+        "decimal": "7",
+        "expression": "7",
+        "lean": "7"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square46.lean",
+          "theorem": "SquarePackingArchive.Records.Square46.s47_eq_seven",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -766,14 +817,31 @@
       "id": "exact-48-nagamochi",
       "n": 48,
       "relation": "exact",
-      "value": { "decimal": "7", "expression": "7" },
+      "value": {
+        "decimal": "7",
+        "expression": "7",
+        "lean": "7"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square46.lean",
+          "theorem": "SquarePackingArchive.Records.Square46.s48_eq_seven",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
