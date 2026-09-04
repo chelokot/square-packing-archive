@@ -289,4 +289,145 @@ lemma contains_middleBand
         rw [points_nine]
         convert top_right_mem using 1; norm_num⟩
 
+def reflectXIndex : Fin 14 → Fin 14 :=
+  ![3, 2, 1, 0, 6, 5, 4, 9, 8, 7, 13, 12, 11, 10]
+
+lemma reflected_x_point (index : Fin 14) :
+    (points (reflectXIndex index)).reflectX 4 = points index := by
+  fin_cases index <;> simp [reflectXIndex, points, Point.reflectX] <;> norm_num
+
+lemma contains_bottomBoundaryPair
+    {square : PlacedSquare} {left gap : ℝ}
+    (fits : square.Fits 4)
+    (gap_positive : 0 < gap)
+    (gap_upper : gap ≤ 4 / 5)
+    (center_x_lower : left ≤ square.center.x)
+    (center_x_upper : square.center.x ≤ left + gap)
+    (center_y_upper : square.center.y ≤ 1) :
+    square.Contains ⟨left, 1⟩ ∨ square.Contains ⟨left + gap, 1⟩ := by
+  apply square.contains_bottomPairWith fits (by norm_num)
+    gap_positive (by linarith)
+  · intro frame cosine_nonnegative sine_nonnegative
+    exact frame.height_add_gap_product_le_sum_of_gap_le_four_fifths
+      cosine_nonnegative sine_nonnegative (by norm_num) gap_upper
+  · exact center_x_lower
+  · exact center_x_upper
+  · exact center_y_upper
+
+lemma contains_bottomPerimeter
+    {square : PlacedSquare} (fits : square.Fits 4)
+    (center_y_upper : square.center.y ≤ 1) :
+    ∃ index, square.Contains (points index) := by
+  by_cases center_left : square.center.x ≤ 1
+  · exact ⟨0, square.contains_cornerPoint fits (by norm_num) (by norm_num)
+      center_left center_y_upper⟩
+  by_cases center_right : 3 ≤ square.center.x
+  · have reflected_mem : (square.reflectX 4).Contains (points 0) :=
+      (square.reflectX 4).contains_cornerPoint
+        ((square.reflectX_fits_iff 4).2 fits) (by norm_num) (by norm_num)
+        (by simp [PlacedSquare.reflectX, Point.reflectX]; linarith)
+        (by simpa [PlacedSquare.reflectX, Point.reflectX] using center_y_upper)
+    exact ⟨reflectXIndex 0,
+      (square.reflectX_contains_iff 4 (points (reflectXIndex 0))).1
+        (by rw [reflected_x_point]; exact reflected_mem)⟩
+  by_cases center_first : square.center.x ≤ 8 / 5
+  · rcases contains_bottomBoundaryPair (left := 1) (gap := 3 / 5) fits
+        (by norm_num) (by norm_num) (by linarith) (by linarith)
+        center_y_upper with left_mem | right_mem
+    · exact ⟨0, left_mem⟩
+    · exact ⟨1, by rw [points_one]; convert right_mem using 1; norm_num⟩
+  by_cases center_second : square.center.x ≤ 12 / 5
+  · rcases contains_bottomBoundaryPair (left := 8 / 5) (gap := 4 / 5) fits
+        (by norm_num) (by norm_num) (by linarith) (by linarith)
+        center_y_upper with left_mem | right_mem
+    · exact ⟨1, left_mem⟩
+    · exact ⟨2, by rw [points_two]; convert right_mem using 1; norm_num⟩
+  · rcases contains_bottomBoundaryPair (left := 12 / 5) (gap := 3 / 5) fits
+        (by norm_num) (by norm_num) (by linarith) (by linarith)
+        center_y_upper with left_mem | right_mem
+    · exact ⟨2, left_mem⟩
+    · exact ⟨3, by rw [points_three]; convert right_mem using 1; norm_num⟩
+
+lemma contains_topPerimeter
+    {square : PlacedSquare} (fits : square.Fits 4)
+    (center_y_lower : 3 ≤ square.center.y) :
+    ∃ index, square.Contains (points index) := by
+  obtain ⟨index, reflected_mem⟩ := contains_bottomPerimeter
+    ((square.reflectY_fits_iff 4).2 fits)
+    (by simp [PlacedSquare.reflectY, Point.reflectY]; linarith)
+  exact ⟨reflectYIndex index,
+    (square.reflectY_contains_iff 4 (points (reflectYIndex index))).1
+      (by rw [reflected_point]; exact reflected_mem)⟩
+
+lemma contains_leftPerimeter
+    {square : PlacedSquare} (fits : square.Fits 4)
+    (center_x_upper : square.center.x ≤ 1)
+    (center_y_lower : 1 ≤ square.center.y)
+    (center_y_upper : square.center.y ≤ 3) :
+    ∃ index, square.Contains (points index) := by
+  have swapped_fits := (square.swap_fits_iff 4).2 fits
+  have swapped_height : square.swap.center.y ≤ 1 := center_x_upper
+  by_cases center_first : square.center.y ≤ 9 / 5
+  · rcases contains_bottomBoundaryPair (square := square.swap)
+        (left := 1) (gap := 4 / 5) swapped_fits (by norm_num) (by norm_num)
+        center_y_lower (by change square.center.y ≤ 1 + 4 / 5; linarith)
+        swapped_height with bottom_mem | top_mem
+    · exact ⟨0, (square.swap_contains_iff (points 0)).1 bottom_mem⟩
+    · exact ⟨4, (square.swap_contains_iff (points 4)).1 (by
+        rw [points_four]; convert top_mem using 1; norm_num [Point.swap])⟩
+  by_cases center_second : square.center.y ≤ 11 / 5
+  · rcases contains_bottomBoundaryPair (square := square.swap)
+        (left := 9 / 5) (gap := 2 / 5) swapped_fits (by norm_num) (by norm_num)
+        (by change 9 / 5 ≤ square.center.y; linarith)
+        (by change square.center.y ≤ 9 / 5 + 2 / 5; linarith)
+        swapped_height with bottom_mem | top_mem
+    · exact ⟨4, (square.swap_contains_iff (points 4)).1 bottom_mem⟩
+    · exact ⟨7, (square.swap_contains_iff (points 7)).1 (by
+        rw [points_seven]; convert top_mem using 1; norm_num [Point.swap])⟩
+  · rcases contains_bottomBoundaryPair (square := square.swap)
+        (left := 11 / 5) (gap := 4 / 5) swapped_fits (by norm_num) (by norm_num)
+        (by change 11 / 5 ≤ square.center.y; linarith)
+        (by change square.center.y ≤ 11 / 5 + 4 / 5; linarith)
+        swapped_height with bottom_mem | top_mem
+    · exact ⟨7, (square.swap_contains_iff (points 7)).1 bottom_mem⟩
+    · exact ⟨10, (square.swap_contains_iff (points 10)).1 (by
+        rw [points_ten]; convert top_mem using 1; norm_num [Point.swap])⟩
+
+lemma contains_rightPerimeter
+    {square : PlacedSquare} (fits : square.Fits 4)
+    (center_x_lower : 3 ≤ square.center.x)
+    (center_y_lower : 1 ≤ square.center.y)
+    (center_y_upper : square.center.y ≤ 3) :
+    ∃ index, square.Contains (points index) := by
+  obtain ⟨index, reflected_mem⟩ := contains_leftPerimeter
+    ((square.reflectX_fits_iff 4).2 fits)
+    (by simp [PlacedSquare.reflectX, Point.reflectX]; linarith)
+    (by simpa [PlacedSquare.reflectX, Point.reflectX] using center_y_lower)
+    (by simpa [PlacedSquare.reflectX, Point.reflectX] using center_y_upper)
+  exact ⟨reflectXIndex index,
+    (square.reflectX_contains_iff 4 (points (reflectXIndex index))).1
+      (by rw [reflected_x_point]; exact reflected_mem)⟩
+
+theorem points_unavoidable : Unavoidable points 4 := by
+  intro square fits
+  by_cases bottom : square.center.y ≤ 1
+  · exact contains_bottomPerimeter fits bottom
+  by_cases top : 3 ≤ square.center.y
+  · exact contains_topPerimeter fits top
+  by_cases left : square.center.x ≤ 1
+  · exact contains_leftPerimeter fits left (by linarith) (by linarith)
+  by_cases right : 3 ≤ square.center.x
+  · exact contains_rightPerimeter fits right (by linarith) (by linarith)
+  by_cases lower_band : square.center.y ≤ 9 / 5
+  · exact contains_bottomBand (by linarith) (by linarith) (by linarith) lower_band
+  by_cases upper_band : 11 / 5 ≤ square.center.y
+  · exact contains_topBand (by linarith) (by linarith) upper_band (by linarith)
+  · exact contains_middleBand (by linarith) (by linarith) (by linarith) (by linarith)
+
+theorem s15_lower_bound : IsLowerBound 15 4 := by
+  simpa using lowerBound_succ_of_unavoidable points_unavoidable
+
+theorem s15_eq_four : IsMinimumSide 15 4 := by
+  exact ⟨by simpa using NearSquare.squareMinusOne_hasPacking 4, s15_lower_bound⟩
+
 end SquarePackingArchive.Records.Square15

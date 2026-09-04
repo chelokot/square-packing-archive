@@ -55,6 +55,10 @@ The `s(15)` formalization now includes the fourteen rational historical points
 and all ten interior triangles, reduced by horizontal and vertical
 reflections to three barycentric base cases. The two remaining central cells
 are discharged by the translated rectangle theorem. This proves coverage of
-the full inner square `[1,3]²`; the perimeter partition remains separate and
-the archive claim is intentionally not marked Lean-checked until that final
-exhaustive layer is complete.
+the full inner square `[1,3]²`. The perimeter partition is now complete as well:
+the bottom edge uses gaps `0.6, 0.8, 0.6`, and the left edge uses gaps
+`0.8, 0.4, 0.8`. The side-strip inequality handles all these gaps for every
+frame, while the corner lemma covers the four corners. Exact index permutations
+transport both edge arguments to the opposite sides. The resulting unavoidable
+set yields `IsLowerBound 15 4`; the grid construction proves the matching upper
+bound, completing `SquarePackingArchive.Records.Square15.s15_eq_four`.

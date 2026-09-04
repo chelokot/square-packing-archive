@@ -2,6 +2,7 @@ import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.HistoricalUpperBounds
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square11
+import SquarePackingArchive.Records.Square15
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
@@ -43,6 +44,9 @@ example : SquarePackingArchive.HasPacking 11 (((97 : ℚ) / 25 : ℝ)) :=
 
 example : SquarePackingArchive.HasPacking 12 (4) :=
   SquarePackingArchive.Records.HistoricalUpperBounds.s12_le_four
+
+example : SquarePackingArchive.IsMinimumSide 15 (4) :=
+  SquarePackingArchive.Records.Square15.s15_eq_four
 
 example : SquarePackingArchive.IsMinimumSide 16 (4) :=
   SquarePackingArchive.Records.SquareNumbers.s16_eq_four
