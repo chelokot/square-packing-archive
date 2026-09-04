@@ -88,6 +88,21 @@ class BoundaryCompensationTests(unittest.TestCase):
             )
         self.assertGreater(example.scores[0].total, 1)
 
+    def test_two_bad_squares_can_own_adjacent_corner_points(self):
+        example = examples()[3]
+        example.verify_packing()
+        self.assertEqual(example.scores[0].covered_corner_points, ((Fraction(1), Fraction(9, 10)),))
+        self.assertEqual(example.scores[1].covered_corner_points, ((Fraction(9, 10), Fraction(1)),))
+        self.assertTrue(all(score.total < 1 for score in example.scores))
+        self.assertEqual(
+            example.scores[0].total,
+            Fraction(97500010000148025020000097500009999999, 99999999999999000000000000000000000000),
+        )
+        self.assertEqual(
+            example.scores[1].total,
+            Fraction(249799680002950003000002819041, 255840000000000000000000000000),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

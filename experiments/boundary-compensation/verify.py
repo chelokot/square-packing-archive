@@ -94,10 +94,27 @@ def examples() -> tuple[Example, ...]:
     sine = Fraction(9999, 10001)
     low_angle = from_bottom_vertex(Fraction(990799, 499950), factor, Fraction(200, 10001), sine)
     low_angle_neighbor = translate(low_angle, factor, (factor / sine, Fraction(0)))
+    corner_factor = 1 + Fraction(1, 10**12)
+    rotation_parameter = 10**7
+    tiny_cosine = Fraction(2 * rotation_parameter, rotation_parameter**2 + 1)
+    tiny_sine = Fraction(rotation_parameter**2 - 1, rotation_parameter**2 + 1)
+    tiny_corner_square = from_bottom_vertex(
+        1 + (corner_factor - Fraction(19, 20) * tiny_cosine) / tiny_sine,
+        corner_factor, tiny_cosine, tiny_sine,
+    )
+    other_bottom_square = from_bottom_vertex(
+        1 + (corner_factor - Fraction(929, 1000) * canonical.COSINE) / canonical.SINE,
+        corner_factor, canonical.COSINE, canonical.SINE,
+    )
+    other_corner_square = RationalSquare(
+        (other_bottom_square.center[1], other_bottom_square.center[0]),
+        -other_bottom_square.half_angle,
+    )
     return (
         Example("adjacent Q owner does not repay the deficit", canonical.FACTOR, (original, corner_neighbor)),
         Example("nearest P owner need not cover the next P", canonical.FACTOR, (shifted, shifted_neighbor)),
         Example("nearest P owner does not repay the deficit", factor, (low_angle, low_angle_neighbor)),
+        Example("two bad squares can own adjacent Q points", corner_factor, (tiny_corner_square, other_corner_square)),
     )
 
 
@@ -116,9 +133,10 @@ def vertical_propagation_counterexample() -> Example:
 def main() -> None:
     checked_examples = examples()
     assert sum(score.total for score in checked_examples[0].scores) < 2
-    for example in checked_examples[1:]:
+    for example in checked_examples[1:3]:
         assert example.scores[1].covered_edge_points == ((Fraction(2), Fraction(9, 10)),)
     assert sum(score.total for score in checked_examples[2].scores) < 2
+    assert all(score.total < 1 for score in checked_examples[3].scores)
     assert all(example.scores[0].total < 1 for example in checked_examples)
     propagation = vertical_propagation_counterexample()
     square = propagation.squares[0]

@@ -1,6 +1,6 @@
 # Failed local compensation rules
 
-These are exact counterexamples to four proposed ways of repairing Nagamochi's
+These are exact counterexamples to five proposed ways of repairing Nagamochi's
 individual-square score lemma. They are **not** counterexamples to the packing
 theorem. None of these new pair calculations is a Lean proof.
 
@@ -77,3 +77,26 @@ cosine `119/169`, rotation sine `-120/169`, and center
 It fits the container and has score greater than one. Thus a proposed boundary
 chain cannot use the missing upper point alone to force its next crossing;
 it needs an additional geometric or score condition.
+
+## Both Q-point owners at one corner can score below one
+
+Use the common side `λ = 1 + 10⁻¹²`. The first square has a very small angle:
+
+```text
+c = 2·10⁷ / (10¹⁴+1)
+s = (10¹⁴−1) / (10¹⁴+1)
+A = (1 + (λ − (19/20)c)/s, 0).
+```
+
+The second is the reflection across `x=y` of a square with
+
+```text
+c = 80/1601
+s = 1599/1601
+A = (1 + (λ − (929/1000)c)/s, 0).
+```
+
+They are disjoint, fit `[0,8]²`, and cover Q `(1,0.9)` and Q `(0.9,1)`,
+respectively. Their scores are approximately `0.97500010000149` and
+`0.97639024391397`. Thus one cannot bound the number of bad squares by four
+using a claim that at most one can occur at each container corner.

@@ -22,7 +22,22 @@ count. Its axiom audit contains only `propext`, `Classical.choice`, and
 `Quot.sound`. The archive now marks the previously unchecked exact results for
 63, 80, and 99 squares as Lean verified.
 
-## A necessary condition, proved in Lean
+## Every marked point would have an owner
+
+The repaired measure also restricts a hypothetical packing of `N=n²−2` squares
+below side `n`. After a small dilation, its total score is greater than `N`
+and at most `N+0.4`.
+
+Every P and Q point must lie strictly inside exactly one square. Leaving even
+one uncovered would waste `0.5` of the measure, more than the available `0.4`.
+Each square must score less than `1.4` under the repaired rule. A square owning
+two adjacent bottom P points would score more than `1.5`, so that cannot happen.
+
+These are consequences of the actual packing assumptions, proved in
+[NagamochiPackingConstraints.lean](../formal/SquarePackingArchive/NagamochiPackingConstraints.lean).
+They are necessary conditions, not a proof that such a packing is impossible.
+
+## A tilted-square count, proved in Lean
 
 Any such packing must have **at least 13 tilted squares**. Here “tilted” means
 that the square's edges are not parallel to the container's edges; there is no
@@ -164,6 +179,27 @@ of its nearest missing P point can have a combined score below two. The
 that shortcut; compensation may require a longer chain or a different argument.
 
 ## What remains
+
+The current repair attempt follows chains of squares along the container's
+boundary. Several parts are now checked in Lean:
+
+- A low-scoring bottom-edge square in a positive coordinate frame must cross
+  the next marked point's vertical segment.
+- A right-going neighbor either crosses the next column or satisfies a
+  terminal condition involving its vertex height.
+- Under that terminal condition, a P-point owner's actual area and line
+  score can repay two incoming shortfalls. The proof checks that the counted
+  area really lies inside the inner square, including the last P column.
+- No square can own P points on different container sides.
+
+These statements are in
+[NagamochiBoundaryPropagation.lean](../formal/SquarePackingArchive/NagamochiBoundaryPropagation.lean),
+[NagamochiChainStep.lean](../formal/SquarePackingArchive/NagamochiChainStep.lean),
+[NagamochiEndpointResource.lean](../formal/SquarePackingArchive/NagamochiEndpointResource.lean),
+and [NagamochiEdgeOwnership.lean](../formal/SquarePackingArchive/NagamochiEdgeOwnership.lean).
+They do not yet connect all boundary chains to a global score bound. In
+particular, the initial shortfall must be tracked quantitatively, the corner
+endpoints must be covered, and the complete argument must handle every frame.
 
 To disprove the theorem, we need an actual non-overlapping packing below the
 claimed bound, followed by a Lean certificate. To prove it, we need a global

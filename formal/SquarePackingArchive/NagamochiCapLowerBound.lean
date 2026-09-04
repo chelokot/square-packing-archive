@@ -1,4 +1,5 @@
 import SquarePackingArchive.NagamochiCut
+import SquarePackingArchive.Records.NearSquare
 
 namespace SquarePackingArchive
 
@@ -218,6 +219,40 @@ lemma horizontalUpperCap_section_lower_bound
       upper_measurable.nullMeasurableSet
   rwa [volumes_equal] at lower_bound
 
+lemma upperCap_area_add_half_section_lower_bound
+    (square : PlacedSquare) {factor height : ℝ}
+    (factor_positive : 0 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (cap_positive : 0 < horizontalUpperCapHeight square factor height)
+    (cap_le_cosine : horizontalUpperCapHeight square factor height ≤ factor * square.frame.cosine)
+    (cap_le_sine : horizontalUpperCapHeight square factor height ≤ factor * square.frame.sine) :
+    ENNReal.ofReal
+      ((horizontalUpperCapHeight square factor height / square.frame.sine) *
+          (horizontalUpperCapHeight square factor height / square.frame.cosine) / 2 +
+        horizontalUpperCapHeight square factor height / (square.frame.sine * square.frame.cosine) / 2) ≤
+      volume (square.dilatedInteriorRegion factor ∩ {point | height ≤ point 1}) +
+        (1 / 2 : ENNReal) * volume {coordinate : ℝ |
+          ![coordinate, height] ∈ square.dilatedInteriorRegion factor} := by
+  have area_bound := horizontalUpperCap_volume_lower_bound square factor_positive
+    cosine_positive sine_positive cap_positive cap_le_cosine cap_le_sine
+  have section_bound := horizontalUpperCap_section_lower_bound square factor_positive
+    cosine_positive sine_positive cap_le_cosine cap_le_sine
+  have encoded : ENNReal.ofReal
+      ((horizontalUpperCapHeight square factor height / square.frame.sine) *
+          (horizontalUpperCapHeight square factor height / square.frame.cosine) / 2 +
+        horizontalUpperCapHeight square factor height / (square.frame.sine * square.frame.cosine) / 2) =
+      ENNReal.ofReal ((horizontalUpperCapHeight square factor height / square.frame.sine) *
+          (horizontalUpperCapHeight square factor height / square.frame.cosine) / 2) +
+        (1 / 2 : ENNReal) * ENNReal.ofReal
+          (horizontalUpperCapHeight square factor height / (square.frame.sine * square.frame.cosine)) := by
+    rw [ENNReal.ofReal_add (by positivity) (by positivity)]
+    congr 1
+    rw [ENNReal.ofReal_div_of_pos (by norm_num : (0 : ℝ) < 2)]
+    simp only [ENNReal.ofReal_ofNat, div_eq_mul_inv, one_mul, mul_comm]
+  rw [encoded]
+  exact add_le_add area_bound (mul_le_mul le_rfl section_bound bot_le bot_le)
+
 theorem upperCap_area_add_half_section_gt_half_of_fits
     (square : PlacedSquare) {factor side : ℝ}
     (factor_gt_one : 1 < factor)
@@ -252,27 +287,64 @@ theorem upperCap_area_add_half_section_gt_half_of_fits
       (cap / square.frame.cosine) / 2 + (cap / (square.frame.sine * square.frame.cosine)) / 2 := by
     field_simp
     nlinarith
-  have area_bound := horizontalUpperCap_volume_lower_bound square factor_positive
-    cosine_positive sine_positive cap_positive cap_le_cosine cap_le_sine
-  have section_bound := horizontalUpperCap_section_lower_bound square factor_positive
-    cosine_positive sine_positive cap_le_cosine cap_le_sine
-  have encoded : ENNReal.ofReal ((cap / square.frame.sine) * (cap / square.frame.cosine) / 2 +
-      (cap / (square.frame.sine * square.frame.cosine)) / 2) =
-      ENNReal.ofReal ((cap / square.frame.sine) * (cap / square.frame.cosine) / 2) +
-        (1 / 2 : ENNReal) * ENNReal.ofReal (cap / (square.frame.sine * square.frame.cosine)) := by
-    rw [ENNReal.ofReal_add (by positivity) (by positivity)]
-    congr 1
-    rw [ENNReal.ofReal_div_of_pos (by norm_num : (0 : ℝ) < 2)]
-    simp only [ENNReal.ofReal_ofNat, div_eq_mul_inv, one_mul, mul_comm]
   have strict_bound := (ENNReal.ofReal_lt_ofReal_iff (by positivity :
     0 < (cap / square.frame.sine) * (cap / square.frame.cosine) / 2 +
       (cap / (square.frame.sine * square.frame.cosine)) / 2)).2 cap_score
-  rw [encoded] at strict_bound
   have half_constant : ENNReal.ofReal (1 / 2 : ℝ) = (1 / 2 : ENNReal) := by
     norm_num [ENNReal.ofReal_div_of_pos]
   rw [half_constant] at strict_bound
-  exact strict_bound.trans_le (add_le_add area_bound
-    (mul_le_mul le_rfl section_bound bot_le bot_le))
+  exact strict_bound.trans_le (upperCap_area_add_half_section_lower_bound square factor_positive
+    cosine_positive sine_positive cap_positive cap_le_cosine cap_le_sine)
+
+lemma cap_score_ge_angle_bound
+    {cosine sine height : ℝ}
+    (cosine_positive : 0 < cosine) (sine_positive : 0 < sine)
+    (unit : cosine ^ 2 + sine ^ 2 = 1)
+    (height_lower : cosine + sine - 1 ≤ height) :
+    (cosine + sine) / (1 + cosine + sine) ≤
+      (height / sine) * (height / cosine) / 2 + height / (sine * cosine) / 2 := by
+  have sum_gt_one : 1 < cosine + sine := by nlinarith
+  have denominator_positive : 0 < 1 + cosine + sine := by positivity
+  have monotone_numerator :
+      (cosine + sine - 1) ^ 2 + (cosine + sine - 1) ≤ height ^ 2 + height := by
+    nlinarith [mul_nonneg (sub_nonneg.mpr height_lower)
+      (show 0 ≤ height + cosine + sine - 1 by linarith)]
+  have base_identity :
+      ((cosine + sine - 1) ^ 2 + (cosine + sine - 1)) * (1 + cosine + sine) =
+        2 * sine * cosine * (cosine + sine) := by
+    linear_combination (cosine + sine) * unit
+  have multiplied := mul_le_mul_of_nonneg_right monotone_numerator denominator_positive.le
+  field_simp
+  nlinarith [base_identity]
+
+theorem upperCap_angle_bound_of_fits
+    (square : PlacedSquare) {factor side : ℝ}
+    (fits : square.Fits side) (factor_gt_one : 1 < factor)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (cap_le_cosine : horizontalUpperCapHeight square factor 1 ≤ factor * square.frame.cosine)
+    (cap_le_sine : horizontalUpperCapHeight square factor 1 ≤ factor * square.frame.sine) :
+    ENNReal.ofReal ((square.frame.cosine + square.frame.sine) /
+      (1 + square.frame.cosine + square.frame.sine)) ≤
+      volume (square.dilatedInteriorRegion factor ∩ {point | 1 ≤ point 1}) +
+        (1 / 2 : ENNReal) * volume {coordinate : ℝ |
+          ![coordinate, 1] ∈ square.dilatedInteriorRegion factor} := by
+  have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
+  have bottom_bound := (square.center_bounds fits).2.2.1
+  simp only [frameExtent, abs_of_pos cosine_positive, abs_of_pos sine_positive] at bottom_bound
+  have scaled_bottom := mul_le_mul_of_nonneg_left bottom_bound factor_positive.le
+  have sum_gt_one : 1 < square.frame.cosine + square.frame.sine := by
+    nlinarith [square.frame.unit]
+  have cap_lower : square.frame.cosine + square.frame.sine - 1 ≤
+      horizontalUpperCapHeight square factor 1 := by
+    dsimp [horizontalUpperCapHeight]
+    nlinarith [mul_nonneg (sub_nonneg.mpr factor_gt_one.le)
+      (add_nonneg cosine_positive.le sine_positive.le)]
+  have cap_positive : 0 < horizontalUpperCapHeight square factor 1 := by linarith
+  exact (ENNReal.ofReal_le_ofReal (cap_score_ge_angle_bound cosine_positive sine_positive
+    square.frame.unit cap_lower)).trans
+      (upperCap_area_add_half_section_lower_bound square factor_positive cosine_positive sine_positive
+        cap_positive cap_le_cosine cap_le_sine)
 
 lemma cap_score_gt_half_add_fifth_height
     {cosine sine height : ℝ}

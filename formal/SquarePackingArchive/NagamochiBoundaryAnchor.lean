@@ -6,6 +6,25 @@ namespace SquarePackingArchive.Nagamochi
 
 open MeasureTheory Set
 
+lemma inverse_bounds_of_dilatedInteriorRegion_mem
+    (square : PlacedSquare) {factor : ℝ} {point : Plane}
+    (factor_positive : 0 < factor)
+    (point_mem : point ∈ square.dilatedInteriorRegion factor) :
+    |square.dilatedLocalX factor point.toPoint| < factor / 2 ∧
+      |square.dilatedLocalY factor point.toPoint| < factor / 2 := by
+  obtain ⟨localX, localY, horizontal_bound, vertical_bound, point_eq⟩ :=
+    (square.mem_dilatedInteriorRegion_iff factor_positive point).1 point_mem
+  have horizontal_eq : square.dilatedLocalX factor point.toPoint = localX := by
+    rw [point_eq]
+    dsimp [PlacedSquare.dilatedLocalX, PlacedSquare.dilatedPoint, Frame.place]
+    linear_combination localX * square.frame.unit
+  have vertical_eq : square.dilatedLocalY factor point.toPoint = localY := by
+    rw [point_eq]
+    dsimp [PlacedSquare.dilatedLocalY, PlacedSquare.dilatedPoint, Frame.place]
+    linear_combination localY * square.frame.unit
+  rw [horizontal_eq, vertical_eq]
+  exact ⟨horizontal_bound, vertical_bound⟩
+
 lemma vertical_offset_component_lt_half
     {component other factor center height : ℝ}
     (component_nonnegative : 0 ≤ component) (other_nonnegative : 0 ≤ other)

@@ -4,12 +4,12 @@ namespace SquarePackingArchive.Nagamochi
 
 open MeasureTheory Set
 
-lemma dilated_square_coordinate_distance_lt_two
+lemma dilated_square_squared_distance_lt_twice_factor_sq
     (square : PlacedSquare) {factor : ℝ} {first second : Plane}
-    (factor_positive : 0 < factor) (factor_at_most : factor ≤ 101 / 100)
+    (factor_positive : 0 < factor)
     (first_mem : first ∈ square.dilatedInteriorRegion factor)
     (second_mem : second ∈ square.dilatedInteriorRegion factor) :
-    |first 0 - second 0| < 2 ∧ |first 1 - second 1| < 2 := by
+    (first 0 - second 0) ^ 2 + (first 1 - second 1) ^ 2 < 2 * factor ^ 2 := by
   obtain ⟨firstX, firstY, firstX_bound, firstY_bound, first_eq⟩ :=
     (square.mem_dilatedInteriorRegion_iff factor_positive first).1 first_mem
   obtain ⟨secondX, secondY, secondX_bound, secondY_bound, second_eq⟩ :=
@@ -29,9 +29,17 @@ lemma dilated_square_coordinate_distance_lt_two
       (firstX - secondX) ^ 2 + (firstY - secondY) ^ 2 := by
     rw [first_horizontal, first_vertical, second_horizontal, second_vertical]
     linear_combination ((firstX - secondX) ^ 2 + (firstY - secondY) ^ 2) * square.frame.unit
-  have norm_bound : (first 0 - second 0) ^ 2 + (first 1 - second 1) ^ 2 < 4 := by
-    nlinarith [sq_abs (firstX - secondX), sq_abs (firstY - secondY),
-      abs_nonneg (firstX - secondX), abs_nonneg (firstY - secondY)]
+  nlinarith [sq_abs (firstX - secondX), sq_abs (firstY - secondY),
+    abs_nonneg (firstX - secondX), abs_nonneg (firstY - secondY)]
+
+lemma dilated_square_coordinate_distance_lt_two
+    (square : PlacedSquare) {factor : ℝ} {first second : Plane}
+    (factor_positive : 0 < factor) (factor_at_most : factor ≤ 101 / 100)
+    (first_mem : first ∈ square.dilatedInteriorRegion factor)
+    (second_mem : second ∈ square.dilatedInteriorRegion factor) :
+    |first 0 - second 0| < 2 ∧ |first 1 - second 1| < 2 := by
+  have norm_bound := dilated_square_squared_distance_lt_twice_factor_sq square
+    factor_positive first_mem second_mem
   constructor <;> rw [abs_lt] <;> constructor <;>
     nlinarith [sq_nonneg (first 0 - second 0), sq_nonneg (first 1 - second 1)]
 
