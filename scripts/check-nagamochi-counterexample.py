@@ -2,6 +2,7 @@ import argparse
 from decimal import Decimal, localcontext
 from fractions import Fraction
 from hashlib import sha256
+from io import StringIO
 from pathlib import Path
 from typing import Literal
 from xml.etree import ElementTree
@@ -160,12 +161,13 @@ def render_figure(
         "svg.fonttype": "none",
         "svg.hashsalt": description,
     })
-    figure = plot.figure(figsize=(14, 11.2), facecolor=background)
-    figure.text(.055, .955, "SQUARE PACKING ARCHIVE  /  LEAN-CHECKED COUNTEREXAMPLE",
-        fontsize=11, color=square_color, weight="bold")
-    figure.text(.055, .91, "Counterexample to Nagamochi’s Lemma 1", fontsize=25, weight="bold")
-    figure.text(.055, .875,
-        "The lemma requires σ(S) > 1. This square has σ(S) < 1.", fontsize=14)
+    figure = plot.figure(figsize=(14, 13.5), facecolor=background)
+    figure.text(.055, .955, "Counterexample to Nagamochi’s Lemma 1", fontsize=24, weight="bold")
+    figure.text(.055, .917,
+        "Lemma 1 (2005): every square with side > 1 inside this 4 × 4 box must score > 1.", fontsize=13)
+    figure.text(.055, .891,
+        f"The green square has side {float(FACTOR):.4f}, fits in the box, and scores only {float(score):.6f}…",
+        fontsize=13, color=square_color, weight="bold")
 
     def draw_geometry(axes: Axes, *, detail: bool) -> None:
         axes.set_facecolor(background)
@@ -203,36 +205,42 @@ def render_figure(
         axes.spines[["top", "right", "left", "bottom"]].set_visible(False)
         axes.tick_params(length=0, pad=5, labelsize=10)
 
-    overview = figure.add_axes((.055, .505, .30, .325))
+    overview = figure.add_axes((.055, .615, .30, .255))
     draw_geometry(overview, detail=False)
     overview.set(xlim=(-.15, 4.15), ylim=(-.15, 4.15), xticks=range(5), yticks=range(5))
-    overview.set_title("01  The full 4 × 4 container", loc="left", fontsize=14, pad=16, weight="bold")
-    overview.text(2, 2, "Inner region\n[1,3]²", ha="center", va="center", color=muted, fontsize=13)
+    overview.text(2, 2, "Central\n2 × 2 region", ha="center", va="center", color=muted, fontsize=13)
     overview.add_patch(Rectangle((.75, -.04), 1.45, 1.22, fill=False,
         edgecolor=muted, linewidth=.9, linestyle=(0, (2, 3))))
-    figure.text(.065, .457, "Dashed box: enlarged at right", fontsize=11, color=muted)
+    figure.text(.065, .591, "Dashed box: enlarged below", fontsize=11, color=muted)
 
-    focus = figure.add_axes((.44, .49, .515, .345))
+    figure.text(.43, .837, "How to count the score", fontsize=17, weight="bold")
+    figure.text(.43, .803, "Count only the parts inside the square:", fontsize=12)
+    figure.text(.43, .762, "Central region", fontsize=13, weight="bold", color=area_color)
+    figure.text(.43, .738, "Add the covered area.", fontsize=12)
+    figure.text(.43, .703, "Four dashed segments", fontsize=13, weight="bold", color=chord_color)
+    figure.text(.43, .679, "Add half the covered length. Each central-region side\nextends 0.1 beyond both corners.",
+        fontsize=12, linespacing=1.5, va="top")
+    figure.text(.43, .622, "Circles (Q): +0.45 each    Diamonds (P): +0.5 each", fontsize=12)
+    figure.text(.43, .594, "Filled = inside. Hollow = outside. Add all contributions.", fontsize=11, color=muted)
+
+    figure.text(.055, .548, "What this square covers", fontsize=16, weight="bold")
+    focus = figure.add_axes((.055, .252, .43, .278))
     draw_geometry(focus, detail=True)
     focus.set(xlim=(.75, 2.2), ylim=(-.08, 1.19), xticks=(1, 1.5, 2), yticks=(0, .5, .9, 1))
-    focus.set_title("02  Only these resources contribute", loc="left", fontsize=14, pad=16, weight="bold")
-    focus.annotate("Q = (1, 0.9)\ninside: +0.45", xy=(1, .9), xytext=(1.09, .64),
+    focus.annotate("Circle at (1, 0.9)\ninside: +0.45", xy=(1, .9), xytext=(1.09, .64),
         fontsize=11, arrowprops={"arrowstyle": "-", "color": ink}, color=ink)
-    focus.annotate("P = (2, 0.9)\noutside: +0", xy=(2, .9), xytext=(1.67, .53),
+    focus.annotate("Diamond at (2, 0.9)\noutside: +0", xy=(2, .9), xytext=(1.47, .46),
         fontsize=11, arrowprops={"arrowstyle": "-", "color": excluded_color}, color=excluded_color)
-    focus.annotate(f"Inner area ≈ {inner_area:.6f}", xy=(1.30, 1.02), xytext=(1.15, 1.125),
+    focus.annotate(f"Area ≈ {inner_area:.6f}", xy=(1.30, 1.02), xytext=(1.15, 1.125),
         fontsize=10, color=area_color, arrowprops={"arrowstyle": "-", "color": area_color})
-    focus.text(1.42, .948, f"chord ≈ {bottom_length:.6f}", fontsize=10, color=chord_color)
-    focus.annotate(f"{left_length:.3f}", xy=(1, .918), xytext=(.77, .80), fontsize=10, color=chord_color,
+    focus.text(1.35, .948, f"length ≈ {bottom_length:.6f}", fontsize=10, color=chord_color)
+    focus.annotate(f"length\n{left_length:.3f}", xy=(1, .918), xytext=(.76, .74), fontsize=10, color=chord_color,
         arrowprops={"arrowstyle": "-", "color": chord_color})
-    focus.text(1.23, .28, f"λ = {float(FACTOR):.4f}", color=square_color, fontsize=16, weight="bold")
-    focus.annotate("A", xy=tuple(map(float, SQUARE[0])), xytext=(-15, -17),
-        textcoords="offset points", fontsize=11, color=square_color)
-    figure.text(.475, .444, "Purple area + gold chords + the filled Q point. All plots use equal x/y scale.",
-        fontsize=10, color=muted)
+    focus.text(1.13, .23, f"Side length {float(FACTOR):.4f}", color=square_color, fontsize=13, weight="bold")
 
-    figure.text(.055, .385, "03  The excluded point, magnified", fontsize=14, weight="bold")
-    inset = figure.add_axes((.07, .19, .25, .17))
+    figure.text(.575, .548, "Why the diamond does not count", fontsize=16, weight="bold")
+    figure.text(.575, .516, "Magnified view near (2, 0.9)", fontsize=12, color=muted)
+    inset = figure.add_axes((.615, .332, .29, .167))
     draw_geometry(inset, detail=True)
     inset.set(xlim=(1.99955, 2.00025), ylim=(.89972, .90028),
         xticks=(2,), yticks=(.9,))
@@ -245,30 +253,33 @@ def render_figure(
     inset.annotate("gap = 0.0001", xy=(1.99995, .9), xytext=(1.99963, .90016),
         fontsize=10, color=excluded_color,
         arrowprops={"arrowstyle": "-", "color": excluded_color})
-    inset.text(1.99958, .89981, "inside S", color=square_color, fontsize=10)
+    inset.text(1.99958, .89981, "inside", color=square_color, fontsize=10)
     inset.text(2.00004, .89981, "outside", color=excluded_color, fontsize=10)
-    inset.annotate("P", xy=(2, .9), xytext=(8, 8), textcoords="offset points", color=excluded_color)
-    figure.text(.055, .115,
-        "At y = 0.9, the square ends at x = 1.9999.\nThe point P has x = 2, strictly outside.",
+    inset.annotate("diamond", xy=(2, .9), xytext=(8, 8), textcoords="offset points", color=excluded_color,
+        fontsize=10)
+    figure.text(.575, .287,
+        "Square’s edge: x = 1.9999 at height y = 0.9.\nDiamond: x = 2. It is outside, not on the edge.",
         fontsize=11, linespacing=1.6)
 
-    figure.text(.425, .385, "04  The total", fontsize=14, weight="bold")
-    figure.text(.425, .34,
-        f"{inner_area:.6f}  +  ½ × ({bottom_length:.6f} + {left_length:.3f})  +  0.45", fontsize=13)
-    figure.text(.425, .26, f"σ(S) ≈ {float(score):.10f} < 1", fontsize=25, weight="bold", color=square_color)
-    figure.text(.425, .224, "Values above are rounded. The exact score is given below.", fontsize=11, color=muted)
-    figure.text(.425, .177, "Lean certificate:  σ(S) ≤ 199/200 < 1", fontsize=16, weight="bold")
-    figure.text(.425, .137, "Other Q atoms, all P atoms, and top/right chords contribute zero.\nThe exact score is 25009470849041 / 25584000000000.",
-        fontsize=11, linespacing=1.6, color=muted)
-    figure.text(.055, .075, "This refutes the score lemma, not the packing theorem s(n² − 2) = n.",
-        fontsize=12, weight="bold")
-    figure.text(.055, .045, "Coordinates: cos θ = 80/1601, sin θ = 1599/1601, A = (10419467/5330000, 0).",
+    figure.text(.055, .212, "Score = covered area + half the two gold lengths + one circle", fontsize=14, weight="bold")
+    figure.text(.055, .176,
+        f"≈ {inner_area:.6f} + ½ × ({bottom_length:.6f} + {left_length:.3f}) + 0.45", fontsize=14)
+    figure.text(.055, .131, f"Score ≈ {float(score):.6f} < 1", fontsize=24, weight="bold", color=square_color)
+    figure.text(.54, .133, "Lean proves: score ≤ 199/200 = 0.995 < 1", fontsize=12, weight="bold")
+    figure.text(.055, .099, "Displayed decimals are rounded; the calculation uses exact fractions. Every other marking adds zero.",
         fontsize=11, color=muted)
-    figure.text(.055, .021, "Square Packing Archive · CC BY 4.0 · Generated from the exact rational coordinates.",
+    figure.text(.055, .059, "This disproves the counting lemma. It does not give a better packing of squares.",
+        fontsize=12, weight="bold")
+    figure.text(.055, .025, "Square Packing Archive · CC BY 4.0 · Nagamochi (2005), Lemma 1 · doi.org/10.37236/1934",
         fontsize=10, color=muted)
     figure_path("svg").parent.mkdir(parents=True, exist_ok=True)
-    figure.savefig(figure_path("svg"), metadata={"Date": None, "Description": description,
-        "Title": "Counterexample to the Nagamochi resource-score premise"})
+    svg_document = StringIO()
+    figure.savefig(svg_document, format="svg", metadata={"Date": None, "Description": description,
+        "Title": "Counterexample to Nagamochi’s Lemma 1"})
+    figure_path("svg").write_text(
+        "\n".join(line.rstrip() for line in svg_document.getvalue().splitlines()) + "\n",
+        encoding="utf-8",
+    )
     figure.savefig(figure_path("png"), dpi=150, metadata={"Description": description})
     plot.close(figure)
 
@@ -313,7 +324,14 @@ def main() -> None:
     corner_score = Fraction(9, 20) * sum(map(contains_interior, corner_points))
     edge_score = Fraction(1, 2) * sum(map(contains_interior, edge_points))
     score = inner_area + sum(boundary_lengths) / 2 + corner_score + edge_score
+    total_available_score = (
+        (CONTAINER_SIDE - 2)**2
+        + 4 * (CONTAINER_SIDE - 2 * RESOURCE_OFFSET) / 2
+        + Fraction(9, 20) * len(corner_points)
+        + Fraction(1, 2) * len(edge_points)
+    )
 
+    assert total_available_score == 14
     assert not any(map(lies_on_square_boundary, corner_points + edge_points))
     assert tuple(filter(contains_interior, corner_points)) == ((Fraction(1), RESOURCE_OFFSET),)
     assert inner_area == Fraction(611022059041, 25584000000000)
