@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: python3 ../scripts/generate-lean-evidence-audit.py --check
-      - run: python3 ../scripts/check-nagamochi-counterexample.py
+      - run: python3 ../scripts/check-nagamochi-counterexample.py --check-figure
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal

@@ -1,110 +1,102 @@
-# Counterexample to the Nagamochi resource-score premise
+# Counterexample to Nagamochi’s Lemma 1
 
-This is a counterexample to the per-square score inequality, not a packing of
-`n²−2` unit squares in a smaller container and not a disproof of `s(n²−2)=n`.
+Lemma 1 in [Nagamochi’s 2005 paper](https://www.combinatorics.org/ojs/index.php/eljc/article/download/v12i1r37/pdf)
+states that every admissible square has resource score greater than one.
+The square below has score less than one. Lean proves the bound
+`σ(S) ≤ 199/200 < 1`.
 
-## Exact geometry
+This refutes the score lemma, **not** the packing theorem `s(n²−2)=n`.
 
-Use a container `[0,4]²`, square side `λ = 10001/10000`, and orthonormal frame
+[![The square in a 4-by-4 container, its contributing resources, a magnified view of the excluded point P, and the score calculation.](assets/nagamochi-counterexample.png)](assets/nagamochi-counterexample.svg)
+
+[Open the vector diagram](assets/nagamochi-counterexample.svg) ·
+[Download the PNG](assets/nagamochi-counterexample.png)
+
+Circles are `Q` points; diamonds are `P` points. A filled point is inside the
+square. Purple shows the counted area; gold shows the counted chord lengths.
+The inset uses the same scale on both axes, magnified enough to show the
+horizontal gap of `1/10000` between the square and `P=(2,0.9)`.
+
+## The square
+
+The container is `[0,4]²`. Set
 
 ```text
-cosine = 80/1601
-sine   = 1599/1601
-cosine² + sine² = 1
+λ = 10001/10000
+c = 80/1601
+s = 1599/1601
+A = (10419467/5330000, 0).
 ```
 
-Let the lower vertex be
-
-```text
-A = (2 − (80/1599)·(9/10) − 1/10000, 0)
-  = (10419467/5330000, 0).
-```
-
-The four vertices, in counterclockwise order, are
+Since `c²+s²=1`, these four vertices form a square of side `λ`:
 
 ```text
 A
-A + λ·(cosine, sine)
-A + λ·(cosine − sine, sine + cosine)
-A + λ·(−sine, cosine).
+A + λ(c, s)
+A + λ(c−s, s+c)
+A + λ(−s, c).
 ```
 
-All vertices lie in the container. Only the resource atom `Q=(1,9/10)` is in
-the square interior; no `P` atom is present. No `Q` or `P` atom is on the square
-boundary, so changing open/closed atom membership does not resolve the issue.
+The closed square fits in the container. Only `Q=(1,9/10)` is inside it.
+No `P` point is inside, and no `Q` or `P` point lies on its boundary.
 
-## Independent exact calculation
+## The score
 
-[The standard-library Python checker](../scripts/check-nagamochi-counterexample.py)
-uses rational polygon clipping, line intersection, and shoelace area. Assertions
-use `Fraction` only; decimal conversion is for display.
+Using the weights and supports from Section 3 of the paper:
 
-| Contribution                | Exact value                     |
-| --------------------------- | ------------------------------- |
-| Inner area                  | `611022059041 / 25584000000000` |
-| Bottom chord length         | `1251468079 / 1279200000`       |
-| Left chord length           | `29/1000`                       |
-| Top and right chord lengths | `0`                             |
-| Q score                     | `9/20`                          |
-| P score                     | `0`                             |
+| Resource                        | Contribution to the score       |
+| ------------------------------- | ------------------------------- |
+| Area inside `[1,3]²`            | `611022059041 / 25584000000000` |
+| Bottom chord, weighted by `1/2` | `1251468079 / 2558400000`       |
+| Left chord, weighted by `1/2`   | `29/2000`                       |
+| The point `Q=(1,9/10)`          | `9/20`                          |
+| All other resources             | `0`                             |
 
-Each chord has weight `1/2`. The total score is therefore
+Thus
 
 ```text
-25009470849041 / 25584000000000
-= 0.977543419677962789… < 1.
+σ(S) = 25009470849041 / 25584000000000
+     = 0.977543419677962789… < 1.
 ```
 
-Reproduce from the repository root:
+## Check it
+
+[The Python checker](../scripts/check-nagamochi-counterexample.py) computes that
+exact score using rational arithmetic. It also generates the diagram from the
+same coordinates.
 
 ```console
-python3 scripts/check-nagamochi-counterexample.py
+python3 scripts/check-nagamochi-counterexample.py --check-figure
 ```
 
-## Lean certificate
+To regenerate the SVG and PNG, install `matplotlib` and run the checker with
+`--figure`. Drawing uses rounded coordinates; every mathematical check uses
+exact fractions.
 
-[NagamochiCounterexample.lean](../formal/SquarePackingArchive/NagamochiCounterexample.lean)
-constructs the square in the archive's existing geometric model and proves
-membership equivalence with four explicit rational half-plane inequalities.
-It proves both the original closed unit square fits in a container of side
-`4/λ` and the closed dilated square fits in `[0,4]²`. It then establishes the
-exact atomic contributions and sufficient
-upper bounds on the continuous contributions:
+[The Lean proof](../formal/SquarePackingArchive/NagamochiCounterexample.lean)
+checks containment of both the closed dilated square in `[0,4]²` and the
+closed unit square in a container of side `4/λ`. It proves a sufficient
+upper bound rather than the exact score:
 
 ```text
-inner area ≤ 3/100
-bottom chord ≤ 1
-left chord ≤ 3/100
-top chord = right chord = 0
-score ≤ 3/100 + (1/2)·(1 + 3/100) + 9/20 = 199/200 < 1.
+σ(S) ≤ 3/100 + (1/2)(1 + 3/100) + 9/20
+     = 199/200 < 1.
 ```
 
-The final theorem is
+The final theorem is `SquarePackingArchive.Nagamochi.not_scoresDilatedSquares_four`.
+Its only axioms are Lean’s standard `propext`, `Classical.choice`, and
+`Quot.sound`. The exact score above comes from Python; the upper bound comes
+from Lean.
 
-```lean
-SquarePackingArchive.Nagamochi.not_scoresDilatedSquares_four :
-  ¬ SquarePackingArchive.NagamochiResource.ScoresDilatedSquares 4
-```
+## Where the argument fails
 
-Lean proves the upper bound `199/200`; the sharper exact total above is the
-independent rational calculation, not an asserted Lean equality. The proof
-depends only on `propext`, `Classical.choice`, and `Quot.sound`, as checked by
-the repository's explicit axiom audit.
+In Case 6, the paper moves a square until `(2,0.9)` touches an edge, then
+applies Lemma 6. But Lemma 6 requires **that edge to cross `y=1`**.
 
-## Relation to the published proof
+Shift the square right by `1/10000`. Then `(2,0.9)` touches the edge from the
+bottom vertex to the right vertex. That edge ends at height `λ·1599/1601 < 1`.
+It does not cross `y=1`, so Lemma 6 does not apply.
 
-The weights and supports match Section 3 of
-[Nagamochi's 2005 paper](https://www.combinatorics.org/ojs/index.php/eljc/article/download/v12i1r37/pdf).
-Its Lemma 1 asserts the corresponding score is greater than one for every
-admissible square; Section 5 reduces the edge-strip cases to a pinned geometry.
-
-The incidence distinction is visible before the small horizontal displacement:
-`(2,0.9)` lies on the edge from the bottom vertex to the right vertex, but that
-edge ends at height `λ·1599/1601 < 1`. It does not cross `y=1`. Contact with
-an arbitrary edge therefore does not establish Lemma 6's hypothesis that the
-contact edge is one of the two edges crossing that line.
-
-This identifies a failed premise in the existing proof route. A corrected
-resource argument, a packing-level argument, or an independent proof is needed
-to formalize the general near-square theorem. The separately verified finite
-packing minima remain verified by their own Lean proofs.
+The general packing theorem needs a repaired argument or a different proof.
+This counterexample does not affect the archive’s independently verified
+finite packing minima.
