@@ -1,5 +1,5 @@
 import { activeClaims, isVerified } from "@square-packing/domain";
-import { ArrowDown, ArrowUpRight, Github, Grid2X2 } from "lucide-react";
+import { ArrowDown, ArrowUpRight, CodeXml, Grid2X2 } from "lucide-react";
 import { archive } from "./archive.ts";
 import { ClaimsTable } from "./components/ClaimsTable.tsx";
 import { CoverageChart } from "./components/CoverageChart.tsx";
@@ -67,7 +67,7 @@ export const App = () => {
               className="flex items-center gap-1.5 hover:text-ink"
               aria-label={copy.github}
             >
-              <Github className="size-4" aria-hidden="true" />
+              <CodeXml className="size-4" aria-hidden="true" />
               <span className="hidden sm:inline">{copy.github}</span>
             </a>
           </nav>
