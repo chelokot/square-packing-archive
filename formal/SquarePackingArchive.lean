@@ -7,6 +7,7 @@ import SquarePackingArchive.Friedman
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
 import SquarePackingArchive.NagamochiLemmas
+import SquarePackingArchive.NagamochiHalfArea
 import SquarePackingArchive.NagamochiCanonicalTerminal
 import SquarePackingArchive.Nagamochi
 import SquarePackingArchive.RationalCertificate

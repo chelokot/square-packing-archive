@@ -187,9 +187,40 @@ right, rather than only the bottom/top pair.
 Both Case 3 branches are exposed through one typed witness: either two distinct
 opposite-edge boundary chords, or one such chord together with half of the
 dilated square's area in the inner rectangle. The witness implies score greater
-than one for every side orientation. The remaining Case 3 task is therefore a
-pure classification theorem deriving this witness from the paper's positional
-hypotheses.
+than one for every side orientation. Completing Case 3 requires both the
+positional classification and the geometric compensation for adjacent triangle
+cuts that the paper disregards using Lemma 4.
+
+The single-crossed-line branch of Case 3 now derives its half-area contribution
+from geometry. Central reflection about the dilated square's center preserves
+both the square and Lebesgue measure. Consequently every half-plane containing
+that center captures at least half the square's area, for every frame and every
+positive dilation factor. The four inner-boundary inequalities share typed
+inward normals. If the center lies in the inner rectangle and the square meets
+only one of its four boundary lines, convexity and the intermediate value
+theorem put the square entirely on the inner side of the other three lines.
+The half-plane bound therefore gives the required inner-area bound without a
+numerical area hypothesis. Combined with a nonadjacent chord on the crossed
+line, `score_gt_one_of_case3_single_crossed_line` proves the score greater than
+one. Its remaining geometric premises are the center position, the absence of
+the other three line crossings, and the typed nonadjacent chord; this does not
+close the full Case 3 classification or the universal near-square theorem.
+
+The nonadjacent-chord premise can now be constructed from the square's center
+and frame. A horizontal line whose distance from the center is at most
+`factor * abs(abs(cosine) - abs(sine)) / 2` cuts a chord of length at least
+`factor`, provided the line meets the open square. Lean proves both possible
+cosine/sine orderings, handles axis-aligned frames directly, and normalizes
+arbitrary frame signs by local quarter rotations. Coordinate swap gives the
+vertical version. For a single crossed inner boundary, the other three inner
+bounds force the constructed chord to lie within the resource segment; no
+separate clipping hypothesis is needed. The resulting
+`score_gt_one_of_case3_single_crossed_line_offset` works for all four sides and
+every frame, with only center position, line intersection, absence of the
+other three line intersections, and the numerical offset bound as premises.
+Case 3 configurations with additional adjacent triangle cuts still require the
+geometric triangle compensation shared with Case 2. The paper's step that
+disregards those cuts is not yet formalized.
 
 Case 5 is now fully proved for all four container corners and every frame.
 Local quarter rotations normalize the frame signs without changing the
