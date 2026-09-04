@@ -5,6 +5,23 @@ replacement proof of the full theorem yet**. The work below tests whether the
 [low-scoring square](nagamochi-score-counterexample.md) can help build a packing
 of 62 unit squares in a container with side less than 8.
 
+## The `n²−1` family now has a complete Lean proof
+
+For every integer `n ≥ 2`, **`s(n²−1)=n`** is now proved without an unproved
+scoring hypothesis. This is not yet the requested `n²−2` theorem.
+
+The repaired rule keeps the original area and extended lines, but raises each
+Q point's weight from `0.45` to `0.5`. Every fitting square with side
+`1 < λ ≤ 1.01` now scores more than one. The eight increases add `0.4` to the total resource mass,
+making it `n²−1.6`. That is enough to exclude `n²−1` squares, but not `n²−2`.
+
+[NagamochiAugmented.lean](../formal/SquarePackingArchive/NagamochiAugmented.lean)
+proves `Records.NearSquare.squareMinusOne_isMinimumSide` for all `n ≥ 2`,
+including containment, arbitrary rotations, all four edges, and the packing
+count. Its axiom audit contains only `propext`, `Classical.choice`, and
+`Quot.sound`. The archive now marks the previously unchecked exact results for
+63, 80, and 99 squares as Lean verified.
+
 ## A necessary condition, proved in Lean
 
 Any such packing must have **at least 13 tilted squares**. Here “tilted” means
@@ -119,9 +136,32 @@ The final theorem is `score_gt_one_of_bottom_strip_without_corners`. All three
 modules are included in the regular Lean build and axiom audit; they use only
 `propext`, `Classical.choice`, and `Quot.sound`.
 
-The corresponding transport to the other three edges is not formalized here.
-More importantly, this proof excludes squares containing Q points. The original
-low-scoring square contains a Q point, so it is outside the repaired case.
+The later [Q-point proof](../formal/SquarePackingArchive/NagamochiEdgeStripWithCorners.lean)
+strengthens this: if just the two horizontal Q points are absent, central area
+plus half the bottom-line intersection exceeds `0.5`. Other Q points may be
+present. The lost cap area lies in two narrow strips and is bounded directly.
+This is the geometric step behind the complete `n²−1` proof above.
+
+The [symmetry proofs](../formal/SquarePackingArchive/NagamochiResourceSymmetry.lean)
+transport the measures through coordinate exchange and reflection. Thus the
+augmented scoring argument covers every edge, not just the bottom.
+
+## Repairs that do not work
+
+Removing the short line extensions to pay for higher Q weights fails, even for
+an axis-aligned square. Replacing those extensions with uniformly weighted
+diagonals also fails. Exact linear inequalities from four squares rule out
+repairing the original markings by changing their four symmetric weights while
+keeping the total budget at `n²−2`.
+
+The [repair experiments](../experiments/resource-repair/README.md) include the
+witnesses and checks. The geometric coefficients are checked in exact Python;
+the resulting scalar contradictions are checked in Lean.
+
+Simple local compensation rules fail too. A low-scoring square and the owner
+of its nearest missing P point can have a combined score below two. The
+[exact pair examples](../experiments/boundary-compensation/README.md) rule out
+that shortcut; compensation may require a longer chain or a different argument.
 
 ## What remains
 
@@ -130,4 +170,5 @@ claimed bound, followed by a Lean certificate. To prove it, we need a global
 argument that covers arrangements with many tilted squares. Neither result
 follows from the tilt count or the unsuccessful searches above.
 
-No archive claim is promoted to “Lean verified” on the basis of this work.
+The `n²−2` claims remain unverified. Neither failed searches nor conditional
+lemmas are used to promote them.

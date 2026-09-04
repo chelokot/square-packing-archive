@@ -65,12 +65,15 @@ class ResourceScore:
         )
 
 
-def resource_score(index: int, container_side: Fraction = CONTAINER_SIDE) -> ResourceScore:
+@dataclass(frozen=True)
+class ResourceMarkings:
+    segments: tuple[tuple[Point, Point], ...]
+    corner_points: tuple[Point, ...]
+    edge_points: tuple[Point, ...]
+
+
+def resource_markings(container_side: Fraction) -> ResourceMarkings:
     assert container_side.denominator == 1 and container_side >= 3
-    inner_polygon = translated_square(index)
-    for axis in (0, 1):
-        inner_polygon = canonical.clip_halfplane(inner_polygon, axis, Fraction(1), 1)
-        inner_polygon = canonical.clip_halfplane(inner_polygon, axis, container_side - 1, -1)
     offset = canonical.RESOURCE_OFFSET
     segments = tuple(
         ((offset, height), (container_side - offset, height))
@@ -89,15 +92,24 @@ def resource_score(index: int, container_side: Fraction = CONTAINER_SIDE) -> Res
         for vertical in range(2, int(container_side) - 1)
         for horizontal in (offset, container_side - offset)
     )
+    return ResourceMarkings(segments, corner_points, edge_points)
+
+
+def resource_score(index: int, container_side: Fraction = CONTAINER_SIDE) -> ResourceScore:
+    markings = resource_markings(container_side)
+    inner_polygon = translated_square(index)
+    for axis in (0, 1):
+        inner_polygon = canonical.clip_halfplane(inner_polygon, axis, Fraction(1), 1)
+        inner_polygon = canonical.clip_halfplane(inner_polygon, axis, container_side - 1, -1)
     assert not any(
         canonical.lies_on_square_boundary((point[0] - index * STEP, point[1]))
-        for point in corner_points + edge_points
+        for point in markings.corner_points + markings.edge_points
     )
     return ResourceScore(
         canonical.polygon_area(inner_polygon),
-        tuple(chord_length(index, start, end) for start, end in segments),
-        tuple(point for point in corner_points if contains_interior(index, point)),
-        tuple(point for point in edge_points if contains_interior(index, point)),
+        tuple(chord_length(index, start, end) for start, end in markings.segments),
+        tuple(point for point in markings.corner_points if contains_interior(index, point)),
+        tuple(point for point in markings.edge_points if contains_interior(index, point)),
     )
 
 

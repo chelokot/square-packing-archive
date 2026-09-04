@@ -40,6 +40,12 @@ jobs:
           python3 -S -m unittest -v test_exact_geometry test_row_compensation
           python3 -S check_results.py results-7.9999.jsonl
           python3 -S check_results.py results-7.999999.jsonl
+      - name: Check resource and compensation experiments
+        working-directory: .
+        run: |
+          python3 -S -m unittest discover -s experiments/resource-repair -p 'test_*.py'
+          python3 -S experiments/resource-repair/verify_repairs.py
+          python3 -S -m unittest discover -s experiments/boundary-compensation -p 'test_*.py'
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal

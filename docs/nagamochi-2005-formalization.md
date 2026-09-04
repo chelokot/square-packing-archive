@@ -2,6 +2,10 @@
 
 ## Current result: the universal score premise is false
 
+The weaker family **`s(n²−1)=n` is now proved in Lean for every `n ≥ 2`**,
+using a repaired measure. See [the proof notes](nagamochi-counterexample-search.md).
+The repair adds `0.4` to the total resource mass, so it does not settle `n²−2`.
+
 The general claim `s(n²−2)=n` is **not formalized**. Lean now proves
 `¬ NagamochiResource.ScoresDilatedSquares 4`: the per-square resource inequality
 used by our translation of Hiroshi Nagamochi's
@@ -32,9 +36,11 @@ between the failed lemma and the original packing claim.
 | Canonical pinned terminal square                                   | Proved under its stated geometric hypotheses   |
 | Universal edge-strip score: Cases 6–7                              | Cannot hold as stated; explicit counterexample |
 | General `s(n²−2)=n`                                                | Not proved or disproved here                   |
+| General `s(n²−1)=n`, using the augmented measure                   | Proved for every `n ≥ 2`                       |
 
-All these statements use the same `PlacedSquare`, arbitrary orthonormal frames,
-open square interiors, and original resource measure. The counterexample is
+These statements use the same `PlacedSquare`, arbitrary orthonormal frames,
+and open square interiors. Only the augmented proof changes the resource
+measure, raising each Q weight to `1/2`. The counterexample is
 checked by the same Lean kernel as the positive results. No custom axioms,
 unfinished proofs, or native evaluation are used.
 
