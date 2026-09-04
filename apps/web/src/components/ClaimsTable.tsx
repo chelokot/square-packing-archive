@@ -1,116 +1,147 @@
-import { activeClaims, type CompiledArchive } from "@square-packing/domain";
-import { ExternalLink, FileCode2 } from "lucide-react";
-import { EvidenceBadge } from "./EvidenceBadge.tsx";
+import {
+  activeClaims,
+  verificationLevel,
+  type CompiledArchive,
+  type Claim,
+} from "@square-packing/domain";
+import { Search } from "lucide-react";
+import { useState } from "react";
+import { copy } from "../copy.ts";
+import { EvidenceBadge, evidencePresentation } from "./EvidenceBadge.tsx";
+import {
+  ClaimLinks,
+  claimValue,
+  contributorNames,
+} from "./claimPresentation.tsx";
 
-export const ClaimsTable = ({ archive }: { archive: CompiledArchive }) => {
-  const authors = new Map(archive.authors.map((author) => [author.id, author]));
-  const sources = new Map(archive.sources.map((source) => [source.id, source]));
+export const filterClaims = (
+  claims: readonly Claim[],
+  archive: CompiledArchive,
+  query: string,
+  status: string,
+): readonly Claim[] => {
+  const search = query.trim().toLocaleLowerCase();
+  return claims.filter((claim) => {
+    const matchesText = /^\d+$/.test(search)
+      ? claim.n === Number(search) ||
+        (search.length === 4 && claim.announcedAt.startsWith(search))
+      : [
+          String(claim.n),
+          claim.announcedAt,
+          claimValue(claim),
+          contributorNames(archive, claim),
+        ]
+          .join(" ")
+          .toLocaleLowerCase()
+          .includes(search);
+    return (
+      matchesText && (status === "all" || verificationLevel(claim) === status)
+    );
+  });
+};
+
+export const ClaimsTable = ({
+  archive,
+  onSelect,
+}: {
+  archive: CompiledArchive;
+  onSelect: (count: number) => void;
+}) => {
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState("all");
   const claims = [...activeClaims(archive)].sort(
     (left, right) => left.n - right.n,
   );
-
+  const filtered = filterClaims(claims, archive, query, status);
   return (
-    <section
-      id="claims"
-      className="overflow-hidden rounded-3xl border border-white/10 bg-ink-900/70"
-    >
-      <div className="border-b border-white/10 px-5 py-6 md:px-7">
-        <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
-          Canonical claims
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">
-          Current curated bounds
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-          A paper is evidence and a Lean theorem is verification. They remain
-          visibly distinct.
-        </p>
+    <section id="claims" className="scroll-mt-6 border-t border-rule py-8">
+      <h2 className="flex items-center gap-3 text-lg font-semibold">
+        <span className="font-mono text-xs font-normal text-muted">03</span>
+        {copy.catalogTitle}
+      </h2>
+      <p className="mt-3 text-sm leading-6 text-muted">
+        {copy.catalogDescription}
+      </p>
+      <div className="my-5 flex flex-wrap items-center gap-3">
+        <label className="flex min-w-0 flex-1 items-center gap-2 border border-rule bg-surface px-3 sm:max-w-sm">
+          <Search className="size-4 shrink-0 text-muted" aria-hidden="true" />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={copy.search}
+            aria-label={copy.search}
+            className="min-w-0 flex-1 bg-transparent py-2.5 text-sm"
+          />
+        </label>
+        <select
+          aria-label={copy.statusFilter}
+          value={status}
+          onChange={(event) => setStatus(event.target.value)}
+          className="max-w-full border border-rule bg-surface px-3 py-2.5 text-sm"
+        >
+          <option value="all">{copy.allEvidence}</option>
+          {Object.entries(evidencePresentation).map(([level, item]) => (
+            <option key={level} value={level}>
+              {item.label}
+            </option>
+          ))}
+        </select>
+        <span role="status" className="text-xs text-muted sm:ml-auto">
+          {copy.resultCount(filtered.length, claims.length)}
+        </span>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[52rem] border-collapse text-left text-sm">
-          <thead className="bg-white/[0.025] font-mono text-[0.68rem] uppercase tracking-[0.16em] text-slate-500">
+      <div className="overflow-x-auto border-y border-rule">
+        <table className="w-full min-w-[48rem] border-collapse text-left text-sm">
+          <thead className="bg-paper text-xs text-muted">
             <tr>
-              <th className="px-6 py-4 font-medium">n</th>
-              <th className="px-6 py-4 font-medium">Claim</th>
-              <th className="px-6 py-4 font-medium">Year</th>
-              <th className="px-6 py-4 font-medium">Contributors</th>
-              <th className="px-6 py-4 font-medium">Status</th>
-              <th className="px-6 py-4 font-medium">Artifacts</th>
+              {Object.values(copy.columns).map((column) => (
+                <th
+                  scope="col"
+                  key={column}
+                  className="px-4 py-3 font-medium first:pl-0 last:pr-0"
+                >
+                  {column}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.06]">
-            {claims.map((claim) => {
-              const source = sources.get(claim.evidence[0]!.source);
-              const leanEvidence = claim.evidence.find(
-                (evidence) => evidence.kind === "lean-proof",
-              );
-              return (
-                <tr
-                  key={claim.id}
-                  className="transition hover:bg-white/[0.025]"
-                >
-                  <td className="px-6 py-4 font-mono text-white">{claim.n}</td>
-                  <td className="px-6 py-4">
-                    <span className="font-mono text-slate-200">
-                      s({claim.n}){" "}
-                      {claim.relation === "exact"
-                        ? "="
-                        : claim.relation === "upper"
-                          ? "≤"
-                          : "≥"}{" "}
-                      {claim.value.expression ?? claim.value.decimal}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 font-mono text-slate-500">
-                    {claim.announcedAt.slice(0, 4)}
-                  </td>
-                  <td className="px-6 py-4 text-slate-400">
-                    {claim.contributors.length === 0
-                      ? "Elementary"
-                      : claim.contributors
-                          .map(
-                            ({ author }) => authors.get(author)?.name ?? author,
-                          )
-                          .join(", ")}
-                  </td>
-                  <td className="px-6 py-4">
-                    <EvidenceBadge claim={claim} />
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      {source === undefined ? null : (
-                        <a
-                          href={source.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          title={source.title}
-                          className="grid size-8 place-items-center rounded-lg border border-white/10 text-slate-400 transition hover:border-cyan-300/40 hover:text-cyan-300"
-                        >
-                          <ExternalLink
-                            className="size-3.5"
-                            aria-hidden="true"
-                          />
-                        </a>
-                      )}
-                      {leanEvidence?.theorem === undefined ||
-                      leanEvidence.artifact === undefined ? null : (
-                        <a
-                          href={`https://github.com/chelokot/square-packing-archive/blob/main/${leanEvidence.artifact}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          title={leanEvidence.theorem}
-                          className="grid size-8 place-items-center rounded-lg border border-mint-300/30 text-mint-300"
-                        >
-                          <FileCode2 className="size-3.5" aria-hidden="true" />
-                        </a>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+          <tbody className="divide-y divide-rule">
+            {filtered.map((claim) => (
+              <tr key={claim.id} className="hover:bg-surface">
+                <th scope="row" className="py-4 pr-4 font-mono font-normal">
+                  <a
+                    href="#explore"
+                    onClick={() => onSelect(claim.n)}
+                    className="text-forest underline decoration-forest/30 underline-offset-4"
+                  >
+                    {claim.n}
+                  </a>
+                </th>
+                <td className="px-4 py-4 font-mono text-xs">
+                  {claimValue(claim)}
+                </td>
+                <td className="px-4 py-4 font-mono text-xs text-muted">
+                  {claim.announcedAt.slice(0, 4)}
+                </td>
+                <td className="px-4 py-4 text-xs text-muted">
+                  {contributorNames(archive, claim)}
+                </td>
+                <td className="px-4 py-4">
+                  <EvidenceBadge claim={claim} />
+                </td>
+                <td className="py-4 pl-4">
+                  <ClaimLinks archive={archive} claim={claim} />
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
+        {filtered.length === 0 ? (
+          <p className="py-10 text-center text-sm text-muted">
+            {copy.noMatches}
+          </p>
+        ) : null}
       </div>
     </section>
   );
