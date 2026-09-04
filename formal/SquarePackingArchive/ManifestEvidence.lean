@@ -3,7 +3,9 @@ import SquarePackingArchive.Records.HistoricalUpperBounds
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square15
+import SquarePackingArchive.Records.Square23
 import SquarePackingArchive.Records.Square24
+import SquarePackingArchive.Records.Square34
 import SquarePackingArchive.Records.Square46
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square68
@@ -53,11 +55,20 @@ example : SquarePackingArchive.IsMinimumSide 15 (4) :=
 example : SquarePackingArchive.IsMinimumSide 16 (4) :=
   SquarePackingArchive.Records.SquareNumbers.s16_eq_four
 
+example : SquarePackingArchive.IsMinimumSide 23 (5) :=
+  SquarePackingArchive.Records.Square23.s23_eq_five
+
 example : SquarePackingArchive.IsMinimumSide 24 (5) :=
   SquarePackingArchive.Records.Square24.s24_eq_five
 
 example : SquarePackingArchive.IsMinimumSide 25 (5) :=
   SquarePackingArchive.Records.SquareNumbers.s25_eq_five
+
+example : SquarePackingArchive.IsMinimumSide 34 (6) :=
+  SquarePackingArchive.Records.Square34.s34_eq_six
+
+example : SquarePackingArchive.IsMinimumSide 35 (6) :=
+  SquarePackingArchive.Records.Square34.s35_eq_six
 
 example : SquarePackingArchive.IsMinimumSide 36 (6) :=
   SquarePackingArchive.Records.SquareNumbers.s36_eq_six

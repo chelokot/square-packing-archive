@@ -606,14 +606,31 @@
       "id": "exact-23-nagamochi",
       "n": 23,
       "relation": "exact",
-      "value": { "decimal": "5", "expression": "5" },
+      "value": {
+        "decimal": "5",
+        "expression": "5",
+        "lean": "5"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square23.lean",
+          "theorem": "SquarePackingArchive.Records.Square23.s23_eq_five",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -695,14 +712,31 @@
       "id": "exact-34-nagamochi",
       "n": 34,
       "relation": "exact",
-      "value": { "decimal": "6", "expression": "6" },
+      "value": {
+        "decimal": "6",
+        "expression": "6",
+        "lean": "6"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square34.lean",
+          "theorem": "SquarePackingArchive.Records.Square34.s34_eq_six",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -711,14 +745,31 @@
       "id": "exact-35-nagamochi",
       "n": 35,
       "relation": "exact",
-      "value": { "decimal": "6", "expression": "6" },
+      "value": {
+        "decimal": "6",
+        "expression": "6",
+        "lean": "6"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square34.lean",
+          "theorem": "SquarePackingArchive.Records.Square34.s35_eq_six",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true

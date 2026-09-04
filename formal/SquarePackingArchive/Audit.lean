@@ -5,6 +5,8 @@ import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.Square15
 import SquarePackingArchive.Records.Square24
+import SquarePackingArchive.Records.Square23
+import SquarePackingArchive.Records.Square34
 import SquarePackingArchive.Records.Square46
 import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square68
@@ -56,6 +58,10 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.Square24.points_unavoidable
 #print axioms SquarePackingArchive.Records.Square24.s24_lower_bound
 #print axioms SquarePackingArchive.Records.Square24.s24_eq_five
+#print axioms SquarePackingArchive.StaggeredLattice.lowerBound
+#print axioms SquarePackingArchive.Records.Square23.s23_eq_five
+#print axioms SquarePackingArchive.Records.Square34.s34_eq_six
+#print axioms SquarePackingArchive.Records.Square34.s35_eq_six
 #print axioms SquarePackingArchive.PlacedSquare.scaleCenter_strictFits
 #print axioms SquarePackingArchive.lowerBound_succ_of_strict_unavoidable
 #print axioms SquarePackingArchive.Records.Square46.s46_eq_seven
