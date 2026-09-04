@@ -34,6 +34,12 @@ jobs:
       - uses: actions/checkout@v7
       - run: python3 ../scripts/generate-lean-evidence-audit.py --check
       - run: python3 ../scripts/check-nagamochi-counterexample.py --check-figure
+      - name: Check exact search experiments
+        working-directory: experiments/near-square-search
+        run: |
+          python3 -S -m unittest -v test_exact_geometry test_row_compensation
+          python3 -S check_results.py results-7.9999.jsonl
+          python3 -S check_results.py results-7.999999.jsonl
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal

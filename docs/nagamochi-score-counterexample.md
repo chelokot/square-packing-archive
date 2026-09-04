@@ -135,3 +135,5 @@ It does not cross `y=1`, so Lemma 6 does not apply.
 The general packing theorem needs a repaired argument or a different proof.
 The individual packing results already checked in Lean have separate proofs;
 this counterexample does not affect them.
+
+[Follow-up: packing searches and direct Lean proof work](nagamochi-counterexample-search.md).
