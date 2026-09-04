@@ -274,6 +274,37 @@ theorem upperCap_area_add_half_section_gt_half_of_fits
   exact strict_bound.trans_le (add_le_add area_bound
     (mul_le_mul le_rfl section_bound bot_le bot_le))
 
+lemma cap_score_gt_half_add_fifth_height
+    {cosine sine height : ℝ}
+    (cosine_positive : 0 < cosine)
+    (sine_positive : 0 < sine)
+    (unit : cosine ^ 2 + sine ^ 2 = 1)
+    (height_lower : cosine + sine - 1 ≤ height) :
+    1 / 2 + height / 5 <
+      (height / sine) * (height / cosine) / 2 + height / (sine * cosine) / 2 := by
+  have product_positive : 0 < cosine * sine := mul_pos cosine_positive sine_positive
+  have sum_gt_one : 1 < cosine + sine := by
+    nlinarith
+  have sum_lt_three_halves : cosine + sine < 3 / 2 := by
+    nlinarith [sq_nonneg (cosine - sine)]
+  have product_bound : cosine * sine ≤ 1 / 2 := by
+    nlinarith [sq_nonneg (cosine - sine)]
+  have base_positive : 0 < (cosine + sine - 1) ^ 2 * (3 / 2 - (cosine + sine)) :=
+    mul_pos (sq_pos_of_pos (by linarith)) (by linarith)
+  have base_identity :
+      5 * (cosine + sine - 1) ^ 2 + (5 - 2 * cosine * sine) * (cosine + sine - 1) -
+          5 * cosine * sine =
+        (cosine + sine - 1) ^ 2 * (3 / 2 - (cosine + sine)) := by
+    linear_combination (cosine + sine + 3 / 2) * unit
+  have increase_nonnegative : 0 ≤ (height - (cosine + sine - 1)) *
+      (5 * (height + (cosine + sine - 1)) + 5 - 2 * cosine * sine) :=
+    mul_nonneg (by linarith) (by linarith)
+  have polynomial_positive :
+      0 < 5 * height ^ 2 + (5 - 2 * cosine * sine) * height - 5 * cosine * sine := by
+    nlinarith [base_identity]
+  field_simp
+  nlinarith
+
 end Nagamochi
 
 end SquarePackingArchive

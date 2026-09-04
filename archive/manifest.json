@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-04",
+  "updatedAt": "2026-09-05",
   "problem": {
     "symbol": "s",
     "name": "Packing unit squares in a square",
@@ -941,7 +941,7 @@
       "id": "exact-63-nagamochi",
       "n": 63,
       "relation": "exact",
-      "value": { "decimal": "8", "expression": "8" },
+      "value": { "decimal": "8", "expression": "8", "lean": "8" },
       "announcedAt": "2005",
       "contributors": [{ "author": "nagamochi", "role": "prover" }],
       "evidence": [
@@ -949,6 +949,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/NagamochiAugmented.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s63_eq_eight",
+          "checkedAt": "2026-09-05"
         }
       ],
       "active": true
@@ -1145,7 +1153,7 @@
       "id": "exact-80-nagamochi",
       "n": 80,
       "relation": "exact",
-      "value": { "decimal": "9", "expression": "9" },
+      "value": { "decimal": "9", "expression": "9", "lean": "9" },
       "announcedAt": "2005",
       "contributors": [{ "author": "nagamochi", "role": "prover" }],
       "evidence": [
@@ -1153,6 +1161,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/NagamochiAugmented.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s80_eq_nine",
+          "checkedAt": "2026-09-05"
         }
       ],
       "active": true
@@ -1201,7 +1217,7 @@
       "id": "exact-99-nagamochi",
       "n": 99,
       "relation": "exact",
-      "value": { "decimal": "10", "expression": "10" },
+      "value": { "decimal": "10", "expression": "10", "lean": "10" },
       "announcedAt": "2005",
       "contributors": [{ "author": "nagamochi", "role": "prover" }],
       "evidence": [
@@ -1209,6 +1225,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/NagamochiAugmented.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s99_eq_ten",
+          "checkedAt": "2026-09-05"
         }
       ],
       "active": true
