@@ -2,126 +2,133 @@ import {
   exactCoverageByYear,
   type CompiledArchive,
 } from "@square-packing/domain";
-
-const chartWidth = 720;
-const chartHeight = 240;
-const padding = 34;
-
-const points = (
-  values: readonly { year: number; count: number }[],
-  maximum: number,
-): string => {
-  const minimumYear = Math.min(...values.map(({ year }) => year));
-  const maximumYear = Math.max(...values.map(({ year }) => year));
-  return values
-    .map(({ year, count }) => {
-      const x =
-        padding +
-        ((year - minimumYear) / Math.max(1, maximumYear - minimumYear)) *
-          (chartWidth - padding * 2);
-      const y =
-        chartHeight -
-        padding -
-        (count / Math.max(1, maximum)) * (chartHeight - padding * 2);
-      return `${x},${y}`;
-    })
-    .join(" ");
-};
+import { copy } from "../copy.ts";
 
 export const CoverageChart = ({ archive }: { archive: CompiledArchive }) => {
   const coverage = exactCoverageByYear(archive);
-  const maximum = Math.max(...coverage.map(({ published }) => published));
-  const published = coverage.map(({ year, published: count }) => ({
-    year,
-    count,
-  }));
-  const verified = coverage.map(({ year, verified: count }) => ({
-    year,
-    count,
-  }));
-  const firstYear = coverage.at(0)?.year ?? 1975;
-  const lastYear = coverage.at(-1)?.year ?? 2026;
-
+  if (coverage.length === 0) return null;
+  const firstYear = coverage[0]!.year;
+  const lastYear = coverage[coverage.length - 1]!.year;
+  const maximum = Math.max(
+    1,
+    ...coverage.flatMap(({ published, verified }) => [published, verified]),
+  );
+  const horizontal = (year: number) =>
+    38 + ((year - firstYear) / Math.max(1, lastYear - firstYear)) * 528;
+  const vertical = (count: number) => 198 - (count / maximum) * 170;
+  const path = (key: "published" | "verified") =>
+    coverage
+      .map((point, index) =>
+        index === 0
+          ? `M ${horizontal(point.year)} ${vertical(point[key])}`
+          : `H ${horizontal(point.year)} V ${vertical(point[key])}`,
+      )
+      .join(" ");
+  const latest = coverage[coverage.length - 1]!;
   return (
-    <section className="rounded-3xl border border-white/10 bg-ink-900/70 p-5 md:p-7">
-      <p className="mb-2 font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
-        Formalization gap
+    <div>
+      <h3 className="font-serif text-2xl">{copy.coverageTitle}</h3>
+      <p className="mt-3 max-w-xl text-xs leading-6 text-muted">
+        {copy.coverageDescription}
       </p>
-      <div className="mb-5 flex items-end justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-white">
-            Exact results over time
-          </h2>
-          <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
-            Amber records what the literature proves. Mint only moves when Lean
-            accepts the theorem.
-          </p>
-        </div>
-        <div className="hidden text-right font-mono text-xs text-slate-500 sm:block">
-          {firstYear} → {lastYear}
-        </div>
-      </div>
       <svg
-        viewBox={`0 0 ${chartWidth} ${chartHeight}`}
-        className="w-full overflow-visible"
+        viewBox="0 0 600 235"
+        className="mt-4 w-full"
         role="img"
-        aria-label="Published and Lean-verified exact results by year"
+        aria-label={copy.coverageTitle}
       >
-        {[0, 0.25, 0.5, 0.75, 1].map((fraction) => {
-          const y =
-            chartHeight - padding - fraction * (chartHeight - padding * 2);
-          return (
-            <g key={fraction}>
-              <line
-                x1={padding}
-                x2={chartWidth - padding}
-                y1={y}
-                y2={y}
-                stroke="rgba(255,255,255,.07)"
-              />
-              <text
-                x={padding - 10}
-                y={y + 4}
-                textAnchor="end"
-                fill="#64748b"
-                fontSize="10"
-              >
-                {Math.round(maximum * fraction)}
-              </text>
-            </g>
-          );
-        })}
-        <polyline
-          points={points(published, maximum)}
+        {[0, Math.round(maximum / 2), maximum].map((value) => (
+          <g key={value}>
+            <line
+              x1="38"
+              x2="566"
+              y1={vertical(value)}
+              y2={vertical(value)}
+              stroke="var(--color-rule)"
+            />
+            <text
+              x="28"
+              y={vertical(value) + 4}
+              textAnchor="end"
+              fontSize="11"
+              fill="var(--color-muted)"
+            >
+              {value}
+            </text>
+          </g>
+        ))}
+        <path
+          d={path("published")}
           fill="none"
-          stroke="#ffc66d"
-          strokeWidth="3"
-          strokeLinejoin="round"
+          stroke="var(--color-ochre)"
+          strokeWidth="2"
         />
-        <polyline
-          points={points(verified, maximum)}
+        <path
+          d={path("verified")}
           fill="none"
-          stroke="#62f5c8"
-          strokeWidth="3"
-          strokeLinejoin="round"
+          stroke="var(--color-forest)"
+          strokeWidth="2"
         />
         <circle
-          cx={chartWidth - padding}
-          cy={chartHeight - padding}
-          r="5"
-          fill="#62f5c8"
+          cx={horizontal(lastYear)}
+          cy={vertical(latest.published)}
+          r="3"
+          fill="var(--color-ochre)"
         />
+        <circle
+          cx={horizontal(lastYear)}
+          cy={vertical(latest.verified)}
+          r="3"
+          fill="var(--color-forest)"
+        />
+        <text x="38" y="224" fontSize="11" fill="var(--color-muted)">
+          {firstYear}
+        </text>
+        <text
+          x="566"
+          y="224"
+          textAnchor="end"
+          fontSize="11"
+          fill="var(--color-muted)"
+        >
+          {lastYear}
+        </text>
       </svg>
-      <div className="mt-2 flex gap-5 text-xs text-slate-400">
-        <span>
-          <i className="mr-2 inline-block h-0.5 w-5 align-middle bg-amber-300" />
-          Published exact
+      <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs">
+        <span className="text-ochre">
+          {copy.coveragePublished}{" "}
+          <b className="ml-1 font-mono">{latest.published}</b>
         </span>
-        <span>
-          <i className="mr-2 inline-block h-0.5 w-5 align-middle bg-mint-300" />
-          Lean verified
+        <span className="text-forest">
+          {copy.coverageVerified}{" "}
+          <b className="ml-1 font-mono">{latest.verified}</b>
         </span>
       </div>
-    </section>
+      <details className="mt-5 text-xs text-muted">
+        <summary className="py-2">{copy.coverageData}</summary>
+        <table className="mt-2 w-full text-left">
+          <thead>
+            <tr>
+              <th scope="col" className="py-2">
+                {copy.columns.date}
+              </th>
+              <th scope="col">{copy.coveragePublished}</th>
+              <th scope="col">{copy.coverageVerified}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {coverage.map((point) => (
+              <tr key={point.year} className="border-t border-rule font-mono">
+                <th scope="row" className="py-2 font-normal">
+                  {point.year}
+                </th>
+                <td>{point.published}</td>
+                <td>{point.verified}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </details>
+    </div>
   );
 };

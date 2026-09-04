@@ -28,6 +28,7 @@ export const sourceSchema = z.object({
 export const valueSchema = z.object({
   decimal,
   expression: z.string().min(1).optional(),
+  lean: z.string().min(1).optional(),
   polynomial: z.string().min(1).optional(),
 });
 
@@ -36,38 +37,86 @@ export const contributorSchema = z.object({
   role: z.enum(["discoverer", "discoverer-and-prover", "optimizer", "prover"]),
 });
 
-export const evidenceSchema = z.object({
-  kind: z.enum([
-    "elementary-construction",
-    "elementary-proof",
-    "interval-certificate",
-    "lean-proof",
-    "published-proof",
-    "tracker-record",
-  ]),
-  status: z.enum([
-    "computationally-checked",
-    "lean-checked",
-    "published",
-    "reported",
-  ]),
-  source: identifier,
-  artifact: z.string().min(1).optional(),
-  theorem: z.string().min(1).optional(),
-});
+export const evidenceSchema = z
+  .object({
+    kind: z.enum([
+      "elementary-construction",
+      "elementary-proof",
+      "interval-certificate",
+      "lean-proof",
+      "published-proof",
+      "tracker-record",
+    ]),
+    status: z.enum([
+      "computationally-checked",
+      "lean-checked",
+      "published",
+      "reported",
+    ]),
+    source: identifier,
+    artifact: z.string().min(1).optional(),
+    theorem: z.string().min(1).optional(),
+    checkedAt: z.iso.date().optional(),
+  })
+  .superRefine((evidence, context) => {
+    if (evidence.kind === "lean-proof") {
+      if (evidence.status !== "lean-checked") {
+        context.addIssue({
+          code: "custom",
+          message: "Lean evidence must be lean-checked",
+          path: ["status"],
+        });
+      }
+      for (const field of ["artifact", "theorem", "checkedAt"] as const) {
+        if (evidence[field] === undefined) {
+          context.addIssue({
+            code: "custom",
+            message: `Lean evidence requires ${field}`,
+            path: [field],
+          });
+        }
+      }
+    } else if (evidence.status === "lean-checked") {
+      context.addIssue({
+        code: "custom",
+        message: "Only Lean evidence can be lean-checked",
+        path: ["status"],
+      });
+    }
+    if (evidence.kind !== "lean-proof" && evidence.checkedAt !== undefined) {
+      context.addIssue({
+        code: "custom",
+        message: "Only Lean evidence can declare checkedAt",
+        path: ["checkedAt"],
+      });
+    }
+  });
 
-export const claimSchema = z.object({
-  id: identifier,
-  n: z.number().int().positive(),
-  relation: z.enum(["exact", "lower", "upper"]),
-  value: valueSchema,
-  announcedAt: date,
-  contributors: z.array(contributorSchema),
-  evidence: z.array(evidenceSchema).min(1),
-  configuration: identifier.optional(),
-  supersedes: identifier.optional(),
-  active: z.boolean(),
-});
+export const claimSchema = z
+  .object({
+    id: identifier,
+    n: z.number().int().positive(),
+    relation: z.enum(["exact", "lower", "upper"]),
+    value: valueSchema,
+    announcedAt: date,
+    contributors: z.array(contributorSchema),
+    evidence: z.array(evidenceSchema).min(1),
+    configuration: identifier.optional(),
+    supersedes: identifier.optional(),
+    active: z.boolean(),
+  })
+  .superRefine((claim, context) => {
+    if (
+      claim.value.lean === undefined &&
+      claim.evidence.some((evidence) => evidence.kind === "lean-proof")
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "Lean-verified claim requires value.lean",
+        path: ["value", "lean"],
+      });
+    }
+  });
 
 export const configurationReferenceSchema = z.object({
   id: identifier,

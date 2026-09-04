@@ -8,8 +8,9 @@
   ],
   "scripts": {
     "archive:build": "bun run scripts/build-archive.ts",
-    "archive:check": "bun run scripts/check-archive.ts",
+    "archive:check": "python3 scripts/generate-lean-evidence-audit.py --check && bun run scripts/check-archive.ts",
     "build": "bun run archive:build && bun --filter @square-packing/web build",
+    "site:package": "bun run archive:build && bun --filter @square-packing/web build --base=/ && bun run scripts/package-site.ts",
     "check": "bun run archive:check && bun --filter '*' check",
     "dev": "bun run archive:build && bun --filter @square-packing/web dev",
     "format": "prettier --write .",
@@ -21,6 +22,6 @@
     "@playwright/test": "^1.55.0",
     "@types/bun": "^1.2.22",
     "prettier": "^3.6.2",
-    "typescript": "^5.9.2"
+    "typescript": "^7.0.2"
   }
 }

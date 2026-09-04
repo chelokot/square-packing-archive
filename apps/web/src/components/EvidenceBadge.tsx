@@ -4,43 +4,44 @@ import {
   type VerificationLevel,
 } from "@square-packing/domain";
 import { BadgeCheck, BookOpen, Cpu, Radio } from "lucide-react";
+import { copy } from "../copy.ts";
 
-const presentation: Readonly<
+export const evidencePresentation: Readonly<
   Record<
     VerificationLevel,
     { label: string; className: string; icon: typeof BadgeCheck }
   >
 > = {
   "lean-verified": {
-    label: "Lean verified",
-    className: "border-mint-300/40 bg-mint-300/10 text-mint-300",
+    label: copy.verified,
+    className: "border-forest/30 bg-forest-soft text-forest",
     icon: BadgeCheck,
   },
   "published-unformalized": {
-    label: "Published · awaiting Lean",
-    className: "border-amber-300/35 bg-amber-300/10 text-amber-300",
+    label: copy.published,
+    className: "border-ochre/25 bg-ochre-soft text-ochre",
     icon: BookOpen,
   },
   "computational-evidence": {
-    label: "Computed · awaiting Lean",
-    className: "border-violet-300/35 bg-violet-300/10 text-violet-300",
+    label: copy.computed,
+    className: "border-plum/25 bg-plum-soft text-plum",
     icon: Cpu,
   },
   reported: {
-    label: "Reported",
-    className: "border-white/15 bg-white/5 text-slate-300",
+    label: copy.reported,
+    className: "border-rule bg-paper text-muted",
     icon: Radio,
   },
 };
 
 export const EvidenceBadge = ({ claim }: { claim: Claim }) => {
-  const item = presentation[verificationLevel(claim)];
+  const item = evidencePresentation[verificationLevel(claim)];
   const Icon = item.icon;
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.68rem] font-semibold tracking-wide ${item.className}`}
+      className={`inline-flex items-center gap-1.5 border px-2 py-1 text-[0.65rem] leading-4 ${item.className}`}
     >
-      <Icon className="size-3.5" aria-hidden="true" />
+      <Icon className="size-3.5 shrink-0" aria-hidden="true" />
       {item.label}
     </span>
   );

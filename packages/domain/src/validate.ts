@@ -48,18 +48,6 @@ export const validateArchiveReferences = (
       if (!sourceIds.has(evidence.source)) {
         errors.push(`${claim.id}: unknown source ${evidence.source}`);
       }
-      if (
-        evidence.status === "lean-checked" &&
-        evidence.kind !== "lean-proof"
-      ) {
-        errors.push(`${claim.id}: only Lean evidence can be lean-checked`);
-      }
-      if (
-        evidence.kind === "lean-proof" &&
-        evidence.status !== "lean-checked"
-      ) {
-        errors.push(`${claim.id}: Lean evidence must be lean-checked`);
-      }
     }
     if (claim.supersedes !== undefined && !claimIds.has(claim.supersedes)) {
       errors.push(`${claim.id}: unknown superseded claim ${claim.supersedes}`);

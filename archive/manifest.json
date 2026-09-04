@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-16",
+  "updatedAt": "2026-09-04",
   "problem": {
     "symbol": "s",
     "name": "Packing unit squares in a square",
@@ -50,7 +50,7 @@
       "title": "Squares in Squares",
       "authors": ["ellsworth", "friedman"],
       "url": "https://kingbird.myphotos.cc/packing/squares_in_squares.html",
-      "accessedAt": "2026-08-16"
+      "accessedAt": "2026-08-29"
     },
     {
       "id": "tracker-history",
@@ -58,7 +58,7 @@
       "title": "Squares in Squares: Older and Alternative Packings",
       "authors": ["ellsworth", "friedman"],
       "url": "https://kingbird.myphotos.cc/packing/squares_in_squares__compared.html",
-      "accessedAt": "2026-08-16"
+      "accessedAt": "2026-08-29"
     },
     {
       "id": "friedman-survey",
@@ -122,7 +122,7 @@
       "id": "exact-1-grid",
       "n": 1,
       "relation": "exact",
-      "value": { "decimal": "1", "expression": "1" },
+      "value": { "decimal": "1", "expression": "1", "lean": "1" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -136,7 +136,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/Basic.lean",
-          "theorem": "SquarePackingArchive.Records.Basic.s1_eq_one"
+          "theorem": "SquarePackingArchive.Records.Basic.s1_eq_one",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -145,7 +146,7 @@
       "id": "exact-2-goebel",
       "n": 2,
       "relation": "exact",
-      "value": { "decimal": "2", "expression": "2" },
+      "value": { "decimal": "2", "expression": "2", "lean": "2" },
       "announcedAt": "1979",
       "contributors": [{ "author": "goebel", "role": "prover" }],
       "evidence": [
@@ -153,6 +154,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/NearSquare.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s2_eq_two",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -161,7 +170,7 @@
       "id": "exact-3-goebel",
       "n": 3,
       "relation": "exact",
-      "value": { "decimal": "2", "expression": "2" },
+      "value": { "decimal": "2", "expression": "2", "lean": "2" },
       "announcedAt": "1979",
       "contributors": [{ "author": "goebel", "role": "prover" }],
       "evidence": [
@@ -169,6 +178,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/NearSquare.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s3_eq_two",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -177,7 +194,7 @@
       "id": "exact-4-grid",
       "n": 4,
       "relation": "exact",
-      "value": { "decimal": "2", "expression": "2" },
+      "value": { "decimal": "2", "expression": "2", "lean": "2" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -191,16 +208,49 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s4_eq_two"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s4_eq_two",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
     },
     {
+      "id": "upper-5-goebel-construction",
+      "n": 5,
+      "relation": "upper",
+      "value": {
+        "decimal": "2.70710678118654",
+        "expression": "2 + √2 / 2",
+        "lean": "2 + Real.sqrt 2 / 2"
+      },
+      "announcedAt": "1979",
+      "contributors": [{ "author": "goebel", "role": "discoverer" }],
+      "evidence": [
+        {
+          "kind": "elementary-construction",
+          "status": "published",
+          "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square5.lean",
+          "theorem": "SquarePackingArchive.Records.Square5.s5_le_goebel",
+          "checkedAt": "2026-08-29"
+        }
+      ],
+      "active": false
+    },
+    {
       "id": "exact-5-goebel",
       "n": 5,
       "relation": "exact",
-      "value": { "decimal": "2.70710678118654", "expression": "2 + √2 / 2" },
+      "value": {
+        "decimal": "2.70710678118654",
+        "expression": "2 + √2 / 2",
+        "lean": "2 + Real.sqrt 2 / 2"
+      },
       "announcedAt": "1979",
       "contributors": [{ "author": "goebel", "role": "discoverer-and-prover" }],
       "evidence": [
@@ -208,6 +258,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square5.lean",
+          "theorem": "SquarePackingArchive.Records.Square5.s5_eq_goebel",
+          "checkedAt": "2026-08-29"
         }
       ],
       "active": true
@@ -251,7 +309,7 @@
       "id": "exact-8-friedman",
       "n": 8,
       "relation": "exact",
-      "value": { "decimal": "3", "expression": "3" },
+      "value": { "decimal": "3", "expression": "3", "lean": "3" },
       "announcedAt": "1999",
       "contributors": [{ "author": "friedman", "role": "prover" }],
       "evidence": [
@@ -259,6 +317,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square8.lean",
+          "theorem": "SquarePackingArchive.Records.Square8.s8_eq_three",
+          "checkedAt": "2026-08-29"
         }
       ],
       "active": true
@@ -267,7 +333,7 @@
       "id": "exact-9-grid",
       "n": 9,
       "relation": "exact",
-      "value": { "decimal": "3", "expression": "3" },
+      "value": { "decimal": "3", "expression": "3", "lean": "3" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -281,7 +347,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s9_eq_three"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s9_eq_three",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -309,7 +376,11 @@
       "id": "upper-11-goebel",
       "n": 11,
       "relation": "upper",
-      "value": { "decimal": "3.91421356237309", "expression": "5 / 2 + √2" },
+      "value": {
+        "decimal": "3.91421356237309",
+        "expression": "5 / 2 + √2",
+        "lean": "5 / 2 + Real.sqrt 2"
+      },
       "announcedAt": "1979",
       "contributors": [{ "author": "goebel", "role": "discoverer" }],
       "evidence": [
@@ -317,6 +388,14 @@
           "kind": "tracker-record",
           "status": "reported",
           "source": "tracker-history"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_goebel_1979",
+          "checkedAt": "2026-08-29"
         }
       ],
       "active": false
@@ -325,7 +404,11 @@
       "id": "upper-11-hamalainen",
       "n": 11,
       "relation": "upper",
-      "value": { "decimal": "3.88561808316412", "expression": "2 + 4√2 / 3" },
+      "value": {
+        "decimal": "3.88561808316412",
+        "expression": "2 + 4√2 / 3",
+        "lean": "2 + 4 * Real.sqrt 2 / 3"
+      },
       "announcedAt": "1980",
       "contributors": [{ "author": "hamalainen", "role": "discoverer" }],
       "evidence": [
@@ -333,6 +416,14 @@
           "kind": "tracker-record",
           "status": "reported",
           "source": "tracker-history"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_hamalainen_1980",
+          "checkedAt": "2026-08-29"
         }
       ],
       "supersedes": "upper-11-goebel",
@@ -360,10 +451,42 @@
       "active": true
     },
     {
+      "id": "upper-11-trump-rationalized",
+      "n": 11,
+      "relation": "upper",
+      "value": {
+        "decimal": "3.88",
+        "expression": "97 / 25",
+        "lean": "((97 : ℚ) / 25 : ℝ)"
+      },
+      "announcedAt": "2026-08-29",
+      "contributors": [
+        { "author": "trump", "role": "discoverer" },
+        { "author": "chelokot", "role": "prover" }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-current"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square11.lean",
+          "theorem": "SquarePackingArchive.Records.Square11TrumpRationalized.s11_le_3_88",
+          "checkedAt": "2026-08-29"
+        }
+      ],
+      "configuration": "square-11-trump-rationalized",
+      "active": false
+    },
+    {
       "id": "upper-12-grid",
       "n": 12,
       "relation": "upper",
-      "value": { "decimal": "4", "expression": "4" },
+      "value": { "decimal": "4", "expression": "4", "lean": "4" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -371,6 +494,14 @@
           "kind": "elementary-construction",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s12_le_four",
+          "checkedAt": "2026-08-20"
         }
       ],
       "active": true
@@ -411,7 +542,7 @@
       "id": "exact-15-friedman",
       "n": 15,
       "relation": "exact",
-      "value": { "decimal": "4", "expression": "4" },
+      "value": { "decimal": "4", "expression": "4", "lean": "4" },
       "announcedAt": "1999",
       "contributors": [{ "author": "friedman", "role": "prover" }],
       "evidence": [
@@ -419,6 +550,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square15.lean",
+          "theorem": "SquarePackingArchive.Records.Square15.s15_eq_four",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -427,7 +566,7 @@
       "id": "exact-16-grid",
       "n": 16,
       "relation": "exact",
-      "value": { "decimal": "4", "expression": "4" },
+      "value": { "decimal": "4", "expression": "4", "lean": "4" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -441,7 +580,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s16_eq_four"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s16_eq_four",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -466,14 +606,31 @@
       "id": "exact-23-nagamochi",
       "n": 23,
       "relation": "exact",
-      "value": { "decimal": "5", "expression": "5" },
+      "value": {
+        "decimal": "5",
+        "expression": "5",
+        "lean": "5"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square23.lean",
+          "theorem": "SquarePackingArchive.Records.Square23.s23_eq_five",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -482,14 +639,31 @@
       "id": "exact-24-friedman",
       "n": 24,
       "relation": "exact",
-      "value": { "decimal": "5", "expression": "5" },
+      "value": {
+        "decimal": "5",
+        "expression": "5",
+        "lean": "5"
+      },
       "announcedAt": "1999",
-      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "friedman",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square24.lean",
+          "theorem": "SquarePackingArchive.Records.Square24.s24_eq_five",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -498,7 +672,7 @@
       "id": "exact-25-grid",
       "n": 25,
       "relation": "exact",
-      "value": { "decimal": "5", "expression": "5" },
+      "value": { "decimal": "5", "expression": "5", "lean": "5" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -512,7 +686,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s25_eq_five"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s25_eq_five",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -537,14 +712,31 @@
       "id": "exact-34-nagamochi",
       "n": 34,
       "relation": "exact",
-      "value": { "decimal": "6", "expression": "6" },
+      "value": {
+        "decimal": "6",
+        "expression": "6",
+        "lean": "6"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square34.lean",
+          "theorem": "SquarePackingArchive.Records.Square34.s34_eq_six",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -553,14 +745,31 @@
       "id": "exact-35-nagamochi",
       "n": 35,
       "relation": "exact",
-      "value": { "decimal": "6", "expression": "6" },
+      "value": {
+        "decimal": "6",
+        "expression": "6",
+        "lean": "6"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square34.lean",
+          "theorem": "SquarePackingArchive.Records.Square34.s35_eq_six",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -569,7 +778,7 @@
       "id": "exact-36-grid",
       "n": 36,
       "relation": "exact",
-      "value": { "decimal": "6", "expression": "6" },
+      "value": { "decimal": "6", "expression": "6", "lean": "6" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -583,7 +792,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s36_eq_six"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s36_eq_six",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -592,14 +802,31 @@
       "id": "exact-46-bentz",
       "n": 46,
       "relation": "exact",
-      "value": { "decimal": "7", "expression": "7" },
+      "value": {
+        "decimal": "7",
+        "expression": "7",
+        "lean": "7"
+      },
       "announcedAt": "2009-08",
-      "contributors": [{ "author": "bentz", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "bentz",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "bentz-2010"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square46.lean",
+          "theorem": "SquarePackingArchive.Records.Square46.s46_eq_seven",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -608,14 +835,31 @@
       "id": "exact-47-nagamochi",
       "n": 47,
       "relation": "exact",
-      "value": { "decimal": "7", "expression": "7" },
+      "value": {
+        "decimal": "7",
+        "expression": "7",
+        "lean": "7"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square46.lean",
+          "theorem": "SquarePackingArchive.Records.Square46.s47_eq_seven",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -624,14 +868,31 @@
       "id": "exact-48-nagamochi",
       "n": 48,
       "relation": "exact",
-      "value": { "decimal": "7", "expression": "7" },
+      "value": {
+        "decimal": "7",
+        "expression": "7",
+        "lean": "7"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square46.lean",
+          "theorem": "SquarePackingArchive.Records.Square46.s48_eq_seven",
+          "checkedAt": "2026-09-04"
         }
       ],
       "active": true
@@ -640,7 +901,7 @@
       "id": "exact-49-grid",
       "n": 49,
       "relation": "exact",
-      "value": { "decimal": "7", "expression": "7" },
+      "value": { "decimal": "7", "expression": "7", "lean": "7" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -654,7 +915,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s49_eq_seven"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s49_eq_seven",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -695,7 +957,7 @@
       "id": "exact-64-grid",
       "n": 64,
       "relation": "exact",
-      "value": { "decimal": "8", "expression": "8" },
+      "value": { "decimal": "8", "expression": "8", "lean": "8" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -709,7 +971,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s64_eq_eight"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s64_eq_eight",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -718,7 +981,10 @@
       "id": "upper-68-brendberg",
       "n": 68,
       "relation": "upper",
-      "value": { "decimal": "8.80357394752856" },
+      "value": {
+        "decimal": "8.80357394752856",
+        "lean": "((880357394752856 : ℚ) / 100000000000000 : ℝ)"
+      },
       "announcedAt": "2023-06",
       "contributors": [{ "author": "brendberg", "role": "discoverer" }],
       "evidence": [
@@ -726,6 +992,14 @@
           "kind": "tracker-record",
           "status": "reported",
           "source": "tracker-history"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_brendberg_2023",
+          "checkedAt": "2026-08-20"
         }
       ],
       "active": false
@@ -734,7 +1008,10 @@
       "id": "upper-68-schadt-ellsworth",
       "n": 68,
       "relation": "upper",
-      "value": { "decimal": "8.80345993651653" },
+      "value": {
+        "decimal": "8.80345993651653",
+        "lean": "((880345993651653 : ℚ) / 100000000000000 : ℝ)"
+      },
       "announcedAt": "2025-12",
       "contributors": [
         { "author": "schadt", "role": "optimizer" },
@@ -745,6 +1022,14 @@
           "kind": "tracker-record",
           "status": "reported",
           "source": "tracker-current"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_ellsworth_2025",
+          "checkedAt": "2026-08-20"
         }
       ],
       "supersedes": "upper-68-brendberg",
@@ -754,7 +1039,10 @@
       "id": "upper-68-archive",
       "n": 68,
       "relation": "upper",
-      "value": { "decimal": "8.80339" },
+      "value": {
+        "decimal": "8.80339",
+        "lean": "((880339 : ℚ) / 100000 : ℝ)"
+      },
       "announcedAt": "2026-08-16",
       "contributors": [{ "author": "chelokot", "role": "optimizer" }],
       "evidence": [
@@ -769,7 +1057,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/Square68.lean",
-          "theorem": "SquarePackingArchive.Records.Square68.s68_le_8_80339"
+          "theorem": "SquarePackingArchive.Records.Square68.s68_le_8_80339",
+          "checkedAt": "2026-08-16"
         }
       ],
       "configuration": "square-68",
@@ -780,7 +1069,10 @@
       "id": "upper-69-morandi-cantrell",
       "n": 69,
       "relation": "upper",
-      "value": { "decimal": "8.82721205592900" },
+      "value": {
+        "decimal": "8.82721205592900",
+        "lean": "((882721205592900 : ℚ) / 100000000000000 : ℝ)"
+      },
       "announcedAt": "2023-08",
       "contributors": [
         { "author": "morandi", "role": "discoverer" },
@@ -791,6 +1083,14 @@
           "kind": "tracker-record",
           "status": "reported",
           "source": "tracker-current"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s69_le_morandi_cantrell_2023",
+          "checkedAt": "2026-08-20"
         }
       ],
       "active": false
@@ -799,7 +1099,10 @@
       "id": "upper-69-archive",
       "n": 69,
       "relation": "upper",
-      "value": { "decimal": "8.8272" },
+      "value": {
+        "decimal": "8.8272",
+        "lean": "((5517 : ℚ) / 625 : ℝ)"
+      },
       "announcedAt": "2026-08-16",
       "contributors": [{ "author": "chelokot", "role": "optimizer" }],
       "evidence": [
@@ -814,7 +1117,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/Square69.lean",
-          "theorem": "SquarePackingArchive.Records.Square69.s69_le_8_8272"
+          "theorem": "SquarePackingArchive.Records.Square69.s69_le_8_8272",
+          "checkedAt": "2026-08-16"
         }
       ],
       "configuration": "square-69",
@@ -857,7 +1161,7 @@
       "id": "exact-81-grid",
       "n": 81,
       "relation": "exact",
-      "value": { "decimal": "9", "expression": "9" },
+      "value": { "decimal": "9", "expression": "9", "lean": "9" },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -871,7 +1175,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s81_eq_nine"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s81_eq_nine",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -910,6 +1215,10 @@
     }
   ],
   "configurations": [
+    {
+      "id": "square-11-trump-rationalized",
+      "path": "configurations/square-11-trump-rationalized.json"
+    },
     { "id": "square-68", "path": "configurations/square-68.json" },
     { "id": "square-69", "path": "configurations/square-69.json" }
   ]

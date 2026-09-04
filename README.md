@@ -27,10 +27,19 @@ the literature faithfully while making the formalization gap measurable.
 - A Lean geometry model, a formal area theorem, a proof that `s(m²) = m` for
   every `m`, and a rational separating-axis certificate checker with a proved
   soundness theorem.
+- Exact finite-point proofs, a shared staggered-lattice theorem, and a
+  continuous-motion preservation theorem; see the
+  [Friedman](docs/friedman-unavoidable-formalization.md),
+  [Bentz lattice](docs/bentz-lattice-formalization.md), and
+  [moving-configuration](docs/bentz-moving-unavoidable-formalization.md) notes.
 - A generated dashboard with a proof matrix, historical coverage graph, record
   timelines, source links, and an interactive packing viewer.
 - Viewer controls for zoom, pan, view rotation, square inspection, exact
   coordinates, and filtering by orientation group.
+- A shared `?n=` selection across the matrix, viewer, and record history;
+  searchable evidence and author filters; accessible square inspection.
+- Separate publication and Lean check dates. Historical coverage uses the
+  date each proof was recorded as checked, rather than its publication year.
 
 The historical catalog is intentionally incomplete at the first release. Missing
 records are visible as missing; import work never invents metadata or silently
@@ -88,6 +97,20 @@ The web application runs locally with:
 bun run dev
 ```
 
+The optional private Sites preview uses the same app, built at the origin root:
+
+```console
+bun run site:package
+```
+
+This produces `dist/site.tar.gz` containing only the built static site and its
+Sites deployment metadata. The normal build retains the GitHub Pages base path.
+The static packaging script follows the Sites archive contract; the bundled
+Worker-only packaging helper and Vite 8 plugin are not used by this Vite 7 app.
+
+The social-preview artwork at `apps/web/public/og.png` was generated with the
+built-in imagegen tool using the prompt recorded in [the artwork notes](docs/site-artwork.md).
+
 ## Reproducible imports
 
 The archive's two initial computational records are imported from the companion
@@ -118,6 +141,13 @@ makes possible. Every individual result retains discoverer, optimizer, prover,
 date, and source roles where available.
 
 See [ATTRIBUTION.md](ATTRIBUTION.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+Source-specific proof limitations and corrections are recorded in
+[the Nagamochi 2005 notes](docs/nagamochi-2005-formalization.md). In particular,
+Lean checks a [counterexample to the universal resource-score premise](docs/nagamochi-score-counterexample.md);
+the general near-square packing theorem remains unverified here, not disproved.
+The reusable
+finite-piercing reduction and its current geometric coverage are tracked in
+[the Friedman unavoidable-point notes](docs/friedman-unavoidable-formalization.md).
 
 ## License
 

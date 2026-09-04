@@ -13,14 +13,15 @@ export type VerificationLevel =
   | "published-unformalized"
   | "reported";
 
+const isPublishedProof = (evidence: Evidence): boolean =>
+  evidence.status === "published" &&
+  (evidence.kind === "published-proof" || evidence.kind === "elementary-proof");
+
 const evidenceLevel = (evidence: Evidence): VerificationLevel => {
   if (evidence.kind === "lean-proof" && evidence.status === "lean-checked") {
     return "lean-verified";
   }
-  if (
-    evidence.kind === "published-proof" ||
-    evidence.kind === "elementary-proof"
-  ) {
+  if (isPublishedProof(evidence)) {
     return "published-unformalized";
   }
   if (
@@ -87,22 +88,34 @@ export const claimsByYear = (
 export const exactCoverageByYear = (
   archive: ArchiveManifest,
 ): readonly { year: number; published: number; verified: number }[] => {
-  const exactClaims = archive.claims
-    .filter((claim) => claim.relation === "exact")
-    .sort((left, right) => left.announcedAt.localeCompare(right.announcedAt));
-  const years = [
-    ...new Set(
-      exactClaims.map((claim) => Number(claim.announcedAt.slice(0, 4))),
+  const exactClaims = archive.claims.filter(
+    (claim) => claim.relation === "exact",
+  );
+  const published = exactClaims
+    .filter((claim) => claim.evidence.some(isPublishedProof))
+    .map((claim) => ({
+      n: claim.n,
+      year: Number(claim.announcedAt.slice(0, 4)),
+    }));
+  const verified = exactClaims.flatMap((claim) =>
+    claim.evidence.flatMap((evidence) =>
+      evidence.kind === "lean-proof" &&
+      evidence.status === "lean-checked" &&
+      evidence.checkedAt !== undefined
+        ? [{ n: claim.n, year: Number(evidence.checkedAt.slice(0, 4)) }]
+        : [],
     ),
-  ];
-  return years.map((year) => {
-    const known = exactClaims.filter(
-      (claim) => Number(claim.announcedAt.slice(0, 4)) <= year,
-    );
-    return {
-      year,
-      published: new Set(known.map((claim) => claim.n)).size,
-      verified: new Set(known.filter(isVerified).map((claim) => claim.n)).size,
-    };
-  });
+  );
+  const years = [
+    ...new Set([...published, ...verified].map(({ year }) => year)),
+  ].sort((left, right) => left - right);
+  const countThrough = (events: typeof published, year: number): number =>
+    new Set(
+      events.filter((event) => event.year <= year).map((event) => event.n),
+    ).size;
+  return years.map((year) => ({
+    year,
+    published: countThrough(published, year),
+    verified: countThrough(verified, year),
+  }));
 };

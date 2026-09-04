@@ -1,8 +1,12 @@
-import type { Claim, CompiledArchive } from "@square-packing/domain";
-import { ArrowDownRight } from "lucide-react";
+import type { CompiledArchive } from "@square-packing/domain";
+import { copy } from "../copy.ts";
 import { EvidenceBadge } from "./EvidenceBadge.tsx";
-
-const year = (claim: Claim): number => Number(claim.announcedAt.slice(0, 4));
+import { BoundHistory } from "./BoundHistory.tsx";
+import {
+  ClaimLinks,
+  claimValue,
+  contributorNames,
+} from "./claimPresentation.tsx";
 
 export const RecordTimeline = ({
   archive,
@@ -13,67 +17,41 @@ export const RecordTimeline = ({
 }) => {
   const claims = archive.claims
     .filter((claim) => claim.n === squareCount)
-    .sort((left, right) => left.announcedAt.localeCompare(right.announcedAt));
-  const authorById = new Map(
-    archive.authors.map((author) => [author.id, author]),
-  );
-
-  if (claims.length === 0) {
-    return (
-      <div className="flex min-h-56 items-center justify-center rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center text-sm text-slate-500">
-        No curated record for n={squareCount} yet. The import queue remains
-        explicit rather than silently guessing.
-      </div>
-    );
-  }
-
+    .sort((left, right) => right.announcedAt.localeCompare(left.announcedAt));
   return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-ink-900/70">
-      <div className="border-b border-white/10 px-5 py-5 md:px-7">
-        <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
-          Record lineage
+    <div>
+      <h3 className="font-serif text-2xl">{copy.historyTitle(squareCount)}</h3>
+      <BoundHistory claims={claims} />
+      {claims.length === 0 ? (
+        <p className="mt-5 border-y border-rule py-8 text-sm text-muted">
+          {copy.noHistory}
         </p>
-        <h2 className="mt-2 text-2xl font-semibold text-white">
-          s({squareCount})
-        </h2>
-      </div>
-      <ol className="divide-y divide-white/[0.07]">
-        {claims.map((claim, index) => (
-          <li
-            key={claim.id}
-            className="grid gap-4 px-5 py-5 sm:grid-cols-[5rem_1fr_auto] sm:items-center md:px-7"
-          >
-            <div className="font-mono text-sm text-slate-500">
-              {year(claim)}
-            </div>
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="font-mono text-lg text-white">
-                  {claim.relation === "upper"
-                    ? "≤"
-                    : claim.relation === "lower"
-                      ? "≥"
-                      : "="}{" "}
-                  {claim.value.decimal}
-                </span>
-                {index > 0 && claim.relation === "upper" ? (
-                  <ArrowDownRight className="size-4 text-mint-300" />
-                ) : null}
+      ) : (
+        <ol className="mt-5 divide-y divide-rule border-y border-rule">
+          {claims.map((claim) => (
+            <li
+              key={claim.id}
+              className="grid gap-3 py-5 sm:grid-cols-[4rem_minmax(0,1fr)]"
+            >
+              <div className="font-mono text-xs text-muted">
+                {claim.announcedAt.slice(0, 4)}
               </div>
-              <p className="mt-1 text-sm text-slate-400">
-                {claim.contributors.length === 0
-                  ? "Elementary construction"
-                  : claim.contributors
-                      .map(
-                        ({ author }) => authorById.get(author)?.name ?? author,
-                      )
-                      .join(", ")}
-              </p>
-            </div>
-            <EvidenceBadge claim={claim} />
-          </li>
-        ))}
-      </ol>
+              <div>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="font-mono text-sm">{claimValue(claim)}</p>
+                  <EvidenceBadge claim={claim} />
+                </div>
+                <p className="mb-3 mt-2 text-xs leading-5 text-muted">
+                  {contributorNames(archive, claim)}
+                  <span className="mx-2">·</span>
+                  {claim.active ? copy.current : copy.historical}
+                </p>
+                <ClaimLinks archive={archive} claim={claim} />
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 };
