@@ -1,6 +1,7 @@
 import SquarePackingArchive.Geometry
 import SquarePackingArchive.Area
 import SquarePackingArchive.Unavoidable
+import SquarePackingArchive.GridObstruction
 import SquarePackingArchive.Triangle
 import SquarePackingArchive.Rectangle
 import SquarePackingArchive.Friedman
@@ -13,6 +14,9 @@ import SquarePackingArchive.NagamochiLemmas
 import SquarePackingArchive.NagamochiHalfArea
 import SquarePackingArchive.NagamochiCutSymmetry
 import SquarePackingArchive.NagamochiInner
+import SquarePackingArchive.NagamochiBoundaryAnchor
+import SquarePackingArchive.NagamochiCapLowerBound
+import SquarePackingArchive.NagamochiEdgeStripNoCorners
 import SquarePackingArchive.NagamochiInnerCorners
 import SquarePackingArchive.NagamochiCounterexample
 import SquarePackingArchive.NagamochiCanonicalTerminal
