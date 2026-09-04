@@ -30,12 +30,14 @@ The remaining work is the exhaustive geometric classification that derives
 these measure hypotheses from the position of every admissible square, plus
 the corresponding Case 2 and Cases 4–7 bridges.
 
-For Case 2, the formal layer also contains the aggregate compensation theorem:
-if the central-area score plus a stated loss covers the full dilated-square
-area, and the boundary-line score covers that loss, then the total score is
-greater than one. The remaining Case 2 obligation is geometric: construct the
-finite family of cut-off triangles and derive those two inequalities from the
-strict chord-versus-triangle lemma.
+For Case 2, the aggregate compensation theorem is now connected to actual
+geometric cuts. Lean bounds each removed cap by an explicitly placed right
+triangle, computes its area, constructs its open boundary chord, and proves
+that the half-weighted chord compensates that area. Measure-preserving
+reflections and coordinate swaps handle all four sides, and a finite covering
+argument sums the cuts even when they overlap. The remaining obligation is
+to construct the typed adjacent-cut data, including resource-segment clipping,
+from the paper's exhaustive positional classification.
 
 The discrete `Q` and `P` resources are represented by typed finite indices, so
 their coordinates have a single formal definition. Lean proves that membership
@@ -218,9 +220,21 @@ separate clipping hypothesis is needed. The resulting
 `score_gt_one_of_case3_single_crossed_line_offset` works for all four sides and
 every frame, with only center position, line intersection, absence of the
 other three line intersections, and the numerical offset bound as premises.
-Case 3 configurations with additional adjacent triangle cuts still require the
-geometric triangle compensation shared with Case 2. The paper's step that
-disregards those cuts is not yet formalized.
+The later compensation layer handles Case 3 configurations with additional
+adjacent triangle cuts. The half-space containing the center is covered by the
+inner rectangle and the cuts on the other three sides. Their actual areas are
+compensated by their respective chords, leaving the exceptional long chord
+available for the strict score inequality. Thus
+`score_gt_one_of_long_chord_and_adjacent_boundary_cuts` formalizes the paper's
+step that disregards those triangles without assuming the inner-area bound.
+It still requires a long chord and typed adjacent-cut geometry; the universal
+case classifier is not yet proved.
+
+`score_gt_one_of_single_bottom_crossing` also removes the earlier numerical
+offset premise in the single-bottom-crossing case. It constructs the required
+chord or compensating cap for every frame, including axis-aligned squares.
+Its premises are the center above the bottom inner line, an actual line
+intersection, the other three inner bounds, and the dilation bounds.
 
 Case 5 is now fully proved for all four container corners and every frame.
 Local quarter rotations normalize the frame signs without changing the

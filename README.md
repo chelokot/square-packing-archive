@@ -27,6 +27,11 @@ the literature faithfully while making the formalization gap measurable.
 - A Lean geometry model, a formal area theorem, a proof that `s(m²) = m` for
   every `m`, and a rational separating-axis certificate checker with a proved
   soundness theorem.
+- Exact finite-point proofs, a shared staggered-lattice theorem, and a
+  continuous-motion preservation theorem; see the
+  [Friedman](docs/friedman-unavoidable-formalization.md),
+  [Bentz lattice](docs/bentz-lattice-formalization.md), and
+  [moving-configuration](docs/bentz-moving-unavoidable-formalization.md) notes.
 - A generated dashboard with a proof matrix, historical coverage graph, record
   timelines, source links, and an interactive packing viewer.
 - Viewer controls for zoom, pan, view rotation, square inspection, exact

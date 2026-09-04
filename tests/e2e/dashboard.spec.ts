@@ -1,4 +1,12 @@
 import { expect, test } from "@playwright/test";
+import {
+  activeClaims,
+  manifestSchema,
+  verificationLevel,
+} from "@square-packing/domain";
+import manifestJson from "../../archive/manifest.json";
+
+const claims = activeClaims(manifestSchema.parse(manifestJson));
 
 test("opens a packing, inspects exact coordinates, and controls the view", async ({
   page,
@@ -66,15 +74,43 @@ test("catalog filters preserve the distinction between published and checked pro
 }) => {
   await page.goto("./#claims");
   const catalog = page.locator("#claims");
+  await catalog
+    .getByLabel("Filter by evidence")
+    .selectOption("published-unformalized");
+  const publishedClaims = claims.filter(
+    (claim) => verificationLevel(claim) === "published-unformalized",
+  );
+  await expect(catalog.locator("tbody tr")).toHaveCount(publishedClaims.length);
   await expect(
-    catalog.locator("tbody").getByText("Published · awaiting Lean").first(),
-  ).toBeVisible();
+    catalog
+      .locator("tbody")
+      .getByText("Published · awaiting Lean", { exact: true }),
+  ).toHaveCount(publishedClaims.length);
   await expect(
-    catalog.locator("tbody").getByText("Lean verified").first(),
-  ).toBeVisible();
+    catalog.locator("tbody").getByText("Lean verified", { exact: true }),
+  ).toHaveCount(0);
+  await catalog.getByLabel("Filter by evidence").selectOption("all");
   await catalog.getByRole("searchbox").fill("Nagamochi");
   await expect(catalog.locator("tbody tr").first()).toContainText("Nagamochi");
   await catalog.getByLabel("Filter by evidence").selectOption("lean-verified");
+  const verifiedNagamochiClaims = claims.filter(
+    (claim) =>
+      verificationLevel(claim) === "lean-verified" &&
+      claim.contributors.some(
+        (contributor) => contributor.author === "nagamochi",
+      ),
+  );
+  await expect(catalog.locator("tbody th")).toHaveText(
+    [...verifiedNagamochiClaims]
+      .sort((left, right) => left.n - right.n)
+      .map((claim) => String(claim.n)),
+  );
+  await expect(
+    catalog
+      .locator("tbody")
+      .getByText("Published · awaiting Lean", { exact: true }),
+  ).toHaveCount(0);
+  await catalog.getByRole("searchbox").fill("no-such-archive-claim");
   await expect(
     catalog.getByText(
       "No matching claims. Try another search or evidence filter.",

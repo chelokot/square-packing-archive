@@ -11,6 +11,7 @@ import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
 import SquarePackingArchive.NagamochiLemmas
 import SquarePackingArchive.NagamochiHalfArea
+import SquarePackingArchive.NagamochiCutSymmetry
 import SquarePackingArchive.NagamochiCanonicalTerminal
 import SquarePackingArchive.Nagamochi
 import SquarePackingArchive.RationalCertificate
