@@ -18,7 +18,7 @@ try {
   await cp(builtSite, resolve(deployment, "client"), { recursive: true });
   await Bun.write(
     resolve(deployment, ".openai/hosting.json"),
-    JSON.stringify({ ...hosting, static: { directory: "client" } }),
+    JSON.stringify({ ...hosting, static: { directory: "dist/client" } }),
   );
   await mkdir(resolve(root, "dist"), { recursive: true });
   await $`tar -C ${staging} -czf ${artifact} dist`;
