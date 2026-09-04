@@ -132,8 +132,9 @@ Shift the square right by `1/10000`. Then `(2,0.9)` touches the edge from the
 bottom vertex to the right vertex. That edge ends at height `λ·1599/1601 < 1`.
 It does not cross `y=1`, so Lemma 6 does not apply.
 
-The general packing theorem needs a repaired argument or a different proof.
-The individual packing results already checked in Lean have separate proofs;
-this counterexample does not affect them.
+The square-container result now has a [separate Lean proof](nagamochi-compensation-proof.md):
+`s(n²−2)=n` for every integer `n ≥ 2`. It compensates low-scoring squares with
+other squares in the packing; it does not assume Lemma 1. This counterexample
+remains valid. The paper's full rectangular-container theorem is not verified here.
 
 [Follow-up: packing searches and direct Lean proof work](nagamochi-counterexample-search.md).

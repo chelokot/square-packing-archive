@@ -144,7 +144,9 @@ See [ATTRIBUTION.md](ATTRIBUTION.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 Source-specific proof limitations and corrections are recorded in
 [the Nagamochi 2005 notes](docs/nagamochi-2005-formalization.md). In particular,
 Lean checks a [counterexample to the universal resource-score premise](docs/nagamochi-score-counterexample.md);
-the general near-square packing theorem remains unverified here, not disproved.
+the packing result nevertheless holds: Lean now proves `s(n²−2)=n` for every
+integer `n ≥ 2`, using [a replacement compensation argument](docs/nagamochi-compensation-proof.md)
+and separate proofs for the small cases. The false lemma is not assumed.
 The reusable
 finite-piercing reduction and its current geometric coverage are tracked in
 [the Friedman unavoidable-point notes](docs/friedman-unavoidable-formalization.md).

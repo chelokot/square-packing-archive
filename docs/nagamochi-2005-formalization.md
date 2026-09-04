@@ -1,20 +1,22 @@
 # Nagamochi 2005 formalization notes
 
-## Current result: the universal score premise is false
+## Current result: the square-container theorem is proved
 
-The weaker family **`s(n²−1)=n` is now proved in Lean for every `n ≥ 2`**,
-using a repaired measure. See [the proof notes](nagamochi-counterexample-search.md).
-The repair adds `0.4` to the total resource mass, so it does not settle `n²−2`.
+Lean proves **`s(n²−2)=n` for every integer `n ≥ 2`**, with no scoring
+hypothesis. The [compensation proof](nagamochi-compensation-proof.md) covers
+`n ≥ 4`; independent proofs handle two and seven squares. The weaker family
+`s(n²−1)=n` is also proved for every `n ≥ 2`, using an augmented measure.
 
-The general claim `s(n²−2)=n` is **not formalized**. Lean now proves
+The original per-square claim remains false. Lean proves
 `¬ NagamochiResource.ScoresDilatedSquares 4`: the per-square resource inequality
 used by our translation of Hiroshi Nagamochi's
 [Packing Unit Squares in a Rectangle](https://doi.org/10.37236/1934)
 has a counterexample.
 
-This does **not** disprove the packing theorem. It prevents completing the
-existing conditional reduction by proving its score premise. A corrected
-argument or a different proof of the packing theorem is required.
+The replacement proof does not try to prove this false premise. Instead,
+it shows that other squares must supply enough excess score to compensate
+every low-scoring square in a hypothetical packing. The paper's full theorem
+for rectangular containers is not verified here.
 
 The counterexample uses the original resource definition: area in
 `[1,n−1]²`, four half-weighted boundary segments, eight `Q` atoms of weight
@@ -35,7 +37,7 @@ between the failed lemma and the original packing claim.
 | Every square with center in one of the four corner regions: Case 5 | Proved                                         |
 | Canonical pinned terminal square                                   | Proved under its stated geometric hypotheses   |
 | Universal edge-strip score: Cases 6–7                              | Cannot hold as stated; explicit counterexample |
-| General `s(n²−2)=n`                                                | Not proved or disproved here                   |
+| General `s(n²−2)=n`, using compensation and separate small cases   | Proved for every `n ≥ 2`                       |
 | General `s(n²−1)=n`, using the augmented measure                   | Proved for every `n ≥ 2`                       |
 
 These statements use the same `PlacedSquare`, arbitrary orthonormal frames,
@@ -101,8 +103,8 @@ Those algebraic corrections do not repair the universal score inequality.
 
 ## Archive policy
 
-No pending historical claim is promoted on the basis of the conditional
-near-square reduction. Previously verified individual cases retain their
-independent Lean proofs; this discovery does not invalidate those proofs.
+The records for 7, 14, 62, 79, and 98 squares now link to unconditional Lean
+proofs. No record is promoted on the basis of the conditional near-square
+reduction. Previously verified individual cases retain their independent proofs.
 The archive distinguishes a published mathematical claim, a checked proof of
 that claim, and a checked obstruction to a proposed proof.

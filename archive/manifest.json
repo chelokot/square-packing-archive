@@ -293,7 +293,7 @@
       "id": "exact-7-friedman",
       "n": 7,
       "relation": "exact",
-      "value": { "decimal": "3", "expression": "3" },
+      "value": { "decimal": "3", "expression": "3", "lean": "3" },
       "announcedAt": "1999",
       "contributors": [{ "author": "friedman", "role": "prover" }],
       "evidence": [
@@ -301,6 +301,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square7.lean",
+          "theorem": "SquarePackingArchive.Records.Square7.s7_eq_three",
+          "checkedAt": "2026-09-05"
         }
       ],
       "active": true
@@ -526,7 +534,7 @@
       "id": "exact-14-friedman",
       "n": 14,
       "relation": "exact",
-      "value": { "decimal": "4", "expression": "4" },
+      "value": { "decimal": "4", "expression": "4", "lean": "4" },
       "announcedAt": "1999",
       "contributors": [{ "author": "friedman", "role": "prover" }],
       "evidence": [
@@ -534,6 +542,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "friedman-survey"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/NagamochiPackingTheorem.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s14_eq_four",
+          "checkedAt": "2026-09-05"
         }
       ],
       "active": true
@@ -925,7 +941,7 @@
       "id": "exact-62-nagamochi",
       "n": 62,
       "relation": "exact",
-      "value": { "decimal": "8", "expression": "8" },
+      "value": { "decimal": "8", "expression": "8", "lean": "8" },
       "announcedAt": "2005",
       "contributors": [{ "author": "nagamochi", "role": "prover" }],
       "evidence": [
@@ -933,6 +949,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/NagamochiPackingTheorem.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s62_eq_eight",
+          "checkedAt": "2026-09-05"
         }
       ],
       "active": true
@@ -1137,7 +1161,7 @@
       "id": "exact-79-nagamochi",
       "n": 79,
       "relation": "exact",
-      "value": { "decimal": "9", "expression": "9" },
+      "value": { "decimal": "9", "expression": "9", "lean": "9" },
       "announcedAt": "2005",
       "contributors": [{ "author": "nagamochi", "role": "prover" }],
       "evidence": [
@@ -1145,6 +1169,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/NagamochiPackingTheorem.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s79_eq_nine",
+          "checkedAt": "2026-09-05"
         }
       ],
       "active": true
@@ -1201,7 +1233,7 @@
       "id": "exact-98-nagamochi",
       "n": 98,
       "relation": "exact",
-      "value": { "decimal": "10", "expression": "10" },
+      "value": { "decimal": "10", "expression": "10", "lean": "10" },
       "announcedAt": "2005",
       "contributors": [{ "author": "nagamochi", "role": "prover" }],
       "evidence": [
@@ -1209,6 +1241,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "nagamochi-2005"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/NagamochiPackingTheorem.lean",
+          "theorem": "SquarePackingArchive.Records.NearSquare.s98_eq_ten",
+          "checkedAt": "2026-09-05"
         }
       ],
       "active": true

@@ -76,7 +76,7 @@ lemma innerHalfArea_add_selectedCuts_covers_square
     ((measure_union_le _ _).trans (add_le_add le_rfl (measure_biUnion_finset_le _ _))))
 
 lemma score_gt_one_of_center_inner_cut_budgets
-    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ} {score : ENNReal}
     (selected : Finset NagamochiResource.BoundarySide)
     (budget : NagamochiResource.BoundarySide → ENNReal)
     (factor_gt_one : 1 < factor)
@@ -88,13 +88,12 @@ lemma score_gt_one_of_center_inner_cut_budgets
         (boundarySideToInner side).inwardNormal point <
           (boundarySideToInner side).inwardThreshold size)
     (available : NagamochiResource.innerArea size (square.dilatedInteriorRegion factor) +
-      ∑ side ∈ selected, budget side ≤
-        NagamochiResource.measure size (square.dilatedInteriorRegion factor))
+      ∑ side ∈ selected, budget side ≤ score)
     (classification : ∀ side ∈ selected,
       volume (boundaryCutRegion (boundarySideToInner side) size
         (square.dilatedInteriorRegion factor)) ≤ budget side ∨
       (1 / 2 : ENNReal) * ENNReal.ofReal factor ≤ budget side) :
-    1 < NagamochiResource.measure size (square.dilatedInteriorRegion factor) := by
+    1 < score := by
   classical
   have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
   have half_twice : (1 / 2 : ENNReal) * 2 = 1 := by

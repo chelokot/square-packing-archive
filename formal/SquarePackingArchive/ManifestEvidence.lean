@@ -1,4 +1,5 @@
 import SquarePackingArchive.NagamochiAugmented
+import SquarePackingArchive.NagamochiPackingTheorem
 import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.HistoricalUpperBounds
 import SquarePackingArchive.Records.NearSquare
@@ -11,6 +12,7 @@ import SquarePackingArchive.Records.Square46
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
+import SquarePackingArchive.Records.Square7
 import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.SquareNumbers
 
@@ -32,6 +34,9 @@ example : SquarePackingArchive.HasPacking 5 (2 + Real.sqrt 2 / 2) :=
 example : SquarePackingArchive.IsMinimumSide 5 (2 + Real.sqrt 2 / 2) :=
   SquarePackingArchive.Records.Square5.s5_eq_goebel
 
+example : SquarePackingArchive.IsMinimumSide 7 (3) :=
+  SquarePackingArchive.Records.Square7.s7_eq_three
+
 example : SquarePackingArchive.IsMinimumSide 8 (3) :=
   SquarePackingArchive.Records.Square8.s8_eq_three
 
@@ -49,6 +54,9 @@ example : SquarePackingArchive.HasPacking 11 (((97 : ℚ) / 25 : ℝ)) :=
 
 example : SquarePackingArchive.HasPacking 12 (4) :=
   SquarePackingArchive.Records.HistoricalUpperBounds.s12_le_four
+
+example : SquarePackingArchive.IsMinimumSide 14 (4) :=
+  SquarePackingArchive.Records.NearSquare.s14_eq_four
 
 example : SquarePackingArchive.IsMinimumSide 15 (4) :=
   SquarePackingArchive.Records.Square15.s15_eq_four
@@ -86,6 +94,9 @@ example : SquarePackingArchive.IsMinimumSide 48 (7) :=
 example : SquarePackingArchive.IsMinimumSide 49 (7) :=
   SquarePackingArchive.Records.SquareNumbers.s49_eq_seven
 
+example : SquarePackingArchive.IsMinimumSide 62 (8) :=
+  SquarePackingArchive.Records.NearSquare.s62_eq_eight
+
 example : SquarePackingArchive.IsMinimumSide 63 (8) :=
   SquarePackingArchive.Records.NearSquare.s63_eq_eight
 
@@ -107,11 +118,17 @@ example : SquarePackingArchive.HasPacking 69 (((882721205592900 : ℚ) / 1000000
 example : SquarePackingArchive.HasPacking 69 (((5517 : ℚ) / 625 : ℝ)) :=
   SquarePackingArchive.Records.Square69.s69_le_8_8272
 
+example : SquarePackingArchive.IsMinimumSide 79 (9) :=
+  SquarePackingArchive.Records.NearSquare.s79_eq_nine
+
 example : SquarePackingArchive.IsMinimumSide 80 (9) :=
   SquarePackingArchive.Records.NearSquare.s80_eq_nine
 
 example : SquarePackingArchive.IsMinimumSide 81 (9) :=
   SquarePackingArchive.Records.SquareNumbers.s81_eq_nine
+
+example : SquarePackingArchive.IsMinimumSide 98 (10) :=
+  SquarePackingArchive.Records.NearSquare.s98_eq_ten
 
 example : SquarePackingArchive.IsMinimumSide 99 (10) :=
   SquarePackingArchive.Records.NearSquare.s99_eq_ten

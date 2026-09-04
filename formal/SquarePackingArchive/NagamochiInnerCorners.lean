@@ -174,12 +174,19 @@ lemma fullBoundaryLine_le_extended_of_inner_anchor
     cornerExtension_first_apply side measurable, cornerExtension_second_apply side measurable]
   simpa [first, second, coordinates, apply_ite volume, measure_empty] using estimate
 
+lemma innerArea_add_extendedBoundaryScore_le_continuous_corner_score
+    {size : ℕ} {region : Set Plane} (measurable : MeasurableSet region) :
+    NagamochiResource.innerArea size region + extendedBoundaryScore size region ≤
+      NagamochiResource.innerArea size region + NagamochiResource.boundaryLines size region +
+        NagamochiResource.cornerPoints size region := by
+  rw [extendedBoundaryScore, ← add_assoc]
+  exact add_le_add le_rfl (selectedCornerExtensions_le_cornerPoints measurable)
+
 lemma innerArea_add_extendedBoundaryScore_le_measure
     {size : ℕ} {region : Set Plane} (measurable : MeasurableSet region) :
     NagamochiResource.innerArea size region + extendedBoundaryScore size region ≤
       NagamochiResource.measure size region := by
-  rw [extendedBoundaryScore, ← add_assoc]
-  exact (add_le_add le_rfl (selectedCornerExtensions_le_cornerPoints measurable)).trans
+  exact (innerArea_add_extendedBoundaryScore_le_continuous_corner_score measurable).trans
     (NagamochiResource.innerArea_add_boundaryLines_add_cornerPoints_le_measure size region)
 
 lemma score_gt_one_of_compensated_extended_inner_area
@@ -283,14 +290,16 @@ lemma fullBoundaryLine_cut_budget
         chord_inside)
     exact mul_le_mul le_rfl line_bound bot_le bot_le
 
-lemma score_gt_one_of_center_inner
+lemma continuous_corner_score_gt_one_of_center_inner
     {size : ℕ} (square : PlacedSquare) {factor : ℝ}
     (factor_gt_one : 1 < factor)
     (factor_at_most : factor ≤ 101 / 100)
     (inside_container : square.dilatedInteriorRegion factor ⊆ containerRegion size)
     (center_inside : factor • square.center.toPlane ∈
       Icc (fun _ => 1) (fun _ => (size : ℝ) - 1)) :
-    1 < NagamochiResource.measure size (square.dilatedInteriorRegion factor) := by
+    1 < NagamochiResource.innerArea size (square.dilatedInteriorRegion factor) +
+      NagamochiResource.boundaryLines size (square.dilatedInteriorRegion factor) +
+        NagamochiResource.cornerPoints size (square.dilatedInteriorRegion factor) := by
   classical
   have factor_positive : 0 < factor := zero_lt_one.trans factor_gt_one
   let region := square.dilatedInteriorRegion factor
@@ -312,7 +321,7 @@ lemma score_gt_one_of_center_inner
       rw [← sum_extendedBoundaryLine, Finset.mul_sum]
       exact Finset.sum_le_sum_of_subset_of_nonneg subset (fun _ _ _ => bot_le)
     exact (add_le_add le_rfl budget_bound).trans
-      (innerArea_add_extendedBoundaryScore_le_measure region_measurable)
+      (innerArea_add_extendedBoundaryScore_le_continuous_corner_score region_measurable)
   · intro side selected_side
     have active := (Finset.mem_filter.mp selected_side).2
     obtain ⟨anchor, anchor_bounds, anchor_mem⟩ := active.exists_coordinate
@@ -329,5 +338,17 @@ lemma score_gt_one_of_center_inner
       exact Or.inl (compensated.trans budget_bound)
     · simp only [boundarySideToInner_toBoundarySide] at long
       exact Or.inr (long.trans budget_bound)
+
+lemma score_gt_one_of_center_inner
+    {size : ℕ} (square : PlacedSquare) {factor : ℝ}
+    (factor_gt_one : 1 < factor)
+    (factor_at_most : factor ≤ 101 / 100)
+    (inside_container : square.dilatedInteriorRegion factor ⊆ containerRegion size)
+    (center_inside : factor • square.center.toPlane ∈
+      Icc (fun _ => 1) (fun _ => (size : ℝ) - 1)) :
+    1 < NagamochiResource.measure size (square.dilatedInteriorRegion factor) :=
+  (continuous_corner_score_gt_one_of_center_inner square factor_gt_one factor_at_most
+    inside_container center_inside).trans_le
+    (NagamochiResource.innerArea_add_boundaryLines_add_cornerPoints_le_measure size _)
 
 end SquarePackingArchive.Nagamochi

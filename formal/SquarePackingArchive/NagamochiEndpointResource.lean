@@ -133,4 +133,52 @@ theorem endpoint_two_height_continuous_budget_of_fits
         cosine_positive sine_positive horizontal_lower horizontal_upper grid_point_mem next_point_missing
         first_upper_facet first_at_most vertex_below_grid))
 
+theorem endpoint_two_height_score_budget_of_fits
+    (square : PlacedSquare) {size coordinate : ℕ} {side factor firstHeight secondHeight : ℝ}
+    (fits : square.Fits side) (size_lower : 4 ≤ size)
+    (factor_gt_one : 1 < factor) (factor_at_most : factor ≤ 101 / 100)
+    (cosine_positive : 0 < square.frame.cosine)
+    (sine_positive : 0 < square.frame.sine)
+    (coordinate_mem : coordinate ∈ Finset.Icc 2 (size - 2))
+    (grid_point_mem : ![(coordinate : ℝ), (9 / 10 : ℝ)] ∈ square.dilatedInteriorRegion factor)
+    (next_point_missing : ![(coordinate : ℝ) + 1, (9 / 10 : ℝ)] ∉ square.dilatedInteriorRegion factor)
+    (first_upper_facet : factor / 2 ≤ square.dilatedLocalY factor ⟨coordinate, firstHeight⟩)
+    (second_upper_facet : factor / 2 ≤ square.dilatedLocalY factor ⟨coordinate, secondHeight⟩)
+    (first_at_most : firstHeight ≤ 1) (second_at_most : secondHeight ≤ 1)
+    (vertex_below_grid : factor * square.center.y +
+      factor * (square.frame.sine - square.frame.cosine) / 2 ≤ 9 / 10) :
+    ENNReal.ofReal (1 + (1 - firstHeight) / 2 + (1 - secondHeight) / 2) <
+      NagamochiResource.measure size (square.dilatedInteriorRegion factor) := by
+  have coordinate_bounds := Finset.mem_Icc.mp coordinate_mem
+  have coordinate_lower : (2 : ℝ) ≤ coordinate := by exact_mod_cast coordinate_bounds.1
+  have coordinate_upper : (coordinate : ℝ) + 1 ≤ (size : ℝ) - 1 := by
+    have cast_bound : (coordinate : ℝ) ≤ ((size - 2 : ℕ) : ℝ) := by exact_mod_cast coordinate_bounds.2
+    rw [Nat.cast_sub (by omega : 2 ≤ size), Nat.cast_ofNat] at cast_bound
+    linarith
+  have region_measurable := square.measurableSet_dilatedInteriorRegion (zero_lt_one.trans factor_gt_one).ne'
+  have continuous_bound := endpoint_two_height_continuous_budget_of_fits square fits size_lower
+    factor_gt_one factor_at_most cosine_positive sine_positive (by linarith) coordinate_upper
+    grid_point_mem next_point_missing first_upper_facet second_upper_facet first_at_most vertex_below_grid
+  have marked_bound := NagamochiResource.edgePoints_lower_bound_of_mem .bottom coordinate_mem
+    region_measurable grid_point_mem
+  have strict := (ENNReal.add_lt_add_iff_right (by finiteness : (1 / 2 : ENNReal) ≠ ⊤)).2 continuous_bound
+  have encoded : ENNReal.ofReal (1 / 2 + (1 - firstHeight) / 2 + (1 - secondHeight) / 2) +
+      (1 / 2 : ENNReal) = ENNReal.ofReal (1 + (1 - firstHeight) / 2 + (1 - secondHeight) / 2) := by
+    rw [show (1 / 2 : ENNReal) = ENNReal.ofReal (1 / 2 : ℝ) by norm_num [ENNReal.ofReal_div_of_pos],
+      ← ENNReal.ofReal_add (by linarith) (by norm_num)]
+    congr 1
+    ring
+  rw [encoded] at strict
+  have line_bound := NagamochiResource.boundaryLine_le_boundaryLines size .bottom
+    (square.dilatedInteriorRegion factor)
+  have resource_bound :
+      (NagamochiResource.innerArea size (square.dilatedInteriorRegion factor) +
+        (1 / 2 : ENNReal) * NagamochiResource.boundaryLine size .bottom
+          (square.dilatedInteriorRegion factor)) + NagamochiResource.edgePoints size
+            (square.dilatedInteriorRegion factor) ≤
+      NagamochiResource.measure size (square.dilatedInteriorRegion factor) := by
+    simp only [NagamochiResource.measure, Measure.add_apply]
+    exact add_le_add ((add_le_add le_rfl line_bound).trans (le_add_of_nonneg_right bot_le)) le_rfl
+  exact (strict.trans_le (add_le_add le_rfl marked_bound)).trans_le resource_bound
+
 end SquarePackingArchive.Nagamochi

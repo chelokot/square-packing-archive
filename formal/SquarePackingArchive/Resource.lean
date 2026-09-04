@@ -4,6 +4,79 @@ namespace SquarePackingArchive
 
 open Function MeasureTheory Set
 
+lemma sum_scores_eq_sum_transferred_scores
+    {elementCount : ℕ} (scores : Fin elementCount → ℝ)
+    (transfers : Fin elementCount → Fin elementCount → ℝ) :
+    ∑ index, (scores index + ∑ source, transfers source index - ∑ target, transfers index target) =
+      ∑ index, scores index := by
+  simp only [Finset.sum_sub_distrib, Finset.sum_add_distrib]
+  rw [Finset.sum_comm (f := transfers)]
+  ring
+
+theorem finite_scores_sum_gt_card_of_balanced_transfers
+    {elementCount : ℕ} (elementCount_positive : 0 < elementCount)
+    (scores : Fin elementCount → ℝ) (transfers : Fin elementCount → Fin elementCount → ℝ)
+    (compensated_scores : ∀ index,
+      1 < scores index + ∑ source, transfers source index - ∑ target, transfers index target) :
+    (elementCount : ℝ) < ∑ index, scores index := by
+  rw [← sum_scores_eq_sum_transferred_scores scores transfers]
+  calc
+    (elementCount : ℝ) = ∑ _index : Fin elementCount, (1 : ℝ) := by simp
+    _ < _ := Finset.sum_lt_sum (fun index _ => (compensated_scores index).le)
+      ⟨⟨0, elementCount_positive⟩, Finset.mem_univ _, compensated_scores _⟩
+
+lemma finiteFamily_sum_resource_le_mass
+    {elementCount : ℕ} (resource : Measure Plane)
+    (regions : Fin elementCount → Set Plane)
+    (regions_measurable : ∀ index, MeasurableSet (regions index))
+    (regions_disjoint : Pairwise (Disjoint on regions)) :
+    ∑ index, resource (regions index) ≤ resource univ := by
+  have union_identity :
+      ∑ index, resource (regions index) =
+        resource (⋃ index ∈ (Finset.univ : Finset (Fin elementCount)), regions index) := by
+    symm
+    apply measure_biUnion_finset
+    · intro left _ right _ different
+      exact regions_disjoint different
+    · intro index _
+      exact regions_measurable index
+  rw [union_identity]
+  exact measure_mono (subset_univ _)
+
+theorem finiteFamily_real_score_sum_le_mass
+    {elementCount : ℕ} (resource : Measure Plane)
+    (resource_finite : resource univ ≠ ⊤)
+    (regions : Fin elementCount → Set Plane)
+    (regions_measurable : ∀ index, MeasurableSet (regions index))
+    (regions_disjoint : Pairwise (Disjoint on regions)) :
+    ∑ index, (resource (regions index)).toReal ≤ (resource univ).toReal := by
+  have score_finite : ∀ index, resource (regions index) ≠ ⊤ :=
+    fun _ => ne_top_of_le_ne_top resource_finite (measure_mono (subset_univ _))
+  have sum_bound := finiteFamily_sum_resource_le_mass resource regions regions_measurable regions_disjoint
+  have sum_finite := ne_top_of_le_ne_top resource_finite sum_bound
+  have real_bound := (ENNReal.toReal_le_toReal sum_finite resource_finite).mpr sum_bound
+  rwa [ENNReal.toReal_sum (fun index _ => score_finite index)] at real_bound
+
+theorem finiteFamily_card_lt_resourceMass_of_balanced_transfers
+    {elementCount : ℕ} (resource : Measure Plane)
+    (elementCount_positive : 0 < elementCount)
+    (resource_finite : resource univ ≠ ⊤)
+    (regions : Fin elementCount → Set Plane)
+    (regions_measurable : ∀ index, MeasurableSet (regions index))
+    (regions_disjoint : Pairwise (Disjoint on regions))
+    (transfers : Fin elementCount → Fin elementCount → ℝ)
+    (compensated_scores : ∀ index,
+      1 < (resource (regions index)).toReal +
+        ∑ source, transfers source index - ∑ target, transfers index target) :
+    (elementCount : ENNReal) < resource univ := by
+  have score_sum_strict := finite_scores_sum_gt_card_of_balanced_transfers elementCount_positive
+    (fun index => (resource (regions index)).toReal) transfers compensated_scores
+  have score_sum_bound := finiteFamily_real_score_sum_le_mass resource resource_finite regions
+    regions_measurable regions_disjoint
+  apply (ENNReal.toReal_lt_toReal (by simp) resource_finite).mp
+  rw [ENNReal.toReal_natCast]
+  exact score_sum_strict.trans_le score_sum_bound
+
 theorem finiteFamily_card_lt_resourceMass
     {elementCount : ℕ} (resource : Measure Plane)
     (elementCount_positive : 0 < elementCount)
@@ -33,19 +106,7 @@ theorem finiteFamily_card_lt_resourceMass
         · intro index index_mem
           exact (score_real index).le
         · exact ⟨⟨0, elementCount_positive⟩, Finset.mem_univ _, score_real _⟩
-  have sum_measure_le :
-      ∑ index ∈ (Finset.univ : Finset (Fin elementCount)), resource (regions index) ≤
-        resource univ := by
-    calc
-      _ = resource (⋃ index ∈ (Finset.univ : Finset (Fin elementCount)),
-          regions index) := by
-        symm
-        apply measure_biUnion_finset
-        · intro left left_mem right right_mem different
-          exact regions_disjoint different
-        · intro index index_mem
-          exact regions_measurable index
-      _ ≤ resource univ := measure_mono (subset_univ _)
+  have sum_measure_le := finiteFamily_sum_resource_le_mass resource regions regions_measurable regions_disjoint
   have sum_finite :
       ∑ index ∈ (Finset.univ : Finset (Fin elementCount)), resource (regions index) ≠
         ⊤ := ne_top_of_le_ne_top resource_finite sum_measure_le

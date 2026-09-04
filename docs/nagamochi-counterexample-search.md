@@ -1,14 +1,18 @@
 # Can the failed lemma lead to a better packing?
 
-Status, 5 September 2026: **no counterexample to the packing theorem and no
-replacement proof of the full theorem yet**. The work below tests whether the
-[low-scoring square](nagamochi-score-counterexample.md) can help build a packing
-of 62 unit squares in a container with side less than 8.
+Result, 5 September 2026: **Lean proves `s(n²−2)=n` for every integer `n ≥ 2`.**
+No packing counterexample was found. A [replacement proof](nagamochi-compensation-proof.md)
+uses chains of squares to compensate the score deficits; it does not assume
+the false per-square lemma. The records for 7, 14, 62, 79, and 98 squares now
+have unconditional Lean proofs.
+
+The work below records the route to that proof, including unsuccessful searches
+for 62 unit squares in a container smaller than 8×8 and failed local repairs.
 
 ## The `n²−1` family now has a complete Lean proof
 
 For every integer `n ≥ 2`, **`s(n²−1)=n`** is now proved without an unproved
-scoring hypothesis. This is not yet the requested `n²−2` theorem.
+scoring hypothesis. This was an intermediate result toward the `n²−2` proof.
 
 The repaired rule keeps the original area and extended lines, but raises each
 Q point's weight from `0.45` to `0.5`. Every fitting square with side
@@ -178,33 +182,44 @@ of its nearest missing P point can have a combined score below two. The
 [exact pair examples](../experiments/boundary-compensation/README.md) rule out
 that shortcut; compensation may require a longer chain or a different argument.
 
-## What remains
+## The completed compensation argument
 
-The current repair attempt follows chains of squares along the container's
-boundary. Several parts are now checked in Lean:
+The successful proof follows chains of squares along the container's
+boundary. Its geometric steps are checked in Lean:
 
-- A low-scoring bottom-edge square in a positive coordinate frame must cross
-  the next marked point's vertical segment.
-- A right-going neighbor either crosses the next column or satisfies a
-  terminal condition involving its vertex height.
-- Under that terminal condition, a P-point owner's actual area and line
-  score can repay two incoming shortfalls. The proof checks that the counted
-  area really lies inside the inner square, including the last P column.
+- A low-scoring bottom-edge square crosses the next marked point's vertical
+  segment at a height that bounds its shortfall. This holds for every rotation.
+- The finite owner chain reaches a geometric terminal or a square owning two
+  consecutive marked points. No continued propagation is assumed.
+- A P terminal can repay two incoming shortfalls; a Q terminal can repay one.
+  These bounds use the actual original score, with the area, lines, and marked
+  points checked separately.
 - No square can own P points on different container sides.
+- A square owning both Q points at one corner contains the full two segments
+  from those points to the inner corner. A missing incoming segment point
+  therefore excludes that shared ownership.
+- Every square scoring at most one owns exactly one Q and no P. A packing has
+  at most eight such squares.
 
 These statements are in
-[NagamochiBoundaryPropagation.lean](../formal/SquarePackingArchive/NagamochiBoundaryPropagation.lean),
-[NagamochiChainStep.lean](../formal/SquarePackingArchive/NagamochiChainStep.lean),
+[NagamochiInitialDebt.lean](../formal/SquarePackingArchive/NagamochiInitialDebt.lean),
+[NagamochiFiniteChain.lean](../formal/SquarePackingArchive/NagamochiFiniteChain.lean),
 [NagamochiEndpointResource.lean](../formal/SquarePackingArchive/NagamochiEndpointResource.lean),
-and [NagamochiEdgeOwnership.lean](../formal/SquarePackingArchive/NagamochiEdgeOwnership.lean).
-They do not yet connect all boundary chains to a global score bound. In
-particular, the initial shortfall must be tracked quantitatively, the corner
-endpoints must be covered, and the complete argument must handle every frame.
+[NagamochiCornerTerminalResource.lean](../formal/SquarePackingArchive/NagamochiCornerTerminalResource.lean),
+[NagamochiEdgeOwnership.lean](../formal/SquarePackingArchive/NagamochiEdgeOwnership.lean),
+[NagamochiCornerOwnership.lean](../formal/SquarePackingArchive/NagamochiCornerOwnership.lean),
+and [NagamochiBadPacking.lean](../formal/SquarePackingArchive/NagamochiBadPacking.lean).
+The completed [all-orientation transfer theorem](../formal/SquarePackingArchive/NagamochiVerifiedTransfer.lean)
+assigns a terminal and a nonnegative credit to every bad square. Geometric
+[capacity bounds](../formal/SquarePackingArchive/NagamochiAssignmentCapacity.lean)
+allow at most two incoming chains at a P terminal and one at a Q terminal.
+Taking the largest incoming credit proves that each terminal can pay all
+its assigned credits. After these transfers every square scores more than
+one, while the total score remains at most the number of squares: a contradiction.
 
-To disprove the theorem, we need an actual non-overlapping packing below the
-claimed bound, followed by a Lean certificate. To prove it, we need a global
-argument that covers arrangements with many tilted squares. Neither result
-follows from the tilt count or the unsuccessful searches above.
-
-The `n²−2` claims remain unverified. Neither failed searches nor conditional
-lemmas are used to promote them.
+[NagamochiPackingTheorem.lean](../formal/SquarePackingArchive/NagamochiPackingTheorem.lean)
+assembles the argument for `n ≥ 4` and includes independent small-case proofs
+to obtain the full family for `n ≥ 2`. The final theorem has no resource-score
+or geometric-assignment premise. Failed searches and conditional lemmas are
+not used as archive evidence. See the [proof outline](nagamochi-compensation-proof.md)
+for the complete argument and links to its checked components.
