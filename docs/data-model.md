@@ -26,6 +26,25 @@ Tracker records, publications, computational certificates, and Lean proofs are
 different evidence kinds. Derived verification status is a pure function of this
 evidence, with `lean-proof` as the only verified state.
 
+Each Lean evidence record requires `checkedAt`, the full calendar date
+(`YYYY-MM-DD`) when that theorem was first recorded as checked for this claim.
+This date belongs to the evidence, independently of the claim's historical
+`announcedAt`. Non-Lean evidence cannot use `checkedAt`.
+
+The initial dates were recovered from the first Git commit introducing each
+claim/theorem pair in `archive/manifest.json`, using the commit's recorded author
+date. These record when the archive first attested verification, not an earlier
+unrecorded local proof run. Existing evidence is dated August 16, 20, or 29, 2026;
+future additions must record their own check dates.
+
+The exact-coverage timeline counts distinct `n`, including inactive historical
+claims. Publication events use `announcedAt` only for `published-proof` or
+`elementary-proof` evidence with `published` status. Lean verification events use
+their own `checkedAt`. The timeline includes years from both event sets, so a
+modern formalization never appears verified in the original publication year.
+Repeated proofs of the same `n` do not increase either cumulative count. Tracker
+reports alone do not count as published proofs.
+
 Historical provenance and present-day verification remain separate. A later,
 stronger kernel-checked packing may prove an older upper-bound claim without
 being attributed to the historical discoverer or presented as a reconstruction

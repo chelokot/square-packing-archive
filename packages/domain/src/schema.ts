@@ -56,6 +56,7 @@ export const evidenceSchema = z
     source: identifier,
     artifact: z.string().min(1).optional(),
     theorem: z.string().min(1).optional(),
+    checkedAt: z.iso.date().optional(),
   })
   .superRefine((evidence, context) => {
     if (evidence.kind === "lean-proof") {
@@ -66,7 +67,7 @@ export const evidenceSchema = z
           path: ["status"],
         });
       }
-      for (const field of ["artifact", "theorem"] as const) {
+      for (const field of ["artifact", "theorem", "checkedAt"] as const) {
         if (evidence[field] === undefined) {
           context.addIssue({
             code: "custom",
@@ -80,6 +81,13 @@ export const evidenceSchema = z
         code: "custom",
         message: "Only Lean evidence can be lean-checked",
         path: ["status"],
+      });
+    }
+    if (evidence.kind !== "lean-proof" && evidence.checkedAt !== undefined) {
+      context.addIssue({
+        code: "custom",
+        message: "Only Lean evidence can declare checkedAt",
+        path: ["checkedAt"],
       });
     }
   });

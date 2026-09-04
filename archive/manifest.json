@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-29",
+  "updatedAt": "2026-09-04",
   "problem": {
     "symbol": "s",
     "name": "Packing unit squares in a square",
@@ -136,7 +136,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/Basic.lean",
-          "theorem": "SquarePackingArchive.Records.Basic.s1_eq_one"
+          "theorem": "SquarePackingArchive.Records.Basic.s1_eq_one",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -159,7 +160,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/NearSquare.lean",
-          "theorem": "SquarePackingArchive.Records.NearSquare.s2_eq_two"
+          "theorem": "SquarePackingArchive.Records.NearSquare.s2_eq_two",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -182,7 +184,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/NearSquare.lean",
-          "theorem": "SquarePackingArchive.Records.NearSquare.s3_eq_two"
+          "theorem": "SquarePackingArchive.Records.NearSquare.s3_eq_two",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -205,7 +208,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s4_eq_two"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s4_eq_two",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -232,7 +236,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/Square5.lean",
-          "theorem": "SquarePackingArchive.Records.Square5.s5_le_goebel"
+          "theorem": "SquarePackingArchive.Records.Square5.s5_le_goebel",
+          "checkedAt": "2026-08-29"
         }
       ],
       "active": false
@@ -259,7 +264,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/Square5.lean",
-          "theorem": "SquarePackingArchive.Records.Square5.s5_eq_goebel"
+          "theorem": "SquarePackingArchive.Records.Square5.s5_eq_goebel",
+          "checkedAt": "2026-08-29"
         }
       ],
       "active": true
@@ -317,7 +323,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/Square8.lean",
-          "theorem": "SquarePackingArchive.Records.Square8.s8_eq_three"
+          "theorem": "SquarePackingArchive.Records.Square8.s8_eq_three",
+          "checkedAt": "2026-08-29"
         }
       ],
       "active": true
@@ -340,7 +347,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s9_eq_three"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s9_eq_three",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -386,7 +394,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
-          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_goebel_1979"
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_goebel_1979",
+          "checkedAt": "2026-08-29"
         }
       ],
       "active": false
@@ -413,7 +422,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
-          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_hamalainen_1980"
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_hamalainen_1980",
+          "checkedAt": "2026-08-29"
         }
       ],
       "supersedes": "upper-11-goebel",
@@ -465,7 +475,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/Square11.lean",
-          "theorem": "SquarePackingArchive.Records.Square11TrumpRationalized.s11_le_3_88"
+          "theorem": "SquarePackingArchive.Records.Square11TrumpRationalized.s11_le_3_88",
+          "checkedAt": "2026-08-29"
         }
       ],
       "configuration": "square-11-trump-rationalized",
@@ -489,7 +500,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
-          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s12_le_four"
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s12_le_four",
+          "checkedAt": "2026-08-20"
         }
       ],
       "active": true
@@ -560,7 +572,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s16_eq_four"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s16_eq_four",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -631,7 +644,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s25_eq_five"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s25_eq_five",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -702,7 +716,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s36_eq_six"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s36_eq_six",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -773,7 +788,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s49_eq_seven"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s49_eq_seven",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -828,7 +844,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s64_eq_eight"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s64_eq_eight",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
@@ -854,7 +871,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
-          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_brendberg_2023"
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_brendberg_2023",
+          "checkedAt": "2026-08-20"
         }
       ],
       "active": false
@@ -883,7 +901,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
-          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_ellsworth_2025"
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_ellsworth_2025",
+          "checkedAt": "2026-08-20"
         }
       ],
       "supersedes": "upper-68-brendberg",
@@ -911,7 +930,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/Square68.lean",
-          "theorem": "SquarePackingArchive.Records.Square68.s68_le_8_80339"
+          "theorem": "SquarePackingArchive.Records.Square68.s68_le_8_80339",
+          "checkedAt": "2026-08-16"
         }
       ],
       "configuration": "square-68",
@@ -942,7 +962,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
-          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s69_le_morandi_cantrell_2023"
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s69_le_morandi_cantrell_2023",
+          "checkedAt": "2026-08-20"
         }
       ],
       "active": false
@@ -969,7 +990,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/Square69.lean",
-          "theorem": "SquarePackingArchive.Records.Square69.s69_le_8_8272"
+          "theorem": "SquarePackingArchive.Records.Square69.s69_le_8_8272",
+          "checkedAt": "2026-08-16"
         }
       ],
       "configuration": "square-69",
@@ -1026,7 +1048,8 @@
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s81_eq_nine"
+          "theorem": "SquarePackingArchive.Records.SquareNumbers.s81_eq_nine",
+          "checkedAt": "2026-08-16"
         }
       ],
       "active": true
