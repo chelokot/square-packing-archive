@@ -141,8 +141,11 @@ makes possible. Every individual result retains discoverer, optimizer, prover,
 date, and source roles where available.
 
 See [ATTRIBUTION.md](ATTRIBUTION.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
-Source-specific corrections discovered during formalization are recorded in
-[the Nagamochi 2005 notes](docs/nagamochi-2005-formalization.md). The reusable
+Source-specific proof limitations and corrections are recorded in
+[the Nagamochi 2005 notes](docs/nagamochi-2005-formalization.md). In particular,
+Lean checks a [counterexample to the universal resource-score premise](docs/nagamochi-score-counterexample.md);
+the general near-square packing theorem remains unverified here, not disproved.
+The reusable
 finite-piercing reduction and its current geometric coverage are tracked in
 [the Friedman unavoidable-point notes](docs/friedman-unavoidable-formalization.md).
 

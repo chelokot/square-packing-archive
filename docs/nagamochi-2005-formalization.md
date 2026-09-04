@@ -1,249 +1,102 @@
 # Nagamochi 2005 formalization notes
 
-The formalization follows Hiroshi Nagamochi's [Packing Unit Squares in a
-Rectangle](https://doi.org/10.37236/1934). Lean checks the resource mass,
-scaling and counting reduction, and the analytic inequalities used by the
-geometric case split.
+## Current result: the universal score premise is false
 
-Two typographical corrections are required when translating the published
-formulas literally:
+The general claim `s(n²−2)=n` is **not formalized**. Lean now proves
+`¬ NagamochiResource.ScoresDilatedSquares 4`: the per-square resource inequality
+used by our translation of Hiroshi Nagamochi's
+[Packing Unit Squares in a Rectangle](https://doi.org/10.37236/1934)
+has a counterexample.
 
-- In Lemma 3, the displayed factorization of `f(√2 − 0.5, t)` is twice the
-  preceding definition of `f`. The correct identity has a factor `1/2` on the
-  factored right-hand side. This does not change its sign.
-- In Lemma 6, the printed chord formula has numerator `t + t²`, but the next
-  sentence uses `c = 1 − d` with `d = t(1 − t)/(1 + t)`. The consistent chord
-  numerator is `1 + t²`. Lean proves the resulting identity `c + d = 1`.
+This does **not** disprove the packing theorem. It prevents completing the
+existing conditional reduction by proving its score premise. A corrected
+argument or a different proof of the packing theorem is required.
 
-The archive does not mark the near-square family as verified until the full
-seven-case geometric score theorem is connected to these checked analytic
-lemmas. Intermediate reductions are intentionally not treated as proof of the
-historical claim.
+The counterexample uses the original resource definition: area in
+`[1,n−1]²`, four half-weighted boundary segments, eight `Q` atoms of weight
+`9/20`, and the `P` atoms of weight `1/2`. The total mass remains `n²−2`.
 
-The current Case 3 layer now includes exact formulas for both kinds of
-opposite-edge horizontal chord, proofs that their open chords lie in the
-dilated square, and the score consequences used in the paper. Two distinct
-boundary-line chords of length at least the dilation factor have combined score
-greater than one. A single such chord together with at least half of the
-dilated square's area in the inner rectangle also has score greater than one.
-The remaining work is the exhaustive geometric classification that derives
-these measure hypotheses from the position of every admissible square, plus
-the corresponding Case 2 and Cases 4–7 bridges.
+See [the exact counterexample](nagamochi-score-counterexample.md) for coordinates,
+component scores, reproducible calculations, and the precise distinction
+between the failed lemma and the original packing claim.
 
-For Case 2, the aggregate compensation theorem is now connected to actual
-geometric cuts. Lean bounds each removed cap by an explicitly placed right
-triangle, computes its area, constructs its open boundary chord, and proves
-that the half-weighted chord compensates that area. Measure-preserving
-reflections and coordinate swaps handle all four sides, and a finite covering
-argument sums the cuts even when they overlap. The remaining obligation is
-to construct the typed adjacent-cut data, including resource-segment clipping,
-from the paper's exhaustive positional classification.
+## Kernel-checked components
 
-The discrete `Q` and `P` resources are represented by typed finite indices, so
-their coordinates have a single formal definition. Lean proves that membership
-of two distinct `Q` points contributes at least `0.9`, while membership of any
-valid indexed `P` point contributes at least `0.5`. The Case 5 score arithmetic
-is connected as well: positive inner-area score, two distinct `0.1` boundary
-chords, and two distinct `Q` points imply total score greater than one. The
-geometric premise is now connected too: every dilated square whose center lies
-in one of the four corner regions contains the corresponding unit-corner and
-two `Q` points, and therefore has score greater than one.
+| Component                                                          | Status                                         |
+| ------------------------------------------------------------------ | ---------------------------------------------- |
+| Resource measure and total mass `n²−2`                             | Proved                                         |
+| Scaling, disjointness, finite-measure counting                     | Proved                                         |
+| Conditional near-square theorem from `ScoresDilatedSquares`        | Proved, but its premise is false for size 4    |
+| Every square with center in the inner rectangle: Cases 1–4         | Proved                                         |
+| Every square with center in one of the four corner regions: Case 5 | Proved                                         |
+| Canonical pinned terminal square                                   | Proved under its stated geometric hypotheses   |
+| Universal edge-strip score: Cases 6–7                              | Cannot hold as stated; explicit counterexample |
+| General `s(n²−2)=n`                                                | Not proved or disproved here                   |
 
-The final pinned subcase of Case 6 is now connected to the resource measure.
-The corrected Lemma 6 expression is represented as an inner-area contribution
-plus a combined boundary-line/`Q` contribution; the previously checked strict
-real inequality lifts to an `ENNReal` score theorem once those two geometric
-lower bounds are supplied. A general nonnegative real-component compositor is
-used for this and the remaining subcases instead of repeating measure
-arithmetic.
+All these statements use the same `PlacedSquare`, arbitrary orthonormal frames,
+open square interiors, and original resource measure. The counterexample is
+checked by the same Lean kernel as the positive results. No custom axioms,
+unfinished proofs, or native evaluation are used.
 
-The inner-area premise of that pinned subcase is no longer an opaque numerical
-bound. Lean computes the exact Lebesgue measure of a right triangle by Tonelli's
-theorem and the fundamental theorem of calculus, transports the result from
-`ℝ × ℝ` to the archive's `Fin 2 → ℝ` plane, and proves that translations preserve
-the area. The pinned triangle's perpendicular edge lengths are `1 − t` and
-`2t / (1 + t)`, so its area is `t(1 − t) / (1 + t)`, exactly the corrected
-Lemma 6 term. Its open interior has the same area because the frontier of a convex set has zero
-Lebesgue measure. The two legs are oriented by the square's orthonormal frame,
-and Lean proves that this rotation and translation preserve volume. A typed
-witness records convexity and openness of the dilated square, the three
-frame-oriented triangle vertices in its closure, and those vertices in the
-closed inner rectangle. Convexity then puts the complete open triangle in both
-resource regions, even when a contact vertex lies on the square boundary, and
-a kernel-checked bridge feeds the resulting `innerArea` bound directly into
-the pinned score theorem.
+### Inner-center geometry
 
-That canonical placed-square certificate is now complete. Lean constructs the
-square from a tangent-half-angle frame, pins its lower vertex to the container
-bottom, and places `(2, 0.9)` on the required edge. It proves that the exact
-horizontal cut of length `(1+t²)/(1+t)` and the vertical cut of length
-`0.1-c′` lie in the open square, that `(1, 0.9)` contributes the corresponding
-`Q` mass, and that the oriented cut triangle lies in both the square and the
-closed inner rectangle. These three contributions compose to a kernel-checked
-theorem that the canonical terminal square has resource score greater than
-one. The remaining Case 7 obligation is therefore the deformation bridge:
-derive the original square's score bound from each typed disconnected endpoint
-outcome through a formal resource-preserving deformation or an equivalent
-direct dominance lemma, including the appropriate container symmetries.
+`SquarePackingArchive.Nagamochi.score_gt_one_of_center_inner`, defined in
+`NagamochiInnerCorners.lean`, proves the actual resource score exceeds one
+whenever the dilated square lies in the container, its center lies in
+`[1,n−1]²`, and `1 < factor ≤ 101/100`. There are no supplied chord,
+area, missing-corner, or classification hypotheses.
 
-The formal model also constructs this cut directly at a square vertex. The
-first endpoint has local coordinates `(t − 1/2, 1/2)` and the second has local
-coordinates `(1/2, 1/2 − 2t/(1+t))`. For `0 < t < 1`, Lean checks that both
-belong to the closed unit square and proves that the complete open cut triangle
-is contained in the square interior. This rules out a merely area-equivalent,
-but geometrically misoriented, triangle certificate.
+The geometric proof uses active boundaries: a side is active when the square
+meets that side inside the inner rectangle. A convex segment from any exterior
+point to the inner center identifies an active side whose cut covers that point.
+This avoids a false intermediate assumption that every full-line intersection
+lies in the finite resource segment; a separate rational counterexample to
+that assumption is also kernel-checked.
 
-The Lemma 5 branch of Case 6 is connected too. Its checked
-triangle-area-plus-half-chord inequality now composes directly with a typed `P`
-point, a boundary chord, and an inner-area lower bound. For the canonical bottom
-orientation of Case 7, Lean also closes the nonadjacent-chord-plus-`P` branch
-and the short-corner-chord-plus-`Q`-plus-`P` branch. If both extreme `Q` points
-on the boundary line are present, convexity supplies the whole chord between
-them and Lean closes that branch directly. These alternatives are exposed as
-one typed Case 7 resource witness, so the score theorem is independent of the
-geometric classification that constructs it. The remaining obligation is that
-exhaustive classification, including the reduction from the last Case 7 branch
-back to Case 6.
+For active sides, a chord extending past a resource endpoint forces its
+corresponding `Q` point into the square. Its weight pays for the missing
+length. Adjacent cuts are bounded by exact right-triangle areas. Long chords
+are combined with central-reflection half-area bounds. A finite budget theorem
+combines these contributions, counting each resource only once.
 
-The positive-inner-area part of Nagamochi's Lemma 7(iv) is now proved for the
-entire set of four edge strips, not left as a witness. Container containment
-forces the point aligned with the square's scaled center onto the corresponding
-inner boundary inside the open dilated square. Typed horizontal and vertical
-reflections, coordinate swap, and an explicit inward-point family then enter
-the open inner rectangle from every side and either half of the container.
-Consequently the Case 7 `Q`/`P` and dual-`Q` branches derive their strict inner
-contribution directly from the stated center-strip geometry.
-The dual-`Q` constructor is side-independent: for any of the four edge strips,
-the two matching extreme `Q` points, convexity and the strip geometry produce
-the complete typed witness and hence score greater than one. The older
-bottom-side theorem is retained as a specialization of this common interface.
+The implementation is split into:
 
-The discrete implication in Lemma 7(iii) is kernel-checked for every side. A
-typed long open chord on the corresponding `0.9` grid line contains a natural
-coordinate strictly between its endpoints. Coordinates `1` and `n − 1` become
-the correct endpoint `Q` constructors; every other coordinate is proved to lie
-in the finite `P` index range `2..n − 2`. Typed eliminators recover a `Q` under
-the assumption that no `P` is present, or a `P` when neither endpoint `Q` is
-present. Endpoint bounds no longer have to be supplied by a geometric caller:
-Lean derives them from the fact that every point of the open chord lies in the
-closed container.
+- `NagamochiClipping.lean`: active-boundary coverage and endpoint implications.
+- `NagamochiCutBudget.lean`: finite cut coverage and score accounting.
+- `NagamochiInner.lean`: arbitrary-frame cut classification and the no-`Q` case.
+- `NagamochiInnerCorners.lean`: charged endpoint extensions and all inner centers.
 
-The canonical bottom-side geometric constructors for that long-grid-chord
-witness are now checked as well. For a nonadjacent cut, either full cosine or
-sine chord has length at least the dilation factor. For the first adjacent
-pairing, the paper's Lemma 2 inequality is connected to the exact chord of the
-dilated square. For the second adjacent pairing, the missing chord-membership
-and chord-length identities are formalized, and the corrected Lemma 3
-inequality proves the chord longer than one. Instead of the paper's informal
-step that translates the square until it touches the bottom side, container
-containment supplies the weaker half-extent inequality needed by monotonicity,
-so the theorem applies directly to the original square. A tangent-half-angle
-witness, including its
-`t ≤ √2 − 1` bound, is derived directly from any positive frame with
-`sin θ ≤ cos θ`; the complementary angle ordering is reduced to it by
-an exact frame swap. Lean exhausts all four linear orderings of the chord
-endpoints, separates centers below and above `y = 0.9`, and handles axis-aligned
-frames without division. Consequently Lemma 7(i), followed by its discrete
-Lemma 7(iii) consequence, is now proved for every frame in the canonical bottom
-strip. Exact reflection and coordinate-swap transports carry the open chord to
-the top, left and right grid lines. A single side-independent theorem now turns
-the paper's `centerInStrip` hypothesis into the correctly typed `Q`-or-`P`
-witness on any of the four sides; no long-grid-chord premise remains for callers
-of Lemma 7(iii).
+### Corner centers and restricted edge-strip certificates
 
-Case 7 now has a single side-independent combinatorial classifier after that
-geometric input is supplied. A `P` combines with the long boundary chord. An
-endpoint `Q` combines with its perpendicular `0.1` chord, with separate typed
-constructors for the near and far endpoints. The latter score inequality—one
-long chord, one short chord and one `Q`—is also proved directly from the resource
-measure. The endpoint-to-perpendicular connection is constructed whenever its
-second endpoint lies in the dilated square. The remaining branch is the final
-deformation into Case 6 from the paper's geometric hypotheses.
+`score_gt_one_of_case5` handles all four container corners and every frame.
+Container containment forces the two relevant `Q` points and the unit-corner
+point into the square; convexity and positive inner area finish the score bound.
 
-The Case 7 bridge now consumes the actual edge-strip geometry rather than a
-caller-supplied grid witness. Given the long chord on the inner boundary line,
-it constructs the matching `Q`-or-`P` witness on the `0.9` grid line and feeds
-both into the side-independent resource classifier. In particular, if neither
-endpoint `Q` is present, Lean extracts an indexed `P` and closes the score
-inequality immediately. The two perpendicular connection points and their
-short boundary sides are now typed uniformly for all four edge strips. If the
-matching connection point is present, convexity supplies the short chord and
-Lean closes the endpoint-`Q` branch. The exhaustive Case 7 theorem therefore
-returns either a proved score or one of exactly two typed disconnected-endpoint
-outcomes; each such outcome additionally certifies that no indexed `P` is
-present, since any `P` would already close the long-chord branch. The classifier
-also checks the opposite endpoint `Q`: if both endpoints are present, their
-combined point mass, the long boundary chord, and positive inner area close the
-score directly. A surviving disconnected outcome therefore carries a proof
-that the opposite `Q` is absent as well. Proving that those remaining outcomes
-reduce to Case 6 under the
-paper's terminal deformation is the sole remaining Case 7 obligation.
+The edge-strip library also proves long grid chords, extraction of an indexed
+`Q` or `P` point, several sufficient chord/point combinations, and the exact
+canonical pinned terminal certificate. These remain valid restricted theorems.
+They do not justify deforming an arbitrary edge-strip square to that certificate.
 
-Coordinate-swap symmetry is formalized as an involution on points, frames and
-placed squares. Lean proves that it preserves membership in dilated open square
-regions, allowing the vertical chord theory to be derived from the horizontal
-theory without duplicating analytic formulas. Consequently, the two-chord
-branch of Case 3 now accepts any two distinct sides among bottom, top, left and
-right, rather than only the bottom/top pair.
+In the published Case 6 reduction, contact with `(2,0.9)` is required only to
+occur on an edge. Lemma 6 additionally requires that contact edge to be one of
+the two edges crossed by `y=1`. The counterexample demonstrates why that
+incidence condition cannot be omitted.
 
-Both Case 3 branches are exposed through one typed witness: either two distinct
-opposite-edge boundary chords, or one such chord together with half of the
-dilated square's area in the inner rectangle. The witness implies score greater
-than one for every side orientation. Completing Case 3 requires both the
-positional classification and the geometric compensation for adjacent triangle
-cuts that the paper disregards using Lemma 4.
+## Earlier formula corrections
 
-The single-crossed-line branch of Case 3 now derives its half-area contribution
-from geometry. Central reflection about the dilated square's center preserves
-both the square and Lebesgue measure. Consequently every half-plane containing
-that center captures at least half the square's area, for every frame and every
-positive dilation factor. The four inner-boundary inequalities share typed
-inward normals. If the center lies in the inner rectangle and the square meets
-only one of its four boundary lines, convexity and the intermediate value
-theorem put the square entirely on the inner side of the other three lines.
-The half-plane bound therefore gives the required inner-area bound without a
-numerical area hypothesis. Combined with a nonadjacent chord on the crossed
-line, `score_gt_one_of_case3_single_crossed_line` proves the score greater than
-one. Its remaining geometric premises are the center position, the absence of
-the other three line crossings, and the typed nonadjacent chord; this does not
-close the full Case 3 classification or the universal near-square theorem.
+Two printed formulas already required correction during translation:
 
-The nonadjacent-chord premise can now be constructed from the square's center
-and frame. A horizontal line whose distance from the center is at most
-`factor * abs(abs(cosine) - abs(sine)) / 2` cuts a chord of length at least
-`factor`, provided the line meets the open square. Lean proves both possible
-cosine/sine orderings, handles axis-aligned frames directly, and normalizes
-arbitrary frame signs by local quarter rotations. Coordinate swap gives the
-vertical version. For a single crossed inner boundary, the other three inner
-bounds force the constructed chord to lie within the resource segment; no
-separate clipping hypothesis is needed. The resulting
-`score_gt_one_of_case3_single_crossed_line_offset` works for all four sides and
-every frame, with only center position, line intersection, absence of the
-other three line intersections, and the numerical offset bound as premises.
-The later compensation layer handles Case 3 configurations with additional
-adjacent triangle cuts. The half-space containing the center is covered by the
-inner rectangle and the cuts on the other three sides. Their actual areas are
-compensated by their respective chords, leaving the exceptional long chord
-available for the strict score inequality. Thus
-`score_gt_one_of_long_chord_and_adjacent_boundary_cuts` formalizes the paper's
-step that disregards those triangles without assuming the inner-area bound.
-It still requires a long chord and typed adjacent-cut geometry; the universal
-case classifier is not yet proved.
+- Lemma 3's displayed factorization is twice the preceding polynomial; the
+  correct factorization has an additional factor `1/2`. Its sign is unchanged.
+- Lemma 6's printed chord numerator `t+t²` conflicts with the following
+  identity `c+d=1`. The checked canonical geometry gives numerator `1+t²`.
 
-`score_gt_one_of_single_bottom_crossing` also removes the earlier numerical
-offset premise in the single-bottom-crossing case. It constructs the required
-chord or compensating cap for every frame, including axis-aligned squares.
-Its premises are the center above the bottom inner line, an actual line
-intersection, the other three inner bounds, and the dilation bounds.
+Those algebraic corrections do not repair the universal score inequality.
 
-Case 5 is now fully proved for all four container corners and every frame.
-Local quarter rotations normalize the frame signs without changing the
-dilated region, coordinate swap handles either ordering of normalized sine and
-cosine, and exact horizontal reflection transfers the point geometry across
-the container. Container containment yields exact center half-extent bounds
-even though the square region is open. Those bounds force the corresponding
-two `Q` points and unit-corner point into the dilated square. Convexity supplies
-the two intervening boundary chords, while openness supplies positive
-inner-area measure. A final theorem performs the four-way corner-strip case
-split and discharges the Case 5 score inequality without additional geometric
-hypotheses.
+## Archive policy
+
+No pending historical claim is promoted on the basis of the conditional
+near-square reduction. Previously verified individual cases retain their
+independent Lean proofs; this discovery does not invalidate those proofs.
+The archive distinguishes a published mathematical claim, a checked proof of
+that claim, and a checked obstruction to a proposed proof.
