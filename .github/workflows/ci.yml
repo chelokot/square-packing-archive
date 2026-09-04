@@ -12,7 +12,7 @@ jobs:
   archive-and-web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.2.22
@@ -31,7 +31,7 @@ jobs:
       run:
         working-directory: formal
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - run: python3 ../scripts/generate-lean-evidence-audit.py --check
       - run: python3 ../scripts/check-nagamochi-counterexample.py --check-figure
       - uses: leanprover/lean-action@v1
