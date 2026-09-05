@@ -1,5 +1,6 @@
 import {
   strongestClaimFor,
+  exactToNumber,
   verificationLevel,
   type CompiledArchive,
 } from "@square-packing/domain";
@@ -122,20 +123,31 @@ export const CoverageMatrix = ({
         ))}
       </div>
       <div className="mt-6 border-t border-rule pt-4">
-        <p className="mb-3 text-xs text-muted">{copy.availableLayouts}</p>
+        <p className="mb-3 text-xs text-muted">{copy.rotatedLayouts}</p>
         <div className="flex flex-wrap gap-2">
-          {archive.configurationData.map((configuration) => (
-            <button
-              key={configuration.id}
-              type="button"
-              onClick={() => onSelect(configuration.n)}
-              aria-pressed={configuration.n === selectedCount}
-              className={`border px-3 py-1.5 font-mono text-xs ${configuration.n === selectedCount ? "border-forest bg-forest text-surface" : "border-rule hover:border-forest"}`}
-            >
-              n = {configuration.n}
-            </button>
-          ))}
+          {archive.configurationData
+            .filter((configuration) =>
+              configuration.squares.some(
+                (square) =>
+                  exactToNumber(square.orientation.sine) !== 0 &&
+                  exactToNumber(square.orientation.cosine) !== 0,
+              ),
+            )
+            .map((configuration) => (
+              <button
+                key={configuration.id}
+                type="button"
+                onClick={() => onSelect(configuration.n)}
+                aria-pressed={configuration.n === selectedCount}
+                className={`border px-3 py-1.5 font-mono text-xs ${configuration.n === selectedCount ? "border-forest bg-forest text-surface" : "border-rule hover:border-forest"}`}
+              >
+                n = {configuration.n}
+              </button>
+            ))}
         </div>
+        <p className="mt-3 text-[0.65rem] leading-5 text-muted">
+          {copy.gridLayouts}
+        </p>
       </div>
     </section>
   );

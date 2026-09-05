@@ -3,6 +3,7 @@ import SquarePackingArchive.NagamochiPackingTheorem
 import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.HistoricalUpperBounds
 import SquarePackingArchive.Records.NearSquare
+import SquarePackingArchive.Records.Square10
 import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square15
 import SquarePackingArchive.Records.Square23
@@ -42,6 +43,9 @@ example : SquarePackingArchive.IsMinimumSide 8 (3) :=
 
 example : SquarePackingArchive.IsMinimumSide 9 (3) :=
   SquarePackingArchive.Records.SquareNumbers.s9_eq_three
+
+example : SquarePackingArchive.HasPacking 10 (3 + Real.sqrt 2 / 2) :=
+  SquarePackingArchive.Records.Square10.s10_le_goebel
 
 example : SquarePackingArchive.HasPacking 11 (5 / 2 + Real.sqrt 2) :=
   SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_goebel_1979
@@ -132,3 +136,102 @@ example : SquarePackingArchive.IsMinimumSide 98 (10) :=
 
 example : SquarePackingArchive.IsMinimumSide 99 (10) :=
   SquarePackingArchive.Records.NearSquare.s99_eq_ten
+
+example : SquarePackingArchive.HasPacking 1 1 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 1) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 1) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 2 2 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 2) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 2) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 3 2 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 3) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 2) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 4 2 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 4) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 2) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 6 3 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 6) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 3) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 7 3 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 7) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 3) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 8 3 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 8) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 3) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 9 3 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 9) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 3) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 12 4 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 12) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 13 4 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 13) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 14 4 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 14) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 15 4 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 15) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 16 4 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 16) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 22 5 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 22) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 23 5 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 23) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 24 5 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 24) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 25 5 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 25) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 33 6 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 33) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 34 6 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 34) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 35 6 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 35) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 36 6 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 36) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 46 7 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 46) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 47 7 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 47) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 48 7 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 48) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 49 7 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 49) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 62 8 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 62) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 63 8 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 63) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 64 8 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 64) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 79 9 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 79) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 80 9 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 80) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 81 9 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 81) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 98 10 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 98) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 99 10 := by
+  simpa using SquarePackingArchive.HasPacking.mono (targetCount := 99) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 10) (by norm_num)

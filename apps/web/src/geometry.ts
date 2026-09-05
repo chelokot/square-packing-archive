@@ -1,7 +1,8 @@
 import {
-  ratioToNumber,
+  exactToNumber,
   type PackingConfiguration,
   type Ratio,
+  type ExactNumber,
 } from "@square-packing/domain";
 
 export const formatRatio = (ratio: Ratio): string =>
@@ -9,13 +10,27 @@ export const formatRatio = (ratio: Ratio): string =>
     ? ratio.numerator
     : `${ratio.numerator}/${ratio.denominator}`;
 
+export const formatExact = (value: ExactNumber): string => {
+  if ("numerator" in value) return formatRatio(value);
+  const rational = formatRatio(value.rational);
+  const coefficient = formatRatio(value.sqrtTwo);
+  if (coefficient === "0") return rational;
+  const radical =
+    coefficient === "1"
+      ? "√2"
+      : coefficient === "-1"
+        ? "−√2"
+        : `${coefficient}·√2`;
+  return rational === "0" ? radical : `${rational} + ${radical}`;
+};
+
 export const squareAngle = (
   square: PackingConfiguration["squares"][number],
 ): number => {
   const angle =
     (Math.atan2(
-      ratioToNumber(square.orientation.sine),
-      ratioToNumber(square.orientation.cosine),
+      exactToNumber(square.orientation.sine),
+      exactToNumber(square.orientation.cosine),
     ) *
       180) /
     Math.PI;

@@ -73,6 +73,15 @@ def render(manifest: dict[str, Any]) -> str:
         f"example : {expected_type(claim)} :=\n  {theorem_name(item)}"
         for claim, item in evidence
     )
+    grids = [reference for reference in manifest["configurations"]
+             if reference.get("recipe") == "grid"]
+    grid_checks = "\n\n".join(
+        f"example : SquarePackingArchive.HasPacking {reference['n']} {reference['side']} := by\n"
+        f"  simpa using SquarePackingArchive.HasPacking.mono (targetCount := {reference['n']}) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking {reference['side']}) (by norm_num)"
+        for reference in grids
+    )
+    if grid_checks:
+        checks += "\n\n" + grid_checks
     return f"{imports}\n\n{checks}\n"
 
 

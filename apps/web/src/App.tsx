@@ -1,4 +1,8 @@
-import { activeClaims, isVerified } from "@square-packing/domain";
+import {
+  activeClaims,
+  gridConfiguration,
+  isVerified,
+} from "@square-packing/domain";
 import { ArrowDown, ArrowUpRight, CodeXml, Grid2X2 } from "lucide-react";
 import { archive } from "./archive.ts";
 import { ClaimsTable } from "./components/ClaimsTable.tsx";
@@ -15,18 +19,27 @@ export const App = () => {
   const exactClaims = activeClaims(archive).filter(
     (claim) => claim.relation === "exact",
   );
-  const configuration = archive.configurationData.find(
+  const selectedClaims = archive.claims.filter(
+    (claim) => claim.n === selectedCount,
+  );
+  const archivedConfiguration = archive.configurationData.find(
     ({ n }) => n === selectedCount,
   );
+  const configuration =
+    archivedConfiguration === undefined && selectedClaims.length === 0
+      ? gridConfiguration(
+          `square-${selectedCount}-grid-example`,
+          selectedCount,
+          Math.ceil(Math.sqrt(selectedCount)),
+          archive.updatedAt,
+        )
+      : archivedConfiguration;
   const configurationClaim =
     configuration === undefined
       ? undefined
       : archive.claims.find(
           (claim) => claim.configuration === configuration.id,
         );
-  const selectedClaims = archive.claims.filter(
-    (claim) => claim.n === selectedCount,
-  );
 
   return (
     <div className="min-h-screen bg-paper text-ink">
@@ -158,6 +171,7 @@ export const App = () => {
                   key={configuration.id}
                   configuration={configuration}
                   claim={configurationClaim}
+                  isGridExample={archivedConfiguration === undefined}
                 />
               )}
             </div>

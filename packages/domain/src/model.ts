@@ -5,6 +5,7 @@ import type {
   Evidence,
   PackingConfiguration,
   Ratio,
+  ExactNumber,
 } from "./schema.ts";
 
 export type VerificationLevel =
@@ -54,6 +55,11 @@ export const isVerified = (claim: Claim): boolean =>
 
 export const ratioToNumber = (ratio: Ratio): number =>
   Number(ratio.numerator) / Number(ratio.denominator);
+
+export const exactToNumber = (value: ExactNumber): number =>
+  "numerator" in value
+    ? ratioToNumber(value)
+    : ratioToNumber(value.rational) + ratioToNumber(value.sqrtTwo) * Math.SQRT2;
 
 export const activeClaims = (archive: ArchiveManifest): readonly Claim[] =>
   archive.claims.filter((claim) => claim.active);

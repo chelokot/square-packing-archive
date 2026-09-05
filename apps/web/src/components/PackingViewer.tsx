@@ -1,5 +1,5 @@
 import {
-  ratioToNumber,
+  exactToNumber,
   type Claim,
   type PackingConfiguration,
 } from "@square-packing/domain";
@@ -16,7 +16,7 @@ import { copy, repositoryUrl } from "../copy.ts";
 import {
   angleGroup,
   clampZoom,
-  formatRatio,
+  formatExact,
   initialViewport,
   squareAngle,
   viewportTransform,
@@ -45,9 +45,11 @@ type Drag = Readonly<{
 export const PackingViewer = ({
   configuration,
   claim,
+  isGridExample = false,
 }: {
   configuration: PackingConfiguration;
   claim: Claim | undefined;
+  isGridExample?: boolean;
 }) => {
   const [viewport, setViewport] = useState(initialViewport);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -57,8 +59,8 @@ export const PackingViewer = ({
   const [showLabels, setShowLabels] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
   const drag = useRef<Drag | null>(null);
-  const containerSide = ratioToNumber(configuration.containerSide);
-  const squareSide = ratioToNumber(configuration.squareSide);
+  const containerSide = exactToNumber(configuration.containerSide);
+  const squareSide = exactToNumber(configuration.squareSide);
   const squares = useMemo(
     () =>
       configuration.squares.map((square) => ({
@@ -221,6 +223,11 @@ export const PackingViewer = ({
           ))}
         </div>
       </div>
+      {isGridExample && (
+        <p className="border-b border-rule bg-paper px-5 py-3 text-xs leading-5 text-muted">
+          {copy.gridExample}
+        </p>
+      )}
       <div className="grid 2xl:grid-cols-[minmax(0,1fr)_15rem]">
         <div className="min-w-0">
           <div className="relative aspect-square max-h-[36rem] w-full overflow-hidden p-4">
@@ -260,7 +267,7 @@ export const PackingViewer = ({
                     return (
                       <g
                         key={square.id}
-                        transform={`translate(${ratioToNumber(square.center.x)} ${containerSide - ratioToNumber(square.center.y)}) rotate(${-square.angle})`}
+                        transform={`translate(${exactToNumber(square.center.x)} ${containerSide - exactToNumber(square.center.y)}) rotate(${-square.angle})`}
                       >
                         <rect
                           data-square-id={square.id}
@@ -412,7 +419,7 @@ export const PackingViewer = ({
                     <div key={label}>
                       <dt className="text-muted">{label}</dt>
                       <dd className="mt-1 break-all font-mono">
-                        {ratioToNumber(value).toFixed(12)}
+                        {exactToNumber(value).toFixed(12)}
                       </dd>
                     </div>
                   ))}
@@ -438,7 +445,7 @@ export const PackingViewer = ({
                       <div key={label}>
                         <dt className="text-muted">{label}</dt>
                         <dd className="mt-1 break-all font-mono text-[0.65rem] leading-5">
-                          {formatRatio(value)}
+                          {formatExact(value)}
                         </dd>
                       </div>
                     ))}

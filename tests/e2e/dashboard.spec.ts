@@ -64,9 +64,12 @@ test("matrix, viewer, history and shared URL follow the same selection", async (
     .getByLabel("Number of squares", { exact: true })
     .selectOption("61");
   await expect(
-    page.getByRole("heading", { name: "Coordinates not yet in the archive" }),
+    page.getByRole("heading", { name: "61 unit squares" }),
   ).toBeVisible();
-  await expect(page.locator('#viewer svg[role="group"]')).toHaveCount(0);
+  await expect(page.locator("#viewer")).toContainText(
+    "Grid example, not a best-known record",
+  );
+  await expect(page.locator("#viewer [data-square-id]")).toHaveCount(61);
 });
 
 test("catalog filters preserve the distinction between published and checked proofs", async ({

@@ -140,6 +140,7 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-1-grid",
       "active": true
     },
     {
@@ -164,6 +165,7 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-2-grid",
       "active": true
     },
     {
@@ -188,6 +190,7 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-3-grid",
       "active": true
     },
     {
@@ -212,6 +215,7 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-4-grid",
       "active": true
     },
     {
@@ -240,6 +244,7 @@
           "checkedAt": "2026-08-29"
         }
       ],
+      "configuration": "square-5-goebel",
       "active": false
     },
     {
@@ -268,6 +273,7 @@
           "checkedAt": "2026-08-29"
         }
       ],
+      "configuration": "square-5-goebel",
       "active": true
     },
     {
@@ -287,6 +293,7 @@
           "source": "kearney-shiu-2002"
         }
       ],
+      "configuration": "square-6-grid",
       "active": true
     },
     {
@@ -311,6 +318,7 @@
           "checkedAt": "2026-09-05"
         }
       ],
+      "configuration": "square-7-grid",
       "active": true
     },
     {
@@ -335,6 +343,7 @@
           "checkedAt": "2026-08-29"
         }
       ],
+      "configuration": "square-8-grid",
       "active": true
     },
     {
@@ -359,7 +368,37 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-9-grid",
       "active": true
+    },
+    {
+      "id": "upper-10-goebel-construction",
+      "n": 10,
+      "relation": "upper",
+      "value": {
+        "decimal": "3.70710678118654",
+        "expression": "3 + √2 / 2",
+        "lean": "3 + Real.sqrt 2 / 2"
+      },
+      "announcedAt": "1979",
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "discoverer"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square10.lean",
+          "theorem": "SquarePackingArchive.Records.Square10.s10_le_goebel",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "configuration": "square-10-goebel",
+      "active": false
     },
     {
       "id": "exact-10-stromquist",
@@ -378,6 +417,7 @@
           "source": "stromquist-2003"
         }
       ],
+      "configuration": "square-10-goebel",
       "active": true
     },
     {
@@ -512,6 +552,7 @@
           "checkedAt": "2026-08-20"
         }
       ],
+      "configuration": "square-12-grid",
       "active": true
     },
     {
@@ -528,6 +569,7 @@
           "source": "bentz-2010"
         }
       ],
+      "configuration": "square-13-grid",
       "active": true
     },
     {
@@ -552,6 +594,7 @@
           "checkedAt": "2026-09-05"
         }
       ],
+      "configuration": "square-14-grid",
       "active": true
     },
     {
@@ -576,6 +619,7 @@
           "checkedAt": "2026-09-04"
         }
       ],
+      "configuration": "square-15-grid",
       "active": true
     },
     {
@@ -600,6 +644,7 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-16-grid",
       "active": true
     },
     {
@@ -616,6 +661,7 @@
           "source": "bentz-2018"
         }
       ],
+      "configuration": "square-22-grid",
       "active": true
     },
     {
@@ -649,6 +695,7 @@
           "checkedAt": "2026-09-04"
         }
       ],
+      "configuration": "square-23-grid",
       "active": true
     },
     {
@@ -682,6 +729,7 @@
           "checkedAt": "2026-09-04"
         }
       ],
+      "configuration": "square-24-grid",
       "active": true
     },
     {
@@ -706,6 +754,7 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-25-grid",
       "active": true
     },
     {
@@ -722,6 +771,7 @@
           "source": "bentz-2018"
         }
       ],
+      "configuration": "square-33-grid",
       "active": true
     },
     {
@@ -755,6 +805,7 @@
           "checkedAt": "2026-09-04"
         }
       ],
+      "configuration": "square-34-grid",
       "active": true
     },
     {
@@ -788,6 +839,7 @@
           "checkedAt": "2026-09-04"
         }
       ],
+      "configuration": "square-35-grid",
       "active": true
     },
     {
@@ -812,6 +864,7 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-36-grid",
       "active": true
     },
     {
@@ -845,6 +898,7 @@
           "checkedAt": "2026-09-04"
         }
       ],
+      "configuration": "square-46-grid",
       "active": true
     },
     {
@@ -878,6 +932,7 @@
           "checkedAt": "2026-09-04"
         }
       ],
+      "configuration": "square-47-grid",
       "active": true
     },
     {
@@ -911,6 +966,7 @@
           "checkedAt": "2026-09-04"
         }
       ],
+      "configuration": "square-48-grid",
       "active": true
     },
     {
@@ -935,6 +991,7 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-49-grid",
       "active": true
     },
     {
@@ -959,6 +1016,7 @@
           "checkedAt": "2026-09-05"
         }
       ],
+      "configuration": "square-62-grid",
       "active": true
     },
     {
@@ -983,6 +1041,7 @@
           "checkedAt": "2026-09-05"
         }
       ],
+      "configuration": "square-63-grid",
       "active": true
     },
     {
@@ -1007,6 +1066,7 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-64-grid",
       "active": true
     },
     {
@@ -1179,6 +1239,7 @@
           "checkedAt": "2026-09-05"
         }
       ],
+      "configuration": "square-79-grid",
       "active": true
     },
     {
@@ -1203,6 +1264,7 @@
           "checkedAt": "2026-09-05"
         }
       ],
+      "configuration": "square-80-grid",
       "active": true
     },
     {
@@ -1227,6 +1289,7 @@
           "checkedAt": "2026-08-16"
         }
       ],
+      "configuration": "square-81-grid",
       "active": true
     },
     {
@@ -1251,6 +1314,7 @@
           "checkedAt": "2026-09-05"
         }
       ],
+      "configuration": "square-98-grid",
       "active": true
     },
     {
@@ -1275,6 +1339,7 @@
           "checkedAt": "2026-09-05"
         }
       ],
+      "configuration": "square-99-grid",
       "active": true
     }
   ],
@@ -1284,6 +1349,41 @@
       "path": "configurations/square-11-trump-rationalized.json"
     },
     { "id": "square-68", "path": "configurations/square-68.json" },
-    { "id": "square-69", "path": "configurations/square-69.json" }
+    { "id": "square-69", "path": "configurations/square-69.json" },
+    { "id": "square-1-grid", "recipe": "grid", "n": 1, "side": 1 },
+    { "id": "square-2-grid", "recipe": "grid", "n": 2, "side": 2 },
+    { "id": "square-3-grid", "recipe": "grid", "n": 3, "side": 2 },
+    { "id": "square-4-grid", "recipe": "grid", "n": 4, "side": 2 },
+    { "id": "square-6-grid", "recipe": "grid", "n": 6, "side": 3 },
+    { "id": "square-7-grid", "recipe": "grid", "n": 7, "side": 3 },
+    { "id": "square-8-grid", "recipe": "grid", "n": 8, "side": 3 },
+    { "id": "square-9-grid", "recipe": "grid", "n": 9, "side": 3 },
+    { "id": "square-12-grid", "recipe": "grid", "n": 12, "side": 4 },
+    { "id": "square-13-grid", "recipe": "grid", "n": 13, "side": 4 },
+    { "id": "square-14-grid", "recipe": "grid", "n": 14, "side": 4 },
+    { "id": "square-15-grid", "recipe": "grid", "n": 15, "side": 4 },
+    { "id": "square-16-grid", "recipe": "grid", "n": 16, "side": 4 },
+    { "id": "square-22-grid", "recipe": "grid", "n": 22, "side": 5 },
+    { "id": "square-23-grid", "recipe": "grid", "n": 23, "side": 5 },
+    { "id": "square-24-grid", "recipe": "grid", "n": 24, "side": 5 },
+    { "id": "square-25-grid", "recipe": "grid", "n": 25, "side": 5 },
+    { "id": "square-33-grid", "recipe": "grid", "n": 33, "side": 6 },
+    { "id": "square-34-grid", "recipe": "grid", "n": 34, "side": 6 },
+    { "id": "square-35-grid", "recipe": "grid", "n": 35, "side": 6 },
+    { "id": "square-36-grid", "recipe": "grid", "n": 36, "side": 6 },
+    { "id": "square-46-grid", "recipe": "grid", "n": 46, "side": 7 },
+    { "id": "square-47-grid", "recipe": "grid", "n": 47, "side": 7 },
+    { "id": "square-48-grid", "recipe": "grid", "n": 48, "side": 7 },
+    { "id": "square-49-grid", "recipe": "grid", "n": 49, "side": 7 },
+    { "id": "square-62-grid", "recipe": "grid", "n": 62, "side": 8 },
+    { "id": "square-63-grid", "recipe": "grid", "n": 63, "side": 8 },
+    { "id": "square-64-grid", "recipe": "grid", "n": 64, "side": 8 },
+    { "id": "square-79-grid", "recipe": "grid", "n": 79, "side": 9 },
+    { "id": "square-80-grid", "recipe": "grid", "n": 80, "side": 9 },
+    { "id": "square-81-grid", "recipe": "grid", "n": 81, "side": 9 },
+    { "id": "square-98-grid", "recipe": "grid", "n": 98, "side": 10 },
+    { "id": "square-99-grid", "recipe": "grid", "n": 99, "side": 10 },
+    { "id": "square-5-goebel", "recipe": "goebel", "n": 5 },
+    { "id": "square-10-goebel", "recipe": "goebel", "n": 10 }
   ]
 }

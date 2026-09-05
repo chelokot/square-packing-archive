@@ -3,6 +3,9 @@ import {
   packingConfigurationSchema,
   validateArchiveReferences,
   type CompiledArchive,
+  gridConfiguration,
+  goebelConfiguration,
+  validateConfigurationGeometry,
 } from "@square-packing/domain";
 
 const root = new URL("../", import.meta.url);
@@ -12,12 +15,28 @@ export const loadArchive = async (): Promise<CompiledArchive> => {
   const manifest = manifestSchema.parse(await Bun.file(manifestPath).json());
   const configurationData = await Promise.all(
     manifest.configurations.map(async (reference) =>
-      packingConfigurationSchema.parse(
-        await Bun.file(new URL(`archive/${reference.path}`, root)).json(),
-      ),
+      "recipe" in reference
+        ? reference.recipe === "goebel"
+          ? goebelConfiguration(reference.id, reference.n, manifest.updatedAt)
+          : gridConfiguration(
+              reference.id,
+              reference.n,
+              reference.side,
+              manifest.updatedAt,
+            )
+        : packingConfigurationSchema.parse(
+            await Bun.file(new URL(`archive/${reference.path}`, root)).json(),
+          ),
     ),
   );
-  const errors = validateArchiveReferences(manifest, configurationData);
+  const errors = [
+    ...validateArchiveReferences(manifest, configurationData),
+    ...configurationData.flatMap((configuration) =>
+      validateConfigurationGeometry(configuration).map(
+        (error) => `${configuration.id}: ${error}`,
+      ),
+    ),
+  ];
   if (errors.length > 0) {
     throw new Error(errors.join("\n"));
   }

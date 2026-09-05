@@ -120,6 +120,12 @@ built-in imagegen tool using the prompt recorded in [the artwork notes](docs/sit
 
 ## Reproducible imports
 
+Grid packings and the 5- and 10-square Göbel constructions are generated from
+recipes in the manifest. Exact coordinates, including square-root expressions,
+can be inspected and downloaded in the viewer. Every build checks containment
+and non-overlap using exact arithmetic; this is separate from Lean verification
+of the bound or optimality claim.
+
 The archive's two initial computational records are imported from the companion
 research workspace and reconstructed with exact rational orientations:
 

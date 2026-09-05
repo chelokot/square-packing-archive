@@ -55,7 +55,7 @@ the same mathematical inequality.
 ## Configuration
 
 A configuration stores unit-square centers in physical Cartesian coordinates.
-Every orientation is represented by an exact rational tangent-half-angle `t`:
+Imported rational configurations represent orientations by an exact rational tangent-half-angle `t`:
 
 ```text
 cos θ = (1 - t²) / (1 + t²)
@@ -64,6 +64,30 @@ sin θ = 2t / (1 + t²)
 
 This makes orthonormality an algebraic identity and every containment and
 separating-axis comparison rational. Decimal angles exist only as display data.
+
+The manifest can reference a coordinate file or an exact construction recipe.
+`grid` stores only the square count and integer container side; its column-major
+ordering matches Lean's `SquareNumbers.gridPacking`. `goebel` reconstructs the
+5- or 10-square layout from the corresponding Lean construction. No duplicate
+coordinate files are needed. Generated layouts support the same viewer,
+inspection, and JSON download as imported layouts.
+
+Göbel's coordinates use numbers in `Q(√2)`, encoded as
+`{ rational: Ratio, sqrtTwo: Ratio }`, meaning `rational + sqrtTwo × √2`.
+They are not rounded to rational numbers. The viewer converts them to floating
+point only for drawing and approximate decimal labels; exact inspection and
+downloads retain the expressions.
+
+Every archive build independently checks unit frames, tangent reconstruction,
+containment, and all pairwise separating axes with exact integer arithmetic in
+`Q(√2)`. This computational check does not create Lean evidence. Grid recipe
+instances also receive typed Lean upper-bound checks, while the 5- and 10-square
+constructions have their own explicit Lean packings. Published lower bounds
+remain unverified until their own Lean proofs are complete.
+
+For an uncatalogued count, the viewer can show a labelled grid example. It is
+not a historical record, is not added to the manifest, and does not change the
+coverage matrix or verification totals.
 
 ## Generated consumers
 

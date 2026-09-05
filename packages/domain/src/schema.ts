@@ -118,10 +118,25 @@ export const claimSchema = z
     }
   });
 
-export const configurationReferenceSchema = z.object({
-  id: identifier,
-  path: z.string().regex(/^configurations\/[a-z0-9-]+\.json$/),
-});
+export const configurationReferenceSchema = z.union([
+  z.object({
+    id: identifier,
+    path: z.string().regex(/^configurations\/[a-z0-9-]+\.json$/),
+  }),
+  z
+    .object({
+      id: identifier,
+      recipe: z.literal("grid"),
+      n: z.number().int().positive(),
+      side: z.number().int().positive(),
+    })
+    .refine(({ n, side }) => n <= side * side, "Grid capacity exceeded"),
+  z.object({
+    id: identifier,
+    recipe: z.literal("goebel"),
+    n: z.union([z.literal(5), z.literal(10)]),
+  }),
+]);
 
 export const manifestSchema = z.object({
   schemaVersion: z.literal(1),
@@ -139,16 +154,23 @@ export const manifestSchema = z.object({
 
 export const ratioSchema = z.object({
   numerator: z.string().regex(/^-?\d+$/),
-  denominator: z.string().regex(/^\d+$/),
+  denominator: z.string().regex(/^[1-9]\d*$/),
 });
+
+export const quadraticSchema = z.object({
+  rational: ratioSchema,
+  sqrtTwo: ratioSchema,
+});
+
+export const exactNumberSchema = z.union([ratioSchema, quadraticSchema]);
 
 export const squareSchema = z.object({
   id: z.number().int().nonnegative(),
-  center: z.object({ x: ratioSchema, y: ratioSchema }),
+  center: z.object({ x: exactNumberSchema, y: exactNumberSchema }),
   orientation: z.object({
-    tangentHalfAngle: ratioSchema,
-    cosine: ratioSchema,
-    sine: ratioSchema,
+    tangentHalfAngle: exactNumberSchema,
+    cosine: exactNumberSchema,
+    sine: exactNumberSchema,
     angleRadiansApprox: z.number().finite(),
   }),
 });
@@ -157,12 +179,18 @@ export const packingConfigurationSchema = z.object({
   schemaVersion: z.literal(1),
   id: identifier,
   n: z.number().int().positive(),
-  containerSide: ratioSchema.extend({ decimal }),
+  containerSide: z.union([
+    ratioSchema.extend({ decimal }),
+    quadraticSchema.extend({ decimal }),
+  ]),
   coordinateSystem: z.literal("physical-cartesian-bottom-left"),
   squareSide: ratioSchema,
   squares: z.array(squareSchema),
   certificate: z.object({
-    method: z.literal("exact-rational-separating-axis"),
+    method: z.enum([
+      "exact-rational-separating-axis",
+      "exact-quadratic-separating-axis",
+    ]),
     minimumContainmentMargin: ratioSchema,
     minimumSeparationMargin: ratioSchema,
     orientationReconstruction: z.string().min(1),
@@ -185,4 +213,5 @@ export type CompiledArchive = z.infer<typeof compiledArchiveSchema>;
 export type Evidence = z.infer<typeof evidenceSchema>;
 export type PackingConfiguration = z.infer<typeof packingConfigurationSchema>;
 export type Ratio = z.infer<typeof ratioSchema>;
+export type ExactNumber = z.infer<typeof exactNumberSchema>;
 export type Source = z.infer<typeof sourceSchema>;

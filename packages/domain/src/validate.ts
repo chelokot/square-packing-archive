@@ -58,6 +58,17 @@ export const validateArchiveReferences = (
     ) {
       errors.push(`${claim.id}: unknown configuration ${claim.configuration}`);
     }
+    const configuration = configurations.find(
+      ({ id }) => id === claim.configuration,
+    );
+    if (configuration !== undefined) {
+      if (claim.n !== configuration.n)
+        errors.push(
+          `${claim.id}: claim and configuration square counts differ`,
+        );
+      if (claim.value.decimal !== configuration.containerSide.decimal)
+        errors.push(`${claim.id}: claim and configuration side lengths differ`);
+    }
   }
 
   for (const configuration of configurations) {
@@ -72,10 +83,6 @@ export const validateArchiveReferences = (
     if (claim === undefined) {
       errors.push(
         `${configuration.id}: configuration is not referenced by a claim`,
-      );
-    } else if (claim.value.decimal !== configuration.containerSide.decimal) {
-      errors.push(
-        `${configuration.id}: claim and configuration side lengths differ`,
       );
     }
   }
