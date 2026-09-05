@@ -15,6 +15,7 @@ import SquarePackingArchive.Records.Square46
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
+import SquarePackingArchive.Records.Square6Exact
 import SquarePackingArchive.Records.Square7
 import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.SquareNumbers
@@ -36,6 +37,9 @@ example : SquarePackingArchive.HasPacking 5 (2 + Real.sqrt 2 / 2) :=
 
 example : SquarePackingArchive.IsMinimumSide 5 (2 + Real.sqrt 2 / 2) :=
   SquarePackingArchive.Records.Square5.s5_eq_goebel
+
+example : SquarePackingArchive.IsMinimumSide 6 (3) :=
+  SquarePackingArchive.Records.Square6.s6_eq_three
 
 example : SquarePackingArchive.IsMinimumSide 7 (3) :=
   SquarePackingArchive.Records.Square7.s7_eq_three

@@ -1,18 +1,19 @@
 # Proof status: 6, 10, 13, 22, and 33 squares
 
-The complete minimum-side theorems are checked for **22 and 33 squares**:
+The complete minimum-side theorems are checked for **6, 22, and 33 squares**:
 
+- `SquarePackingArchive.Records.Square6.s6_eq_three : IsMinimumSide 6 3`.
 - `SquarePackingArchive.Records.Square22.s22_eq_five : IsMinimumSide 22 5`.
 - `SquarePackingArchive.Records.Square33.s33_eq_six : IsMinimumSide 33 6`.
 
-The other three exact results remain **Published · awaiting Lean**. A checked
+The other two exact results remain **Published · awaiting Lean**. A checked
 construction proves an upper bound; checked lemmas alone do not prove optimality.
 
 ## Completed parts
 
 | Squares | Checked in Lean                                                                                                                                                                                 | Still needed for optimality                                               |
 | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| 6       | The two seven-point configurations, their incidence restrictions, the two possible center-free matchings, and explicit contact-coordinate identities.                                           | Excluding the remaining arrangements, including the center-covered case.  |
+| 6       | The full lower bound and matching grid construction.                                                                                                                                            | Nothing.                                                                  |
 | 10      | The exact Göbel construction, Stromquist's boundary quadrilateral and pentagon lemmas, the initial ten-point unavoidable set, and assignment of these points to a hypothetical smaller packing. | The subsequent point replacements and final contradiction.                |
 | 13      | Bentz's initial sixteen-point unavoidable set and the conclusion that at least two corner points have singleton owners.                                                                         | The replacement-point lemmas and the adjacent/non-adjacent case analysis. |
 | 22      | The full lower bound and matching grid construction.                                                                                                                                            | Nothing.                                                                  |
@@ -24,6 +25,22 @@ closed-disjoint squares, an explicit scaling theorem supplies them.
 
 The integrated theorems are included in `formal/SquarePackingArchive/Audit.lean`.
 Their axiom checks allow only `propext`, `Classical.choice`, and `Quot.sound`.
+
+## Why six squares need side three
+
+The checked proof follows Stromquist's nine-point argument. An eight-point
+perimeter set ensures every square contains a point other than the center.
+Geometry prevents adjacent perimeter points from being the sole points of two
+different squares. A finite counting argument then forces one square to contain
+exactly the center and one neighboring point.
+
+After a rotation or reflection, that square must contain four points of a
+second, eight-point unavoidable set. Only four points remain for the other five
+squares, a contradiction. The proof handles arbitrary rotations and touching
+squares: a hypothetical packing with side below three is first transformed into
+a closed-disjoint family fitting side three.
+
+The final theorem is in `formal/SquarePackingArchive/Records/Square6Exact.lean`.
 
 ## Layouts
 

@@ -37,4 +37,30 @@ lemma PlacedSquare.contains_triangleVertex_of_cross_nonnegative
     dsimp [Point.orientedArea]
     ring
 
+lemma PlacedSquare.contains_indexed_triangleVertex
+    (square : PlacedSquare) {pointCount : ℕ}
+    (points : Fin pointCount → Point) (vertices : Fin 3 → Fin pointCount)
+    (valid :
+      0 < Point.orientedArea (points (vertices 0)) (points (vertices 1)) (points (vertices 2)) ∧
+      ((points (vertices 0)).x - (points (vertices 1)).x) ^ 2 +
+        ((points (vertices 0)).y - (points (vertices 1)).y) ^ 2 ≤ 1 ∧
+      ((points (vertices 0)).x - (points (vertices 2)).x) ^ 2 +
+        ((points (vertices 0)).y - (points (vertices 2)).y) ^ 2 ≤ 1 ∧
+      ((points (vertices 1)).x - (points (vertices 2)).x) ^ 2 +
+        ((points (vertices 1)).y - (points (vertices 2)).y) ^ 2 ≤ 1)
+    (first_halfplane : 0 ≤ Point.orientedArea
+      (points (vertices 0)) (points (vertices 1)) square.center)
+    (second_halfplane : 0 ≤ Point.orientedArea
+      (points (vertices 1)) (points (vertices 2)) square.center)
+    (third_halfplane : 0 ≤ Point.orientedArea
+      (points (vertices 2)) (points (vertices 0)) square.center) :
+    ∃ index, square.Contains (points index) := by
+  obtain ⟨orientation, first_edge, second_edge, third_edge⟩ := valid
+  rcases square.contains_triangleVertex_of_cross_nonnegative _ _ _ orientation
+    first_halfplane second_halfplane third_halfplane first_edge second_edge third_edge with
+      first_inside | second_inside | third_inside
+  · exact ⟨vertices 0, first_inside⟩
+  · exact ⟨vertices 1, second_inside⟩
+  · exact ⟨vertices 2, third_inside⟩
+
 end SquarePackingArchive

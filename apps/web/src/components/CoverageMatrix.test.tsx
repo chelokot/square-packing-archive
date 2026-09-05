@@ -27,6 +27,7 @@ describe("coverage matrix claim types", () => {
   });
 
   test.each([
+    [6, "Exact", "=", "s(6) = 3"],
     [64, "Exact", "=", "s(64) = 8"],
     [69, "Upper bound", "≤", "s(69) ≤ 8.8272"],
   ])(
@@ -47,8 +48,10 @@ describe("coverage matrix claim types", () => {
   });
 
   test("keeps published exact results amber and uncatalogued cells unmarked", () => {
-    expect(cellMarkup(6)).toContain("n = 6: Exact · Published · awaiting Lean");
-    expect(cellMarkup(6)).toContain("bg-ochre-soft");
+    expect(cellMarkup(13)).toContain(
+      "n = 13: Exact · Published · awaiting Lean",
+    );
+    expect(cellMarkup(13)).toContain("bg-ochre-soft");
     expect(cellMarkup(61)).toContain("n = 61: Not catalogued");
     for (const symbol of ["=", "≤", "≥"]) {
       expect(cellMarkup(61)).not.toContain(`>${symbol}</span>`);

@@ -3,6 +3,7 @@ import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square6
+import SquarePackingArchive.Records.Square6Exact
 import SquarePackingArchive.Records.Square13
 import SquarePackingArchive.Records.Square10
 import SquarePackingArchive.Records.Square33
@@ -60,6 +61,8 @@ import SquarePackingArchive.NagamochiCanonicalTerminal
 import SquarePackingArchive.Nagamochi
 
 #print axioms SquarePackingArchive.Records.Basic.s1_eq_one
+#print axioms SquarePackingArchive.Records.Square6.s6_lower_bound
+#print axioms SquarePackingArchive.Records.Square6.s6_eq_three
 #print axioms SquarePackingArchive.Records.Square10.s10_le_goebel
 #print axioms SquarePackingArchive.Records.Square33.s33_lower_bound
 #print axioms SquarePackingArchive.Records.Square33.s33_eq_six

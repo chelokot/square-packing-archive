@@ -280,7 +280,7 @@
       "id": "exact-6-kearney-shiu",
       "n": 6,
       "relation": "exact",
-      "value": { "decimal": "3", "expression": "3" },
+      "value": { "decimal": "3", "expression": "3", "lean": "3" },
       "announcedAt": "2001-06",
       "contributors": [
         { "author": "kearney", "role": "prover" },
@@ -291,6 +291,19 @@
           "kind": "published-proof",
           "status": "published",
           "source": "kearney-shiu-2002"
+        },
+        {
+          "kind": "published-proof",
+          "status": "published",
+          "source": "stromquist-2003"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square6Exact.lean",
+          "theorem": "SquarePackingArchive.Records.Square6.s6_eq_three",
+          "checkedAt": "2026-09-05"
         }
       ],
       "configuration": "square-6-grid",

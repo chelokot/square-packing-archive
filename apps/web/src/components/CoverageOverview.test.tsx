@@ -17,9 +17,10 @@ describe("README coverage overview", () => {
 
   test.each([
     [5, "Exact · Lean verified", "=", "#e1e9dc"],
+    [6, "Exact · Lean verified", "=", "#e1e9dc"],
     [64, "Exact · Lean verified", "=", "#e1e9dc"],
     [69, "Upper bound · Lean verified", "≤", "#e1e9dc"],
-    [6, "Exact · Published · awaiting Lean", "=", "#f3e8d4"],
+    [13, "Exact · Published · awaiting Lean", "=", "#f3e8d4"],
   ])(
     "renders the claim and evidence together for n=%i",
     (count, label, symbol, fill) => {
