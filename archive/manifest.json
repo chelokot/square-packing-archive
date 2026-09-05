@@ -1,6 +1,15 @@
 {
   "schemaVersion": 1,
   "updatedAt": "2026-09-05",
+  "gridBaseline": {
+    "through": 100,
+    "proof": {
+      "source": "archive-research-2026",
+      "artifact": "formal/SquarePackingArchive/Records/GridBounds.lean",
+      "theorem": "SquarePackingArchive.Records.GridBounds.grid_hasPacking",
+      "checkedAt": "2026-09-05"
+    }
+  },
   "problem": {
     "symbol": "s",
     "name": "Packing unit squares in a square",

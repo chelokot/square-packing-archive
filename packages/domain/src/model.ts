@@ -41,7 +41,9 @@ const verificationPriority: Readonly<Record<VerificationLevel, number>> = {
   "lean-verified": 3,
 };
 
-export const verificationLevel = (claim: Claim): VerificationLevel =>
+export const verificationLevel = (
+  claim: Pick<Claim, "evidence">,
+): VerificationLevel =>
   claim.evidence
     .map(evidenceLevel)
     .reduce((strongest, current) =>

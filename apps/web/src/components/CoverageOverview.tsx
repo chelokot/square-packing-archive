@@ -1,12 +1,14 @@
 import {
-  strongestClaimFor,
+  explorerBoundFor,
   verificationLevel,
   type ArchiveManifest,
   type VerificationLevel,
 } from "@square-packing/domain";
 import { copy } from "../copy.ts";
-import { claimRelationSymbols, claimValue } from "./claimPresentation.tsx";
-import { evidencePresentation } from "./EvidenceBadge.tsx";
+import {
+  claimRelationSymbols,
+  explorerBoundDescription,
+} from "./claimPresentation.tsx";
 
 const colors = {
   "lean-verified": { fill: "#e1e9dc", ink: "#315d40" },
@@ -42,13 +44,13 @@ export const CoverageOverview = ({ archive }: { archive: ArchiveManifest }) => (
       </text>
       {Array.from({ length: 100 }, (_, index) => {
         const count = index + 1;
-        const claim = strongestClaimFor(archive, count);
+        const claim = explorerBoundFor(archive, count);
         const palette =
           claim === undefined ? emptyColors : colors[verificationLevel(claim)];
         const label =
           claim === undefined
             ? copy.emptyStatus
-            : `${copy.claimRelations[claim.relation]} · ${evidencePresentation[verificationLevel(claim)].label} · ${claimValue(claim)}`;
+            : explorerBoundDescription(claim);
         return (
           <g
             key={count}

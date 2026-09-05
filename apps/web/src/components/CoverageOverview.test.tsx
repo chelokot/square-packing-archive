@@ -41,6 +41,7 @@ describe("README coverage overview", () => {
     [13, "Exact · Lean verified", "=", "#e1e9dc"],
     [22, "Exact · Lean verified", "=", "#e1e9dc"],
     [33, "Exact · Lean verified", "=", "#e1e9dc"],
+    [61, "Upper bound · Lean verified", "≤", "#e1e9dc"],
   ])(
     "renders the claim and evidence together for n=%i",
     (count, label, symbol, fill) => {
@@ -63,7 +64,17 @@ describe("README coverage overview", () => {
       />,
     );
     expect(updated).toContain("2026-10-01");
-    expect(updated).toContain("n = 69: Not catalogued");
-    expect(updated).not.toContain("s(69)");
+    expect(updated).toContain(
+      "n = 69: Upper bound · Lean verified · s(69) ≤ 9 · Basic grid bound",
+    );
+    expect(updated).not.toContain("s(69) ≤ 8.8272");
+  });
+
+  test("does not manufacture verification without a baseline policy", () => {
+    const withoutBaseline = renderToStaticMarkup(
+      <CoverageOverview archive={{ ...archive, gridBaseline: undefined }} />,
+    );
+    expect(withoutBaseline).toContain("n = 61: Not catalogued");
+    expect(withoutBaseline).not.toContain("s(61)");
   });
 });

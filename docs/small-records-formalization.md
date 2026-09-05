@@ -77,8 +77,12 @@ are generated from manifest recipes; the 5- and 10-square constructions use exac
 numbers in Q(√2). Every generated layout is checked for containment and pairwise
 non-overlap using exact arithmetic during the archive build.
 
-An uncatalogued count displays a labelled **grid example**, not a best-known
-record. These examples do not change the proof-status matrix.
+An uncatalogued count displays a labelled **basic grid bound**, not a best-known
+record. `gridBaseline` in the manifest supplies the common proof and supported
+range. The matrix shows a Lean-verified upper bound; the viewer uses the same
+grid size and links to `Records.GridBounds.grid_hasPacking`. The generated Lean
+audit checks each integer instance. These bounds remain outside the historical
+claims and do not change record counts or exact-coverage graphs.
 
 ## Sources
 

@@ -1,6 +1,7 @@
 import {
   exactToNumber,
-  type Claim,
+  type ExplorerBound,
+  isGridBaseline,
   type PackingConfiguration,
 } from "@square-packing/domain";
 import {
@@ -45,11 +46,9 @@ type Drag = Readonly<{
 export const PackingViewer = ({
   configuration,
   claim,
-  isGridExample = false,
 }: {
   configuration: PackingConfiguration;
-  claim: Claim | undefined;
-  isGridExample?: boolean;
+  claim: ExplorerBound | undefined;
 }) => {
   const [viewport, setViewport] = useState(initialViewport);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -223,9 +222,9 @@ export const PackingViewer = ({
           ))}
         </div>
       </div>
-      {isGridExample && (
+      {claim !== undefined && isGridBaseline(claim) && (
         <p className="border-b border-rule bg-paper px-5 py-3 text-xs leading-5 text-muted">
-          {copy.gridExample}
+          {copy.gridBaselineNotice}
         </p>
       )}
       <div className="grid 2xl:grid-cols-[minmax(0,1fr)_15rem]">

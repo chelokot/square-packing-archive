@@ -66,8 +66,20 @@ test("matrix, viewer, history and shared URL follow the same selection", async (
   await expect(
     page.getByRole("heading", { name: "61 unit squares" }),
   ).toBeVisible();
-  await expect(page.locator("#viewer")).toContainText(
-    "Grid example, not a best-known record",
+  await expect(page.locator("#viewer")).toContainText("Basic grid bound");
+  await expect(page.locator("#viewer")).toContainText("not its optimality");
+  await expect(page.locator("#viewer")).toContainText("Lean verified");
+  await expect(
+    page.locator("#viewer").getByRole("link", { name: "Lean proof" }),
+  ).toHaveAttribute("href", /Records\/GridBounds\.lean$/);
+  await expect(
+    page.locator("#matrix").getByRole("button", {
+      name: "n = 61: Upper bound · Lean verified · s(61) ≤ 8 · Basic grid bound",
+      exact: true,
+    }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#history")).toContainText(
+    "No results catalogued for this n yet.",
   );
   await expect(page.locator("#viewer [data-square-id]")).toHaveCount(61);
 });

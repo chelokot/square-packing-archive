@@ -1,6 +1,10 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, test } from "vitest";
-import { goebelConfiguration, gridConfiguration } from "@square-packing/domain";
+import {
+  goebelConfiguration,
+  gridBaselineFor,
+  gridBaselineConfiguration,
+} from "@square-packing/domain";
 import { PackingViewer } from "./PackingViewer.tsx";
 import { formatExact } from "../geometry.ts";
 import { archive } from "../archive.ts";
@@ -20,25 +24,28 @@ describe("packing reconstructions", () => {
       );
       expect(markup.match(/data-square-id=/g)).toHaveLength(count);
       expect(markup).toContain(configuration.containerSide.decimal);
-      expect(markup).not.toContain("Grid example, not a best-known record");
+      expect(markup).not.toContain("Basic grid bound");
     },
   );
 
-  test("labels an uncatalogued grid as an example, without a verification badge", () => {
+  test("shows a checked baseline with its proof and explicit non-optimality notice", () => {
+    const baseline = gridBaselineFor(archive, 61)!;
     const markup = renderToStaticMarkup(
       <PackingViewer
-        configuration={gridConfiguration(
-          "square-61-example",
-          61,
-          8,
-          "2026-09-05",
-        )}
-        claim={undefined}
-        isGridExample
+        configuration={gridBaselineConfiguration(baseline)}
+        claim={baseline}
       />,
     );
-    expect(markup).toContain("Grid example, not a best-known record");
-    expect(markup).not.toContain("Lean verified");
+    expect(markup).toContain("Basic grid bound");
+    expect(markup).toContain("not its optimality");
+    expect(markup).toContain("not a historical record");
+    expect(markup).toContain("Lean verified");
+    expect(markup).toContain(
+      'href="https://github.com/chelokot/square-packing-archive/blob/main/formal/SquarePackingArchive/Records/GridBounds.lean"',
+    );
+    expect(markup).toContain(
+      'title="SquarePackingArchive.Records.GridBounds.grid_hasPacking"',
+    );
     expect(markup.match(/data-square-id=/g)).toHaveLength(61);
   });
 

@@ -34,7 +34,11 @@ export const evidencePresentation: Readonly<
   },
 };
 
-export const EvidenceBadge = ({ claim }: { claim: Claim }) => {
+export const EvidenceBadge = ({
+  claim,
+}: {
+  claim: Pick<Claim, "evidence">;
+}) => {
   const item = evidencePresentation[verificationLevel(claim)];
   const Icon = item.icon;
   return (

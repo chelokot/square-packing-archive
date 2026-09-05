@@ -1,5 +1,12 @@
-import type { Claim, CompiledArchive } from "@square-packing/domain";
+import {
+  isGridBaseline,
+  verificationLevel,
+  type Claim,
+  type CompiledArchive,
+  type ExplorerBound,
+} from "@square-packing/domain";
 import { copy, repositoryUrl } from "../copy.ts";
+import { evidencePresentation } from "./EvidenceBadge.tsx";
 
 export const claimRelationSymbols = {
   exact: "=",
@@ -7,8 +14,13 @@ export const claimRelationSymbols = {
   lower: "≥",
 } as const satisfies Record<Claim["relation"], string>;
 
-export const claimValue = (claim: Claim): string =>
+export const claimValue = (
+  claim: Pick<Claim, "n" | "relation" | "value">,
+): string =>
   `s(${claim.n}) ${claimRelationSymbols[claim.relation]} ${claim.value.expression ?? claim.value.decimal}`;
+
+export const explorerBoundDescription = (bound: ExplorerBound): string =>
+  `${copy.claimRelations[bound.relation]} · ${evidencePresentation[verificationLevel(bound)].label} · ${claimValue(bound)}${isGridBaseline(bound) ? ` · ${copy.gridBaseline}` : ""}`;
 
 export const contributorNames = (
   archive: CompiledArchive,

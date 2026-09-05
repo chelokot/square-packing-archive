@@ -1,5 +1,6 @@
 import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers
+import SquarePackingArchive.Records.GridBounds
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square6
@@ -64,6 +65,7 @@ import SquarePackingArchive.NagamochiCanonicalTerminal
 import SquarePackingArchive.Nagamochi
 
 #print axioms SquarePackingArchive.Records.Basic.s1_eq_one
+#print axioms SquarePackingArchive.Records.GridBounds.grid_hasPacking
 #print axioms SquarePackingArchive.Records.Square6.s6_lower_bound
 #print axioms SquarePackingArchive.Records.Square6.s6_eq_three
 #print axioms SquarePackingArchive.Records.Square10.s10_le_goebel

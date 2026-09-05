@@ -1,6 +1,8 @@
 import {
   activeClaims,
-  gridConfiguration,
+  explorerBoundFor,
+  isGridBaseline,
+  gridBaselineConfiguration,
   isVerified,
 } from "@square-packing/domain";
 import { ArrowDown, ArrowUpRight, CodeXml, Grid2X2 } from "lucide-react";
@@ -25,20 +27,20 @@ export const App = () => {
   const archivedConfiguration = archive.configurationData.find(
     ({ n }) => n === selectedCount,
   );
+  const selectedBound = explorerBoundFor(archive, selectedCount);
+  const baseline =
+    selectedBound !== undefined && isGridBaseline(selectedBound)
+      ? selectedBound
+      : undefined;
   const configuration =
-    archivedConfiguration === undefined && selectedClaims.length === 0
-      ? gridConfiguration(
-          `square-${selectedCount}-grid-example`,
-          selectedCount,
-          Math.ceil(Math.sqrt(selectedCount)),
-          archive.updatedAt,
-        )
+    archivedConfiguration === undefined && baseline !== undefined
+      ? gridBaselineConfiguration(baseline)
       : archivedConfiguration;
   const configurationClaim =
-    configuration === undefined
-      ? undefined
+    archivedConfiguration === undefined
+      ? baseline
       : archive.claims.find(
-          (claim) => claim.configuration === configuration.id,
+          (claim) => claim.configuration === archivedConfiguration.id,
         );
 
   return (
@@ -171,7 +173,6 @@ export const App = () => {
                   key={configuration.id}
                   configuration={configuration}
                   claim={configurationClaim}
-                  isGridExample={archivedConfiguration === undefined}
                 />
               )}
             </div>

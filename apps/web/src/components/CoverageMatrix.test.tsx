@@ -96,9 +96,15 @@ describe("coverage matrix claim types", () => {
     expect(cell![0]).toContain(">=</span>");
   });
 
-  test("keeps uncatalogued cells unmarked", () => {
-    expect(cellMarkup(61)).toContain("n = 61: Not catalogued");
-    for (const symbol of ["=", "≤", "≥"]) {
+  test("fills uncatalogued cells with checked grid bounds, never exactness", () => {
+    expect(cellMarkup(61)).toContain(
+      "n = 61: Upper bound · Lean verified · s(61) ≤ 8 · Basic grid bound",
+    );
+    expect(cellMarkup(61)).toContain("bg-forest-soft");
+    expect(cellMarkup(61)).toMatch(
+      /<span[^>]*class="[^"]*text-bound[^"]*"[^>]*>≤<\/span>/,
+    );
+    for (const symbol of ["=", "≥"]) {
       expect(cellMarkup(61)).not.toContain(`>${symbol}</span>`);
     }
   });

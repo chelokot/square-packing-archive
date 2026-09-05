@@ -1,6 +1,7 @@
 import SquarePackingArchive.NagamochiAugmented
 import SquarePackingArchive.NagamochiPackingTheorem
 import SquarePackingArchive.Records.Basic
+import SquarePackingArchive.Records.GridBounds
 import SquarePackingArchive.Records.HistoricalUpperBounds
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square10
@@ -255,3 +256,303 @@ example : SquarePackingArchive.HasPacking 98 10 := by
 
 example : SquarePackingArchive.HasPacking 99 10 := by
   simpa using SquarePackingArchive.HasPacking.mono (targetCount := 99) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 1 1 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 1) (side := 1) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 2 2 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 2) (side := 2) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 3 2 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 3) (side := 2) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 4 2 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 4) (side := 2) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 5 3 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 5) (side := 3) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 6 3 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 6) (side := 3) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 7 3 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 7) (side := 3) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 8 3 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 8) (side := 3) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 9 3 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 9) (side := 3) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 10 4 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 10) (side := 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 11 4 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 11) (side := 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 12 4 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 12) (side := 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 13 4 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 13) (side := 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 14 4 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 14) (side := 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 15 4 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 15) (side := 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 16 4 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 16) (side := 4) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 17 5 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 17) (side := 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 18 5 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 18) (side := 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 19 5 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 19) (side := 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 20 5 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 20) (side := 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 21 5 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 21) (side := 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 22 5 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 22) (side := 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 23 5 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 23) (side := 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 24 5 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 24) (side := 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 25 5 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 25) (side := 5) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 26 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 26) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 27 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 27) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 28 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 28) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 29 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 29) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 30 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 30) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 31 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 31) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 32 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 32) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 33 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 33) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 34 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 34) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 35 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 35) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 36 6 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 36) (side := 6) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 37 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 37) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 38 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 38) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 39 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 39) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 40 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 40) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 41 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 41) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 42 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 42) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 43 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 43) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 44 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 44) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 45 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 45) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 46 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 46) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 47 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 47) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 48 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 48) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 49 7 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 49) (side := 7) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 50 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 50) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 51 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 51) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 52 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 52) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 53 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 53) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 54 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 54) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 55 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 55) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 56 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 56) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 57 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 57) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 58 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 58) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 59 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 59) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 60 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 60) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 61 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 61) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 62 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 62) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 63 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 63) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 64 8 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 64) (side := 8) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 65 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 65) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 66 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 66) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 67 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 67) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 68 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 68) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 69 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 69) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 70 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 70) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 71 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 71) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 72 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 72) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 73 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 73) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 74 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 74) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 75 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 75) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 76 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 76) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 77 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 77) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 78 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 78) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 79 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 79) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 80 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 80) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 81 9 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 81) (side := 9) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 82 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 82) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 83 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 83) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 84 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 84) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 85 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 85) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 86 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 86) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 87 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 87) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 88 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 88) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 89 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 89) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 90 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 90) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 91 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 91) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 92 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 92) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 93 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 93) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 94 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 94) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 95 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 95) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 96 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 96) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 97 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 97) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 98 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 98) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 99 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 99) (side := 10) (by norm_num)
+
+example : SquarePackingArchive.HasPacking 100 10 := by
+  simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 100) (side := 10) (by norm_num)

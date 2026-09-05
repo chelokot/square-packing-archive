@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 from pathlib import Path
 from typing import Any
@@ -39,10 +40,15 @@ def module_name(artifact: str) -> str:
     return match.group(1).replace("/", ".")
 
 
-def theorem_name(evidence: dict[str, Any]) -> str:
-    theorem = evidence.get("theorem")
+def proof_theorem_name(proof: dict[str, Any]) -> str:
+    theorem = proof.get("theorem")
     if not isinstance(theorem, str) or THEOREM_PATTERN.fullmatch(theorem) is None:
         raise ValueError(f"invalid Lean theorem name: {theorem}")
+    return theorem
+
+
+def theorem_name(evidence: dict[str, Any]) -> str:
+    theorem = proof_theorem_name(evidence)
     if evidence.get("status") != "lean-checked":
         raise ValueError(f"Lean evidence must be lean-checked: {theorem}")
     return theorem
@@ -65,10 +71,25 @@ def expected_type(claim: dict[str, Any]) -> str:
 
 def render(manifest: dict[str, Any]) -> str:
     evidence = lean_evidence(manifest)
-    modules = sorted(
-        {module_name(item.get("artifact", "")) for _, item in evidence}
-    )
-    imports = "\n".join(f"import {module}" for module in modules)
+    modules = {module_name(item.get("artifact", "")) for _, item in evidence}
+    baseline_checks = ""
+    if "gridBaseline" in manifest:
+        policy = manifest["gridBaseline"]
+        through = policy["through"]
+        if type(through) is not int or through < 1:
+            raise ValueError(f"invalid grid baseline count: {through}")
+        proof = policy["proof"]
+        modules.add(module_name(proof.get("artifact", "")))
+        theorem = proof_theorem_name(proof)
+        baseline_checks = "\n\n".join(
+            f"example : SquarePackingArchive.HasPacking {count} {side} := by\n"
+            f"  simpa using {theorem} (count := {count}) (side := {side}) (by norm_num)"
+            for count, side in (
+                (count, math.isqrt(count - 1) + 1)
+                for count in range(1, through + 1)
+            )
+        )
+    imports = "\n".join(f"import {module}" for module in sorted(modules))
     checks = "\n\n".join(
         f"example : {expected_type(claim)} :=\n  {theorem_name(item)}"
         for claim, item in evidence
@@ -82,6 +103,8 @@ def render(manifest: dict[str, Any]) -> str:
     )
     if grid_checks:
         checks += "\n\n" + grid_checks
+    if baseline_checks:
+        checks += "\n\n" + baseline_checks
     return f"{imports}\n\n{checks}\n"
 
 

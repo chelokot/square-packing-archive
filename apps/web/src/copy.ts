@@ -15,7 +15,7 @@ export const copy = {
   github: "GitHub",
   claimCount: "claims catalogued",
   exactCount: "exact results checked in Lean",
-  layoutCount: "coordinate sets to explore",
+  layoutCount: "catalogued coordinate sets",
   archiveScope: (date: string) => `Selected records · data updated ${date}`,
   noLayout: "Coordinates not yet in the archive",
   noRecord:
@@ -32,9 +32,9 @@ export const copy = {
   matrixTitle: "Choose the number of squares",
   coverageOverviewTitle: "Packing results · 1–100 squares",
   coverageOverviewDescription:
-    "Colors show evidence status. The symbols =, ≤ and ≥ distinguish exact results, upper bounds and lower bounds. Unmarked cells are not catalogued.",
+    "Colors show evidence status. The symbols =, ≤ and ≥ distinguish exact results, upper bounds and lower bounds. Counts without catalogued records use Lean-checked basic grid bounds.",
   coverageOverviewScope:
-    "Selected records · Color shows evidence; symbol shows the claim",
+    "Selected records + basic grid bounds · Color shows evidence; symbol shows the claim",
   claimRelations: {
     exact: "Exact",
     upper: "Upper bound",
@@ -47,9 +47,11 @@ export const copy = {
   next: "Next n",
   availableLayouts: "With coordinates",
   rotatedLayouts: "Rotated packings",
-  gridLayouts: "Grid layouts are available directly in the matrix.",
-  gridExample:
-    "Grid example, not a best-known record. This n is not yet catalogued; its record may fit in a smaller container.",
+  gridLayouts:
+    "Counts without catalogued records use Lean-checked basic grid bounds, not best-known records.",
+  gridBaseline: "Basic grid bound",
+  gridBaselineNotice:
+    "Basic grid bound. Lean checks this construction, not its optimality. A smaller packing may exist. This is not a historical record.",
   emptyStatus: "Not catalogued",
   verified: "Lean verified",
   published: "Published · awaiting Lean",

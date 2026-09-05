@@ -1,5 +1,5 @@
 import {
-  strongestClaimFor,
+  explorerBoundFor,
   exactToNumber,
   verificationLevel,
   type CompiledArchive,
@@ -7,7 +7,10 @@ import {
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { copy } from "../copy.ts";
 import { evidencePresentation } from "./EvidenceBadge.tsx";
-import { claimRelationSymbols, claimValue } from "./claimPresentation.tsx";
+import {
+  claimRelationSymbols,
+  explorerBoundDescription,
+} from "./claimPresentation.tsx";
 
 export const CoverageMatrix = ({
   archive,
@@ -58,7 +61,7 @@ export const CoverageMatrix = ({
       </div>
       <div className="@container grid grid-cols-10 gap-1">
         {Array.from({ length: 100 }, (_, index) => index + 1).map((count) => {
-          const claim = strongestClaimFor(archive, count);
+          const claim = explorerBoundFor(archive, count);
           const presentation =
             claim === undefined
               ? {
@@ -69,7 +72,7 @@ export const CoverageMatrix = ({
           const description =
             claim === undefined
               ? presentation.label
-              : `${copy.claimRelations[claim.relation]} · ${presentation.label} · ${claimValue(claim)}`;
+              : explorerBoundDescription(claim);
           const label = copy.matrixCellLabel(count, description);
           return (
             <button

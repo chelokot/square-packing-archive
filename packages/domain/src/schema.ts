@@ -141,6 +141,21 @@ export const configurationReferenceSchema = z.union([
 export const manifestSchema = z.object({
   schemaVersion: z.literal(1),
   updatedAt: date,
+  gridBaseline: z
+    .object({
+      through: z.number().int().positive().max(100),
+      proof: z.object({
+        source: identifier,
+        artifact: z
+          .string()
+          .regex(/^formal\/SquarePackingArchive(?:\/[A-Za-z0-9_]+)+\.lean$/),
+        theorem: z
+          .string()
+          .regex(/^SquarePackingArchive(?:\.[A-Za-z_][A-Za-z0-9_']*)+$/),
+        checkedAt: z.iso.date(),
+      }),
+    })
+    .optional(),
   problem: z.object({
     symbol: z.literal("s"),
     name: z.string().min(1),

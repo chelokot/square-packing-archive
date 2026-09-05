@@ -14,6 +14,14 @@ export const validateArchiveReferences = (
   const errors: string[] = [];
   const authorIds = new Set(manifest.authors.map((author) => author.id));
   const sourceIds = new Set(manifest.sources.map((source) => source.id));
+  if (
+    manifest.gridBaseline !== undefined &&
+    !sourceIds.has(manifest.gridBaseline.proof.source)
+  ) {
+    errors.push(
+      `grid baseline: unknown source ${manifest.gridBaseline.proof.source}`,
+    );
+  }
   const claimIds = new Set(manifest.claims.map((claim) => claim.id));
   const configurationIds = new Set(
     configurations.map((configuration) => configuration.id),

@@ -17,6 +17,10 @@ result (`=`) proves optimality; an upper bound (`≤`) proves a packing exists.
 Published proofs awaiting Lean keep a separate label. Each record links to its
 authors, sources, and available formal proofs.
 
+Counts without catalogued records show a **basic grid bound**, `s(n) ≤ ⌈√n⌉`,
+with a Lean proof and viewable coordinates. These derived bounds are not
+historical records and do not contribute to the record or exact-result counts.
+
 ## What is live
 
 - A versioned canonical manifest with claims, authors, sources, provenance, and
