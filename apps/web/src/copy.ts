@@ -30,8 +30,18 @@ export const copy = {
   dataLicense: "Archive data · CC BY 4.0",
   contribute: "Submit a result",
   matrixTitle: "Choose the number of squares",
-  matrixHelp:
-    "A cell describes the strongest catalogued claim. Open it to distinguish an upper bound from an exact result.",
+  coverageOverviewTitle: "Packing results · 1–100 squares",
+  coverageOverviewDescription:
+    "Colors show evidence status. The symbols =, ≤ and ≥ distinguish exact results, upper bounds and lower bounds. Unmarked cells are not catalogued.",
+  coverageOverviewScope:
+    "Selected records · Color shows evidence; symbol shows the claim",
+  claimRelations: {
+    exact: "Exact",
+    upper: "Upper bound",
+    lower: "Lower bound",
+  },
+  matrixCellLabel: (count: number, description: string) =>
+    `n = ${count}: ${description}`,
   squareCount: "Number of squares",
   previous: "Previous n",
   next: "Next n",
@@ -41,7 +51,7 @@ export const copy = {
   published: "Published · awaiting Lean",
   computed: "Computed · awaiting Lean",
   reported: "Reported",
-  matrixVerified: "Lean checked claim",
+  matrixVerified: "Lean checked",
   matrixPublished: "Published proof",
   matrixComputed: "Computed",
   matrixReported: "Reported",

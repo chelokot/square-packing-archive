@@ -1,11 +1,12 @@
 import {
-  activeClaims,
+  strongestClaimFor,
   verificationLevel,
   type CompiledArchive,
 } from "@square-packing/domain";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { copy } from "../copy.ts";
 import { evidencePresentation } from "./EvidenceBadge.tsx";
+import { claimRelationSymbols, claimValue } from "./claimPresentation.tsx";
 
 export const CoverageMatrix = ({
   archive,
@@ -16,13 +17,6 @@ export const CoverageMatrix = ({
   selectedCount: number;
   onSelect: (count: number) => void;
 }) => {
-  const claims = activeClaims(archive);
-  const ranks = {
-    reported: 0,
-    "computational-evidence": 1,
-    "published-unformalized": 2,
-    "lean-verified": 3,
-  };
   return (
     <section id="matrix">
       <h3 className="text-sm font-medium">{copy.matrixTitle}</h3>
@@ -61,15 +55,9 @@ export const CoverageMatrix = ({
           <ChevronRight className="size-4" />
         </button>
       </div>
-      <div className="grid grid-cols-10 gap-1">
+      <div className="@container grid grid-cols-10 gap-1">
         {Array.from({ length: 100 }, (_, index) => index + 1).map((count) => {
-          const claim = claims
-            .filter((item) => item.n === count)
-            .sort(
-              (left, right) =>
-                ranks[verificationLevel(right)] -
-                ranks[verificationLevel(left)],
-            )[0];
+          const claim = strongestClaimFor(archive, count);
           const presentation =
             claim === undefined
               ? {
@@ -77,22 +65,49 @@ export const CoverageMatrix = ({
                   className: "border-rule/70 text-muted bg-surface",
                 }
               : evidencePresentation[verificationLevel(claim)];
+          const description =
+            claim === undefined
+              ? presentation.label
+              : `${copy.claimRelations[claim.relation]} · ${presentation.label} · ${claimValue(claim)}`;
+          const label = copy.matrixCellLabel(count, description);
           return (
             <button
               key={count}
               type="button"
-              aria-label={`n = ${count}: ${presentation.label}`}
-              title={`n = ${count}: ${presentation.label}`}
+              aria-label={label}
               aria-pressed={count === selectedCount}
               onClick={() => onSelect(count)}
-              className={`aspect-square border font-mono text-[0.65rem] hover:border-ink ${presentation.className} ${count === selectedCount ? "outline outline-2 outline-offset-1 outline-ink z-10 font-bold" : ""}`}
+              className={`group relative aspect-square border font-mono text-[0.65rem] hover:z-20 hover:border-ink focus-visible:z-20 ${presentation.className} ${count === selectedCount ? "outline outline-2 outline-offset-1 outline-ink z-10 font-bold" : ""}`}
             >
-              {count}
+              <span>{count}</span>
+              {claim !== undefined && (
+                <span
+                  aria-hidden="true"
+                  className="absolute right-0.5 bottom-0.5 text-[0.6rem] leading-none"
+                >
+                  {claimRelationSymbols[claim.relation]}
+                </span>
+              )}
+              <span
+                aria-hidden="true"
+                className={`pointer-events-none absolute bottom-full z-30 mb-2 w-max max-w-[min(16rem,50cqw)] border border-rule bg-surface px-2 py-1.5 text-left font-sans text-xs leading-5 font-normal text-ink opacity-0 shadow-sm group-hover:opacity-100 group-focus-visible:opacity-100 ${(count - 1) % 10 < 5 ? "left-0" : "right-0"}`}
+              >
+                {label}
+              </span>
             </button>
           );
         })}
       </div>
-      <p className="mt-4 text-xs leading-5 text-muted">{copy.matrixHelp}</p>
+      <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-[0.65rem] text-muted">
+        {Object.entries(claimRelationSymbols).map(([relation, symbol]) => (
+          <span key={relation} className="flex items-center gap-1.5">
+            <span className="font-mono text-xs" aria-hidden="true">
+              {symbol}
+            </span>
+            {copy.claimRelations[relation as keyof typeof claimRelationSymbols]}
+          </span>
+        ))}
+      </div>
       <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 text-[0.65rem] text-muted">
         {[
           [copy.matrixVerified, "bg-forest-soft border-forest/40"],

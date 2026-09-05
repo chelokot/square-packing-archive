@@ -1,7 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import { claimSchema, evidenceSchema, manifestSchema } from "./schema.ts";
 import type { Claim } from "./schema.ts";
-import { exactCoverageByYear, isVerified, verificationLevel } from "./model.ts";
+import {
+  exactCoverageByYear,
+  isVerified,
+  strongestClaimFor,
+  verificationLevel,
+} from "./model.ts";
 
 const claim = claimSchema.parse({
   id: "upper-1-example",
@@ -78,6 +83,52 @@ describe("verificationLevel", () => {
         ],
       }),
     ).toBe("reported");
+  });
+});
+
+describe("strongestClaimFor", () => {
+  const checkedUpper = claimSchema.parse({
+    ...claim,
+    value: { decimal: "1", lean: "1" },
+    evidence: [leanEvidence],
+  });
+  const publishedExact: Claim = {
+    ...claim,
+    id: "exact-1-example",
+    relation: "exact",
+  };
+  const checkedExact: Claim = {
+    ...checkedUpper,
+    id: "exact-1-checked",
+    relation: "exact",
+  };
+
+  test("prefers an exact result at the same evidence level in either order", () => {
+    for (const claims of [
+      [checkedUpper, checkedExact],
+      [checkedExact, checkedUpper],
+    ]) {
+      expect(strongestClaimFor(archiveWith(claims), 1)).toEqual(checkedExact);
+    }
+  });
+
+  test("does not combine an exact claim with another claim's Lean evidence", () => {
+    for (const claims of [
+      [publishedExact, checkedUpper],
+      [checkedUpper, publishedExact],
+    ]) {
+      expect(strongestClaimFor(archiveWith(claims), 1)).toEqual(checkedUpper);
+    }
+  });
+
+  test("ignores inactive claims and claims for a different square count", () => {
+    const archive = archiveWith([
+      { ...checkedExact, active: false },
+      { ...checkedUpper, id: "upper-2-example", n: 2 },
+      publishedExact,
+    ]);
+    expect(strongestClaimFor(archive, 1)).toEqual(publishedExact);
+    expect(strongestClaimFor(archive, 3)).toBeUndefined();
   });
 });
 

@@ -4,3 +4,4 @@ apps/web/dist/
 formal/
 node_modules/
 test-results/
+docs/assets/coverage.svg

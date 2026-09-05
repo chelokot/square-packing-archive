@@ -5,16 +5,17 @@
 [![Code license](https://img.shields.io/badge/code-Apache--2.0-70ddff)](LICENSE)
 [![Data license](https://img.shields.io/badge/data-CC%20BY%204.0-b9a4ff)](LICENSE-DATA)
 
-Square Packing Archive is a provenance-first, machine-verifiable record of the
-problem of packing congruent unit squares into the smallest square container.
-It connects historical claims, authors, publications, exact coordinates,
-interactive visualizations, computational certificates, and Lean theorems
-without conflating them.
+How small a square can contain `n` unit squares? Squares may rotate, but their
+interiors cannot overlap. Browse the packings, historical results, and proofs.
 
-The project uses one strict rule: **verified means checked by Lean**. A
-peer-reviewed proof is represented as `published · awaiting Lean`; a robust
-interval or rational computation is `computed · awaiting Lean`. This preserves
-the literature faithfully while making the formalization gap measurable.
+**[Open the interactive archive →](https://chelokot.github.io/square-packing-archive/)**
+
+[![Packing results for 1–100 squares. Colors show evidence; = means exact, ≤ upper bound, and ≥ lower bound. Click to explore.](docs/assets/coverage.svg)](https://chelokot.github.io/square-packing-archive/#explore)
+
+**Verified means checked by Lean—not necessarily proved optimal.** An exact
+result (`=`) proves optimality; an upper bound (`≤`) proves a packing exists.
+Published proofs awaiting Lean keep a separate label. Each record links to its
+authors, sources, and available formal proofs.
 
 ## What is live
 
@@ -58,7 +59,9 @@ scripts/                        deterministic import and code generation
 ```
 
 `archive/manifest.json` and its referenced configuration files are the only
-editable source of archive facts. The web bundle is generated from them. Lean
+editable source of archive facts. The web bundle and README matrix are generated
+from them with `bun run archive:build`; `bun run archive:check` rejects a stale
+README matrix. Both views use the same claim-selection rules. Lean
 record modules are also generated from the same rational configurations, while
 their shared soundness proof is maintained by hand.
 
@@ -91,6 +94,10 @@ lake exe cache get
 lake build
 ```
 
+The [public site](https://chelokot.github.io/square-packing-archive/) is deployed
+to GitHub Pages by [the Pages workflow](.github/workflows/pages.yml) on pushes
+to `main`.
+
 The web application runs locally with:
 
 ```console
@@ -106,7 +113,7 @@ bun run site:package
 This produces `dist/site.tar.gz` containing only the built static site and its
 Sites deployment metadata. The normal build retains the GitHub Pages base path.
 The static packaging script follows the Sites archive contract; the bundled
-Worker-only packaging helper and Vite 8 plugin are not used by this Vite 7 app.
+Worker-only packaging helper and Sites Vite plugin are not used by this app.
 
 The social-preview artwork at `apps/web/public/og.png` was generated with the
 built-in imagegen tool using the prompt recorded in [the artwork notes](docs/site-artwork.md).

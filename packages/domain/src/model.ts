@@ -58,6 +58,19 @@ export const ratioToNumber = (ratio: Ratio): number =>
 export const activeClaims = (archive: ArchiveManifest): readonly Claim[] =>
   archive.claims.filter((claim) => claim.active);
 
+export const strongestClaimFor = (
+  archive: ArchiveManifest,
+  squareCount: number,
+): Claim | undefined =>
+  activeClaims(archive)
+    .filter((claim) => claim.n === squareCount)
+    .sort(
+      (left, right) =>
+        verificationPriority[verificationLevel(right)] -
+          verificationPriority[verificationLevel(left)] ||
+        Number(right.relation === "exact") - Number(left.relation === "exact"),
+    )[0];
+
 export const currentClaimFor = (
   archive: ArchiveManifest,
   squareCount: number,

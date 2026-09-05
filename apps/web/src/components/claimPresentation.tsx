@@ -1,8 +1,14 @@
 import type { Claim, CompiledArchive } from "@square-packing/domain";
 import { copy, repositoryUrl } from "../copy.ts";
 
+export const claimRelationSymbols = {
+  exact: "=",
+  upper: "≤",
+  lower: "≥",
+} as const satisfies Record<Claim["relation"], string>;
+
 export const claimValue = (claim: Claim): string =>
-  `s(${claim.n}) ${{ exact: "=", upper: "≤", lower: "≥" }[claim.relation]} ${claim.value.expression ?? claim.value.decimal}`;
+  `s(${claim.n}) ${claimRelationSymbols[claim.relation]} ${claim.value.expression ?? claim.value.decimal}`;
 
 export const contributorNames = (
   archive: CompiledArchive,

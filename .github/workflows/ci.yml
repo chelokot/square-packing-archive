@@ -18,6 +18,8 @@ jobs:
           bun-version: 1.2.22
       - run: bun install --frozen-lockfile
       - run: bun run archive:build
+      - name: Check README matrix is up to date
+        run: git diff --exit-code -- docs/assets/coverage.svg
       - run: bun run check
       - run: bun run test
       - run: bunx playwright install --with-deps chromium
