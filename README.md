@@ -85,6 +85,10 @@ the public construction currently proves only `s(11) ≤ 3.88`.
 
 ## Sources and gratitude
 
+Project concept and product direction: **chelokot**. AI research and
+formalizations: **GPT 6 Astra**. These credits are separate from the original
+researchers' discovery and proof credits.
+
 This archive builds on [Erich Friedman’s survey](https://doi.org/10.37236/28),
 the [Squares in Squares tracker](https://kingbird.myphotos.cc/packing/squares_in_squares.html)
 maintained by David Ellsworth, and the original authors linked from each result.

@@ -19,11 +19,7 @@
     { "id": "bentz", "name": "Wolfram Bentz" },
     { "id": "brendberg", "name": "Sigvart Brendberg" },
     { "id": "cantrell", "name": "David W. Cantrell" },
-    {
-      "id": "chelokot",
-      "name": "chelokot",
-      "links": [{ "label": "GitHub", "url": "https://github.com/chelokot" }]
-    },
+    { "id": "gpt-6-astra", "name": "GPT 6 Astra" },
     {
       "id": "ellsworth",
       "name": "David Ellsworth",
@@ -122,7 +118,7 @@
       "id": "archive-research-2026",
       "kind": "repository",
       "title": "Square packing research pipeline",
-      "authors": ["chelokot"],
+      "authors": ["gpt-6-astra"],
       "url": "https://github.com/chelokot/square-packing-archive/tree/main/archive/configurations",
       "publishedAt": "2026"
     },
@@ -623,7 +619,7 @@
       "announcedAt": "2026-08-29",
       "contributors": [
         { "author": "trump", "role": "discoverer" },
-        { "author": "chelokot", "role": "prover" }
+        { "author": "gpt-6-astra", "role": "prover" }
       ],
       "evidence": [
         {
@@ -1289,7 +1285,7 @@
         "lean": "((880339 : ℚ) / 100000 : ℝ)"
       },
       "announcedAt": "2026-08-16",
-      "contributors": [{ "author": "chelokot", "role": "optimizer" }],
+      "contributors": [{ "author": "gpt-6-astra", "role": "optimizer" }],
       "evidence": [
         {
           "kind": "interval-certificate",
@@ -1350,7 +1346,7 @@
         "lean": "((5517 : ℚ) / 625 : ℝ)"
       },
       "announcedAt": "2026-08-16",
-      "contributors": [{ "author": "chelokot", "role": "optimizer" }],
+      "contributors": [{ "author": "gpt-6-astra", "role": "optimizer" }],
       "evidence": [
         {
           "kind": "interval-certificate",
@@ -1516,7 +1512,7 @@
           "role": "optimizer"
         },
         {
-          "author": "chelokot",
+          "author": "gpt-6-astra",
           "role": "prover"
         }
       ],
@@ -1554,7 +1550,7 @@
           "role": "discoverer"
         },
         {
-          "author": "chelokot",
+          "author": "gpt-6-astra",
           "role": "prover"
         }
       ],
@@ -1592,7 +1588,7 @@
           "role": "discoverer"
         },
         {
-          "author": "chelokot",
+          "author": "gpt-6-astra",
           "role": "prover"
         }
       ],
@@ -1630,7 +1626,7 @@
           "role": "discoverer"
         },
         {
-          "author": "chelokot",
+          "author": "gpt-6-astra",
           "role": "prover"
         }
       ],
@@ -1668,7 +1664,7 @@
           "role": "discoverer"
         },
         {
-          "author": "chelokot",
+          "author": "gpt-6-astra",
           "role": "prover"
         }
       ],
@@ -1706,7 +1702,7 @@
           "role": "discoverer"
         },
         {
-          "author": "chelokot",
+          "author": "gpt-6-astra",
           "role": "prover"
         }
       ],

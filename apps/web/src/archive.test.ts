@@ -1,5 +1,6 @@
 import { assert, describe, expect, test } from "vitest";
 import { archive } from "./archive.ts";
+import { contributorNames } from "./components/claimPresentation.tsx";
 import {
   explorerBoundFor,
   isGridBaseline,
@@ -9,6 +10,35 @@ import {
 } from "@square-packing/domain";
 
 describe("compiled archive", () => {
+  test("credits AI work separately from project ownership and original discoveries", () => {
+    expect(
+      archive.claims
+        .flatMap(({ contributors }) => contributors)
+        .some(({ author }) => author === "chelokot"),
+    ).toBe(false);
+    for (const id of ["upper-68-archive", "upper-69-archive"]) {
+      const claim = archive.claims.find((claim) => claim.id === id)!;
+      expect(claim.contributors).toEqual([
+        { author: "gpt-6-astra", role: "optimizer" },
+      ]);
+      expect(contributorNames(archive, claim)).toBe("GPT 6 Astra");
+    }
+    const imported = archive.claims.find(
+      ({ id }) => id === "upper-50-schadt-ellsworth",
+    )!;
+    expect(imported.contributors).toEqual([
+      { author: "schadt", role: "discoverer" },
+      { author: "ellsworth", role: "optimizer" },
+      { author: "gpt-6-astra", role: "prover" },
+    ]);
+    expect(contributorNames(archive, imported)).toBe(
+      "Thomas Schadt, David Ellsworth, GPT 6 Astra",
+    );
+    expect(
+      archive.sources.find(({ id }) => id === "archive-research-2026")!.authors,
+    ).toEqual(["gpt-6-astra"]);
+  });
+
   test("distinguishes Brendberg's 2023 bound from Schadt's 2025 improvement", () => {
     expect(
       archive.claims.find(({ id }) => id === "upper-68-brendberg"),

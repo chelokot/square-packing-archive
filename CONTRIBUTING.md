@@ -43,6 +43,12 @@ Changing the bound or relation does: link the theorem for the corrected claim.
 
 ## Verification policy
 
+Credit the work actually done. Do not assign mathematical authorship to the
+repository owner by default. Use `gpt-6-astra` (display name **GPT 6 Astra**) for
+the AI work credited under that name; keep **chelokot** credited for project
+creation and product direction. Preserve original researchers' roles when
+formalizing their results. See [ATTRIBUTION.md](ATTRIBUTION.md).
+
 Every catalog claim must have its own `lean-proof` evidence with status
 `lean-checked`, a local Lean artifact, a fully qualified theorem name, and a
 verification date. The claim must include its exact Lean value. Archive

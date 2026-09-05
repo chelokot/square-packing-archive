@@ -1,5 +1,17 @@
 # Attribution
 
+## Project and research credits
+
+- **chelokot:** project creator, concept, and product direction.
+- **GPT 6 Astra:** AI-produced research, packing optimizations, and Lean
+  formalizations credited under this name in the archive.
+
+Project ownership does not imply authorship of a mathematical result.
+Formalizing or reconstructing a published result does not transfer its discovery
+credit: the original discoverer, optimizer, and prover keep their respective roles.
+
+## Historical sources
+
 Square Packing Archive exists because of the unusually careful public record
 maintained by the packing community.
 
