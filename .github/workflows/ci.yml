@@ -40,6 +40,8 @@ jobs:
         working-directory: .
         run: |
           python3 -S -m unittest discover -s scripts -p 'test_triangle_cover.py'
+          python3 -S -m unittest discover -s scripts -p 'test_nonadjacent_cover.py'
+          python3 -S -m unittest discover -s scripts -p 'test_bentz_adjacent_cover.py'
           python3 -S scripts/generate-triangle-cover.py --check
           python3 -S scripts/generate-triangle-cover.py --step 2 --full --check
           python3 -S scripts/generate-triangle-cover.py --step 3 --full --check

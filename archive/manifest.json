@@ -584,7 +584,7 @@
       "id": "exact-13-bentz",
       "n": 13,
       "relation": "exact",
-      "value": { "decimal": "4", "expression": "4" },
+      "value": { "decimal": "4", "expression": "4", "lean": "4" },
       "announcedAt": "2009-08",
       "contributors": [{ "author": "bentz", "role": "prover" }],
       "evidence": [
@@ -592,6 +592,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "bentz-2010"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square13Exact.lean",
+          "theorem": "SquarePackingArchive.Records.Square13.s13_eq_four",
+          "checkedAt": "2026-09-05"
         }
       ],
       "configuration": "square-13-grid",

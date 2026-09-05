@@ -1,24 +1,12 @@
 # Proof status: 6, 10, 13, 22, and 33 squares
 
-The complete minimum-side theorems are checked for **6, 10, 22, and 33 squares**:
+The complete minimum-side theorems are checked for **all five square counts**:
 
 - `SquarePackingArchive.Records.Square6.s6_eq_three : IsMinimumSide 6 3`.
 - `SquarePackingArchive.Records.Square10.s10_eq_goebel : IsMinimumSide 10 (3 + Real.sqrt 2 / 2)`.
+- `SquarePackingArchive.Records.Square13.s13_eq_four : IsMinimumSide 13 4`.
 - `SquarePackingArchive.Records.Square22.s22_eq_five : IsMinimumSide 22 5`.
 - `SquarePackingArchive.Records.Square33.s33_eq_six : IsMinimumSide 33 6`.
-
-The 13-square exact result remains **Published · awaiting Lean**. A checked
-construction proves an upper bound; checked lemmas alone do not prove optimality.
-
-## Completed parts
-
-| Squares | Checked in Lean                                                                                                         | Still needed for optimality                                               |
-| ------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| 6       | The full lower bound and matching grid construction.                                                                    | Nothing.                                                                  |
-| 10      | The full lower bound and matching Göbel construction.                                                                   | Nothing.                                                                  |
-| 13      | Bentz's initial sixteen-point unavoidable set and the conclusion that at least two corner points have singleton owners. | The replacement-point lemmas and the adjacent/non-adjacent case analysis. |
-| 22      | The full lower bound and matching grid construction.                                                                    | Nothing.                                                                  |
-| 33      | The full lower bound and matching grid construction.                                                                    | Nothing.                                                                  |
 
 The initial configurations and geometric lemmas cover arbitrary rotations. The
 packing arguments start with interior-disjoint squares; where a proof needs
@@ -60,9 +48,27 @@ coverage and boundary arguments handle arbitrary rotations. The fixed
 replacement configurations include both rotated inner points, with their
 ownership proved separately.
 
+The rotated inner points also appear in
+[Stromquist's October 1984 manuscript](https://walterstromquist.com/papers/squares1.pdf).
+
 The final theorem is in `formal/SquarePackingArchive/Records/Square10Exact.lean`.
 The [generated coverage proofs](generated-geometric-covers.md) are reproducible
 and checked by Lean, not trusted as external certificates.
+
+## Why thirteen squares need side four
+
+The proof follows Bentz's point-set and counting strategy. The initial
+sixteen-point set forces two corner-restricted squares. Replacement lemmas
+then give points owned by those squares. In every adjacent or non-adjacent
+case, a further unavoidable set has too few points left for the other squares.
+
+Lean checks 32 non-adjacent and 13 adjacent coverage certificates. The proof
+uses corrected auxiliary point sets and an eight-point replacement grid for
+the moving point in case R1. The
+[13-square formalization notes](bentz-13-formalization.md) explain the changes
+and include exact counterexamples to two printed auxiliary sets.
+
+The final theorem is in `formal/SquarePackingArchive/Records/Square13Exact.lean`.
 
 ## Layouts
 

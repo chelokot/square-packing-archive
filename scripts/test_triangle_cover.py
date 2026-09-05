@@ -88,6 +88,15 @@ class ExactCoverTests(unittest.TestCase):
         self.assertIn("stepThree_area_0_7", definitions)
         self.assertLessEqual(references, definitions)
 
+    def test_single_halfplane_region_has_no_conjunction_constructor(self):
+        boundary = Halfplane(ONE, ZERO, ZERO)
+        region = generator["Region"](0, (), (boundary,), "boundary")
+        renderer = Renderer("example", normalize_boundaries=False)
+        renderer.cover(1, ((ZERO, ZERO), (ONE, ZERO), (ONE, ONE), (ZERO, ONE)),
+                       (region,), (Constraint(boundary, "horizontal"),))
+        self.assertEqual(renderer.lines[-1], "  exact horizontal")
+        self.assertFalse(any("refine ⟨" in line for line in renderer.lines))
+
 
 if __name__ == "__main__":
     unittest.main()

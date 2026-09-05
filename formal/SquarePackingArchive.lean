@@ -55,6 +55,9 @@ import SquarePackingArchive.Records.Square6
 import SquarePackingArchive.Records.Square6Exact
 import SquarePackingArchive.Records.Square10Exact
 import SquarePackingArchive.Records.Square13
+import SquarePackingArchive.Records.Square13Exact
+import SquarePackingArchive.BentzThirteenNonadjacentExact
+import SquarePackingArchive.BentzThirteenR2Repair
 import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.Square15
 import SquarePackingArchive.Records.Square24

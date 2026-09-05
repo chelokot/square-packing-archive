@@ -29,6 +29,9 @@ describe("coverage matrix claim types", () => {
   test.each([
     [6, "Exact", "=", "s(6) = 3"],
     [10, "Exact", "=", "s(10) = 3 + √2 / 2"],
+    [13, "Exact", "=", "s(13) = 4"],
+    [22, "Exact", "=", "s(22) = 5"],
+    [33, "Exact", "=", "s(33) = 6"],
     [64, "Exact", "=", "s(64) = 8"],
     [69, "Upper bound", "≤", "s(69) ≤ 8.8272"],
   ])(
@@ -48,11 +51,36 @@ describe("coverage matrix claim types", () => {
     expect(cellMarkup(5)).toContain(">=</span>");
   });
 
-  test("keeps published exact results amber and uncatalogued cells unmarked", () => {
-    expect(cellMarkup(13)).toContain(
-      "n = 13: Exact · Published · awaiting Lean",
+  test("keeps a published exact claim amber until it has Lean evidence", () => {
+    const published = renderToStaticMarkup(
+      <CoverageMatrix
+        archive={{
+          ...archive,
+          claims: archive.claims.map((claim) =>
+            claim.id === "exact-13-bentz"
+              ? {
+                  ...claim,
+                  evidence: claim.evidence.filter(
+                    (evidence) => evidence.kind !== "lean-proof",
+                  ),
+                }
+              : claim,
+          ),
+        }}
+        selectedCount={13}
+        onSelect={() => {}}
+      />,
     );
-    expect(cellMarkup(13)).toContain("bg-ochre-soft");
+    const cell = published.match(
+      /<button[^>]*aria-label="n = 13:[\s\S]*?<\/button>/,
+    );
+    expect(cell).not.toBeNull();
+    expect(cell![0]).toContain("n = 13: Exact · Published · awaiting Lean");
+    expect(cell![0]).toContain("bg-ochre-soft");
+    expect(cell![0]).toContain(">=</span>");
+  });
+
+  test("keeps uncatalogued cells unmarked", () => {
     expect(cellMarkup(61)).toContain("n = 61: Not catalogued");
     for (const symbol of ["=", "≤", "≥"]) {
       expect(cellMarkup(61)).not.toContain(`>${symbol}</span>`);

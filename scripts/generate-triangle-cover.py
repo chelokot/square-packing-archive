@@ -166,6 +166,7 @@ class Renderer:
         self.leaf_count = 0
         self.prefix = prefix
         self.normalize_boundaries = normalize_boundaries
+        self.used_regions: set[tuple[str, int]] = set()
 
     def append(self, depth: int, text: str) -> None:
         self.lines.append("  " * depth + text)
@@ -224,20 +225,23 @@ class Renderer:
         for region in regions:
             if all(boundary.at(point).sign() >= 0 for boundary in region.boundaries for point in polygon):
                 self.leaf_count += 1
+                self.used_regions.add((region.kind, region.index))
                 if region.kind == "boundary":
                     self.append(depth, f"apply {self.prefix}_hit_boundary square fits {region.index}")
                     if self.normalize_boundaries:
                         self.append(depth, f"rw [{self.prefix}_boundary_{region.index}]")
                     else:
                         self.append(depth, "change " + " ∧ ".join(f"0 ≤ {plane.lean()}" for plane in region.boundaries))
-                    self.append(depth, f"refine ⟨{', '.join('?_ ' for _ in region.boundaries)}⟩")
+                    if len(region.boundaries) > 1:
+                        self.append(depth, f"refine ⟨{', '.join('?_ ' for _ in region.boundaries)}⟩")
                 elif region.kind == "hull":
                     self.append(depth, f"apply {self.prefix}_hit_in_hull square")
                 else:
                     self.append(depth, f"apply {self.prefix}_hit_triangle square {region.index}")
                 for edge_index, boundary in enumerate(region.boundaries):
                     if region.kind == "boundary":
-                        self.append(depth, "·")
+                        if len(region.boundaries) > 1:
+                            self.append(depth, "·")
                     else:
                         first = region.vertices[edge_index]
                         second = region.vertices[(edge_index + 1) % len(region.vertices)]
@@ -246,7 +250,8 @@ class Renderer:
                         else:
                             self.append(depth, f"· change 0 ≤ Point.orientedArea ({self.prefix}Points {first}) ({self.prefix}Points {second}) square.center")
                         self.append(depth + 1, f"rw [{self.prefix}_area_{first}_{second}]")
-                    self.membership(depth + 1, boundary, constraints)
+                    proof_depth = depth if region.kind == "boundary" and len(region.boundaries) == 1 else depth + 1
+                    self.membership(proof_depth, boundary, constraints)
                 return
         intersections = []
         for region in regions:

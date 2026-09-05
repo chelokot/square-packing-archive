@@ -5,6 +5,8 @@ import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square6
 import SquarePackingArchive.Records.Square6Exact
 import SquarePackingArchive.Records.Square13
+import SquarePackingArchive.Records.Square13Exact
+import SquarePackingArchive.BentzThirteenR2Repair
 import SquarePackingArchive.Records.Square10
 import SquarePackingArchive.Records.Square10Exact
 import SquarePackingArchive.Records.Square33
@@ -91,6 +93,11 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Stromquist.TenPoints.exists_namedFamily_of_packing_below
 #print axioms SquarePackingArchive.Records.Square13.initialPoints_unavoidable
 #print axioms SquarePackingArchive.Records.Square13.packing_has_two_corner_restricted_points
+#print axioms SquarePackingArchive.BentzThirteen.verifiedCovers
+#print axioms SquarePackingArchive.Records.Square13.s13_lower_bound
+#print axioms SquarePackingArchive.Records.Square13.s13_eq_four
+#print axioms SquarePackingArchive.BentzThirteen.printedR2LeftPoints_not_unavoidable
+#print axioms SquarePackingArchive.BentzThirteen.printedR3Points_not_unavoidable
 #print axioms SquarePackingArchive.Bentz.middle_exception_impossible
 #print axioms SquarePackingArchive.Bentz.bottom_exception_impossible
 #print axioms SquarePackingArchive.Bentz.vertical_unit_chord_of_center_le_eleven_tenths
