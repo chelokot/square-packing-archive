@@ -49,6 +49,7 @@
       ]
     },
     { "id": "shiu", "name": "Peter Shiu" },
+    { "id": "stenlund", "name": "Evert Stenlund" },
     { "id": "stromquist", "name": "Walter Stromquist" },
     { "id": "trump", "name": "Walter Trump" }
   ],
@@ -124,6 +125,105 @@
       "authors": ["chelokot"],
       "url": "https://github.com/chelokot/square-packing-archive/tree/main/archive/configurations",
       "publishedAt": "2026"
+    },
+    {
+      "id": "schadt-ellsworth-50-2025",
+      "kind": "tracker",
+      "title": "50 squares: Schadt construction, Ellsworth exact optimization",
+      "authors": ["schadt", "ellsworth"],
+      "url": "https://kingbird.myphotos.cc/packing/square-50.svg",
+      "publishedAt": "2025-12-14",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "schadt-68-2025",
+      "kind": "tracker",
+      "title": "68 squares: Schadt's improvement of Brendberg's construction",
+      "authors": ["brendberg", "schadt"],
+      "url": "https://kingbird.myphotos.cc/packing/square-68_r4.svg",
+      "publishedAt": "2025-12-19",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-27-goebel",
+      "kind": "tracker",
+      "title": "27 squares: Göbel diagonal-strip construction",
+      "authors": ["goebel"],
+      "url": "https://kingbird.myphotos.cc/packing/square-27.svg",
+      "publishedAt": "1979",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-38-goebel",
+      "kind": "tracker",
+      "title": "38 squares: Göbel diagonal-strip construction",
+      "authors": ["goebel"],
+      "url": "https://kingbird.myphotos.cc/packing/square-38.svg",
+      "publishedAt": "1979",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-52-goebel",
+      "kind": "tracker",
+      "title": "52 squares: Göbel diagonal-strip construction",
+      "authors": ["goebel"],
+      "url": "https://kingbird.myphotos.cc/packing/square-52.svg",
+      "publishedAt": "1979",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-67-stenlund",
+      "kind": "tracker",
+      "title": "67 squares: Stenlund diagonal-strip construction",
+      "authors": ["stenlund"],
+      "url": "https://kingbird.myphotos.cc/packing/square-67.svg",
+      "publishedAt": "1980",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-84-stenlund",
+      "kind": "tracker",
+      "title": "84 squares: Stenlund diagonal-strip construction",
+      "authors": ["stenlund"],
+      "url": "https://kingbird.myphotos.cc/packing/square-84.svg",
+      "publishedAt": "1980",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-68-stenlund-1980",
+      "kind": "tracker",
+      "title": "68 squares: Stenlund 1980 construction",
+      "authors": ["stenlund"],
+      "url": "https://kingbird.myphotos.cc/packing/square-68_r1.svg",
+      "publishedAt": "1980",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-68-cantrell-2002",
+      "kind": "tracker",
+      "title": "68 squares: Cantrell 2002 construction",
+      "authors": ["cantrell"],
+      "url": "https://kingbird.myphotos.cc/packing/square-68_r2.svg",
+      "publishedAt": "2002-09",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-68-brendberg-2023",
+      "kind": "tracker",
+      "title": "68 squares: Brendberg 2023 construction",
+      "authors": ["brendberg"],
+      "url": "https://kingbird.myphotos.cc/packing/square-68_r3.svg",
+      "publishedAt": "2023-06",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-69-friedman-1997",
+      "kind": "tracker",
+      "title": "69 squares: Friedman 1997 construction",
+      "authors": ["friedman"],
+      "url": "https://kingbird.myphotos.cc/packing/square-69_r1.svg",
+      "publishedAt": "1997",
+      "accessedAt": "2026-09-05"
     }
   ],
   "claims": [
@@ -1107,30 +1207,40 @@
       "active": true
     },
     {
-      "id": "upper-68-brendberg",
+      "id": "upper-68-schadt",
       "n": 68,
       "relation": "upper",
       "value": {
         "decimal": "8.80357394752856",
         "lean": "((880357394752856 : ℚ) / 100000000000000 : ℝ)"
       },
-      "announcedAt": "2023-06",
-      "contributors": [{ "author": "brendberg", "role": "discoverer" }],
+      "announcedAt": "2025-12-19",
+      "contributors": [
+        {
+          "author": "brendberg",
+          "role": "discoverer"
+        },
+        {
+          "author": "schadt",
+          "role": "optimizer"
+        }
+      ],
       "evidence": [
         {
           "kind": "tracker-record",
           "status": "reported",
-          "source": "tracker-history"
+          "source": "schadt-68-2025"
         },
         {
           "kind": "lean-proof",
           "status": "lean-checked",
           "source": "archive-research-2026",
           "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
-          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_brendberg_2023",
+          "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_2025",
           "checkedAt": "2026-08-20"
         }
       ],
+      "supersedes": "upper-68-brendberg",
       "active": false
     },
     {
@@ -1143,8 +1253,14 @@
       },
       "announcedAt": "2025-12",
       "contributors": [
-        { "author": "schadt", "role": "optimizer" },
-        { "author": "ellsworth", "role": "optimizer" }
+        {
+          "author": "schadt",
+          "role": "optimizer"
+        },
+        {
+          "author": "ellsworth",
+          "role": "optimizer"
+        }
       ],
       "evidence": [
         {
@@ -1161,7 +1277,7 @@
           "checkedAt": "2026-08-20"
         }
       ],
-      "supersedes": "upper-68-brendberg",
+      "supersedes": "upper-68-schadt",
       "active": false
     },
     {
@@ -1222,6 +1338,7 @@
           "checkedAt": "2026-08-20"
         }
       ],
+      "supersedes": "upper-69-friedman",
       "active": false
     },
     {
@@ -1378,6 +1495,372 @@
       ],
       "configuration": "square-99-grid",
       "active": true
+    },
+    {
+      "id": "upper-50-schadt-ellsworth",
+      "n": 50,
+      "relation": "upper",
+      "value": {
+        "decimal": "7.57142857142857",
+        "expression": "53 / 7",
+        "lean": "((53 : ℚ) / 7 : ℝ)"
+      },
+      "announcedAt": "2025-12-14",
+      "contributors": [
+        {
+          "author": "schadt",
+          "role": "discoverer"
+        },
+        {
+          "author": "ellsworth",
+          "role": "optimizer"
+        },
+        {
+          "author": "chelokot",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "schadt-ellsworth-50-2025"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square50SchadtEllsworth.lean",
+          "theorem": "SquarePackingArchive.Records.Square50SchadtEllsworth.s50_le_7_57142857142857",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "configuration": "square-50-schadt-ellsworth",
+      "active": true
+    },
+    {
+      "id": "upper-27-goebel",
+      "n": 27,
+      "relation": "upper",
+      "value": {
+        "decimal": "5.707106781186548",
+        "expression": "5 + √2 / 2",
+        "lean": "5 + Real.sqrt 2 / 2"
+      },
+      "announcedAt": "1979",
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "discoverer"
+        },
+        {
+          "author": "chelokot",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-27-goebel"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/GoebelStrip.lean",
+          "theorem": "SquarePackingArchive.Records.GoebelStrip.s27_le_goebel",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "configuration": "square-27-goebel-strip",
+      "active": true
+    },
+    {
+      "id": "upper-38-goebel",
+      "n": 38,
+      "relation": "upper",
+      "value": {
+        "decimal": "6.707106781186548",
+        "expression": "6 + √2 / 2",
+        "lean": "6 + Real.sqrt 2 / 2"
+      },
+      "announcedAt": "1979",
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "discoverer"
+        },
+        {
+          "author": "chelokot",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-38-goebel"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/GoebelStrip.lean",
+          "theorem": "SquarePackingArchive.Records.GoebelStrip.s38_le_goebel",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "configuration": "square-38-goebel-strip",
+      "active": true
+    },
+    {
+      "id": "upper-52-goebel",
+      "n": 52,
+      "relation": "upper",
+      "value": {
+        "decimal": "7.707106781186548",
+        "expression": "7 + √2 / 2",
+        "lean": "7 + Real.sqrt 2 / 2"
+      },
+      "announcedAt": "1979",
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "discoverer"
+        },
+        {
+          "author": "chelokot",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-52-goebel"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/GoebelStrip.lean",
+          "theorem": "SquarePackingArchive.Records.GoebelStrip.s52_le_goebel",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "configuration": "square-52-goebel-strip",
+      "active": true
+    },
+    {
+      "id": "upper-67-stenlund",
+      "n": 67,
+      "relation": "upper",
+      "value": {
+        "decimal": "8.707106781186548",
+        "expression": "8 + √2 / 2",
+        "lean": "8 + Real.sqrt 2 / 2"
+      },
+      "announcedAt": "1980",
+      "contributors": [
+        {
+          "author": "stenlund",
+          "role": "discoverer"
+        },
+        {
+          "author": "chelokot",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-67-stenlund"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/GoebelStrip.lean",
+          "theorem": "SquarePackingArchive.Records.GoebelStrip.s67_le_goebel",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "configuration": "square-67-goebel-strip",
+      "active": true
+    },
+    {
+      "id": "upper-84-stenlund",
+      "n": 84,
+      "relation": "upper",
+      "value": {
+        "decimal": "9.707106781186548",
+        "expression": "9 + √2 / 2",
+        "lean": "9 + Real.sqrt 2 / 2"
+      },
+      "announcedAt": "1980",
+      "contributors": [
+        {
+          "author": "stenlund",
+          "role": "discoverer"
+        },
+        {
+          "author": "chelokot",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-84-stenlund"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/GoebelStrip.lean",
+          "theorem": "SquarePackingArchive.Records.GoebelStrip.s84_le_goebel",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "configuration": "square-84-goebel-strip",
+      "active": true
+    },
+    {
+      "id": "upper-68-stenlund",
+      "n": 68,
+      "relation": "upper",
+      "value": {
+        "decimal": "8.82842712474619",
+        "expression": "6 + 2√2",
+        "lean": "6 + 2 * Real.sqrt 2"
+      },
+      "announcedAt": "1980",
+      "contributors": [
+        {
+          "author": "stenlund",
+          "role": "discoverer"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-68-stenlund-1980"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalRadicalBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalRadicalBounds.s68_le_stenlund_1980",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "active": false
+    },
+    {
+      "id": "upper-68-cantrell",
+      "n": 68,
+      "relation": "upper",
+      "value": {
+        "decimal": "8.822875655532295",
+        "expression": "15 / 2 + √7 / 2",
+        "lean": "15 / 2 + Real.sqrt 7 / 2"
+      },
+      "announcedAt": "2002-09",
+      "contributors": [
+        {
+          "author": "cantrell",
+          "role": "discoverer"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-68-cantrell-2002"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalRadicalBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalRadicalBounds.s68_le_cantrell_2002",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "supersedes": "upper-68-stenlund",
+      "active": false
+    },
+    {
+      "id": "upper-68-brendberg",
+      "n": 68,
+      "relation": "upper",
+      "value": {
+        "decimal": "8.805469288332912",
+        "expression": "13 / 3 + 2√5",
+        "lean": "13 / 3 + 2 * Real.sqrt 5"
+      },
+      "announcedAt": "2023-06",
+      "contributors": [
+        {
+          "author": "brendberg",
+          "role": "discoverer"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-68-brendberg-2023"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalRadicalBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalRadicalBounds.s68_le_brendberg_2023",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "supersedes": "upper-68-cantrell",
+      "active": false
+    },
+    {
+      "id": "upper-69-friedman",
+      "n": 69,
+      "relation": "upper",
+      "value": {
+        "decimal": "8.86396103067893",
+        "expression": "5 / 2 + 9√2 / 2",
+        "lean": "5 / 2 + 9 * Real.sqrt 2 / 2"
+      },
+      "announcedAt": "1997",
+      "contributors": [
+        {
+          "author": "friedman",
+          "role": "discoverer"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-69-friedman-1997"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalRadicalBounds.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalRadicalBounds.s69_le_friedman_1997",
+          "checkedAt": "2026-09-05"
+        }
+      ],
+      "active": false
     }
   ],
   "configurations": [
@@ -1421,6 +1904,40 @@
     { "id": "square-98-grid", "recipe": "grid", "n": 98, "side": 10 },
     { "id": "square-99-grid", "recipe": "grid", "n": 99, "side": 10 },
     { "id": "square-5-goebel", "recipe": "goebel", "n": 5 },
-    { "id": "square-10-goebel", "recipe": "goebel", "n": 10 }
+    { "id": "square-10-goebel", "recipe": "goebel", "n": 10 },
+    {
+      "id": "square-50-schadt-ellsworth",
+      "path": "configurations/square-50-schadt-ellsworth.json"
+    },
+    {
+      "id": "square-27-goebel-strip",
+      "recipe": "goebel-strip",
+      "steps": 4,
+      "stripCount": 5
+    },
+    {
+      "id": "square-38-goebel-strip",
+      "recipe": "goebel-strip",
+      "steps": 5,
+      "stripCount": 6
+    },
+    {
+      "id": "square-52-goebel-strip",
+      "recipe": "goebel-strip",
+      "steps": 6,
+      "stripCount": 8
+    },
+    {
+      "id": "square-67-goebel-strip",
+      "recipe": "goebel-strip",
+      "steps": 7,
+      "stripCount": 9
+    },
+    {
+      "id": "square-84-goebel-strip",
+      "recipe": "goebel-strip",
+      "steps": 8,
+      "stripCount": 10
+    }
   ]
 }

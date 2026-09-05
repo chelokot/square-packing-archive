@@ -10,7 +10,7 @@ import { formatExact } from "../geometry.ts";
 import { archive } from "../archive.ts";
 
 describe("packing reconstructions", () => {
-  test.each([5, 6, 10, 13, 22, 33, 99])(
+  test.each([5, 6, 10, 13, 22, 27, 33, 38, 50, 52, 67, 84, 99])(
     "renders all %s squares at the archived bound",
     (count) => {
       const configuration = archive.configurationData.find(

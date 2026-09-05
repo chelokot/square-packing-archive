@@ -231,7 +231,7 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s12_le_four
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_goebel_1979
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_hamalainen_1980
-#print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_brendberg_2023
+#print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_2025
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_ellsworth_2025
 #print axioms SquarePackingArchive.Records.HistoricalUpperBounds.s69_le_morandi_cantrell_2023
 #print axioms SquarePackingArchive.PlacedSquare.rotateQuarter_contains_iff

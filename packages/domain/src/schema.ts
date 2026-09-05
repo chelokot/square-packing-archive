@@ -166,6 +166,18 @@ export const configurationReferenceSchema = z.union([
     recipe: z.literal("goebel"),
     n: z.union([z.literal(5), z.literal(10)]),
   }),
+  z
+    .object({
+      id: identifier,
+      recipe: z.literal("goebel-strip"),
+      steps: z.number().int().positive(),
+      stripCount: z.number().int().positive(),
+    })
+    .refine(
+      ({ steps, stripCount }) =>
+        BigInt(stripCount - 1) ** 2n <= 2n * BigInt(steps - 1) ** 2n,
+      "Diagonal strip exceeds available length",
+    ),
 ]);
 
 export const manifestSchema = z.object({

@@ -72,7 +72,9 @@ separating-axis comparison rational. Decimal angles exist only as display data.
 The manifest can reference a coordinate file or an exact construction recipe.
 `grid` stores only the square count and integer container side; its column-major
 ordering matches Lean's `SquareNumbers.gridPacking`. `goebel` reconstructs the
-5- or 10-square layout from the corresponding Lean construction. No duplicate
+5- or 10-square layout from the corresponding Lean construction. `goebel-strip`
+stores staircase size and strip length for the generic diagonal-strip packing;
+its exact fit condition is checked before constructing coordinates. No duplicate
 coordinate files are needed. Generated layouts support the same viewer,
 inspection, and JSON download as imported layouts.
 

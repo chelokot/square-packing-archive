@@ -22,7 +22,7 @@ theorem s11_le_hamalainen_1980 :
   have sqrt_two_squared : (Real.sqrt 2) ^ 2 = 2 := by norm_num
   nlinarith
 
-theorem s68_le_brendberg_2023 :
+theorem s68_le_schadt_2025 :
     HasPacking 68 (((880357394752856 : ℚ) / 100000000000000) : ℝ) := by
   exact HasPacking.enlarge Square68.s68_le_8_80339 (by norm_num)
 
