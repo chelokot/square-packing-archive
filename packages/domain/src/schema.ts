@@ -215,7 +215,17 @@ export const quadraticSchema = z.object({
   sqrtTwo: ratioSchema,
 });
 
-export const exactNumberSchema = z.union([ratioSchema, quadraticSchema]);
+export const radicalSchema = z.object({
+  rational: ratioSchema,
+  radical: ratioSchema,
+  radicand: z.number().int().min(2),
+});
+
+export const exactNumberSchema = z.union([
+  ratioSchema,
+  quadraticSchema,
+  radicalSchema,
+]);
 
 export const squareSchema = z.object({
   id: z.number().int().nonnegative(),
@@ -228,32 +238,55 @@ export const squareSchema = z.object({
   }),
 });
 
-export const packingConfigurationSchema = z.object({
-  schemaVersion: z.literal(1),
-  id: identifier,
-  n: z.number().int().positive(),
-  containerSide: z.union([
-    ratioSchema.extend({ decimal }),
-    quadraticSchema.extend({ decimal }),
-  ]),
-  coordinateSystem: z.literal("physical-cartesian-bottom-left"),
-  squareSide: ratioSchema,
-  squares: z.array(squareSchema),
-  certificate: z.object({
-    method: z.enum([
-      "exact-rational-separating-axis",
-      "exact-quadratic-separating-axis",
+export const packingConfigurationSchema = z
+  .object({
+    schemaVersion: z.literal(1),
+    id: identifier,
+    n: z.number().int().positive(),
+    containerSide: z.union([
+      ratioSchema.extend({ decimal }),
+      quadraticSchema.extend({ decimal }),
+      radicalSchema.extend({ decimal }),
     ]),
-    minimumContainmentMargin: ratioSchema,
-    minimumSeparationMargin: ratioSchema,
-    orientationReconstruction: z.string().min(1),
-  }),
-  provenance: z.object({
-    source: z.string().min(1),
-    sourceOptimizedContainerSide: decimal,
-    importedAt: date,
-  }),
-});
+    coordinateSystem: z.literal("physical-cartesian-bottom-left"),
+    squareSide: ratioSchema,
+    squares: z.array(squareSchema),
+    certificate: z.object({
+      method: z.enum([
+        "exact-rational-separating-axis",
+        "exact-quadratic-separating-axis",
+      ]),
+      minimumContainmentMargin: ratioSchema,
+      minimumSeparationMargin: ratioSchema,
+      orientationReconstruction: z.string().min(1),
+    }),
+    provenance: z.object({
+      source: z.string().min(1),
+      sourceOptimizedContainerSide: decimal,
+      importedAt: date,
+    }),
+  })
+  .refine((configuration) => {
+    const values = [
+      configuration.containerSide,
+      ...configuration.squares.flatMap(({ center, orientation }) => [
+        center.x,
+        center.y,
+        orientation.cosine,
+        orientation.sine,
+        orientation.tangentHalfAngle,
+      ]),
+    ];
+    const fields = new Set(
+      values.flatMap((value) => {
+        if ("numerator" in value) return [];
+        const coefficient = "sqrtTwo" in value ? value.sqrtTwo : value.radical;
+        if (BigInt(coefficient.numerator) === 0n) return [];
+        return ["sqrtTwo" in value ? 2 : value.radicand];
+      }),
+    );
+    return fields.size <= 1;
+  }, "A configuration must use a single quadratic field");
 
 export const compiledArchiveSchema = manifestSchema.extend({
   claims: z.array(catalogClaimSchema),

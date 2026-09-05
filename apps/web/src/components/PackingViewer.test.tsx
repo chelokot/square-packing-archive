@@ -10,23 +10,23 @@ import { formatExact } from "../geometry.ts";
 import { archive } from "../archive.ts";
 
 describe("packing reconstructions", () => {
-  test.each([5, 6, 10, 13, 22, 27, 33, 38, 50, 52, 67, 84, 99])(
-    "renders all %s squares at the archived bound",
-    (count) => {
-      const configuration = archive.configurationData.find(
-        ({ n }) => n === count,
-      )!;
-      const claim = archive.claims.find(
-        (claim) => claim.configuration === configuration.id,
-      );
-      const markup = renderToStaticMarkup(
-        <PackingViewer configuration={configuration} claim={claim} />,
-      );
-      expect(markup.match(/data-square-id=/g)).toHaveLength(count);
-      expect(markup).toContain(configuration.containerSide.decimal);
-      expect(markup).not.toContain("Basic grid bound");
-    },
-  );
+  test.each([
+    5, 6, 10, 13, 17, 18, 19, 22, 26, 27, 33, 38, 40, 50, 52, 53, 65, 66, 67,
+    82, 84, 85, 86, 89, 99,
+  ])("renders all %s squares at the archived bound", (count) => {
+    const configuration = archive.configurationData.find(
+      ({ n }) => n === count,
+    )!;
+    const claim = archive.claims.find(
+      (claim) => claim.configuration === configuration.id,
+    );
+    const markup = renderToStaticMarkup(
+      <PackingViewer configuration={configuration} claim={claim} />,
+    );
+    expect(markup.match(/data-square-id=/g)).toHaveLength(count);
+    expect(markup).toContain(configuration.containerSide.decimal);
+    expect(markup).not.toContain("Basic grid bound");
+  });
 
   test("shows the baseline inequality and its proof without a repeated verification badge", () => {
     const baseline = gridBaselineFor(archive, 61)!;
@@ -82,5 +82,15 @@ describe("packing reconstructions", () => {
     expect(
       JSON.parse(JSON.stringify(configuration)).containerSide.sqrtTwo,
     ).toEqual({ numerator: "1", denominator: "2" });
+  });
+
+  test("preserves general quadratic fields in exact labels", () => {
+    expect(
+      formatExact({
+        rational: { numerator: "13", denominator: "2" },
+        radical: { numerator: "1", denominator: "2" },
+        radicand: 7,
+      }),
+    ).toBe("13/2 + 1/2·√7");
   });
 });

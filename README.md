@@ -69,8 +69,13 @@ To check the site, archive, and proofs from the repository root:
 bun run build
 bun run check
 bun run test
-(cd formal && lake exe cache get && lake --wfail build)
+(cd formal && lake exe cache get)
+python3 scripts/build-lean-certificates.py
 ```
+
+The memory-bounded build checks the quadratic certificates one at a
+time, then the complete library. See [tracker imports](docs/tracker-imports.md)
+for the reconstructed current and historical layouts.
 
 See the [development guide](docs/development.md) for architecture, imports,
 additional tests, and deployment. GitHub Pages updates only after CI passes.

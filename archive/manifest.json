@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-05",
+  "updatedAt": "2026-09-06",
   "gridBaseline": {
     "through": 100,
     "proof": {
@@ -16,38 +16,148 @@
     "definition": "s(n) is the infimum side length of a square container that can hold n pairwise interior-disjoint unit squares with arbitrary rotations."
   },
   "authors": [
-    { "id": "bentz", "name": "Wolfram Bentz" },
-    { "id": "brendberg", "name": "Sigvart Brendberg" },
-    { "id": "cantrell", "name": "David W. Cantrell" },
-    { "id": "gpt-6-astra", "name": "GPT 6 Astra" },
+    {
+      "id": "bentz",
+      "name": "Wolfram Bentz"
+    },
+    {
+      "id": "brendberg",
+      "name": "Sigvart Brendberg"
+    },
+    {
+      "id": "cantrell",
+      "name": "David W. Cantrell"
+    },
+    {
+      "id": "gpt-6-astra",
+      "name": "GPT 6 Astra"
+    },
     {
       "id": "ellsworth",
       "name": "David Ellsworth",
-      "links": [{ "label": "GitHub", "url": "https://github.com/Davidebyzero" }]
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/Davidebyzero"
+        }
+      ]
     },
     {
       "id": "friedman",
       "name": "Erich Friedman",
       "links": [
-        { "label": "Website", "url": "https://erich-friedman.github.io/" }
+        {
+          "label": "Website",
+          "url": "https://erich-friedman.github.io/"
+        }
       ]
     },
-    { "id": "goebel", "name": "Frits Göbel" },
-    { "id": "hamalainen", "name": "Pertti Hämäläinen" },
-    { "id": "kearney", "name": "Michael Kearney" },
-    { "id": "morandi", "name": "Maurizio Morandi" },
-    { "id": "nagamochi", "name": "Hiroshi Nagamochi" },
+    {
+      "id": "goebel",
+      "name": "Frits Göbel"
+    },
+    {
+      "id": "hamalainen",
+      "name": "Pertti Hämäläinen"
+    },
+    {
+      "id": "kearney",
+      "name": "Michael Kearney"
+    },
+    {
+      "id": "morandi",
+      "name": "Maurizio Morandi"
+    },
+    {
+      "id": "nagamochi",
+      "name": "Hiroshi Nagamochi"
+    },
     {
       "id": "schadt",
       "name": "Thomas Schadt",
       "links": [
-        { "label": "GitHub", "url": "https://github.com/BalthasarStrauss" }
+        {
+          "label": "GitHub",
+          "url": "https://github.com/BalthasarStrauss"
+        }
       ]
     },
-    { "id": "shiu", "name": "Peter Shiu" },
-    { "id": "stenlund", "name": "Evert Stenlund" },
-    { "id": "stromquist", "name": "Walter Stromquist" },
-    { "id": "trump", "name": "Walter Trump" }
+    {
+      "id": "shiu",
+      "name": "Peter Shiu"
+    },
+    {
+      "id": "stenlund",
+      "name": "Evert Stenlund"
+    },
+    {
+      "id": "stromquist",
+      "name": "Walter Stromquist"
+    },
+    {
+      "id": "trump",
+      "name": "Walter Trump"
+    },
+    {
+      "id": "cottingham",
+      "name": "Charles F. Cottingham"
+    },
+    {
+      "id": "wainwright",
+      "name": "Robert Wainwright"
+    },
+    {
+      "id": "gustafsson",
+      "name": "Mats Gustafsson"
+    },
+    {
+      "id": "gensane",
+      "name": "Thierry Gensane"
+    },
+    {
+      "id": "ryckelynck",
+      "name": "Philippe Ryckelynck"
+    },
+    {
+      "id": "ammann",
+      "name": "Robert Ammann"
+    },
+    {
+      "id": "crowther",
+      "name": "Joseph Crowther"
+    },
+    {
+      "id": "engler",
+      "name": "Paul Engler"
+    },
+    {
+      "id": "gough",
+      "name": "Gerald Gough"
+    },
+    {
+      "id": "everett",
+      "name": "Hugh Everett"
+    },
+    {
+      "id": "hobby",
+      "name": "David Hobby"
+    },
+    {
+      "id": "holzsayer",
+      "name": "Richard Holzsayer"
+    },
+    {
+      "id": "kitchens",
+      "name": "David Kitchens"
+    },
+    {
+      "id": "konopasek",
+      "name": "Milos Konopasek"
+    },
+    {
+      "id": "stoll",
+      "name": "Douglas Stoll"
+    }
   ],
   "sources": [
     {
@@ -188,7 +298,7 @@
     {
       "id": "tracker-68-stenlund-1980",
       "kind": "tracker",
-      "title": "68 squares: Stenlund 1980 construction",
+      "title": "68 squares: Stenlund construction; centered symmetric variant, corrected side 6 + 2√2",
       "authors": ["stenlund"],
       "url": "https://kingbird.myphotos.cc/packing/square-68_r1.svg",
       "publishedAt": "1980",
@@ -215,10 +325,194 @@
     {
       "id": "tracker-69-friedman-1997",
       "kind": "tracker",
-      "title": "69 squares: Friedman 1997 construction",
+      "title": "69 squares: Friedman historical construction",
       "authors": ["friedman"],
       "url": "https://kingbird.myphotos.cc/packing/square-69_r1.svg",
       "publishedAt": "1997",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-11-goebel-1979",
+      "kind": "tracker",
+      "title": "11 squares: Göbel and independently Cottingham; equal-bound layout variant",
+      "authors": ["goebel", "cottingham"],
+      "url": "https://kingbird.myphotos.cc/packing/square-11_r1a.svg",
+      "publishedAt": "1979",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-11-hamalainen-1980",
+      "kind": "tracker",
+      "title": "11 squares: Hämäläinen; known by 20 April 1980",
+      "authors": ["hamalainen"],
+      "url": "https://kingbird.myphotos.cc/packing/square-11_r2.svg",
+      "publishedAt": "1980",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-17-hamalainen-1980",
+      "kind": "tracker",
+      "title": "17 squares: Hämäläinen historical construction; later improved by Bidwell",
+      "authors": ["hamalainen"],
+      "url": "https://kingbird.myphotos.cc/packing/square-17_r2.svg",
+      "publishedAt": "1980",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-18-hamalainen",
+      "kind": "tracker",
+      "title": "18 squares: Hämäläinen original construction",
+      "authors": ["hamalainen"],
+      "url": "https://kingbird.myphotos.cc/packing/square-18.svg",
+      "publishedAt": "1980",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-18-gustafsson",
+      "kind": "tracker",
+      "title": "18 squares: Gustafsson equal-bound alternative",
+      "authors": ["gustafsson"],
+      "url": "https://kingbird.myphotos.cc/packing/square-18b.svg",
+      "publishedAt": "1981",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-18-cantrell",
+      "kind": "tracker",
+      "title": "18 squares: Cantrell equal-bound alternative",
+      "authors": ["cantrell"],
+      "url": "https://kingbird.myphotos.cc/packing/square-18c.svg",
+      "publishedAt": "2002-09",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-18-gensane-ryckelynck",
+      "kind": "tracker",
+      "title": "18 squares: Gensane and Ryckelynck equal-bound alternative",
+      "authors": ["gensane", "ryckelynck"],
+      "url": "https://kingbird.myphotos.cc/packing/square-18d.svg",
+      "publishedAt": "2004",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-19-goebel-1979",
+      "kind": "tracker",
+      "title": "19 squares: Göbel historical construction",
+      "authors": ["goebel"],
+      "url": "https://kingbird.myphotos.cc/packing/square-19_r1.svg",
+      "publishedAt": "1979",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-19-cottingham-1979",
+      "kind": "tracker",
+      "title": "19 squares: Cottingham historical improvement",
+      "authors": ["cottingham"],
+      "url": "https://kingbird.myphotos.cc/packing/square-19_r2.svg",
+      "publishedAt": "1979",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-19-tracker",
+      "kind": "tracker",
+      "title": "19 squares: Wainwright and independent rediscoverers, November 1979–March 1980 (catalog year: known by 1980)",
+      "authors": [
+        "wainwright",
+        "ammann",
+        "crowther",
+        "engler",
+        "gough",
+        "everett",
+        "hobby",
+        "holzsayer",
+        "kitchens",
+        "konopasek",
+        "stenlund",
+        "stoll"
+      ],
+      "url": "https://kingbird.myphotos.cc/packing/square-19.svg",
+      "publishedAt": "1980",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-26-tracker",
+      "kind": "tracker",
+      "title": "26 squares: Friedman construction; bilateral-symmetry variant",
+      "authors": ["friedman"],
+      "url": "https://kingbird.myphotos.cc/packing/square-26b.svg",
+      "publishedAt": "1997",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-40-tracker",
+      "kind": "tracker",
+      "title": "40 squares: Göbel construction",
+      "authors": ["goebel"],
+      "url": "https://kingbird.myphotos.cc/packing/square-40.svg",
+      "publishedAt": "1979",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-53-ellsworth-reconstructed",
+      "kind": "tracker",
+      "title": "53 squares: Ellsworth bound; alternate exact reconstruction with rational auxiliary half-angle tangents by GPT 6 Astra",
+      "authors": ["ellsworth"],
+      "url": "https://kingbird.myphotos.cc/packing/square-53.svg",
+      "publishedAt": "2026-02-07",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-65-tracker",
+      "kind": "tracker",
+      "title": "65 squares: Göbel construction",
+      "authors": ["goebel"],
+      "url": "https://kingbird.myphotos.cc/packing/square-65.svg",
+      "publishedAt": "1979",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-66-tracker",
+      "kind": "tracker",
+      "title": "66 squares: Stenlund construction",
+      "authors": ["stenlund"],
+      "url": "https://kingbird.myphotos.cc/packing/square-66.svg",
+      "publishedAt": "1980",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-82-tracker",
+      "kind": "tracker",
+      "title": "82 squares: Probably Friedman, 1997, extending Göbel's 1979 construction; attribution and date tentative",
+      "authors": [],
+      "url": "https://kingbird.myphotos.cc/packing/square-82.svg",
+      "publishedAt": "1997",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-85-tracker",
+      "kind": "tracker",
+      "title": "85 squares: Friedman construction; bilateral-symmetry variant",
+      "authors": ["friedman"],
+      "url": "https://kingbird.myphotos.cc/packing/square-85b.svg",
+      "publishedAt": "1997",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-86-friedman",
+      "kind": "tracker",
+      "title": "86 squares: Friedman construction, generalizing Gustafsson's 18-square layout",
+      "authors": ["friedman"],
+      "url": "https://kingbird.myphotos.cc/packing/square-86.svg",
+      "publishedAt": "1997",
+      "accessedAt": "2026-09-05"
+    },
+    {
+      "id": "tracker-square-89-tracker",
+      "kind": "tracker",
+      "title": "89 squares: Stenlund construction",
+      "authors": ["stenlund"],
+      "url": "https://kingbird.myphotos.cc/packing/square-89.svg",
+      "publishedAt": "1980",
       "accessedAt": "2026-09-05"
     }
   ],
@@ -227,7 +521,11 @@
       "id": "exact-1-grid",
       "n": 1,
       "relation": "exact",
-      "value": { "decimal": "1", "expression": "1", "lean": "1" },
+      "value": {
+        "decimal": "1",
+        "expression": "1",
+        "lean": "1"
+      },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -252,9 +550,18 @@
       "id": "exact-2-goebel",
       "n": 2,
       "relation": "exact",
-      "value": { "decimal": "2", "expression": "2", "lean": "2" },
+      "value": {
+        "decimal": "2",
+        "expression": "2",
+        "lean": "2"
+      },
       "announcedAt": "1979",
-      "contributors": [{ "author": "goebel", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -277,9 +584,18 @@
       "id": "exact-3-goebel",
       "n": 3,
       "relation": "exact",
-      "value": { "decimal": "2", "expression": "2", "lean": "2" },
+      "value": {
+        "decimal": "2",
+        "expression": "2",
+        "lean": "2"
+      },
       "announcedAt": "1979",
-      "contributors": [{ "author": "goebel", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -302,7 +618,11 @@
       "id": "exact-4-grid",
       "n": 4,
       "relation": "exact",
-      "value": { "decimal": "2", "expression": "2", "lean": "2" },
+      "value": {
+        "decimal": "2",
+        "expression": "2",
+        "lean": "2"
+      },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -333,7 +653,12 @@
         "lean": "2 + Real.sqrt 2 / 2"
       },
       "announcedAt": "1979",
-      "contributors": [{ "author": "goebel", "role": "discoverer" }],
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "discoverer"
+        }
+      ],
       "evidence": [
         {
           "kind": "elementary-construction",
@@ -362,7 +687,12 @@
         "lean": "2 + Real.sqrt 2 / 2"
       },
       "announcedAt": "1979",
-      "contributors": [{ "author": "goebel", "role": "discoverer-and-prover" }],
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "discoverer-and-prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -385,11 +715,21 @@
       "id": "exact-6-kearney-shiu",
       "n": 6,
       "relation": "exact",
-      "value": { "decimal": "3", "expression": "3", "lean": "3" },
+      "value": {
+        "decimal": "3",
+        "expression": "3",
+        "lean": "3"
+      },
       "announcedAt": "2001-06",
       "contributors": [
-        { "author": "kearney", "role": "prover" },
-        { "author": "shiu", "role": "prover" }
+        {
+          "author": "kearney",
+          "role": "prover"
+        },
+        {
+          "author": "shiu",
+          "role": "prover"
+        }
       ],
       "evidence": [
         {
@@ -418,9 +758,18 @@
       "id": "exact-7-friedman",
       "n": 7,
       "relation": "exact",
-      "value": { "decimal": "3", "expression": "3", "lean": "3" },
+      "value": {
+        "decimal": "3",
+        "expression": "3",
+        "lean": "3"
+      },
       "announcedAt": "1999",
-      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "friedman",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -443,9 +792,18 @@
       "id": "exact-8-friedman",
       "n": 8,
       "relation": "exact",
-      "value": { "decimal": "3", "expression": "3", "lean": "3" },
+      "value": {
+        "decimal": "3",
+        "expression": "3",
+        "lean": "3"
+      },
       "announcedAt": "1999",
-      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "friedman",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -468,7 +826,11 @@
       "id": "exact-9-grid",
       "n": 9,
       "relation": "exact",
-      "value": { "decimal": "3", "expression": "3", "lean": "3" },
+      "value": {
+        "decimal": "3",
+        "expression": "3",
+        "lean": "3"
+      },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -529,8 +891,14 @@
       },
       "announcedAt": "2003",
       "contributors": [
-        { "author": "goebel", "role": "discoverer" },
-        { "author": "stromquist", "role": "prover" }
+        {
+          "author": "goebel",
+          "role": "discoverer"
+        },
+        {
+          "author": "stromquist",
+          "role": "prover"
+        }
       ],
       "evidence": [
         {
@@ -555,17 +923,30 @@
       "n": 11,
       "relation": "upper",
       "value": {
-        "decimal": "3.91421356237309",
+        "decimal": "3.91421356237309504880168872421",
         "expression": "5 / 2 + √2",
         "lean": "5 / 2 + Real.sqrt 2"
       },
       "announcedAt": "1979",
-      "contributors": [{ "author": "goebel", "role": "discoverer" }],
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "discoverer"
+        },
+        {
+          "author": "cottingham",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "tracker-record",
           "status": "reported",
-          "source": "tracker-history"
+          "source": "tracker-square-11-goebel-1979"
         },
         {
           "kind": "lean-proof",
@@ -574,26 +955,44 @@
           "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
           "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_goebel_1979",
           "checkedAt": "2026-08-29"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalQuadraticReconstructions.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalQuadraticReconstructions.s11_le_goebel_1979",
+          "checkedAt": "2026-09-06"
         }
       ],
-      "active": false
+      "active": false,
+      "configuration": "square-11-goebel-1979"
     },
     {
       "id": "upper-11-hamalainen",
       "n": 11,
       "relation": "upper",
       "value": {
-        "decimal": "3.88561808316412",
+        "decimal": "3.88561808316412673173558496561293",
         "expression": "2 + 4√2 / 3",
         "lean": "2 + 4 * Real.sqrt 2 / 3"
       },
       "announcedAt": "1980",
-      "contributors": [{ "author": "hamalainen", "role": "discoverer" }],
+      "contributors": [
+        {
+          "author": "hamalainen",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "tracker-record",
           "status": "reported",
-          "source": "tracker-history"
+          "source": "tracker-square-11-hamalainen-1980"
         },
         {
           "kind": "lean-proof",
@@ -602,10 +1001,19 @@
           "artifact": "formal/SquarePackingArchive/Records/HistoricalUpperBounds.lean",
           "theorem": "SquarePackingArchive.Records.HistoricalUpperBounds.s11_le_hamalainen_1980",
           "checkedAt": "2026-08-29"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalQuadraticReconstructions.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalQuadraticReconstructions.s11_le_hamalainen_1980",
+          "checkedAt": "2026-09-06"
         }
       ],
       "supersedes": "upper-11-goebel",
-      "active": false
+      "active": false,
+      "configuration": "square-11-hamalainen-1980"
     },
     {
       "id": "upper-11-trump-rationalized",
@@ -618,8 +1026,14 @@
       },
       "announcedAt": "2026-08-29",
       "contributors": [
-        { "author": "trump", "role": "discoverer" },
-        { "author": "gpt-6-astra", "role": "prover" }
+        {
+          "author": "trump",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
       ],
       "evidence": [
         {
@@ -643,7 +1057,11 @@
       "id": "upper-12-grid",
       "n": 12,
       "relation": "upper",
-      "value": { "decimal": "4", "expression": "4", "lean": "4" },
+      "value": {
+        "decimal": "4",
+        "expression": "4",
+        "lean": "4"
+      },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -668,9 +1086,18 @@
       "id": "exact-13-bentz",
       "n": 13,
       "relation": "exact",
-      "value": { "decimal": "4", "expression": "4", "lean": "4" },
+      "value": {
+        "decimal": "4",
+        "expression": "4",
+        "lean": "4"
+      },
       "announcedAt": "2009-08",
-      "contributors": [{ "author": "bentz", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "bentz",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -693,9 +1120,18 @@
       "id": "exact-14-friedman",
       "n": 14,
       "relation": "exact",
-      "value": { "decimal": "4", "expression": "4", "lean": "4" },
+      "value": {
+        "decimal": "4",
+        "expression": "4",
+        "lean": "4"
+      },
       "announcedAt": "1999",
-      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "friedman",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -718,9 +1154,18 @@
       "id": "exact-15-friedman",
       "n": 15,
       "relation": "exact",
-      "value": { "decimal": "4", "expression": "4", "lean": "4" },
+      "value": {
+        "decimal": "4",
+        "expression": "4",
+        "lean": "4"
+      },
       "announcedAt": "1999",
-      "contributors": [{ "author": "friedman", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "friedman",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -743,7 +1188,11 @@
       "id": "exact-16-grid",
       "n": 16,
       "relation": "exact",
-      "value": { "decimal": "4", "expression": "4", "lean": "4" },
+      "value": {
+        "decimal": "4",
+        "expression": "4",
+        "lean": "4"
+      },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -768,9 +1217,18 @@
       "id": "exact-22-bentz",
       "n": 22,
       "relation": "exact",
-      "value": { "decimal": "5", "expression": "5", "lean": "5" },
+      "value": {
+        "decimal": "5",
+        "expression": "5",
+        "lean": "5"
+      },
       "announcedAt": "2018-10",
-      "contributors": [{ "author": "bentz", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "bentz",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -861,7 +1319,11 @@
       "id": "exact-25-grid",
       "n": 25,
       "relation": "exact",
-      "value": { "decimal": "5", "expression": "5", "lean": "5" },
+      "value": {
+        "decimal": "5",
+        "expression": "5",
+        "lean": "5"
+      },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -886,9 +1348,18 @@
       "id": "exact-33-bentz",
       "n": 33,
       "relation": "exact",
-      "value": { "decimal": "6", "expression": "6", "lean": "6" },
+      "value": {
+        "decimal": "6",
+        "expression": "6",
+        "lean": "6"
+      },
       "announcedAt": "2018-10",
-      "contributors": [{ "author": "bentz", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "bentz",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -979,7 +1450,11 @@
       "id": "exact-36-grid",
       "n": 36,
       "relation": "exact",
-      "value": { "decimal": "6", "expression": "6", "lean": "6" },
+      "value": {
+        "decimal": "6",
+        "expression": "6",
+        "lean": "6"
+      },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -1106,7 +1581,11 @@
       "id": "exact-49-grid",
       "n": 49,
       "relation": "exact",
-      "value": { "decimal": "7", "expression": "7", "lean": "7" },
+      "value": {
+        "decimal": "7",
+        "expression": "7",
+        "lean": "7"
+      },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -1131,9 +1610,18 @@
       "id": "exact-62-nagamochi",
       "n": 62,
       "relation": "exact",
-      "value": { "decimal": "8", "expression": "8", "lean": "8" },
+      "value": {
+        "decimal": "8",
+        "expression": "8",
+        "lean": "8"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -1156,9 +1644,18 @@
       "id": "exact-63-nagamochi",
       "n": 63,
       "relation": "exact",
-      "value": { "decimal": "8", "expression": "8", "lean": "8" },
+      "value": {
+        "decimal": "8",
+        "expression": "8",
+        "lean": "8"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -1181,7 +1678,11 @@
       "id": "exact-64-grid",
       "n": 64,
       "relation": "exact",
-      "value": { "decimal": "8", "expression": "8", "lean": "8" },
+      "value": {
+        "decimal": "8",
+        "expression": "8",
+        "lean": "8"
+      },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -1285,7 +1786,12 @@
         "lean": "((880339 : ℚ) / 100000 : ℝ)"
       },
       "announcedAt": "2026-08-16",
-      "contributors": [{ "author": "gpt-6-astra", "role": "optimizer" }],
+      "contributors": [
+        {
+          "author": "gpt-6-astra",
+          "role": "optimizer"
+        }
+      ],
       "evidence": [
         {
           "kind": "interval-certificate",
@@ -1316,8 +1822,14 @@
       },
       "announcedAt": "2023-08",
       "contributors": [
-        { "author": "morandi", "role": "discoverer" },
-        { "author": "cantrell", "role": "optimizer" }
+        {
+          "author": "morandi",
+          "role": "discoverer"
+        },
+        {
+          "author": "cantrell",
+          "role": "optimizer"
+        }
       ],
       "evidence": [
         {
@@ -1346,7 +1858,12 @@
         "lean": "((5517 : ℚ) / 625 : ℝ)"
       },
       "announcedAt": "2026-08-16",
-      "contributors": [{ "author": "gpt-6-astra", "role": "optimizer" }],
+      "contributors": [
+        {
+          "author": "gpt-6-astra",
+          "role": "optimizer"
+        }
+      ],
       "evidence": [
         {
           "kind": "interval-certificate",
@@ -1371,9 +1888,18 @@
       "id": "exact-79-nagamochi",
       "n": 79,
       "relation": "exact",
-      "value": { "decimal": "9", "expression": "9", "lean": "9" },
+      "value": {
+        "decimal": "9",
+        "expression": "9",
+        "lean": "9"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -1396,9 +1922,18 @@
       "id": "exact-80-nagamochi",
       "n": 80,
       "relation": "exact",
-      "value": { "decimal": "9", "expression": "9", "lean": "9" },
+      "value": {
+        "decimal": "9",
+        "expression": "9",
+        "lean": "9"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -1421,7 +1956,11 @@
       "id": "exact-81-grid",
       "n": 81,
       "relation": "exact",
-      "value": { "decimal": "9", "expression": "9", "lean": "9" },
+      "value": {
+        "decimal": "9",
+        "expression": "9",
+        "lean": "9"
+      },
       "announcedAt": "1975",
       "contributors": [],
       "evidence": [
@@ -1446,9 +1985,18 @@
       "id": "exact-98-nagamochi",
       "n": 98,
       "relation": "exact",
-      "value": { "decimal": "10", "expression": "10", "lean": "10" },
+      "value": {
+        "decimal": "10",
+        "expression": "10",
+        "lean": "10"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -1471,9 +2019,18 @@
       "id": "exact-99-nagamochi",
       "n": 99,
       "relation": "exact",
-      "value": { "decimal": "10", "expression": "10", "lean": "10" },
+      "value": {
+        "decimal": "10",
+        "expression": "10",
+        "lean": "10"
+      },
       "announcedAt": "2005",
-      "contributors": [{ "author": "nagamochi", "role": "prover" }],
+      "contributors": [
+        {
+          "author": "nagamochi",
+          "role": "prover"
+        }
+      ],
       "evidence": [
         {
           "kind": "published-proof",
@@ -1729,7 +2286,7 @@
       "n": 68,
       "relation": "upper",
       "value": {
-        "decimal": "8.82842712474619",
+        "decimal": "8.82842712474619009760337744842",
         "expression": "6 + 2√2",
         "lean": "6 + 2 * Real.sqrt 2"
       },
@@ -1738,6 +2295,10 @@
         {
           "author": "stenlund",
           "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
         }
       ],
       "evidence": [
@@ -1753,9 +2314,18 @@
           "artifact": "formal/SquarePackingArchive/Records/HistoricalRadicalBounds.lean",
           "theorem": "SquarePackingArchive.Records.HistoricalRadicalBounds.s68_le_stenlund_1980",
           "checkedAt": "2026-09-05"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalQuadraticReconstructions.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalQuadraticReconstructions.s68_le_stenlund_1980",
+          "checkedAt": "2026-09-06"
         }
       ],
-      "active": false
+      "active": false,
+      "configuration": "square-68-stenlund-1980"
     },
     {
       "id": "upper-68-cantrell",
@@ -1830,7 +2400,7 @@
       "n": 69,
       "relation": "upper",
       "value": {
-        "decimal": "8.86396103067893",
+        "decimal": "8.86396103067892771960759925894",
         "expression": "5 / 2 + 9√2 / 2",
         "lean": "5 / 2 + 9 * Real.sqrt 2 / 2"
       },
@@ -1839,6 +2409,10 @@
         {
           "author": "friedman",
           "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
         }
       ],
       "evidence": [
@@ -1854,9 +2428,710 @@
           "artifact": "formal/SquarePackingArchive/Records/HistoricalRadicalBounds.lean",
           "theorem": "SquarePackingArchive.Records.HistoricalRadicalBounds.s69_le_friedman_1997",
           "checkedAt": "2026-09-05"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/HistoricalQuadraticReconstructions.lean",
+          "theorem": "SquarePackingArchive.Records.HistoricalQuadraticReconstructions.s69_le_friedman_1997",
+          "checkedAt": "2026-09-06"
         }
       ],
+      "active": false,
+      "configuration": "square-69-friedman-1997"
+    },
+    {
+      "id": "upper-17-hamalainen-1980",
+      "n": 17,
+      "relation": "upper",
+      "value": {
+        "decimal": "4.69035593728849174800281454035",
+        "expression": "7/3 + 5/3·√2",
+        "lean": "(((7 : ℚ) / 3) : ℝ) + (((5 : ℚ) / 3) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1980",
+      "contributors": [
+        {
+          "author": "hamalainen",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-17-hamalainen-1980"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square17Hamalainen1980.lean",
+          "theorem": "SquarePackingArchive.Records.Square17Hamalainen1980.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-17-hamalainen-1980",
+      "active": true
+    },
+    {
+      "id": "upper-18-hamalainen",
+      "n": 18,
+      "relation": "upper",
+      "value": {
+        "decimal": "4.822875655532295",
+        "expression": "7/2 + 1/2·√7",
+        "lean": "(((7 : ℚ) / 2) : ℝ) + (((1 : ℚ) / 2) : ℝ) * Real.sqrt 7"
+      },
+      "announcedAt": "1980",
+      "contributors": [
+        {
+          "author": "hamalainen",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-18-hamalainen"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square18Hamalainen.lean",
+          "theorem": "SquarePackingArchive.Records.Square18Hamalainen.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-18-hamalainen",
+      "active": true
+    },
+    {
+      "id": "upper-18-gustafsson",
+      "n": 18,
+      "relation": "upper",
+      "value": {
+        "decimal": "4.822875655532295",
+        "expression": "7/2 + 1/2·√7",
+        "lean": "(((7 : ℚ) / 2) : ℝ) + (((1 : ℚ) / 2) : ℝ) * Real.sqrt 7"
+      },
+      "announcedAt": "1981",
+      "contributors": [
+        {
+          "author": "gustafsson",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-18-gustafsson"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square18Gustafsson.lean",
+          "theorem": "SquarePackingArchive.Records.Square18Gustafsson.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-18-gustafsson",
       "active": false
+    },
+    {
+      "id": "upper-18-cantrell",
+      "n": 18,
+      "relation": "upper",
+      "value": {
+        "decimal": "4.822875655532295",
+        "expression": "7/2 + 1/2·√7",
+        "lean": "(((7 : ℚ) / 2) : ℝ) + (((1 : ℚ) / 2) : ℝ) * Real.sqrt 7"
+      },
+      "announcedAt": "2002-09",
+      "contributors": [
+        {
+          "author": "cantrell",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-18-cantrell"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square18Cantrell.lean",
+          "theorem": "SquarePackingArchive.Records.Square18Cantrell.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-18-cantrell",
+      "active": false
+    },
+    {
+      "id": "upper-18-gensane-ryckelynck",
+      "n": 18,
+      "relation": "upper",
+      "value": {
+        "decimal": "4.822875655532295",
+        "expression": "7/2 + 1/2·√7",
+        "lean": "(((7 : ℚ) / 2) : ℝ) + (((1 : ℚ) / 2) : ℝ) * Real.sqrt 7"
+      },
+      "announcedAt": "2004",
+      "contributors": [
+        {
+          "author": "gensane",
+          "role": "discoverer"
+        },
+        {
+          "author": "ryckelynck",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-18-gensane-ryckelynck"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square18GensaneRyckelynck.lean",
+          "theorem": "SquarePackingArchive.Records.Square18GensaneRyckelynck.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-18-gensane-ryckelynck",
+      "active": false
+    },
+    {
+      "id": "upper-19-goebel-1979",
+      "n": 19,
+      "relation": "upper",
+      "value": {
+        "decimal": "4.94280904158206336586779248281",
+        "expression": "4 + 2/3·√2",
+        "lean": "((4 : ℚ) : ℝ) + (((2 : ℚ) / 3) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1979",
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-19-goebel-1979"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square19Goebel1979.lean",
+          "theorem": "SquarePackingArchive.Records.Square19Goebel1979.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-19-goebel-1979",
+      "active": false
+    },
+    {
+      "id": "upper-19-cottingham-1979",
+      "n": 19,
+      "relation": "upper",
+      "value": {
+        "decimal": "4.91421356237309504880168872421",
+        "expression": "7/2 + √2",
+        "lean": "(((7 : ℚ) / 2) : ℝ) + ((1 : ℚ) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1979",
+      "contributors": [
+        {
+          "author": "cottingham",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-19-cottingham-1979"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square19Cottingham1979.lean",
+          "theorem": "SquarePackingArchive.Records.Square19Cottingham1979.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-19-cottingham-1979",
+      "active": false,
+      "supersedes": "upper-19-goebel-1979"
+    },
+    {
+      "id": "upper-19-tracker",
+      "n": 19,
+      "relation": "upper",
+      "value": {
+        "decimal": "4.88561808316412673173558496561",
+        "expression": "3 + 4/3·√2",
+        "lean": "((3 : ℚ) : ℝ) + (((4 : ℚ) / 3) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1980",
+      "contributors": [
+        {
+          "author": "wainwright",
+          "role": "discoverer"
+        },
+        {
+          "author": "ammann",
+          "role": "discoverer"
+        },
+        {
+          "author": "crowther",
+          "role": "discoverer"
+        },
+        {
+          "author": "engler",
+          "role": "discoverer"
+        },
+        {
+          "author": "gough",
+          "role": "discoverer"
+        },
+        {
+          "author": "everett",
+          "role": "discoverer"
+        },
+        {
+          "author": "hobby",
+          "role": "discoverer"
+        },
+        {
+          "author": "holzsayer",
+          "role": "discoverer"
+        },
+        {
+          "author": "kitchens",
+          "role": "discoverer"
+        },
+        {
+          "author": "konopasek",
+          "role": "discoverer"
+        },
+        {
+          "author": "stenlund",
+          "role": "discoverer"
+        },
+        {
+          "author": "stoll",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-19-tracker"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square19Tracker.lean",
+          "theorem": "SquarePackingArchive.Records.Square19Tracker.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-19-tracker",
+      "active": true,
+      "supersedes": "upper-19-cottingham-1979"
+    },
+    {
+      "id": "upper-26-tracker",
+      "n": 26,
+      "relation": "upper",
+      "value": {
+        "decimal": "5.62132034355964257320253308632",
+        "expression": "7/2 + 3/2·√2",
+        "lean": "(((7 : ℚ) / 2) : ℝ) + (((3 : ℚ) / 2) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1997",
+      "contributors": [
+        {
+          "author": "friedman",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-26-tracker"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square26Tracker.lean",
+          "theorem": "SquarePackingArchive.Records.Square26Tracker.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-26-tracker",
+      "active": true
+    },
+    {
+      "id": "upper-40-tracker",
+      "n": 40,
+      "relation": "upper",
+      "value": {
+        "decimal": "6.82842712474619009760337744842",
+        "expression": "4 + 2·√2",
+        "lean": "((4 : ℚ) : ℝ) + ((2 : ℚ) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1979",
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-40-tracker"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square40Tracker.lean",
+          "theorem": "SquarePackingArchive.Records.Square40Tracker.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-40-tracker",
+      "active": true
+    },
+    {
+      "id": "upper-53-ellsworth-reconstructed",
+      "n": 53,
+      "relation": "upper",
+      "value": {
+        "decimal": "7.822875655532295",
+        "expression": "13/2 + 1/2·√7",
+        "lean": "(((13 : ℚ) / 2) : ℝ) + (((1 : ℚ) / 2) : ℝ) * Real.sqrt 7"
+      },
+      "announcedAt": "2026-02-07",
+      "contributors": [
+        {
+          "author": "ellsworth",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-53-ellsworth-reconstructed"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square53EllsworthReconstructed.lean",
+          "theorem": "SquarePackingArchive.Records.Square53EllsworthReconstructed.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-53-ellsworth-reconstructed",
+      "active": true
+    },
+    {
+      "id": "upper-65-tracker",
+      "n": 65,
+      "relation": "upper",
+      "value": {
+        "decimal": "8.53553390593273762200422181052425",
+        "expression": "5 + 5/2·√2",
+        "lean": "((5 : ℚ) : ℝ) + (((5 : ℚ) / 2) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1979",
+      "contributors": [
+        {
+          "author": "goebel",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-65-tracker"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square65Tracker.lean",
+          "theorem": "SquarePackingArchive.Records.Square65Tracker.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-65-tracker",
+      "active": true
+    },
+    {
+      "id": "upper-66-tracker",
+      "n": 66,
+      "relation": "upper",
+      "value": {
+        "decimal": "8.65685424949238019520675489684",
+        "expression": "3 + 4·√2",
+        "lean": "((3 : ℚ) : ℝ) + ((4 : ℚ) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1980",
+      "contributors": [
+        {
+          "author": "stenlund",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-66-tracker"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square66Tracker.lean",
+          "theorem": "SquarePackingArchive.Records.Square66Tracker.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-66-tracker",
+      "active": true
+    },
+    {
+      "id": "upper-82-tracker",
+      "n": 82,
+      "relation": "upper",
+      "value": {
+        "decimal": "9.53553390593273762200422181052425",
+        "expression": "6 + 5/2·√2",
+        "lean": "((6 : ℚ) : ℝ) + (((5 : ℚ) / 2) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1997",
+      "contributors": [
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-82-tracker"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square82Tracker.lean",
+          "theorem": "SquarePackingArchive.Records.Square82Tracker.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-82-tracker",
+      "active": true
+    },
+    {
+      "id": "upper-85-tracker",
+      "n": 85,
+      "relation": "upper",
+      "value": {
+        "decimal": "9.74264068711928514640506617263",
+        "expression": "11/2 + 3·√2",
+        "lean": "(((11 : ℚ) / 2) : ℝ) + ((3 : ℚ) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1997",
+      "contributors": [
+        {
+          "author": "friedman",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-85-tracker"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square85Tracker.lean",
+          "theorem": "SquarePackingArchive.Records.Square85Tracker.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-85-tracker",
+      "active": true
+    },
+    {
+      "id": "upper-86-friedman",
+      "n": 86,
+      "relation": "upper",
+      "value": {
+        "decimal": "9.822875655532295",
+        "expression": "17/2 + 1/2·√7",
+        "lean": "(((17 : ℚ) / 2) : ℝ) + (((1 : ℚ) / 2) : ℝ) * Real.sqrt 7"
+      },
+      "announcedAt": "1997",
+      "contributors": [
+        {
+          "author": "friedman",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-86-friedman"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square86Friedman.lean",
+          "theorem": "SquarePackingArchive.Records.Square86Friedman.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-86-friedman",
+      "active": true
+    },
+    {
+      "id": "upper-89-tracker",
+      "n": 89,
+      "relation": "upper",
+      "value": {
+        "decimal": "9.94974746830583267080591053473394",
+        "expression": "5 + 7/2·√2",
+        "lean": "((5 : ℚ) : ℝ) + (((7 : ℚ) / 2) : ℝ) * Real.sqrt 2"
+      },
+      "announcedAt": "1980",
+      "contributors": [
+        {
+          "author": "stenlund",
+          "role": "discoverer"
+        },
+        {
+          "author": "gpt-6-astra",
+          "role": "prover"
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "tracker-record",
+          "status": "reported",
+          "source": "tracker-square-89-tracker"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square89Tracker.lean",
+          "theorem": "SquarePackingArchive.Records.Square89Tracker.upper_bound",
+          "checkedAt": "2026-09-06"
+        }
+      ],
+      "configuration": "square-89-tracker",
+      "active": true
     }
   ],
   "configurations": [
@@ -1864,43 +3139,222 @@
       "id": "square-11-trump-rationalized",
       "path": "configurations/square-11-trump-rationalized.json"
     },
-    { "id": "square-68", "path": "configurations/square-68.json" },
-    { "id": "square-69", "path": "configurations/square-69.json" },
-    { "id": "square-1-grid", "recipe": "grid", "n": 1, "side": 1 },
-    { "id": "square-2-grid", "recipe": "grid", "n": 2, "side": 2 },
-    { "id": "square-3-grid", "recipe": "grid", "n": 3, "side": 2 },
-    { "id": "square-4-grid", "recipe": "grid", "n": 4, "side": 2 },
-    { "id": "square-6-grid", "recipe": "grid", "n": 6, "side": 3 },
-    { "id": "square-7-grid", "recipe": "grid", "n": 7, "side": 3 },
-    { "id": "square-8-grid", "recipe": "grid", "n": 8, "side": 3 },
-    { "id": "square-9-grid", "recipe": "grid", "n": 9, "side": 3 },
-    { "id": "square-12-grid", "recipe": "grid", "n": 12, "side": 4 },
-    { "id": "square-13-grid", "recipe": "grid", "n": 13, "side": 4 },
-    { "id": "square-14-grid", "recipe": "grid", "n": 14, "side": 4 },
-    { "id": "square-15-grid", "recipe": "grid", "n": 15, "side": 4 },
-    { "id": "square-16-grid", "recipe": "grid", "n": 16, "side": 4 },
-    { "id": "square-22-grid", "recipe": "grid", "n": 22, "side": 5 },
-    { "id": "square-23-grid", "recipe": "grid", "n": 23, "side": 5 },
-    { "id": "square-24-grid", "recipe": "grid", "n": 24, "side": 5 },
-    { "id": "square-25-grid", "recipe": "grid", "n": 25, "side": 5 },
-    { "id": "square-33-grid", "recipe": "grid", "n": 33, "side": 6 },
-    { "id": "square-34-grid", "recipe": "grid", "n": 34, "side": 6 },
-    { "id": "square-35-grid", "recipe": "grid", "n": 35, "side": 6 },
-    { "id": "square-36-grid", "recipe": "grid", "n": 36, "side": 6 },
-    { "id": "square-46-grid", "recipe": "grid", "n": 46, "side": 7 },
-    { "id": "square-47-grid", "recipe": "grid", "n": 47, "side": 7 },
-    { "id": "square-48-grid", "recipe": "grid", "n": 48, "side": 7 },
-    { "id": "square-49-grid", "recipe": "grid", "n": 49, "side": 7 },
-    { "id": "square-62-grid", "recipe": "grid", "n": 62, "side": 8 },
-    { "id": "square-63-grid", "recipe": "grid", "n": 63, "side": 8 },
-    { "id": "square-64-grid", "recipe": "grid", "n": 64, "side": 8 },
-    { "id": "square-79-grid", "recipe": "grid", "n": 79, "side": 9 },
-    { "id": "square-80-grid", "recipe": "grid", "n": 80, "side": 9 },
-    { "id": "square-81-grid", "recipe": "grid", "n": 81, "side": 9 },
-    { "id": "square-98-grid", "recipe": "grid", "n": 98, "side": 10 },
-    { "id": "square-99-grid", "recipe": "grid", "n": 99, "side": 10 },
-    { "id": "square-5-goebel", "recipe": "goebel", "n": 5 },
-    { "id": "square-10-goebel", "recipe": "goebel", "n": 10 },
+    {
+      "id": "square-68",
+      "path": "configurations/square-68.json"
+    },
+    {
+      "id": "square-69",
+      "path": "configurations/square-69.json"
+    },
+    {
+      "id": "square-1-grid",
+      "recipe": "grid",
+      "n": 1,
+      "side": 1
+    },
+    {
+      "id": "square-2-grid",
+      "recipe": "grid",
+      "n": 2,
+      "side": 2
+    },
+    {
+      "id": "square-3-grid",
+      "recipe": "grid",
+      "n": 3,
+      "side": 2
+    },
+    {
+      "id": "square-4-grid",
+      "recipe": "grid",
+      "n": 4,
+      "side": 2
+    },
+    {
+      "id": "square-6-grid",
+      "recipe": "grid",
+      "n": 6,
+      "side": 3
+    },
+    {
+      "id": "square-7-grid",
+      "recipe": "grid",
+      "n": 7,
+      "side": 3
+    },
+    {
+      "id": "square-8-grid",
+      "recipe": "grid",
+      "n": 8,
+      "side": 3
+    },
+    {
+      "id": "square-9-grid",
+      "recipe": "grid",
+      "n": 9,
+      "side": 3
+    },
+    {
+      "id": "square-12-grid",
+      "recipe": "grid",
+      "n": 12,
+      "side": 4
+    },
+    {
+      "id": "square-13-grid",
+      "recipe": "grid",
+      "n": 13,
+      "side": 4
+    },
+    {
+      "id": "square-14-grid",
+      "recipe": "grid",
+      "n": 14,
+      "side": 4
+    },
+    {
+      "id": "square-15-grid",
+      "recipe": "grid",
+      "n": 15,
+      "side": 4
+    },
+    {
+      "id": "square-16-grid",
+      "recipe": "grid",
+      "n": 16,
+      "side": 4
+    },
+    {
+      "id": "square-22-grid",
+      "recipe": "grid",
+      "n": 22,
+      "side": 5
+    },
+    {
+      "id": "square-23-grid",
+      "recipe": "grid",
+      "n": 23,
+      "side": 5
+    },
+    {
+      "id": "square-24-grid",
+      "recipe": "grid",
+      "n": 24,
+      "side": 5
+    },
+    {
+      "id": "square-25-grid",
+      "recipe": "grid",
+      "n": 25,
+      "side": 5
+    },
+    {
+      "id": "square-33-grid",
+      "recipe": "grid",
+      "n": 33,
+      "side": 6
+    },
+    {
+      "id": "square-34-grid",
+      "recipe": "grid",
+      "n": 34,
+      "side": 6
+    },
+    {
+      "id": "square-35-grid",
+      "recipe": "grid",
+      "n": 35,
+      "side": 6
+    },
+    {
+      "id": "square-36-grid",
+      "recipe": "grid",
+      "n": 36,
+      "side": 6
+    },
+    {
+      "id": "square-46-grid",
+      "recipe": "grid",
+      "n": 46,
+      "side": 7
+    },
+    {
+      "id": "square-47-grid",
+      "recipe": "grid",
+      "n": 47,
+      "side": 7
+    },
+    {
+      "id": "square-48-grid",
+      "recipe": "grid",
+      "n": 48,
+      "side": 7
+    },
+    {
+      "id": "square-49-grid",
+      "recipe": "grid",
+      "n": 49,
+      "side": 7
+    },
+    {
+      "id": "square-62-grid",
+      "recipe": "grid",
+      "n": 62,
+      "side": 8
+    },
+    {
+      "id": "square-63-grid",
+      "recipe": "grid",
+      "n": 63,
+      "side": 8
+    },
+    {
+      "id": "square-64-grid",
+      "recipe": "grid",
+      "n": 64,
+      "side": 8
+    },
+    {
+      "id": "square-79-grid",
+      "recipe": "grid",
+      "n": 79,
+      "side": 9
+    },
+    {
+      "id": "square-80-grid",
+      "recipe": "grid",
+      "n": 80,
+      "side": 9
+    },
+    {
+      "id": "square-81-grid",
+      "recipe": "grid",
+      "n": 81,
+      "side": 9
+    },
+    {
+      "id": "square-98-grid",
+      "recipe": "grid",
+      "n": 98,
+      "side": 10
+    },
+    {
+      "id": "square-99-grid",
+      "recipe": "grid",
+      "n": 99,
+      "side": 10
+    },
+    {
+      "id": "square-5-goebel",
+      "recipe": "goebel",
+      "n": 5
+    },
+    {
+      "id": "square-10-goebel",
+      "recipe": "goebel",
+      "n": 10
+    },
     {
       "id": "square-50-schadt-ellsworth",
       "path": "configurations/square-50-schadt-ellsworth.json"
@@ -1934,6 +3388,90 @@
       "recipe": "goebel-strip",
       "steps": 8,
       "stripCount": 10
+    },
+    {
+      "id": "square-11-goebel-1979",
+      "path": "configurations/square-11-goebel-1979.json"
+    },
+    {
+      "id": "square-11-hamalainen-1980",
+      "path": "configurations/square-11-hamalainen-1980.json"
+    },
+    {
+      "id": "square-17-hamalainen-1980",
+      "path": "configurations/square-17-hamalainen-1980.json"
+    },
+    {
+      "id": "square-18-hamalainen",
+      "path": "configurations/square-18-hamalainen.json"
+    },
+    {
+      "id": "square-18-gustafsson",
+      "path": "configurations/square-18-gustafsson.json"
+    },
+    {
+      "id": "square-18-cantrell",
+      "path": "configurations/square-18-cantrell.json"
+    },
+    {
+      "id": "square-18-gensane-ryckelynck",
+      "path": "configurations/square-18-gensane-ryckelynck.json"
+    },
+    {
+      "id": "square-19-goebel-1979",
+      "path": "configurations/square-19-goebel-1979.json"
+    },
+    {
+      "id": "square-19-cottingham-1979",
+      "path": "configurations/square-19-cottingham-1979.json"
+    },
+    {
+      "id": "square-19-tracker",
+      "path": "configurations/square-19-tracker.json"
+    },
+    {
+      "id": "square-26-tracker",
+      "path": "configurations/square-26-tracker.json"
+    },
+    {
+      "id": "square-40-tracker",
+      "path": "configurations/square-40-tracker.json"
+    },
+    {
+      "id": "square-53-ellsworth-reconstructed",
+      "path": "configurations/square-53-ellsworth-reconstructed.json"
+    },
+    {
+      "id": "square-65-tracker",
+      "path": "configurations/square-65-tracker.json"
+    },
+    {
+      "id": "square-66-tracker",
+      "path": "configurations/square-66-tracker.json"
+    },
+    {
+      "id": "square-68-stenlund-1980",
+      "path": "configurations/square-68-stenlund-1980.json"
+    },
+    {
+      "id": "square-69-friedman-1997",
+      "path": "configurations/square-69-friedman-1997.json"
+    },
+    {
+      "id": "square-82-tracker",
+      "path": "configurations/square-82-tracker.json"
+    },
+    {
+      "id": "square-85-tracker",
+      "path": "configurations/square-85-tracker.json"
+    },
+    {
+      "id": "square-86-friedman",
+      "path": "configurations/square-86-friedman.json"
+    },
+    {
+      "id": "square-89-tracker",
+      "path": "configurations/square-89-tracker.json"
     }
   ]
 }

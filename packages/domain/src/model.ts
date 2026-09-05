@@ -61,7 +61,11 @@ export const ratioToNumber = (ratio: Ratio): number =>
 export const exactToNumber = (value: ExactNumber): number =>
   "numerator" in value
     ? ratioToNumber(value)
-    : ratioToNumber(value.rational) + ratioToNumber(value.sqrtTwo) * Math.SQRT2;
+    : "sqrtTwo" in value
+      ? ratioToNumber(value.rational) +
+        ratioToNumber(value.sqrtTwo) * Math.SQRT2
+      : ratioToNumber(value.rational) +
+        ratioToNumber(value.radical) * Math.sqrt(value.radicand);
 
 export const activeClaims = (archive: ArchiveManifest): readonly Claim[] =>
   archive.claims.filter((claim) => claim.active);

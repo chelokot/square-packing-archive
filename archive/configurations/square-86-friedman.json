@@ -1,0 +1,3576 @@
+{
+  "schemaVersion": 1,
+  "id": "square-86-friedman",
+  "n": 86,
+  "containerSide": {
+    "rational": {
+      "numerator": "17",
+      "denominator": "2"
+    },
+    "radical": {
+      "numerator": "1",
+      "denominator": "2"
+    },
+    "radicand": 7,
+    "decimal": "9.822875655532295"
+  },
+  "coordinateSystem": "physical-cartesian-bottom-left",
+  "squareSide": {
+    "numerator": "1",
+    "denominator": "1"
+  },
+  "squares": [
+    {
+      "id": 0,
+      "center": {
+        "x": {
+          "numerator": "1",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 1,
+      "center": {
+        "x": {
+          "numerator": "3",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 2,
+      "center": {
+        "x": {
+          "numerator": "5",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 3,
+      "center": {
+        "x": {
+          "numerator": "7",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 4,
+      "center": {
+        "x": {
+          "numerator": "9",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 5,
+      "center": {
+        "x": {
+          "numerator": "11",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 6,
+      "center": {
+        "x": {
+          "numerator": "13",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 7,
+      "center": {
+        "x": {
+          "numerator": "1",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 8,
+      "center": {
+        "x": {
+          "numerator": "3",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 9,
+      "center": {
+        "x": {
+          "numerator": "5",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 10,
+      "center": {
+        "x": {
+          "numerator": "7",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 11,
+      "center": {
+        "x": {
+          "numerator": "9",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 12,
+      "center": {
+        "x": {
+          "numerator": "11",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 13,
+      "center": {
+        "x": {
+          "numerator": "1",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 14,
+      "center": {
+        "x": {
+          "numerator": "3",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 15,
+      "center": {
+        "x": {
+          "numerator": "5",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 16,
+      "center": {
+        "x": {
+          "numerator": "7",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 17,
+      "center": {
+        "x": {
+          "numerator": "9",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 18,
+      "center": {
+        "x": {
+          "numerator": "1",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "5",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 19,
+      "center": {
+        "x": {
+          "numerator": "3",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "5",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 20,
+      "center": {
+        "x": {
+          "numerator": "5",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "5",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 21,
+      "center": {
+        "x": {
+          "numerator": "7",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "5",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 22,
+      "center": {
+        "x": {
+          "numerator": "1",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "4",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 23,
+      "center": {
+        "x": {
+          "numerator": "3",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "4",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 24,
+      "center": {
+        "x": {
+          "numerator": "5",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "4",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 25,
+      "center": {
+        "x": {
+          "numerator": "1",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "3",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 26,
+      "center": {
+        "x": {
+          "numerator": "3",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "3",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 27,
+      "center": {
+        "x": {
+          "numerator": "1",
+          "denominator": "2"
+        },
+        "y": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 28,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "1",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 29,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "1",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 30,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "1",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 31,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "5",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "1",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 32,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "4",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "1",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 33,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "3",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "1",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 34,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "1",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 35,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "1",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "1",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 36,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "3",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 37,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "3",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 38,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "3",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 39,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "5",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "3",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 40,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "4",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "3",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 41,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "3",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "3",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 42,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "3",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 43,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "5",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 44,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "5",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 45,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "5",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 46,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "5",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "5",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 47,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "4",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "5",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 48,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "3",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "5",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 49,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "7",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 50,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "7",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 51,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "7",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 52,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "5",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "7",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 53,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "4",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "7",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 54,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "9",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 55,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "9",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 56,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "9",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 57,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "5",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "9",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 58,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "11",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 59,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "11",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 60,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "6",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "11",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 61,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "13",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 62,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "numerator": "13",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 63,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 64,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 65,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "8",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 66,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "7",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "2"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 67,
+      "center": {
+        "x": {
+          "numerator": "1",
+          "denominator": "2"
+        },
+        "y": {
+          "numerator": "1",
+          "denominator": "2"
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "cosine": {
+          "numerator": "1",
+          "denominator": "1"
+        },
+        "sine": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "angleRadiansApprox": 0
+      }
+    },
+    {
+      "id": 68,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "105",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "3",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "109",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "9",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 69,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "101",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "7",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "105",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "5",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 70,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "99",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "111",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "3",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 71,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "95",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "5",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "107",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 72,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "93",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "113",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-3",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 73,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "89",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "3",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "109",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-7",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 74,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "89",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-5",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "117",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-7",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 75,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "85",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "113",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-11",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 76,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "83",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-7",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "119",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-13",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 77,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "79",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-3",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "115",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-17",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 78,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "77",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-9",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "121",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-19",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 79,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "73",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-5",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "117",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-23",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 80,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "71",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-11",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "123",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-25",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 81,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "67",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-7",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "119",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-29",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 82,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "67",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-15",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "127",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-29",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 83,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "63",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-11",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "123",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-33",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 84,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "61",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-17",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "129",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-35",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    },
+    {
+      "id": 85,
+      "center": {
+        "x": {
+          "rational": {
+            "numerator": "57",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-13",
+            "denominator": "16"
+          },
+          "radicand": 7
+        },
+        "y": {
+          "rational": {
+            "numerator": "125",
+            "denominator": "16"
+          },
+          "radical": {
+            "numerator": "-39",
+            "denominator": "16"
+          },
+          "radicand": 7
+        }
+      },
+      "orientation": {
+        "tangentHalfAngle": {
+          "rational": {
+            "numerator": "2",
+            "denominator": "1"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "1"
+          },
+          "radicand": 7
+        },
+        "cosine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "sine": {
+          "rational": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radical": {
+            "numerator": "-1",
+            "denominator": "4"
+          },
+          "radicand": 7
+        },
+        "angleRadiansApprox": -1.146765287304156
+      }
+    }
+  ],
+  "certificate": {
+    "method": "exact-quadratic-separating-axis",
+    "minimumContainmentMargin": {
+      "numerator": "0",
+      "denominator": "1"
+    },
+    "minimumSeparationMargin": {
+      "numerator": "0",
+      "denominator": "1"
+    },
+    "orientationReconstruction": "Exact coordinates and unit frames in Q(sqrt(7)), reconstructed from the source construction."
+  },
+  "provenance": {
+    "source": "https://kingbird.myphotos.cc/packing/square-86.svg",
+    "sourceOptimizedContainerSide": "9.822875655532295",
+    "importedAt": "2026-09-05"
+  }
+}

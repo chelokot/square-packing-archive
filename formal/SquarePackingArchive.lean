@@ -47,6 +47,7 @@ import SquarePackingArchive.NagamochiCounterexample
 import SquarePackingArchive.NagamochiCanonicalTerminal
 import SquarePackingArchive.Nagamochi
 import SquarePackingArchive.RationalCertificate
+import SquarePackingArchive.QuadraticCertificateChecks
 import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.NearSquare

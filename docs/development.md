@@ -40,8 +40,15 @@ bun run check
 bun run test
 bun run build
 bun run format:check
-(cd formal && lake exe cache get && lake --wfail build)
+(cd formal && lake exe cache get)
+python3 scripts/build-lean-certificates.py
 ```
+
+The build helper compiles quadratic certificates sequentially, then checks the
+complete library. Each generated certificate also checks its separation rows
+sequentially; the library uses two Lean worker threads. This limits peak memory
+without weakening kernel verification. CI caches the library after all checks
+have passed.
 
 The axiom-policy tests below require the Lean build above. They check that
 standard dependencies are accepted and custom axioms, unfinished proofs, and
@@ -50,6 +57,9 @@ native-evaluation dependencies are rejected.
 ```console
 python3 -S -m unittest discover -s scripts -p test_lean_evidence_audit.py
 python3 -S -m unittest discover -s scripts -p test_lean_axiom_policy.py
+python3 -S -m unittest discover -s scripts -p test_quadratic_tracker.py
+python3 -S -m unittest discover -s scripts -p test_sqrt_seven_reconstruction.py
+bun test scripts/generate-quadratic-certificates.test.ts
 bunx playwright install --with-deps chromium
 bun run test:e2e
 ```
@@ -86,6 +96,14 @@ recipes. Göbel's coordinates retain exact square-root expressions. Every archiv
 build checks unit frames, containment, and non-overlap with exact arithmetic;
 this computational check is separate from the Lean proof. Details are in the
 [configuration model](data-model.md#configuration).
+
+For a coordinate file in a single quadratic field, use
+`bun scripts/generate-quadratic-certificates.ts configuration.json destination.lean`.
+The generator first checks the exact geometry and rejects mixed fields, then
+emits kernel-checked boundaries and separation rows. `bun run archive:check`
+checks that every catalogued quadratic coordinate file still matches its
+generated Lean module. Reconstruction recipes for the September 2026 batch are
+listed in the [import report](tracker-imports.md#twenty-one-quadratic-layouts).
 
 The following import example requires the companion research workspace. It is
 not needed to build the archive from the checked-in data:

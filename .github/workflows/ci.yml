@@ -31,6 +31,7 @@ jobs:
         run: git diff --exit-code -- docs/assets/coverage.svg
       - run: bun run check
       - run: bun run test
+      - run: bun test scripts/generate-quadratic-certificates.test.ts
       - run: bunx playwright install --with-deps chromium
       - run: bun run test:e2e
       - run: bun run format:check
@@ -68,9 +69,23 @@ jobs:
           python3 -S -m unittest discover -s experiments/resource-repair -p 'test_*.py'
           python3 -S experiments/resource-repair/verify_repairs.py
           python3 -S -m unittest discover -s experiments/boundary-compensation -p 'test_*.py'
+      - uses: actions/cache/restore@v5
+        id: lean-cache
+        with:
+          path: formal/.lake
+          key: lake-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('formal/lean-toolchain') }}-${{ hashFiles('formal/lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: lake-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('formal/lean-toolchain') }}-${{ hashFiles('formal/lake-manifest.json') }}
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal
+          build-args: "--wfail SquarePackingArchive.QuadraticCertificateChecks"
+          use-github-cache: "false"
+      - name: Check exact-coordinate reconstruction recipes
+        run: |
+          python3 -S -m unittest discover -s ../scripts -p 'test_quadratic_tracker.py'
+          python3 -S -m unittest discover -s ../scripts -p 'test_sqrt_seven_reconstruction.py'
+      - name: Build certificates sequentially and check the complete library
+        run: python3 -S ../scripts/build-lean-certificates.py
       - name: Test proof dependency policy
         run: python3 -S -m unittest discover -s ../scripts -p 'test_lean_axiom_policy.py'
       - name: Reject unfinished proofs
@@ -78,3 +93,8 @@ jobs:
           if grep -R --line-number --word-regexp sorry SquarePackingArchive SquarePackingArchive.lean; then
             exit 1
           fi
+      - uses: actions/cache/save@v5
+        if: steps.lean-cache.outputs.cache-hit != 'true'
+        with:
+          path: formal/.lake
+          key: ${{ steps.lean-cache.outputs.cache-primary-key }}

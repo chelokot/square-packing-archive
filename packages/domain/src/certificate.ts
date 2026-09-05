@@ -20,6 +20,9 @@ type Square = Readonly<{
   vertical: Vector;
 }>;
 
+export type SeparatingAxisWitness =
+  "leftHorizontal" | "leftVertical" | "rightHorizontal" | "rightVertical";
+
 const dot = (left: Vector, right: Vector): Quadratic =>
   addExact(multiplyExact(left[0], right[0]), multiplyExact(left[1], right[1]));
 
@@ -32,10 +35,20 @@ const radius = (square: Square, axis: Vector): Quadratic =>
     ),
   );
 
-export const validateConfigurationGeometry = (
+export const analyzeConfigurationGeometry = (
   configuration: PackingConfiguration,
-): readonly string[] => {
+): Readonly<{
+  errors: readonly string[];
+  separatingAxes: readonly (readonly SeparatingAxisWitness[])[];
+}> => {
   const errors: string[] = [];
+  const separatingAxes = Array.from(
+    { length: configuration.squares.length },
+    () =>
+      Array<SeparatingAxisWitness>(configuration.squares.length).fill(
+        "leftHorizontal",
+      ),
+  );
   const side = fromExact(configuration.containerSide);
   const containmentMargin = fromExact(
     configuration.certificate.minimumContainmentMargin,
@@ -53,6 +66,7 @@ export const validateConfigurationGeometry = (
   )
     errors.push("Certificate margins must be nonnegative");
   if (
+    configuration.squares.length !== configuration.n ||
     new Set(configuration.squares.map(({ id }) => id)).size !== configuration.n
   )
     errors.push("Square ids must be distinct and match the square count");
@@ -116,12 +130,13 @@ export const validateConfigurationGeometry = (
         subtractExact(right.center[1], left.center[1]),
       ];
       const separated = [
-        left.horizontal,
-        left.vertical,
-        right.horizontal,
-        right.vertical,
-      ].some(
-        (axis) =>
+        ["leftHorizontal", left.horizontal],
+        ["leftVertical", left.vertical],
+        ["rightHorizontal", right.horizontal],
+        ["rightVertical", right.vertical],
+      ] as const;
+      const witness = separated.find(
+        ([, axis]) =>
           compareExact(
             subtractExact(
               subtractExact(
@@ -133,11 +148,16 @@ export const validateConfigurationGeometry = (
             separationMargin,
           ) >= 0,
       );
-      if (!separated)
+      if (witness === undefined)
         errors.push(
           `Squares ${configuration.squares[first]!.id}, ${configuration.squares[second]!.id}: separation certificate failed`,
         );
+      else separatingAxes[first]![second] = witness[0];
     }
   }
-  return errors;
+  return { errors, separatingAxes };
 };
+
+export const validateConfigurationGeometry = (
+  configuration: PackingConfiguration,
+): readonly string[] => analyzeConfigurationGeometry(configuration).errors;

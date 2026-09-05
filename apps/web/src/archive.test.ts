@@ -10,6 +10,61 @@ import {
 } from "@square-packing/domain";
 
 describe("compiled archive", () => {
+  test("keeps equal-bound 18-square alternatives as distinct historical layouts", () => {
+    const alternatives = archive.claims.filter(({ n }) => n === 18);
+    expect(alternatives).toHaveLength(4);
+    expect(alternatives.filter(({ active }) => active)).toHaveLength(1);
+    expect(
+      new Set(alternatives.map(({ configuration }) => configuration)).size,
+    ).toBe(4);
+    expect(new Set(alternatives.map(({ value }) => value.lean)).size).toBe(1);
+    expect(
+      alternatives.every(({ announcedAt }) => announcedAt !== "2026-09-06"),
+    ).toBe(true);
+  });
+
+  test("distinguishes the 53-square reconstruction from discovery of its bound", () => {
+    const claim = archive.claims.find(
+      ({ id }) => id === "upper-53-ellsworth-reconstructed",
+    )!;
+    expect(claim.announcedAt).toBe("2026-02-07");
+    expect(claim.contributors).toEqual([
+      { author: "ellsworth", role: "discoverer" },
+      { author: "gpt-6-astra", role: "prover" },
+    ]);
+    const configuration = archive.configurationData.find(
+      ({ id }) => id === claim.configuration,
+    )!;
+    expect(configuration.certificate.orientationReconstruction).toContain(
+      "6/25",
+    );
+    expect(configuration.certificate.orientationReconstruction).toContain(
+      "2/7",
+    );
+    expect(configuration.containerSide).toMatchObject({ radicand: 7 });
+  });
+
+  test("preserves tentative attribution and historical date ranges", () => {
+    const uncertain = archive.claims.find(
+      ({ id }) => id === "upper-82-tracker",
+    )!;
+    expect(uncertain.contributors).toEqual([
+      { author: "gpt-6-astra", role: "prover" },
+    ]);
+    expect(
+      archive.sources.find(({ id }) => id === uncertain.evidence[0]!.source)!
+        .title,
+    ).toContain("Probably Friedman");
+    const wainwright = archive.claims.find(
+      ({ id }) => id === "upper-19-tracker",
+    )!;
+    expect(wainwright.announcedAt).toBe("1980");
+    expect(
+      archive.sources.find(({ id }) => id === wainwright.evidence[0]!.source)!
+        .title,
+    ).toContain("November 1979–March 1980");
+  });
+
   test("credits AI work separately from project ownership and original discoveries", () => {
     expect(
       archive.claims

@@ -88,9 +88,20 @@ They are not rounded to rational numbers. The viewer converts them to floating
 point only for drawing and approximate decimal labels; exact inspection and
 downloads retain the expressions.
 
+Other single quadratic fields use `{ rational: Ratio, radical: Ratio, radicand: integer }`,
+meaning `rational + radical × √radicand`. Rational values can occur in either
+encoding, but a configuration cannot mix nonzero radical coefficients from
+different fields. In particular, the historical `Q(√7)` constructions retain
+their exact coordinates rather than decimal approximations.
+
 Every archive build independently checks unit frames, tangent reconstruction,
 containment, and all pairwise separating axes with exact integer arithmetic in
-`Q(√2)`. This computational check does not create Lean evidence. Grid recipe
+`Q(√d)`. This computational check does not create Lean evidence. The quadratic
+certificate generator records an exact separating axis for every pair. Lean's
+kernel checks the resulting rational inequalities, and the general
+`QuadraticCertificate.valid_sound` theorem converts them into a packing.
+CI regenerates these certificates to check their correspondence with the
+canonical coordinates. Grid recipe
 instances also receive typed Lean upper-bound checks, while the 5- and 10-square
 constructions have their own explicit Lean packings. Lower bounds enter the
 catalog only after their own Lean proofs are complete.

@@ -43,7 +43,9 @@ Its theorem uses exactly `53/7`, not the displayed decimal approximation.
 [These proofs](../formal/SquarePackingArchive/Records/HistoricalRadicalBounds.lean)
 enlarge our existing, stronger 68- and 69-square packings. They establish the
 historical upper bounds below but **do not reconstruct the original layouts**.
-Those coordinate sets remain part of the backlog.
+The original 68-square Stenlund and 69-square Friedman layouts have now also
+been reconstructed in the quadratic batch below. The Cantrell and Brendberg
+coordinate sets remain part of the backlog.
 
 | Squares | Bound         | Attribution and source                                                            |
 | ------- | ------------- | --------------------------------------------------------------------------------- |
@@ -64,3 +66,59 @@ reconstruction of Schadt's original layout.
 Discovery dates stay separate from the Lean check date, 5 September 2026.
 Only factual construction data was reconstructed. Source artwork and prose
 were not copied or relicensed.
+
+## Twenty-one quadratic layouts
+
+The September 6 batch adds 17 historical claims and attaches reconstructed
+coordinates to four existing claims. The archive now contains 72 claims and
+65 configurations. These are upper bounds, not optimality proofs or newly
+discovered packing records.
+
+| Squares | Side          | Construction                                                                                                  |
+| ------- | ------------- | ------------------------------------------------------------------------------------------------------------- |
+| 11      | `5/2 + √2`    | Göbel and independently Cottingham, 1979; equal-bound variant                                                 |
+| 11      | `2 + 4√2/3`   | Hämäläinen, known by April 20, 1980                                                                           |
+| 17      | `7/3 + 5√2/3` | Hämäläinen, 1980; historical, not the current best known bound                                                |
+| 18      | `(7 + √7)/2`  | Hämäläinen 1980, Gustafsson 1981, Cantrell September 2002, and Gensane–Ryckelynck 2004: four separate layouts |
+| 19      | `4 + 2√2/3`   | Göbel, early 1979                                                                                             |
+| 19      | `7/2 + √2`    | Cottingham, early 1979                                                                                        |
+| 19      | `3 + 4√2/3`   | Wainwright and independent rediscoverers, November 1979–March 1980                                            |
+| 26      | `7/2 + 3√2/2` | Friedman, 1997; bilateral-symmetry variant                                                                    |
+| 40      | `4 + 2√2`     | Göbel, 1979                                                                                                   |
+| 53      | `(13 + √7)/2` | Ellsworth, February 7, 2026; alternate exact reconstruction                                                   |
+| 65      | `5 + 5√2/2`   | Göbel, 1979                                                                                                   |
+| 66      | `3 + 4√2`     | Stenlund, 1980                                                                                                |
+| 68      | `6 + 2√2`     | Stenlund, 1980; centered symmetric variant                                                                    |
+| 69      | `5/2 + 9√2/2` | Friedman, 1997                                                                                                |
+| 82      | `6 + 5√2/2`   | Probably Friedman, 1997, extending Göbel's 65-square construction; attribution and date tentative             |
+| 85      | `11/2 + 3√2`  | Friedman, 1997; bilateral-symmetry variant                                                                    |
+| 86      | `(17 + √7)/2` | Friedman, 1997, generalizing Gustafsson's 18-square layout                                                    |
+| 89      | `5 + 7√2/2`   | Stenlund, 1980                                                                                                |
+
+Each coordinate file retains its specific source URL. The four 18-square
+alternatives have equal bounds; they are not presented as successive
+improvements. The 19-square date field uses the conservative known-by year
+1980, while its source title preserves the documented date interval and the
+claim credits all named independent discoverers.
+
+For 53 squares, GPT 6 Astra replaced two auxiliary algebraic rotations with
+exact rational half-angle tangents `6/25` and `2/7`. The published container
+side is unchanged. This is an alternate reconstruction, not a claim to have
+recovered Ellsworth's exact original coordinates or improved his bound.
+
+The general [quadratic certificate theorem](../formal/SquarePackingArchive/QuadraticCertificate.lean)
+proves that the exact unit-frame, containment, and separating-axis checks
+produce a packing. Generated record certificates evaluate those checks in
+Lean's kernel, with separate per-row proofs to limit peak memory and without
+native-evaluation oracles. Four newly reconstructed
+historical layouts retain their earlier inequality evidence and additionally
+have their own kernel-checked, axiom-audited coordinate certificates.
+
+Exact reconstruction recipes and regression tests are in
+`scripts/reconstruct-quadratic-tracker.py`, `scripts/reconstruct-quadratic-history.py`,
+and `scripts/reconstruct-sqrt-seven.py`. CI checks both recipe reproducibility
+and generated Lean correspondence, then compiles the certificates sequentially
+to bound peak memory use before checking the complete library.
+
+The original discoverers retain their credits. The exact-coordinate
+reconstruction and Lean formalization are credited to GPT 6 Astra.

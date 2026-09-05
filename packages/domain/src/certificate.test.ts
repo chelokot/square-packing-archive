@@ -9,7 +9,7 @@ import {
   multiplyExact,
   signExact,
 } from "./exact.ts";
-import { exactNumberSchema } from "./schema.ts";
+import { exactNumberSchema, packingConfigurationSchema } from "./schema.ts";
 
 const ratio = (numerator: string, denominator = "1") => ({
   numerator,
@@ -19,6 +19,60 @@ const surd = (rational: string, radical: string) =>
   fromExact({ rational: ratio(rational), sqrtTwo: ratio(radical) });
 
 describe("exact quadratic arithmetic", () => {
+  test("computes and orders sqrt(7) without approximating its coefficients", () => {
+    const root = fromExact({
+      rational: ratio("0"),
+      radical: ratio("1"),
+      radicand: 7,
+    });
+    expect(compareExact(multiplyExact(root, root), fromExact(ratio("7")))).toBe(
+      0,
+    );
+    expect(
+      signExact(
+        fromExact({ rational: ratio("-2"), radical: ratio("1"), radicand: 7 }),
+      ),
+    ).toBe(1);
+    expect(
+      signExact(
+        fromExact({ rational: ratio("-3"), radical: ratio("1"), radicand: 7 }),
+      ),
+    ).toBe(-1);
+    expect(
+      signExact(
+        fromExact({ rational: ratio("2"), radical: ratio("-1"), radicand: 7 }),
+      ),
+    ).toBe(-1);
+    expect(
+      signExact(
+        fromExact({ rational: ratio("3"), radical: ratio("-1"), radicand: 7 }),
+      ),
+    ).toBe(1);
+    expect(
+      signExact(
+        fromExact({ rational: ratio("-2"), radical: ratio("1"), radicand: 4 }),
+      ),
+    ).toBe(0);
+  });
+
+  test("rejects mixed quadratic fields instead of silently using sqrt(2)", () => {
+    const configuration = goebelConfiguration("mixed-field", 5, "2026-09-05");
+    configuration.squares[0]!.center.x = {
+      rational: ratio("0"),
+      radical: ratio("1"),
+      radicand: 7,
+    };
+    expect(
+      packingConfigurationSchema.safeParse(configuration).success,
+    ).toBeFalse();
+    expect(() =>
+      multiplyExact(
+        fromExact(configuration.squares[0]!.center.x),
+        fromExact({ rational: ratio("0"), sqrtTwo: ratio("1") }),
+      ),
+    ).toThrow("single quadratic field");
+  });
+
   test("orders opposite-sign terms without floating-point rounding", () => {
     expect(signExact(surd("-1", "1"))).toBe(1);
     expect(signExact(surd("1", "-1"))).toBe(-1);

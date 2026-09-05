@@ -13,14 +13,17 @@ export const formatRatio = (ratio: Ratio): string =>
 export const formatExact = (value: ExactNumber): string => {
   if ("numerator" in value) return formatRatio(value);
   const rational = formatRatio(value.rational);
-  const coefficient = formatRatio(value.sqrtTwo);
+  const coefficient = formatRatio(
+    "sqrtTwo" in value ? value.sqrtTwo : value.radical,
+  );
+  const radicand = "sqrtTwo" in value ? 2 : value.radicand;
   if (coefficient === "0") return rational;
   const radical =
     coefficient === "1"
-      ? "√2"
+      ? `√${radicand}`
       : coefficient === "-1"
-        ? "−√2"
-        : `${coefficient}·√2`;
+        ? `−√${radicand}`
+        : `${coefficient}·√${radicand}`;
   return rational === "0" ? radical : `${rational} + ${radical}`;
 };
 

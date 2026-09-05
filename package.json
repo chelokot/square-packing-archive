@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "archive:build": "bun run scripts/build-archive.ts",
-    "archive:check": "python3 scripts/generate-lean-evidence-audit.py --check && bun run scripts/check-archive.ts",
+    "archive:check": "python3 scripts/generate-lean-evidence-audit.py --check && bun run scripts/generate-quadratic-certificates.ts --check-all && bun run scripts/check-archive.ts",
     "build": "bun run archive:build && bun --filter @square-packing/web build",
     "site:package": "bun run archive:build && bun --filter @square-packing/web build --base=/ && bun run scripts/package-site.ts",
     "check": "bun run archive:check && bun --filter '*' check",
