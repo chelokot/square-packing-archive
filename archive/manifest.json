@@ -761,7 +761,7 @@
       "id": "exact-33-bentz",
       "n": 33,
       "relation": "exact",
-      "value": { "decimal": "6", "expression": "6" },
+      "value": { "decimal": "6", "expression": "6", "lean": "6" },
       "announcedAt": "2018-10",
       "contributors": [{ "author": "bentz", "role": "prover" }],
       "evidence": [
@@ -769,6 +769,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "bentz-2018"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square33.lean",
+          "theorem": "SquarePackingArchive.Records.Square33.s33_eq_six",
+          "checkedAt": "2026-09-05"
         }
       ],
       "configuration": "square-33-grid",

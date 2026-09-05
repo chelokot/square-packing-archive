@@ -19,8 +19,27 @@ initially belonged to a different box. Its presence in the new open box then
 gives a neighborhood on which its old assignment remains violated.
 Preconnectedness and the initial parameter force all assignments to persist.
 
-This completes Theorem 8, not the packing results for 22 or 33 squares.
-Their full proofs still require explicit continuous point configurations,
-unavoidability throughout each movement, and the final line-intersection
-resource contradiction. Neither historical exact claim is promoted by this
-intermediate theorem.
+This topological theorem alone does not prove a packing bound. The archive now
+also contains the complete argument for **s(33) = 6**, checked on 2026-09-05:
+`SquarePackingArchive.Records.Square33.s33_eq_six : IsMinimumSide 33 6`.
+
+The proof starts with 33 unavoidable points in six staggered rows. Each square
+has exactly one assigned point. Continuous vertical compression preserves these
+assignments, and a small horizontal shift makes each odd row's leftmost point
+reach x = 2/5. A separate endpoint-replacement argument and a reflected copy of
+the configuration identify six distinct squares that reach this strip.
+
+Each such unit square has a vertical chord of length at least one on the fixed
+line x = 451/500. Their interiors are disjoint, so the six chord lengths cannot
+fit in a container of side less than six. The ordinary 6×6 grid with three
+squares removed supplies the matching upper bound.
+
+The finite row heights are exact rationals. The endpoint argument is a direct
+geometric replacement proof; it does not assume that the whole row can be
+shifted arbitrarily. The final theorem has no unproved geometric hypotheses.
+Its axiom audit lists only `propext`, `Classical.choice`, and `Quot.sound`.
+
+The main modules are `BentzSixRows.lean`, `BentzSixRowsShift.lean`,
+`BentzSixRowsEndpoint.lean`, `BentzSixRowsCombine.lean`, and `BentzLineCuts.lean`.
+The **22-square result remains separate**: its extra point makes the assignment
+argument different, and it is not marked Lean verified by this proof.

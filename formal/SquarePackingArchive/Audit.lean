@@ -2,6 +2,8 @@ import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
+import SquarePackingArchive.Records.Square10
+import SquarePackingArchive.Records.Square33
 import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.Square15
 import SquarePackingArchive.Records.Square24
@@ -51,6 +53,9 @@ import SquarePackingArchive.NagamochiCanonicalTerminal
 import SquarePackingArchive.Nagamochi
 
 #print axioms SquarePackingArchive.Records.Basic.s1_eq_one
+#print axioms SquarePackingArchive.Records.Square10.s10_le_goebel
+#print axioms SquarePackingArchive.Records.Square33.s33_lower_bound
+#print axioms SquarePackingArchive.Records.Square33.s33_eq_six
 #print axioms SquarePackingArchive.PlacedSquare.AxisAligned.contains_interiorGridPoint
 #print axioms SquarePackingArchive.Packing.covered_square_count_le_point_count
 #print axioms SquarePackingArchive.Packing.gridAvoidingSquares_card_lower_bound
