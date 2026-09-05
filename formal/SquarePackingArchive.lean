@@ -53,6 +53,7 @@ import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square6
 import SquarePackingArchive.Records.Square6Exact
+import SquarePackingArchive.Records.Square10Exact
 import SquarePackingArchive.Records.Square13
 import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.Square15

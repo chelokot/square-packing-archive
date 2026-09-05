@@ -417,7 +417,11 @@
       "id": "exact-10-stromquist",
       "n": 10,
       "relation": "exact",
-      "value": { "decimal": "3.70710678118654", "expression": "3 + √2 / 2" },
+      "value": {
+        "decimal": "3.70710678118654",
+        "expression": "3 + √2 / 2",
+        "lean": "3 + Real.sqrt 2 / 2"
+      },
       "announcedAt": "2003",
       "contributors": [
         { "author": "goebel", "role": "discoverer" },
@@ -428,6 +432,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "stromquist-2003"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square10Exact.lean",
+          "theorem": "SquarePackingArchive.Records.Square10.s10_eq_goebel",
+          "checkedAt": "2026-09-05"
         }
       ],
       "configuration": "square-10-goebel",

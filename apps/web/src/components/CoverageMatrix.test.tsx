@@ -28,6 +28,7 @@ describe("coverage matrix claim types", () => {
 
   test.each([
     [6, "Exact", "=", "s(6) = 3"],
+    [10, "Exact", "=", "s(10) = 3 + √2 / 2"],
     [64, "Exact", "=", "s(64) = 8"],
     [69, "Upper bound", "≤", "s(69) ≤ 8.8272"],
   ])(

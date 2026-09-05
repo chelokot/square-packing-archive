@@ -36,6 +36,14 @@ jobs:
       - uses: actions/checkout@v7
       - run: python3 ../scripts/generate-lean-evidence-audit.py --check
       - run: python3 ../scripts/check-nagamochi-counterexample.py --check-figure
+      - name: Check generated geometric covers
+        working-directory: .
+        run: |
+          python3 -S -m unittest discover -s scripts -p 'test_triangle_cover.py'
+          python3 -S scripts/generate-triangle-cover.py --check
+          python3 -S scripts/generate-triangle-cover.py --step 2 --full --check
+          python3 -S scripts/generate-triangle-cover.py --step 3 --full --check
+          python3 -S scripts/generate-triangle-cover.py --step 4 --full --check
       - name: Check exact search experiments
         working-directory: experiments/near-square-search
         run: |

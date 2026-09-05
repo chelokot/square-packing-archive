@@ -6,6 +6,7 @@ import SquarePackingArchive.Records.Square6
 import SquarePackingArchive.Records.Square6Exact
 import SquarePackingArchive.Records.Square13
 import SquarePackingArchive.Records.Square10
+import SquarePackingArchive.Records.Square10Exact
 import SquarePackingArchive.Records.Square33
 import SquarePackingArchive.Records.Square22
 import SquarePackingArchive.Records.Square8
@@ -64,6 +65,12 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.Square6.s6_lower_bound
 #print axioms SquarePackingArchive.Records.Square6.s6_eq_three
 #print axioms SquarePackingArchive.Records.Square10.s10_le_goebel
+#print axioms SquarePackingArchive.Records.Square10.s10_lower_bound
+#print axioms SquarePackingArchive.Records.Square10.s10_eq_goebel
+#print axioms SquarePackingArchive.Stromquist.TenPoints.stepTwo_unavoidable
+#print axioms SquarePackingArchive.Stromquist.TenPoints.stepThree_unavoidable
+#print axioms SquarePackingArchive.Stromquist.TenPoints.stepFour_cover
+#print axioms SquarePackingArchive.Stromquist.TenPoints.ring_unavoidable
 #print axioms SquarePackingArchive.Records.Square33.s33_lower_bound
 #print axioms SquarePackingArchive.Records.Square33.s33_eq_six
 #print axioms SquarePackingArchive.Records.Square22.s22_lower_bound
