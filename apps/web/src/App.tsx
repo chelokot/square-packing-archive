@@ -3,7 +3,6 @@ import {
   explorerBoundFor,
   isGridBaseline,
   gridBaselineConfiguration,
-  isVerified,
 } from "@square-packing/domain";
 import { ArrowDown, ArrowUpRight, CodeXml, Grid2X2 } from "lucide-react";
 import { archive } from "./archive.ts";
@@ -104,10 +103,7 @@ export const App = () => {
           <dl className="flex flex-wrap gap-x-9 gap-y-4 lg:pb-1">
             {[
               [String(archive.claims.length), copy.claimCount],
-              [
-                `${exactClaims.filter(isVerified).length}/${exactClaims.length}`,
-                copy.exactCount,
-              ],
+              [String(exactClaims.length), copy.exactCount],
               [String(archive.configurationData.length), copy.layoutCount],
             ].map(([value, label]) => (
               <div key={label}>

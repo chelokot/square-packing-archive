@@ -40,7 +40,7 @@ describe("compiled archive", () => {
     );
   });
 
-  test("keeps the published and formal verification counts distinct", () => {
+  test("every catalogued result has its own checked proof, including historical entries", () => {
     const publishedExact = archive.claims.filter(
       (claim) => claim.active && claim.relation === "exact",
     );
@@ -51,7 +51,11 @@ describe("compiled archive", () => {
       ),
     );
     expect(publishedExact.length).toBeGreaterThan(0);
-    expect(leanChecked.length).toBeLessThanOrEqual(archive.claims.length);
+    expect(leanChecked.length).toBe(archive.claims.length);
+    expect(archive.claims.some(({ id }) => id === "upper-11-trump")).toBe(
+      false,
+    );
+    expect(explorerBoundFor(archive, 11)?.value.decimal).toBe("3.88");
   });
 
   test("every active integer-side construction has coordinates at its stated bound", () => {

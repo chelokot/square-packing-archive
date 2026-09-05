@@ -1,9 +1,5 @@
 import { expect, test } from "@playwright/test";
-import {
-  activeClaims,
-  manifestSchema,
-  verificationLevel,
-} from "@square-packing/domain";
+import { activeClaims, manifestSchema } from "@square-packing/domain";
 import manifestJson from "../../archive/manifest.json";
 
 const claims = activeClaims(manifestSchema.parse(manifestJson));
@@ -43,7 +39,7 @@ test("matrix, viewer, history and shared URL follow the same selection", async (
   ).toBeVisible();
   await page
     .locator("#matrix")
-    .getByRole("button", { name: "n = 69", exact: true })
+    .getByRole("button", { name: /^n = 69:/ })
     .click();
   await expect(page).toHaveURL(/n=69/);
   await expect(
@@ -61,20 +57,21 @@ test("matrix, viewer, history and shared URL follow the same selection", async (
     page.getByRole("heading", { name: "11 unit squares", exact: true }),
   ).toBeVisible();
   await page
-    .getByLabel("Number of squares", { exact: true })
-    .selectOption("61");
+    .locator("#matrix")
+    .getByRole("button", { name: /^n = 61:/ })
+    .click();
   await expect(
     page.getByRole("heading", { name: "61 unit squares" }),
   ).toBeVisible();
   await expect(page.locator("#viewer")).toContainText("Basic grid bound");
-  await expect(page.locator("#viewer")).toContainText("not its optimality");
-  await expect(page.locator("#viewer")).toContainText("Lean verified");
+  await expect(page.locator("#viewer")).toContainText("s(61) ≤ 8");
+  await expect(page.locator("#viewer")).not.toContainText("Lean verified");
   await expect(
     page.locator("#viewer").getByRole("link", { name: "Lean proof" }),
   ).toHaveAttribute("href", /Records\/GridBounds\.lean$/);
   await expect(
     page.locator("#matrix").getByRole("button", {
-      name: "n = 61: Upper bound · Lean verified · s(61) ≤ 8 · Basic grid bound",
+      name: "n = 61: Upper bound · s(61) ≤ 8 · Basic grid bound",
       exact: true,
     }),
   ).toHaveAttribute("aria-pressed", "true");
@@ -84,56 +81,36 @@ test("matrix, viewer, history and shared URL follow the same selection", async (
   await expect(page.locator("#viewer [data-square-id]")).toHaveCount(61);
 });
 
-test("catalog filters preserve the distinction between published and checked proofs", async ({
+test("the catalog searches formalized results without an evidence filter", async ({
   page,
 }) => {
   await page.goto("./#claims");
   const catalog = page.locator("#claims");
-  await catalog
-    .getByLabel("Filter by evidence")
-    .selectOption("published-unformalized");
-  const publishedClaims = claims.filter(
-    (claim) => verificationLevel(claim) === "published-unformalized",
-  );
-  await expect(catalog.locator("tbody tr")).toHaveCount(publishedClaims.length);
-  await expect(
-    catalog
-      .locator("tbody")
-      .getByText("Published · awaiting Lean", { exact: true }),
-  ).toHaveCount(publishedClaims.length);
-  await expect(
-    catalog.locator("tbody").getByText("Lean verified", { exact: true }),
-  ).toHaveCount(0);
-  await catalog.getByLabel("Filter by evidence").selectOption("all");
+  await expect(catalog.getByRole("combobox")).toHaveCount(0);
+  await expect(catalog.locator("tbody tr")).toHaveCount(claims.length);
+  for (const row of await catalog.locator("tbody tr").all()) {
+    await expect(row.getByRole("link", { name: "Lean proof" })).not.toHaveCount(
+      0,
+    );
+  }
   await catalog.getByRole("searchbox").fill("Nagamochi");
-  await expect(catalog.locator("tbody tr").first()).toContainText("Nagamochi");
-  await catalog.getByLabel("Filter by evidence").selectOption("lean-verified");
-  const verifiedNagamochiClaims = claims.filter(
-    (claim) =>
-      verificationLevel(claim) === "lean-verified" &&
-      claim.contributors.some(
-        (contributor) => contributor.author === "nagamochi",
-      ),
+  const nagamochiClaims = claims.filter((claim) =>
+    claim.contributors.some(
+      (contributor) => contributor.author === "nagamochi",
+    ),
   );
   await expect(catalog.locator("tbody th")).toHaveText(
-    [...verifiedNagamochiClaims]
+    [...nagamochiClaims]
       .sort((left, right) => left.n - right.n)
       .map((claim) => String(claim.n)),
   );
-  await expect(
-    catalog
-      .locator("tbody")
-      .getByText("Published · awaiting Lean", { exact: true }),
-  ).toHaveCount(0);
   await catalog.getByRole("searchbox").fill("no-such-archive-claim");
   await expect(
-    catalog.getByText(
-      "No matching claims. Try another search or evidence filter.",
-    ),
+    catalog.getByText("No matching claims. Try another search."),
   ).toBeVisible();
   await catalog.getByRole("searchbox").fill("68");
   await expect(catalog.locator("tbody tr")).toHaveCount(1);
-  await expect(catalog.locator("tbody tr")).toContainText("Lean verified");
+  await expect(catalog.locator("tbody tr")).toContainText("s(68) ≤ 8.80339");
 });
 
 test("keyboard inspection, orientation groups and coordinate downloads work", async ({
@@ -170,12 +147,16 @@ test("keyboard inspection, orientation groups and coordinate downloads work", as
 test("mobile selection and controls remain reachable", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("./?n=69");
+  const matrix = page.locator("#matrix");
+  await expect(matrix.getByRole("button")).toHaveCount(100);
+  await expect(matrix.getByRole("combobox")).toHaveCount(0);
+  await expect(matrix.getByRole("button", { name: /^n = 13:/ })).toHaveClass(
+    /bg-forest-soft/,
+  );
   await expect(
-    page.getByLabel("Number of squares", { exact: true }),
-  ).toBeVisible();
-  await page
-    .getByLabel("Number of squares", { exact: true })
-    .selectOption("11");
+    matrix.getByRole("button", { name: /^n = 11:/ }),
+  ).not.toHaveClass(/bg-forest-soft/);
+  await matrix.getByRole("button", { name: /^n = 11:/ }).click();
   await expect(
     page.getByRole("heading", { name: "11 unit squares", exact: true }),
   ).toBeVisible();

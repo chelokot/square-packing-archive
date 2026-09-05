@@ -14,7 +14,7 @@ export const copy = {
   sources: "Sources & proofs",
   github: "GitHub",
   claimCount: "claims catalogued",
-  exactCount: "exact results checked in Lean",
+  exactCount: "proved optimal",
   layoutCount: "catalogued coordinate sets",
   archiveScope: (date: string) => `Selected records · data updated ${date}`,
   noLayout: "Coordinates not yet in the archive",
@@ -32,9 +32,9 @@ export const copy = {
   matrixTitle: "Choose the number of squares",
   coverageOverviewTitle: "Packing results · 1–100 squares",
   coverageOverviewDescription:
-    "Colors show evidence status. The symbols =, ≤ and ≥ distinguish exact results, upper bounds and lower bounds. Counts without catalogued records use Lean-checked basic grid bounds.",
+    "Green cells mark proved optima. White cells mark bounds only. Every result has a Lean proof.",
   coverageOverviewScope:
-    "Selected records + basic grid bounds · Color shows evidence; symbol shows the claim",
+    "Selected records + basic grid bounds · Green: proved optimal · White: bound only",
   claimRelations: {
     exact: "Exact",
     upper: "Upper bound",
@@ -42,28 +42,12 @@ export const copy = {
   },
   matrixCellLabel: (count: number, description: string) =>
     `n = ${count}: ${description}`,
-  squareCount: "Number of squares",
-  previous: "Previous n",
-  next: "Next n",
-  availableLayouts: "With coordinates",
-  rotatedLayouts: "Rotated packings",
-  gridLayouts:
-    "Counts without catalogued records use Lean-checked basic grid bounds, not best-known records.",
+  matrixExact: "Proved optimal",
+  matrixBound: "Bound only",
   gridBaseline: "Basic grid bound",
-  gridBaselineNotice:
-    "Basic grid bound. Lean checks this construction, not its optimality. A smaller packing may exist. This is not a historical record.",
   emptyStatus: "Not catalogued",
-  verified: "Lean verified",
-  published: "Published · awaiting Lean",
-  computed: "Computed · awaiting Lean",
-  reported: "Reported",
-  matrixVerified: "Lean checked",
-  matrixPublished: "Published proof",
-  matrixComputed: "Computed",
-  matrixReported: "Reported",
   viewerTitle: (count: number) => `${count} unit squares`,
   containerSide: "Container side",
-  layoutBound: "This layout gives an upper bound, not a proof of optimality.",
   viewHelp: "Drag to pan · scroll to zoom · select a square to inspect",
   angleGroups: "Orientation groups",
   angleGroupHelp:
@@ -88,19 +72,16 @@ export const copy = {
   drawingLabel: (count: number) => `Packing of ${count} unit squares`,
   catalogTitle: "The catalog",
   catalogDescription:
-    "Published results and formal proofs, with their original attribution. The catalog is still being expanded.",
+    "Formalized results with their original attribution. The historical catalog is still being expanded.",
   search: "Search n, author, year or value",
-  statusFilter: "Filter by evidence",
-  allEvidence: "All evidence",
   resultCount: (visible: number, total: number) =>
     `${visible} of ${total} active claims`,
-  noMatches: "No matching claims. Try another search or evidence filter.",
+  noMatches: "No matching claims. Try another search.",
   columns: {
     count: "n",
     claim: "Result",
     date: "Year",
     contributors: "Contributors",
-    status: "Evidence",
     links: "Read",
   },
   elementary: "Elementary construction",
@@ -114,11 +95,12 @@ export const copy = {
   coverageDescription:
     "Distinct n with an exact result in this catalog. Formal checks are dated when they were added, separately from publication.",
   coveragePublished: "Published exact results",
-  coverageVerified: "Exact results checked in Lean",
+  coverageVerified: "Formalized exact results",
   coverageData: "Show yearly counts",
-  proofTitle: "What a checked result means",
+  proofTitle: "Every result has a proof",
   proofDescription:
-    "A green label means the stated bound or equality has a Lean theorem checked by the kernel. A published proof awaiting formalization keeps its own label. An upper-bound proof does not establish optimality.",
+    "Every result in this archive requires a kernel-checked Lean proof. Green cells mark proved optima; white cells mark bounds only. Results awaiting formalization belong in GitHub issues.",
+  pendingResults: "Pending results & contributions",
   proofLink: "Read the Lean library",
   sourcesTitle: "Built on the work of others",
   sourcesDescription:

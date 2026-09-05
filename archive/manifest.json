@@ -512,27 +512,6 @@
       "active": false
     },
     {
-      "id": "upper-11-trump",
-      "n": 11,
-      "relation": "upper",
-      "value": {
-        "decimal": "3.87708359002281",
-        "expression": "largest relevant root of degree-8 record polynomial",
-        "polynomial": "s^8 - 20s^7 + 178s^6 - 842s^5 + 1923s^4 - 496s^3 - 6754s^2 + 12420s - 6865"
-      },
-      "announcedAt": "1979",
-      "contributors": [{ "author": "trump", "role": "discoverer" }],
-      "evidence": [
-        {
-          "kind": "tracker-record",
-          "status": "reported",
-          "source": "tracker-current"
-        }
-      ],
-      "supersedes": "upper-11-hamalainen",
-      "active": true
-    },
-    {
       "id": "upper-11-trump-rationalized",
       "n": 11,
       "relation": "upper",
@@ -562,7 +541,7 @@
         }
       ],
       "configuration": "square-11-trump-rationalized",
-      "active": false
+      "active": true
     },
     {
       "id": "upper-12-grid",

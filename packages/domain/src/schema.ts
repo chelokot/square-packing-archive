@@ -3,6 +3,12 @@ import { z } from "zod";
 const identifier = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 const date = z.string().regex(/^\d{4}(?:-\d{2}(?:-\d{2})?)?$/);
 const decimal = z.string().regex(/^\d+(?:\.\d+)?$/);
+const leanArtifactSchema = z
+  .string()
+  .regex(/^formal\/SquarePackingArchive(?:\/[A-Za-z0-9_]+)+\.lean$/);
+const leanTheoremSchema = z
+  .string()
+  .regex(/^SquarePackingArchive(?:\.[A-Za-z_][A-Za-z0-9_']*)+$/);
 
 export const linkSchema = z.object({
   label: z.string().min(1),
@@ -76,6 +82,21 @@ export const evidenceSchema = z
           });
         }
       }
+      for (const [field, schema] of [
+        ["artifact", leanArtifactSchema],
+        ["theorem", leanTheoremSchema],
+      ] as const) {
+        if (
+          evidence[field] !== undefined &&
+          !schema.safeParse(evidence[field]).success
+        ) {
+          context.addIssue({
+            code: "custom",
+            message: `Invalid Lean ${field}`,
+            path: [field],
+          });
+        }
+      }
     } else if (evidence.status === "lean-checked") {
       context.addIssue({
         code: "custom",
@@ -118,6 +139,15 @@ export const claimSchema = z
     }
   });
 
+export const catalogClaimSchema = claimSchema.refine(
+  (claim) => claim.evidence.some((evidence) => evidence.kind === "lean-proof"),
+  {
+    message:
+      "Catalog claims require a Lean proof; keep unformalized proposals in issues",
+    path: ["evidence"],
+  },
+);
+
 export const configurationReferenceSchema = z.union([
   z.object({
     id: identifier,
@@ -146,12 +176,8 @@ export const manifestSchema = z.object({
       through: z.number().int().positive().max(100),
       proof: z.object({
         source: identifier,
-        artifact: z
-          .string()
-          .regex(/^formal\/SquarePackingArchive(?:\/[A-Za-z0-9_]+)+\.lean$/),
-        theorem: z
-          .string()
-          .regex(/^SquarePackingArchive(?:\.[A-Za-z_][A-Za-z0-9_']*)+$/),
+        artifact: leanArtifactSchema,
+        theorem: leanTheoremSchema,
         checkedAt: z.iso.date(),
       }),
     })
@@ -218,6 +244,7 @@ export const packingConfigurationSchema = z.object({
 });
 
 export const compiledArchiveSchema = manifestSchema.extend({
+  claims: z.array(catalogClaimSchema),
   configurationData: z.array(packingConfigurationSchema),
 });
 

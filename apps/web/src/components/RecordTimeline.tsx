@@ -1,6 +1,5 @@
 import type { CompiledArchive } from "@square-packing/domain";
 import { copy } from "../copy.ts";
-import { EvidenceBadge } from "./EvidenceBadge.tsx";
 import { BoundHistory } from "./BoundHistory.tsx";
 import {
   ClaimLinks,
@@ -39,7 +38,6 @@ export const RecordTimeline = ({
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="font-mono text-sm">{claimValue(claim)}</p>
-                  <EvidenceBadge claim={claim} />
                 </div>
                 <p className="mb-3 mt-2 text-xs leading-5 text-muted">
                   {contributorNames(archive, claim)}

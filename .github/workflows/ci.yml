@@ -9,6 +9,15 @@ permissions:
   contents: read
 
 jobs:
+  pages:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [archive-and-web, lean]
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml
+
   archive-and-web:
     runs-on: ubuntu-latest
     steps:
@@ -62,6 +71,8 @@ jobs:
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal
+      - name: Test proof dependency policy
+        run: python3 -S -m unittest discover -s ../scripts -p 'test_lean_axiom_policy.py'
       - name: Reject unfinished proofs
         run: |
           if grep -R --line-number --word-regexp sorry SquarePackingArchive SquarePackingArchive.lean; then

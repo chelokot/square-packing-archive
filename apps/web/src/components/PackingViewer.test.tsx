@@ -28,7 +28,7 @@ describe("packing reconstructions", () => {
     },
   );
 
-  test("shows a checked baseline with its proof and explicit non-optimality notice", () => {
+  test("shows the baseline inequality and its proof without a repeated verification badge", () => {
     const baseline = gridBaselineFor(archive, 61)!;
     const markup = renderToStaticMarkup(
       <PackingViewer
@@ -37,9 +37,8 @@ describe("packing reconstructions", () => {
       />,
     );
     expect(markup).toContain("Basic grid bound");
-    expect(markup).toContain("not its optimality");
-    expect(markup).toContain("not a historical record");
-    expect(markup).toContain("Lean verified");
+    expect(markup).toContain("s(61) ≤ 8");
+    expect(markup).not.toContain("Lean verified");
     expect(markup).toContain(
       'href="https://github.com/chelokot/square-packing-archive/blob/main/formal/SquarePackingArchive/Records/GridBounds.lean"',
     );

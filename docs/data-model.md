@@ -15,16 +15,20 @@ s(n) = value
 Its `active` flag indicates the current curated claim for that `n`; it does not
 erase older records. `supersedes` forms an explicit record lineage.
 
-`value.lean` is the exact formal value used by verified claims; the decimal is
+`value.lean` is the exact formal value required by every catalog claim; the decimal is
 display data and may be rounded. The evidence generator combines that value
 with the claim's `n` and relation to check the complete expected theorem type.
+Display expressions and decimal approximations require a separate consistency
+review: the typed Lean audit checks `value.lean`, not prose or decimal formatting.
 
 ## Evidence
 
 Evidence describes why a claim is present. It never changes the relation itself.
 Tracker records, publications, computational certificates, and Lean proofs are
-different evidence kinds. Derived verification status is a pure function of this
-evidence, with `lean-proof` as the only verified state.
+different evidence kinds. Every catalog claim must include its own `lean-proof`
+evidence, including inactive historical records. The other evidence kinds retain
+source provenance. Results awaiting formalization belong in GitHub issues.
+The public matrix uses color for exactness, not evidence status.
 
 Each Lean evidence record requires `checkedAt`, the full calendar date
 (`YYYY-MM-DD`) when that theorem was first recorded as checked for this claim.
@@ -82,12 +86,13 @@ Every archive build independently checks unit frames, tangent reconstruction,
 containment, and all pairwise separating axes with exact integer arithmetic in
 `Q(√2)`. This computational check does not create Lean evidence. Grid recipe
 instances also receive typed Lean upper-bound checks, while the 5- and 10-square
-constructions have their own explicit Lean packings. Published lower bounds
-remain unverified until their own Lean proofs are complete.
+constructions have their own explicit Lean packings. Lower bounds enter the
+catalog only after their own Lean proofs are complete.
 
-For an uncatalogued count, the viewer can show a labelled grid example. It is
-not a historical record, is not added to the manifest, and does not change the
-coverage matrix or verification totals.
+For an uncatalogued count, the manifest's `gridBaseline` policy supplies a
+Lean-checked upper bound and generated grid coordinates. These appear as white
+cells in the matrix. They are not historical records and do not contribute to
+catalogue totals or the exact-result timeline.
 
 ## Generated consumers
 
@@ -96,4 +101,7 @@ The web build receives one compiled JSON artifact. The Lean generator emits
 record-specific certificate modules. A second generator emits a typed `example`
 for every `lean-proof` theorem named by the manifest, so CI rejects stale names
 and theorems whose `n`, relation, or exact value differs from the claim. CI fails
-if any consumer disagrees with the canonical archive.
+if any consumer disagrees with the canonical archive. Each linked theorem's
+transitive axiom dependencies must be contained in `propext`, `Classical.choice`,
+and `Quot.sound`; custom axioms, unfinished proofs, and native-evaluation oracles
+are rejected. GitHub Pages deployment waits for both archive/web and Lean CI.

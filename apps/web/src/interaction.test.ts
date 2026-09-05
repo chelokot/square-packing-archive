@@ -45,18 +45,13 @@ describe("viewer geometry", () => {
 
 describe("catalog search", () => {
   test("searches exact n rather than matching n=11 when searching n=1", () => {
-    const result = filterClaims(archive.claims, archive, "1", "all");
+    const result = filterClaims(archive.claims, archive, "1");
     expect(result.length).toBeGreaterThan(0);
     expect(result.every((claim) => claim.n === 1)).toBe(true);
   });
 
-  test("combines author search and evidence filters", () => {
-    const result = filterClaims(
-      archive.claims,
-      archive,
-      "Friedman",
-      "lean-verified",
-    );
+  test("searches original contributors", () => {
+    const result = filterClaims(archive.claims, archive, "Friedman");
     expect(result.length).toBeGreaterThan(0);
     expect(
       result.every((claim) =>
@@ -69,7 +64,7 @@ describe("catalog search", () => {
       ),
     ).toBe(true);
     expect(
-      filterClaims(archive.claims, archive, "no-such-author", "all"),
+      filterClaims(archive.claims, archive, "no-such-author"),
     ).toHaveLength(0);
   });
 });

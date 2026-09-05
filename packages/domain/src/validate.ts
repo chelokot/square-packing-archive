@@ -1,4 +1,5 @@
 import type { ArchiveManifest, PackingConfiguration } from "./schema.ts";
+import { catalogClaimSchema } from "./schema.ts";
 
 const duplicates = (values: readonly string[]): readonly string[] => {
   const counts = Map.groupBy(values, (value) => value);
@@ -47,6 +48,12 @@ export const validateArchiveReferences = (
   }
 
   for (const claim of manifest.claims) {
+    const catalogClaim = catalogClaimSchema.safeParse(claim);
+    if (!catalogClaim.success) {
+      for (const issue of catalogClaim.error.issues) {
+        errors.push(`${claim.id}: ${issue.message}`);
+      }
+    }
     for (const contributor of claim.contributors) {
       if (!authorIds.has(contributor.author)) {
         errors.push(`${claim.id}: unknown contributor ${contributor.author}`);

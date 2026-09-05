@@ -25,12 +25,16 @@ THEOREM_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_']*(?:\.[A-Za-z_][A-Za-z0-9_
 def lean_evidence(
     manifest: dict[str, Any],
 ) -> tuple[tuple[dict[str, Any], dict[str, Any]], ...]:
-    return tuple(
-        (claim, evidence)
-        for claim in manifest["claims"]
-        for evidence in claim["evidence"]
-        if evidence["kind"] == "lean-proof"
-    )
+    checked = []
+    for claim in manifest["claims"]:
+        proofs = [item for item in claim["evidence"] if item["kind"] == "lean-proof"]
+        if not proofs:
+            raise ValueError(
+                f"{claim['id']}: catalog claims require a Lean proof; "
+                "keep unformalized proposals in issues"
+            )
+        checked.extend((claim, proof) for proof in proofs)
+    return tuple(checked)
 
 
 def module_name(artifact: str) -> str:
@@ -71,7 +75,9 @@ def expected_type(claim: dict[str, Any]) -> str:
 
 def render(manifest: dict[str, Any]) -> str:
     evidence = lean_evidence(manifest)
-    modules = {module_name(item.get("artifact", "")) for _, item in evidence}
+    modules = {"SquarePackingArchive.EvidenceAudit"}
+    modules.update(module_name(item.get("artifact", "")) for _, item in evidence)
+    audited_theorems = {theorem_name(item) for _, item in evidence}
     baseline_checks = ""
     if "gridBaseline" in manifest:
         policy = manifest["gridBaseline"]
@@ -81,6 +87,7 @@ def render(manifest: dict[str, Any]) -> str:
         proof = policy["proof"]
         modules.add(module_name(proof.get("artifact", "")))
         theorem = proof_theorem_name(proof)
+        audited_theorems.add(theorem)
         baseline_checks = "\n\n".join(
             f"example : SquarePackingArchive.HasPacking {count} {side} := by\n"
             f"  simpa using {theorem} (count := {count}) (side := {side}) (by norm_num)"
@@ -102,10 +109,17 @@ def render(manifest: dict[str, Any]) -> str:
         for reference in grids
     )
     if grid_checks:
+        audited_theorems.update((
+            "SquarePackingArchive.HasPacking.mono",
+            "SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking",
+        ))
         checks += "\n\n" + grid_checks
     if baseline_checks:
         checks += "\n\n" + baseline_checks
-    return f"{imports}\n\n{checks}\n"
+    axiom_checks = "\n".join(
+        f"assert_standard_axioms {theorem}" for theorem in sorted(audited_theorems)
+    )
+    return f"{imports}\n\n{checks}\n\n{axiom_checks}\n"
 
 
 def main() -> None:

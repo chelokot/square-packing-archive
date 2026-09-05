@@ -10,12 +10,11 @@ interiors cannot overlap. Browse the packings, historical results, and proofs.
 
 **[Open the interactive archive →](https://chelokot.github.io/square-packing-archive/)**
 
-[![Packing results for 1–100 squares. Colors show evidence; = means exact, ≤ upper bound, and ≥ lower bound. Click to explore.](docs/assets/coverage.svg)](https://chelokot.github.io/square-packing-archive/#explore)
+[![Packing results for 1–100 squares. Green marks proved optima; white marks bounds only. Click to explore.](docs/assets/coverage.svg)](https://chelokot.github.io/square-packing-archive/#explore)
 
-**Verified means checked by Lean—not necessarily proved optimal.** An exact
-result (`=`) proves optimality; an upper bound (`≤`) proves a packing exists.
-Published proofs awaiting Lean keep a separate label. Each record links to its
-authors, sources, and available formal proofs.
+**Every result has a kernel-checked Lean proof.** Green cells mark proved optima;
+white cells mark bounds only. Each result links to its authors, sources, and proof.
+Results awaiting formalization belong in [GitHub issues](https://github.com/chelokot/square-packing-archive/issues).
 
 Counts without catalogued records show a **basic grid bound**, `s(n) ≤ ⌈√n⌉`,
 with a Lean proof and viewable coordinates. These derived bounds are not
@@ -45,12 +44,12 @@ historical records and do not contribute to the record or exact-result counts.
 - Viewer controls for zoom, pan, view rotation, square inspection, exact
   coordinates, and filtering by orientation group.
 - A shared `?n=` selection across the matrix, viewer, and record history;
-  searchable evidence and author filters; accessible square inspection.
+  search by number, author, year, or value; accessible square inspection.
 - Separate publication and Lean check dates. Historical coverage uses the
   date each proof was recorded as checked, rather than its publication year.
 
-The historical catalog is intentionally incomplete at the first release. Missing
-records are visible as missing; import work never invents metadata or silently
+The historical catalog is intentionally incomplete at the first release. Pending
+records are tracked in issues; import work never invents metadata or silently
 upgrades evidence.
 
 ## Architecture
@@ -74,14 +73,17 @@ their shared soundness proof is maintained by hand.
 
 ## Trust model
 
-| Display status              | Meaning                                                    |
-| --------------------------- | ---------------------------------------------------------- |
-| `Reported`                  | A tracker or source reports the claim.                     |
-| `Computed · awaiting Lean`  | An independent computational certificate exists.           |
-| `Published · awaiting Lean` | A mathematical proof is published but not formalized here. |
-| `Lean verified`             | Lean CI checks the exact theorem without `sorry`.          |
+Every catalogued claim, including inactive historical records, must link to a
+Lean theorem proving its exact stated bound or equality. Schema validation rejects
+records without proof metadata; the generated Lean audit checks the theorem
+against the claim. CI must pass without unfinished proofs before publication.
+The audit rejects transitive axiom dependencies outside `propext`,
+`Classical.choice`, and `Quot.sound`.
+Source attribution is preserved separately from formal verification.
 
-Only the final row contributes to verified counters and graphs.
+A proof of an upper bound establishes a construction, not optimality. For example,
+the public 11-square construction proves `s(11) ≤ 3.88`; the stronger reported
+algebraic bound awaits formalization in [issue #16](https://github.com/chelokot/square-packing-archive/issues/16).
 
 ## Development
 
@@ -103,7 +105,7 @@ lake build
 
 The [public site](https://chelokot.github.io/square-packing-archive/) is deployed
 to GitHub Pages by [the Pages workflow](.github/workflows/pages.yml) on pushes
-to `main`.
+to `main`, after both the archive/web checks and Lean build pass.
 
 The web application runs locally with:
 

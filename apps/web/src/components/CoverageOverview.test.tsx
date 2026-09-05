@@ -6,21 +6,13 @@ import { CoverageOverview } from "./CoverageOverview.tsx";
 const markup = renderToStaticMarkup(<CoverageOverview archive={archive} />);
 
 describe("README coverage overview", () => {
-  test("uses red only for upper-bound symbols, including the legend", () => {
-    const symbols = [
-      ...markup.matchAll(/<text[^>]*fill="(#a13f35)"[^>]*>([^<]*)<\/text>/g),
-    ];
-    expect(symbols).toHaveLength(
-      1 + [...markup.matchAll(/<title>n = \d+: Upper bound/g)].length,
-    );
-    expect(symbols.every((symbol) => symbol[2] === "≤")).toBe(true);
-    for (const count of [11, 12, 68, 69]) {
-      const cell = markup.match(new RegExp(`<g data-n="${count}"[^]*?</g>`));
-      expect(cell![0]).toContain('fill="#a13f35">≤</text>');
-      expect(cell![0]).toContain(
-        count === 11 ? 'fill="#f5f3ec"' : 'fill="#e1e9dc"',
-      );
-    }
+  test("shows only a number in each cell, with a two-color legend", () => {
+    expect(markup.match(/<text /g)).toHaveLength(105);
+    expect(markup).toContain("Proved optimal");
+    expect(markup).toContain("Bound only");
+    expect(markup).not.toContain("Lean verified");
+    expect(markup).not.toContain(">≤</text>");
+    expect(markup).not.toContain(">=</text>");
   });
 
   test("renders every square count exactly once in order", () => {
@@ -33,22 +25,21 @@ describe("README coverage overview", () => {
   });
 
   test.each([
-    [5, "Exact · Lean verified", "=", "#e1e9dc"],
-    [6, "Exact · Lean verified", "=", "#e1e9dc"],
-    [10, "Exact · Lean verified", "=", "#e1e9dc"],
-    [64, "Exact · Lean verified", "=", "#e1e9dc"],
-    [69, "Upper bound · Lean verified", "≤", "#e1e9dc"],
-    [13, "Exact · Lean verified", "=", "#e1e9dc"],
-    [22, "Exact · Lean verified", "=", "#e1e9dc"],
-    [33, "Exact · Lean verified", "=", "#e1e9dc"],
-    [61, "Upper bound · Lean verified", "≤", "#e1e9dc"],
+    [5, "Exact", "#e1e9dc"],
+    [6, "Exact", "#e1e9dc"],
+    [10, "Exact", "#e1e9dc"],
+    [64, "Exact", "#e1e9dc"],
+    [69, "Upper bound", "#fffef9"],
+    [13, "Exact", "#e1e9dc"],
+    [22, "Exact", "#e1e9dc"],
+    [33, "Exact", "#e1e9dc"],
+    [61, "Upper bound", "#fffef9"],
   ])(
-    "renders the claim and evidence together for n=%i",
-    (count, label, symbol, fill) => {
+    "renders the actual claim and exactness color for n=%i",
+    (count, label, fill) => {
       const cell = markup.match(new RegExp(`<g data-n="${count}"[^]*?</g>`));
       expect(cell).not.toBeNull();
       expect(cell![0]).toContain(`n = ${count}: ${label}`);
-      expect(cell![0]).toContain(`>${symbol}</text>`);
       expect(cell![0]).toContain(`fill="${fill}"`);
     },
   );
@@ -65,7 +56,7 @@ describe("README coverage overview", () => {
     );
     expect(updated).toContain("2026-10-01");
     expect(updated).toContain(
-      "n = 69: Upper bound · Lean verified · s(69) ≤ 9 · Basic grid bound",
+      "n = 69: Upper bound · s(69) ≤ 9 · Basic grid bound",
     );
     expect(updated).not.toContain("s(69) ≤ 8.8272");
   });

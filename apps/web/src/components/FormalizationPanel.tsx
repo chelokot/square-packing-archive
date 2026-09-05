@@ -27,6 +27,7 @@ export const FormalizationPanel = ({
         <a href={`${repositoryUrl}/blob/main/archive/manifest.json`}>
           {copy.dataLink}
         </a>
+        <a href={`${repositoryUrl}/issues`}>{copy.pendingResults}</a>
       </div>
     </div>
     <div>

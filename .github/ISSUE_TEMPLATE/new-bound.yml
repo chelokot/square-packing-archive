@@ -1,8 +1,15 @@
 name: New or improved bound
-description: Submit a packing, lower bound, or exact result.
+description: Propose a result or submit a Lean-checked result for the catalog.
 title: "[bound] s(n) relation value"
 labels: ["bound submission"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Unformalized results belong in issues. Catalog additions require a linked
+        Lean theorem for the exact count, bound, and relation, plus passing CI.
+        This also applies to inactive historical records. Preserve primary
+        sources, original coordinates, and every contributor's attribution.
   - type: input
     id: claim
     attributes:
@@ -21,7 +28,7 @@ body:
     id: artifacts
     attributes:
       label: Configuration or proof artifacts
-      description: Link coordinates, source code, paper, certificate, and Lean theorem where available.
+      description: Link original coordinates, source code, paper, and certificates. Explain any rounding or reconstruction.
     validations:
       required: true
   - type: dropdown
@@ -31,10 +38,15 @@ body:
       options:
         - Reported configuration
         - Computational certificate
-        - Published proof awaiting Lean
-        - Lean theorem
+        - Published proof awaiting Lean (issue only)
+        - Lean theorem ready for catalog review
     validations:
       required: true
+  - type: textarea
+    id: lean-proof
+    attributes:
+      label: Lean theorem and CI
+      description: Required for catalog review; optional for pending proposals. Link the Lean file, give the fully qualified theorem name and exact statement, and link passing CI that checks it against the catalog claim.
   - type: checkboxes
     id: attribution
     attributes:

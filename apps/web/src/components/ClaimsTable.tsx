@@ -1,13 +1,11 @@
 import {
   activeClaims,
-  verificationLevel,
   type CompiledArchive,
   type Claim,
 } from "@square-packing/domain";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { copy } from "../copy.ts";
-import { EvidenceBadge, evidencePresentation } from "./EvidenceBadge.tsx";
 import {
   ClaimLinks,
   claimValue,
@@ -18,7 +16,6 @@ export const filterClaims = (
   claims: readonly Claim[],
   archive: CompiledArchive,
   query: string,
-  status: string,
 ): readonly Claim[] => {
   const search = query.trim().toLocaleLowerCase();
   return claims.filter((claim) => {
@@ -34,9 +31,7 @@ export const filterClaims = (
           .join(" ")
           .toLocaleLowerCase()
           .includes(search);
-    return (
-      matchesText && (status === "all" || verificationLevel(claim) === status)
-    );
+    return matchesText;
   });
 };
 
@@ -48,11 +43,10 @@ export const ClaimsTable = ({
   onSelect: (count: number) => void;
 }) => {
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState("all");
   const claims = [...activeClaims(archive)].sort(
     (left, right) => left.n - right.n,
   );
-  const filtered = filterClaims(claims, archive, query, status);
+  const filtered = filterClaims(claims, archive, query);
   return (
     <section id="claims" className="scroll-mt-6 border-t border-rule py-8">
       <h2 className="flex items-center gap-3 text-lg font-semibold">
@@ -74,19 +68,6 @@ export const ClaimsTable = ({
             className="min-w-0 flex-1 bg-transparent py-2.5 text-sm"
           />
         </label>
-        <select
-          aria-label={copy.statusFilter}
-          value={status}
-          onChange={(event) => setStatus(event.target.value)}
-          className="max-w-full border border-rule bg-surface px-3 py-2.5 text-sm"
-        >
-          <option value="all">{copy.allEvidence}</option>
-          {Object.entries(evidencePresentation).map(([level, item]) => (
-            <option key={level} value={level}>
-              {item.label}
-            </option>
-          ))}
-        </select>
         <span role="status" className="text-xs text-muted sm:ml-auto">
           {copy.resultCount(filtered.length, claims.length)}
         </span>
@@ -126,9 +107,6 @@ export const ClaimsTable = ({
                 </td>
                 <td className="px-4 py-4 text-xs text-muted">
                   {contributorNames(archive, claim)}
-                </td>
-                <td className="px-4 py-4">
-                  <EvidenceBadge claim={claim} />
                 </td>
                 <td className="py-4 pl-4">
                   <ClaimLinks archive={archive} claim={claim} />

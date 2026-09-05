@@ -1,37 +1,24 @@
-import {
-  explorerBoundFor,
-  verificationLevel,
-  type ArchiveManifest,
-  type VerificationLevel,
-} from "@square-packing/domain";
+import { explorerBoundFor, type ArchiveManifest } from "@square-packing/domain";
 import { copy } from "../copy.ts";
+import { explorerBoundDescription } from "./claimPresentation.tsx";
+
 import {
-  claimRelationSymbols,
-  explorerBoundDescription,
-} from "./claimPresentation.tsx";
-
-const colors = {
-  "lean-verified": { fill: "#e1e9dc", ink: "#315d40" },
-  "published-unformalized": { fill: "#f3e8d4", ink: "#835c23" },
-  "computational-evidence": { fill: "#eee6f1", ink: "#6e5879" },
-  reported: { fill: "#f5f3ec", ink: "#686c62" },
-} satisfies Record<VerificationLevel, { fill: string; ink: string }>;
-
-const emptyColors = { fill: "#fffef9", ink: "#686c62" };
-const upperBoundInk = "#a13f35";
+  coveragePresentation,
+  coveragePresentationFor,
+} from "./coveragePresentation.ts";
 
 export const CoverageOverview = ({ archive }: { archive: ArchiveManifest }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 840 328"
+    viewBox="0 0 840 304"
     width="840"
-    height="328"
+    height="304"
     role="img"
     aria-labelledby="coverage-title coverage-description"
   >
     <title id="coverage-title">{copy.coverageOverviewTitle}</title>
     <desc id="coverage-description">{copy.coverageOverviewDescription}</desc>
-    <rect width="840" height="328" rx="4" fill="#f5f3ec" />
+    <rect width="840" height="304" rx="4" fill="#f5f3ec" />
     <g fontFamily="Arial, sans-serif" fill="#686c62">
       <text x="22" y="29" fontSize="17" fontWeight="600" fill="#252b27">
         {copy.coverageOverviewTitle}
@@ -45,8 +32,7 @@ export const CoverageOverview = ({ archive }: { archive: ArchiveManifest }) => (
       {Array.from({ length: 100 }, (_, index) => {
         const count = index + 1;
         const claim = explorerBoundFor(archive, count);
-        const palette =
-          claim === undefined ? emptyColors : colors[verificationLevel(claim)];
+        const palette = coveragePresentationFor(claim);
         const label =
           claim === undefined
             ? copy.emptyStatus
@@ -75,44 +61,14 @@ export const CoverageOverview = ({ archive }: { archive: ArchiveManifest }) => (
             >
               {count}
             </text>
-            {claim !== undefined && (
-              <text
-                x="31"
-                y="31"
-                textAnchor="end"
-                fontSize="10"
-                fill={claim.relation === "upper" ? upperBoundInk : palette.ink}
-              >
-                {claimRelationSymbols[claim.relation]}
-              </text>
-            )}
           </g>
         );
       })}
-      {Object.entries(claimRelationSymbols).map(([relation, symbol], index) => (
-        <g key={relation} transform={`translate(${22 + index * 130}, 282)`}>
-          <text
-            fontFamily="Consolas, monospace"
-            fontSize="14"
-            fill={relation === "upper" ? upperBoundInk : undefined}
-          >
-            {symbol}
-          </text>
-          <text x="18" fontSize="11">
-            {copy.claimRelations[relation as keyof typeof claimRelationSymbols]}
-          </text>
-        </g>
-      ))}
-      {(
-        [
-          [copy.matrixVerified, colors["lean-verified"]],
-          [copy.matrixPublished, colors["published-unformalized"]],
-          [copy.matrixComputed, colors["computational-evidence"]],
-          [copy.matrixReported, colors.reported],
-          [copy.emptyStatus, emptyColors],
-        ] as const
-      ).map(([label, palette], index) => (
-        <g key={label} transform={`translate(${22 + index * 160}, 305)`}>
+      {Object.values(coveragePresentation).map((palette, index) => (
+        <g
+          key={palette.label}
+          transform={`translate(${22 + index * 160}, 283)`}
+        >
           <rect
             y="-9"
             width="10"
@@ -122,7 +78,7 @@ export const CoverageOverview = ({ archive }: { archive: ArchiveManifest }) => (
             strokeOpacity="0.35"
           />
           <text x="18" fontSize="11">
-            {label}
+            {palette.label}
           </text>
         </g>
       ))}

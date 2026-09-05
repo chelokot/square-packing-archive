@@ -1,12 +1,10 @@
 import {
   isGridBaseline,
-  verificationLevel,
   type Claim,
   type CompiledArchive,
   type ExplorerBound,
 } from "@square-packing/domain";
 import { copy, repositoryUrl } from "../copy.ts";
-import { evidencePresentation } from "./EvidenceBadge.tsx";
 
 export const claimRelationSymbols = {
   exact: "=",
@@ -20,7 +18,7 @@ export const claimValue = (
   `s(${claim.n}) ${claimRelationSymbols[claim.relation]} ${claim.value.expression ?? claim.value.decimal}`;
 
 export const explorerBoundDescription = (bound: ExplorerBound): string =>
-  `${copy.claimRelations[bound.relation]} · ${evidencePresentation[verificationLevel(bound)].label} · ${claimValue(bound)}${isGridBaseline(bound) ? ` · ${copy.gridBaseline}` : ""}`;
+  `${copy.claimRelations[bound.relation]} · ${claimValue(bound)}${isGridBaseline(bound) ? ` · ${copy.gridBaseline}` : ""}`;
 
 export const contributorNames = (
   archive: CompiledArchive,

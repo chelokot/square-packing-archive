@@ -22,7 +22,7 @@ import {
   squareAngle,
   viewportTransform,
 } from "../geometry.ts";
-import { EvidenceBadge } from "./EvidenceBadge.tsx";
+import { claimValue } from "./claimPresentation.tsx";
 
 const groupColors = [
   "#a8b997",
@@ -222,11 +222,6 @@ export const PackingViewer = ({
           ))}
         </div>
       </div>
-      {claim !== undefined && isGridBaseline(claim) && (
-        <p className="border-b border-rule bg-paper px-5 py-3 text-xs leading-5 text-muted">
-          {copy.gridBaselineNotice}
-        </p>
-      )}
       <div className="grid 2xl:grid-cols-[minmax(0,1fr)_15rem]">
         <div className="min-w-0">
           <div className="relative aspect-square max-h-[36rem] w-full overflow-hidden p-4">
@@ -456,9 +451,11 @@ export const PackingViewer = ({
         </aside>
       </div>
       <div className="flex flex-wrap items-center gap-3 border-t border-rule px-5 py-3">
-        {claim === undefined ? null : <EvidenceBadge claim={claim} />}
         <p className="flex-1 text-[0.65rem] leading-5 text-muted">
-          {copy.layoutBound}
+          {claim === undefined ? null : claimValue(claim)}
+          {claim !== undefined && isGridBaseline(claim)
+            ? ` · ${copy.gridBaseline}`
+            : ""}
         </p>
         {proof === undefined ? null : (
           <a
