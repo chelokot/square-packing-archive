@@ -1,5 +1,4 @@
 import {
-  activeClaims,
   explorerBoundFor,
   isGridBaseline,
   gridBaselineConfiguration,
@@ -17,9 +16,6 @@ import { useSelection } from "./selection.ts";
 
 export const App = () => {
   const [selectedCount, selectCount] = useSelection();
-  const exactClaims = activeClaims(archive).filter(
-    (claim) => claim.relation === "exact",
-  );
   const selectedClaims = archive.claims.filter(
     (claim) => claim.n === selectedCount,
   );
@@ -61,11 +57,11 @@ export const App = () => {
               strokeWidth={1.5}
               aria-hidden="true"
             />
-            {copy.title}
+            <h1>{copy.title}</h1>
           </a>
           <nav
             aria-label={copy.navigation}
-            className="flex items-center gap-5 text-sm text-muted md:gap-8"
+            className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted md:gap-x-8"
           >
             <a href="#explore" className="hover:text-ink">
               {copy.explore}
@@ -88,44 +84,14 @@ export const App = () => {
         </div>
       </header>
       <main id="top" className="mx-auto max-w-[96rem] px-5 pb-16 md:px-10">
-        <section className="grid gap-8 border-b border-rule py-10 lg:grid-cols-[1fr_auto] lg:items-end lg:py-14">
-          <div>
-            <p className="mb-3 font-mono text-xs uppercase tracking-widest text-forest">
-              {copy.problemLabel}
-            </p>
-            <h1 className="font-serif text-4xl leading-tight tracking-tight sm:text-5xl">
-              {copy.heading}
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-muted sm:text-base">
-              {copy.introduction}
-            </p>
-          </div>
-          <dl className="flex flex-wrap gap-x-9 gap-y-4 lg:pb-1">
-            {[
-              [String(archive.claims.length), copy.claimCount],
-              [String(exactClaims.length), copy.exactCount],
-              [String(archive.configurationData.length), copy.layoutCount],
-            ].map(([value, label]) => (
-              <div key={label}>
-                <dd className="font-mono text-3xl tracking-tight">{value}</dd>
-                <dt className="mt-2 text-xs text-muted">{label}</dt>
-              </div>
-            ))}
-          </dl>
-        </section>
-        <section id="explore" className="scroll-mt-6 py-8">
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <h2 className="flex items-center gap-3 text-lg font-semibold">
-              <span className="font-mono text-xs font-normal text-muted">
-                01
-              </span>
-              {copy.explore}
-            </h2>
-            <p className="text-xs text-muted">
-              {copy.archiveScope(archive.updatedAt)}
-            </p>
-          </div>
-          <div className="grid items-start gap-6 xl:grid-cols-[21rem_minmax(0,1fr)]">
+        <p className="py-5 text-sm leading-6 text-muted">{copy.introduction}</p>
+        <section
+          id="explore"
+          aria-label={copy.explore}
+          className="scroll-mt-6 pb-8"
+        >
+          <h2 className="sr-only">{copy.explore}</h2>
+          <div className="grid items-start gap-6 lg:grid-cols-[21rem_minmax(0,1fr)]">
             <CoverageMatrix
               archive={archive}
               selectedCount={selectedCount}
@@ -176,7 +142,6 @@ export const App = () => {
         </section>
         <section id="history" className="scroll-mt-6 border-t border-rule py-8">
           <h2 className="mb-5 flex items-center gap-3 text-lg font-semibold">
-            <span className="font-mono text-xs font-normal text-muted">02</span>
             {copy.history}
           </h2>
           <div className="grid items-start gap-8 lg:grid-cols-2">
@@ -189,6 +154,9 @@ export const App = () => {
       </main>
       <footer className="border-t border-rule">
         <div className="mx-auto flex max-w-[96rem] flex-wrap justify-between gap-5 px-5 py-7 text-xs leading-6 text-muted md:px-10">
+          <p className="text-xs text-muted">
+            {copy.archiveScope(archive.updatedAt)}
+          </p>
           <p>
             <a
               className="hover:text-ink"

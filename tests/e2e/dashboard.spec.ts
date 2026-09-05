@@ -9,10 +9,12 @@ test("opens a packing, inspects exact coordinates, and controls the view", async
 }) => {
   await page.goto("./?n=68");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Small squares. A surprisingly hard problem.",
+    "Square Packing Archive",
   );
   const viewer = page.locator("#viewer");
   await viewer.getByRole("button", { name: "Square 0", exact: true }).click();
+  await expect(viewer.getByText("Exact t = tan(θ/2)")).not.toBeVisible();
+  await viewer.getByText("Exact coordinates", { exact: true }).click();
   await expect(viewer.getByText("Exact t = tan(θ/2)")).toBeVisible();
   await expect(
     viewer.getByRole("heading", { name: /^Square 0\b/ }),
@@ -170,4 +172,69 @@ test("mobile selection and controls remain reachable", async ({ page }) => {
       () => document.documentElement.scrollWidth <= window.innerWidth,
     ),
   ).toBe(true);
+});
+
+for (const width of [320, 390, 768, 1023, 1024, 1279, 1280, 1600]) {
+  test(`matrix stays compact at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto("./?n=68");
+    const matrix = page.locator("#matrix");
+    await expect(matrix.getByRole("button")).toHaveCount(100);
+    const geometry = await page.evaluate(() => {
+      const matrixBounds = document
+        .querySelector("#matrix")!
+        .getBoundingClientRect();
+      const viewerBounds = document
+        .querySelector("#viewer")!
+        .getBoundingClientRect();
+      return {
+        matrixWidth: matrixBounds.width,
+        matrixRight: matrixBounds.right,
+        matrixBottom: matrixBounds.bottom,
+        matrixTop: matrixBounds.top,
+        viewerLeft: viewerBounds.left,
+        viewerTop: viewerBounds.top,
+        rootSize: parseFloat(
+          getComputedStyle(document.documentElement).fontSize,
+        ),
+        pageWidth: document.documentElement.scrollWidth,
+        viewportWidth: window.innerWidth,
+      };
+    });
+    expect(geometry.matrixWidth).toBeLessThanOrEqual(
+      21 * geometry.rootSize + 1,
+    );
+    expect(geometry.pageWidth).toBeLessThanOrEqual(geometry.viewportWidth);
+    if (width >= 1024) {
+      expect(geometry.viewerLeft).toBeGreaterThan(geometry.matrixRight);
+      expect(Math.abs(geometry.viewerTop - geometry.matrixTop)).toBeLessThan(1);
+      expect(geometry.viewerTop).toBeLessThan(200);
+    } else {
+      expect(geometry.viewerTop).toBeGreaterThan(geometry.matrixBottom);
+    }
+  });
+}
+
+test("viewer instructions are optional and a single orientation has no filter", async ({
+  page,
+}) => {
+  await page.goto("./?n=61");
+  const viewer = page.locator("#viewer");
+  await expect(
+    viewer.getByRole("heading", { name: "Orientation groups" }),
+  ).toHaveCount(0);
+  const instructions = viewer.getByText(
+    "Drag to pan · scroll to zoom · select a square to inspect",
+    { exact: true },
+  );
+  await expect(instructions).not.toBeVisible();
+  const help = viewer.getByLabel("Viewer help", { exact: true });
+  await help.click();
+  await expect(instructions).toBeVisible();
+  await help.click();
+  await expect(instructions).not.toBeVisible();
+  await viewer.getByLabel("Inspect square", { exact: true }).selectOption("0");
+  await expect(viewer.getByText("Exact t = tan(θ/2)")).not.toBeVisible();
+  await viewer.getByText("Exact coordinates", { exact: true }).click();
+  await expect(viewer.getByText("Exact t = tan(θ/2)")).toBeVisible();
 });

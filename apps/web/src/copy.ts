@@ -3,20 +3,16 @@ export const repositoryUrl =
 
 export const copy = {
   title: "Square Packing Archive",
-  heading: "Small squares. A surprisingly hard problem.",
-  problemLabel: "Discrete geometry / squares in a square",
   introduction:
-    "How small a square can contain n unit squares? Explore constructions, follow improvements, and read the proofs. Squares may rotate; their interiors cannot overlap.",
+    "How small a square can contain n unit squares? Rotation is allowed; interiors cannot overlap.",
   skipNavigation: "Skip to the explorer",
   navigation: "Main navigation",
   explore: "Explore the packings",
   catalog: "Catalog",
   sources: "Sources & proofs",
   github: "GitHub",
-  claimCount: "claims catalogued",
   exactCount: "proved optimal",
-  layoutCount: "catalogued coordinate sets",
-  archiveScope: (date: string) => `Selected records · data updated ${date}`,
+  archiveScope: (date: string) => `Data updated ${date}`,
   noLayout: "Coordinates not yet in the archive",
   noRecord:
     "This n has no catalogued result yet. This does not mean the mathematical problem is unsolved.",
@@ -48,6 +44,7 @@ export const copy = {
   emptyStatus: "Not catalogued",
   viewerTitle: (count: number) => `${count} unit squares`,
   containerSide: "Container side",
+  viewerHelp: "Viewer help",
   viewHelp: "Drag to pan · scroll to zoom · select a square to inspect",
   angleGroups: "Orientation groups",
   angleGroupHelp:

@@ -16,6 +16,29 @@ const cellMarkup = (count: number): string => {
 };
 
 describe("coverage matrix", () => {
+  test("caps the matrix width even before the two-column breakpoint", () => {
+    expect(markup).toContain('class="w-full min-w-0 max-w-[21rem]"');
+    expect(markup).not.toContain("<h3");
+    expect(markup).toContain('aria-label="Choose the number of squares"');
+  });
+
+  test("counts proved square counts once, not proof records", () => {
+    const exactClaim = archive.claims.find(
+      (claim) => claim.active && claim.relation === "exact",
+    )!;
+    const repeated = renderToStaticMarkup(
+      <CoverageMatrix
+        archive={{
+          ...archive,
+          claims: [...archive.claims, { ...exactClaim, id: "second-proof" }],
+        }}
+        selectedCount={69}
+        onSelect={() => {}}
+      />,
+    );
+    expect(repeated).toContain(">34</span> proved optimal");
+  });
+
   test("uses green only for proved optima and white for bounds", () => {
     for (const count of [5, 6, 10, 13, 22, 33, 64]) {
       expect(cellMarkup(count)).toContain("bg-forest-soft");

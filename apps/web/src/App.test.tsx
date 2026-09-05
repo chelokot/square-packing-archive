@@ -20,7 +20,31 @@ test("an uncatalogued selection uses the same verified grid bound throughout the
     'href="https://github.com/chelokot/square-packing-archive/blob/main/formal/SquarePackingArchive/Records/GridBounds.lean"',
   );
   expect(markup).toContain("No results catalogued for this n yet.");
-  expect(markup).toContain(`>${archive.claims.length}</dd>`);
-  expect(markup).toContain(">34</dd>");
+  expect(markup).toContain(">34</span> proved optimal");
   expect(markup).not.toContain("Coordinates not yet in the archive");
+});
+
+test("keeps the introduction compact without removing the catalog or proof policy", () => {
+  const markup = renderToStaticMarkup(<App />);
+  expect(markup).toContain("<h1>Square Packing Archive</h1>");
+  for (const removed of [
+    "Small squares. A surprisingly hard problem.",
+    "Discrete geometry",
+    "claims catalogued",
+    "catalogued coordinate sets",
+    ">01<",
+    ">02<",
+    ">03<",
+  ]) {
+    expect(markup).not.toContain(removed);
+  }
+  expect(markup).toContain("lg:grid-cols-[21rem_minmax(0,1fr)]");
+  expect(markup).toContain('id="claims"');
+  expect(markup).toContain('id="formalization"');
+  expect(markup).toContain("Every result has a proof");
+  const footer = markup.slice(markup.indexOf("<footer"));
+  expect(footer).toContain(`Data updated ${archive.updatedAt}`);
+  expect(markup.slice(0, markup.indexOf("<footer"))).not.toContain(
+    "Data updated",
+  );
 });

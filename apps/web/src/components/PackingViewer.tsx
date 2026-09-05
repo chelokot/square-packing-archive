@@ -5,6 +5,7 @@ import {
   type PackingConfiguration,
 } from "@square-packing/domain";
 import {
+  CircleHelp,
   Download,
   Maximize2,
   RotateCcw,
@@ -326,7 +327,21 @@ export const PackingViewer = ({
             </output>
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-rule px-5 py-3 text-[0.65rem] text-muted">
-            <p>{copy.viewHelp}</p>
+            <details className="relative">
+              <summary
+                aria-label={copy.viewerHelp}
+                className="flex size-8 list-none items-center justify-center text-muted hover:text-ink [&::-webkit-details-marker]:hidden"
+              >
+                <CircleHelp className="size-4" aria-hidden="true" />
+              </summary>
+              <div className="absolute bottom-full left-0 z-30 mb-2 w-64 max-w-[70vw] border border-rule bg-surface p-3 text-xs leading-5 text-ink shadow-sm">
+                <p>{copy.viewHelp}</p>
+                <p className="mt-2">{copy.inspectPrompt}</p>
+                {groups.length > 1 && (
+                  <p className="mt-2">{copy.angleGroupHelp}</p>
+                )}
+              </div>
+            </details>
             <label className="flex cursor-pointer items-center gap-2">
               <input
                 type="checkbox"
@@ -339,40 +354,47 @@ export const PackingViewer = ({
           </div>
         </div>
         <aside className="min-w-0 border-t border-rule bg-paper/50 p-5 2xl:border-l 2xl:border-t-0">
-          <h4 className="text-xs font-medium">{copy.angleGroups}</h4>
-          <p className="mt-1 text-[0.65rem] leading-5 text-muted">
-            {copy.angleGroupHelp}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {groups.map((group, index) => (
-              <button
-                key={group}
-                type="button"
-                aria-pressed={!hiddenGroups.has(group)}
-                onClick={() =>
-                  setHiddenGroups((current) => {
-                    const next = new Set(current);
-                    if (next.has(group)) next.delete(group);
-                    else next.add(group);
-                    return next;
-                  })
-                }
-                className={`flex items-center gap-1.5 border border-rule px-2 py-1 font-mono text-[0.65rem] ${hiddenGroups.has(group) ? "text-muted line-through" : "bg-surface text-ink"}`}
-              >
-                <i
-                  className="size-2.5"
-                  style={{
-                    backgroundColor: groupColors[index % groupColors.length],
-                  }}
-                />
-                {group.toFixed(1)}°{" "}
-                <span className="text-muted">
-                  ({squares.filter((square) => square.group === group).length})
-                </span>
-              </button>
-            ))}
-          </div>
-          <div className="mt-5 border-t border-rule pt-4">
+          {groups.length > 1 && (
+            <div className="mb-4 border-b border-rule pb-4">
+              <h4 className="text-xs font-medium">{copy.angleGroups}</h4>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {groups.map((group, index) => (
+                  <button
+                    key={group}
+                    type="button"
+                    aria-pressed={!hiddenGroups.has(group)}
+                    onClick={() =>
+                      setHiddenGroups((current) => {
+                        const next = new Set(current);
+                        if (next.has(group)) next.delete(group);
+                        else next.add(group);
+                        return next;
+                      })
+                    }
+                    className={`flex items-center gap-1.5 border border-rule px-2 py-1 font-mono text-[0.65rem] ${hiddenGroups.has(group) ? "text-muted line-through" : "bg-surface text-ink"}`}
+                  >
+                    <i
+                      className="size-2.5"
+                      style={{
+                        backgroundColor:
+                          groupColors[index % groupColors.length],
+                      }}
+                    />
+                    {group.toFixed(1)}°{" "}
+                    <span className="text-muted">
+                      (
+                      {
+                        squares.filter((square) => square.group === group)
+                          .length
+                      }
+                      )
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          <div>
             <label htmlFor="square-selection" className="text-xs font-medium">
               {copy.selectSquare}
             </label>
@@ -393,11 +415,7 @@ export const PackingViewer = ({
                 </option>
               ))}
             </select>
-            {selected === undefined ? (
-              <p className="mt-4 text-xs leading-6 text-muted">
-                {copy.inspectPrompt}
-              </p>
-            ) : (
+            {selected === undefined ? null : (
               <div className="mt-4">
                 <h4 className="flex items-baseline justify-between gap-2 text-sm font-medium">
                   {copy.square(selected.id)}
@@ -418,7 +436,7 @@ export const PackingViewer = ({
                     </div>
                   ))}
                 </dl>
-                <details className="mt-4 text-xs" open>
+                <details className="mt-4 text-xs">
                   <summary className="text-forest">
                     {copy.exactCoordinates}
                   </summary>

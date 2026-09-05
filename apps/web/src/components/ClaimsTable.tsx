@@ -50,7 +50,6 @@ export const ClaimsTable = ({
   return (
     <section id="claims" className="scroll-mt-6 border-t border-rule py-8">
       <h2 className="flex items-center gap-3 text-lg font-semibold">
-        <span className="font-mono text-xs font-normal text-muted">03</span>
         {copy.catalogTitle}
       </h2>
       <p className="mt-3 text-sm leading-6 text-muted">
