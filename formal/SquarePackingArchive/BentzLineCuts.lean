@@ -21,6 +21,51 @@ lemma low_point_offset_bound {cosine sine center : ℝ}
   rw [abs_lt]
   constructor <;> linarith
 
+theorem horizontal_unit_chord_of_normalized_offset_bound
+    (square : PlacedSquare) {line : ℝ}
+    (offset : |line - square.firstQuadrant.center.y| <
+      (square.firstQuadrant.frame.cosine + square.firstQuadrant.frame.sine) / 2 -
+        square.firstQuadrant.frame.cosine * square.firstQuadrant.frame.sine) :
+    ∃ intervalStart intervalEnd : ℝ, 1 ≤ intervalEnd - intervalStart ∧
+      ∀ horizontal ∈ Ioo intervalStart intervalEnd,
+        square.InteriorContains ⟨horizontal, line⟩ := by
+  let normalized := square.firstQuadrant
+  have cosine_nonnegative : 0 ≤ normalized.frame.cosine := square.firstQuadrant_cosine_nonnegative
+  have sine_nonnegative : 0 ≤ normalized.frame.sine := square.firstQuadrant_sine_nonnegative
+  have chord : ∃ intervalStart intervalEnd : ℝ, 1 ≤ intervalEnd - intervalStart ∧
+      ∀ horizontal ∈ Ioo intervalStart intervalEnd,
+        ![horizontal, line] ∈ normalized.dilatedInteriorRegion 1 := by
+    by_cases axis_aligned : normalized.frame.cosine = 0 ∨ normalized.frame.sine = 0
+    · have anchor : ![normalized.center.x, line] ∈ normalized.dilatedInteriorRegion 1 := by
+        change |line - normalized.center.y| <
+          (normalized.frame.cosine + normalized.frame.sine) / 2 -
+            normalized.frame.cosine * normalized.frame.sine at offset
+        apply normalized.mem_dilatedInteriorRegion_of_inverse_bounds (by norm_num)
+        all_goals
+          rcases axis_aligned with cosine_zero | sine_zero
+          all_goals
+            have other_one : normalized.frame.cosine = 1 ∨ normalized.frame.sine = 1 := by
+              first
+              | right; nlinarith [normalized.frame.unit]
+              | left; nlinarith [normalized.frame.unit]
+            rcases other_one with cosine_one | sine_one <;>
+              simp_all [PlacedSquare.dilatedLocalX, PlacedSquare.dilatedLocalY, Plane.toPoint]
+      exact Nagamochi.exists_horizontal_chord_of_axis_aligned normalized (by norm_num)
+        cosine_nonnegative sine_nonnegative axis_aligned ⟨_, by simpa using anchor⟩
+    · push Not at axis_aligned
+      obtain ⟨intervalStart, intervalEnd, length_bound, inside⟩ :=
+        Nagamochi.horizontal_chord_longer_than_side_of_offset_bound normalized (factor := 1)
+          (by norm_num) (lt_of_le_of_ne cosine_nonnegative axis_aligned.1.symm)
+          (lt_of_le_of_ne sine_nonnegative axis_aligned.2.symm) (by simpa [normalized] using offset)
+      exact ⟨intervalStart, intervalEnd, length_bound.le, inside⟩
+  obtain ⟨intervalStart, intervalEnd, length_bound, inside⟩ := chord
+  refine ⟨intervalStart, intervalEnd, length_bound, ?_⟩
+  intro horizontal horizontal_mem
+  have normalized_inside := inside horizontal horizontal_mem
+  rw [PlacedSquare.dilatedInteriorRegion_one] at normalized_inside
+  apply (square.firstQuadrant_interiorContains_iff _).1
+  exact (normalized.mem_interiorRegion_iff _).1 normalized_inside
+
 theorem horizontal_unit_chord_of_low_point
     (square : PlacedSquare) {side : ℝ} {point : Point}
     (fits : square.Fits side) (point_mem : square.Contains point)
@@ -46,36 +91,7 @@ theorem horizontal_unit_chord_of_low_point
       mul_nonneg (show 0 ≤ localY + 1 / 2 by linarith) cosine_nonnegative]
   have offset := low_point_offset_bound cosine_nonnegative sine_nonnegative normalized.frame.unit
     center_lower center_upper
-  have chord : ∃ intervalStart intervalEnd : ℝ, 1 ≤ intervalEnd - intervalStart ∧
-      ∀ horizontal ∈ Ioo intervalStart intervalEnd,
-        ![horizontal, (451 / 500 : ℝ)] ∈ normalized.dilatedInteriorRegion 1 := by
-    by_cases axis_aligned : normalized.frame.cosine = 0 ∨ normalized.frame.sine = 0
-    · have anchor : ![normalized.center.x, (451 / 500 : ℝ)] ∈ normalized.dilatedInteriorRegion 1 := by
-        apply normalized.mem_dilatedInteriorRegion_of_inverse_bounds (by norm_num)
-        all_goals
-          rcases axis_aligned with cosine_zero | sine_zero
-          all_goals
-            have other_one : normalized.frame.cosine = 1 ∨ normalized.frame.sine = 1 := by
-              first
-              | right; nlinarith [normalized.frame.unit]
-              | left; nlinarith [normalized.frame.unit]
-            rcases other_one with cosine_one | sine_one <;>
-              simp_all [PlacedSquare.dilatedLocalX, PlacedSquare.dilatedLocalY, Plane.toPoint]
-      exact Nagamochi.exists_horizontal_chord_of_axis_aligned normalized (by norm_num)
-        cosine_nonnegative sine_nonnegative axis_aligned ⟨_, by simpa using anchor⟩
-    · push Not at axis_aligned
-      obtain ⟨intervalStart, intervalEnd, length_bound, inside⟩ :=
-        Nagamochi.horizontal_chord_longer_than_side_of_offset_bound normalized (factor := 1)
-          (by norm_num) (lt_of_le_of_ne cosine_nonnegative axis_aligned.1.symm)
-          (lt_of_le_of_ne sine_nonnegative axis_aligned.2.symm) (by simpa using offset)
-      exact ⟨intervalStart, intervalEnd, length_bound.le, inside⟩
-  obtain ⟨intervalStart, intervalEnd, length_bound, inside⟩ := chord
-  refine ⟨intervalStart, intervalEnd, length_bound, ?_⟩
-  intro horizontal horizontal_mem
-  have normalized_inside := inside horizontal horizontal_mem
-  rw [PlacedSquare.dilatedInteriorRegion_one] at normalized_inside
-  apply (square.firstQuadrant_interiorContains_iff _).1
-  exact (normalized.mem_interiorRegion_iff _).1 normalized_inside
+  exact horizontal_unit_chord_of_normalized_offset_bound square offset
 
 theorem vertical_unit_chord_of_left_point
     (square : PlacedSquare) {side : ℝ} {point : Point}
@@ -90,6 +106,30 @@ theorem vertical_unit_chord_of_left_point
   refine ⟨intervalStart, intervalEnd, length_bound, ?_⟩
   intro vertical vertical_mem
   exact (square.interiorContains_swap_iff ⟨451 / 500, vertical⟩).1 (inside vertical vertical_mem)
+
+theorem count_le_of_disjoint_unit_intervals
+    {selectedCount : ℕ} {bound : ℝ}
+    (lower upper : Fin selectedCount → ℝ) (bound_nonnegative : 0 ≤ bound)
+    (length_bound : ∀ selected, 1 ≤ upper selected - lower selected)
+    (intervals_disjoint : (↑(Finset.univ : Finset (Fin selectedCount)) : Set (Fin selectedCount)).PairwiseDisjoint
+      (fun selected => Ioo (lower selected) (upper selected)))
+    (union_subset : (⋃ selected ∈ (Finset.univ : Finset (Fin selectedCount)),
+      Ioo (lower selected) (upper selected)) ⊆ Icc 0 bound) :
+    (selectedCount : ℝ) ≤ bound := by
+  have sum_volume : ∑ selected, volume (Ioo (lower selected) (upper selected)) ≤
+      volume (Icc (0 : ℝ) bound) := by
+    rw [← measure_biUnion_finset intervals_disjoint (fun _ _ => measurableSet_Ioo)]
+    exact measure_mono union_subset
+  have count_bound : (selectedCount : ENNReal) ≤ ∑ selected, volume (Ioo (lower selected) (upper selected)) := by
+    calc
+      (selectedCount : ENNReal) = ∑ _selected : Fin selectedCount, (1 : ENNReal) := by simp
+      _ ≤ _ := Finset.sum_le_sum (fun selected _ => by
+        rw [Real.volume_Ioo]
+        exact_mod_cast (ENNReal.ofReal_le_ofReal (length_bound selected)))
+  have bound_measure := count_bound.trans sum_volume
+  rw [Real.volume_Icc, sub_zero] at bound_measure
+  have real_bound := ENNReal.toReal_mono (by simp : ENNReal.ofReal bound ≠ ⊤) bound_measure
+  simpa [ENNReal.toReal_ofReal bound_nonnegative] using real_bound
 
 theorem count_le_side_of_vertical_unit_chords
     {count selectedCount : ℕ} {side line : ℝ} (packing : Packing count side)
@@ -116,20 +156,8 @@ theorem count_le_side_of_vertical_unit_chords
     have bounds := packing.fits (owners selected)
       ⟨localX, localY, horizontal_bound.le, vertical_bound.le, equality⟩
     exact ⟨bounds.2.2.1, bounds.2.2.2⟩
-  have sum_volume : ∑ selected, volume (intervals selected) ≤ volume (Icc (0 : ℝ) side) := by
-    rw [← measure_biUnion_finset intervals_disjoint (fun _ _ => measurableSet_Ioo)]
-    exact measure_mono union_subset
-  have count_bound : (selectedCount : ENNReal) ≤ ∑ selected, volume (intervals selected) := by
-    calc
-      (selectedCount : ENNReal) = ∑ _selected : Fin selectedCount, (1 : ENNReal) := by simp
-      _ ≤ _ := Finset.sum_le_sum (fun selected _ => by
-        rw [show volume (intervals selected) = ENNReal.ofReal (upper selected - lower selected) by
-          exact Real.volume_Ioo]
-        exact_mod_cast (ENNReal.ofReal_le_ofReal (length_bound selected)))
-  have bound := count_bound.trans sum_volume
-  rw [Real.volume_Icc, sub_zero] at bound
-  have real_bound := ENNReal.toReal_mono (by simp : ENNReal.ofReal side ≠ ⊤) bound
-  simpa [ENNReal.toReal_ofReal packing.side_nonnegative] using real_bound
+  exact count_le_of_disjoint_unit_intervals lower upper packing.side_nonnegative
+    length_bound intervals_disjoint union_subset
 
 theorem count_le_side_of_left_points
     {count selectedCount : ℕ} {side : ℝ} (packing : Packing count side)

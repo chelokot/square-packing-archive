@@ -3,10 +3,17 @@ import SquarePackingArchive.Area
 import SquarePackingArchive.Unavoidable
 import SquarePackingArchive.GridObstruction
 import SquarePackingArchive.Triangle
+import SquarePackingArchive.TriangleRegions
 import SquarePackingArchive.Rectangle
 import SquarePackingArchive.Friedman
 import SquarePackingArchive.FriedmanStrip
 import SquarePackingArchive.MovingUnavoidable
+import SquarePackingArchive.PackingPointCapacity
+import SquarePackingArchive.Stromquist
+import SquarePackingArchive.StromquistPentagon
+import SquarePackingArchive.StromquistOwnership
+import SquarePackingArchive.BentzExceptionalSquare
+import SquarePackingArchive.BentzOrderedChords
 import SquarePackingArchive.StaggeredLattice
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
@@ -44,6 +51,8 @@ import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
+import SquarePackingArchive.Records.Square6
+import SquarePackingArchive.Records.Square13
 import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.Square15
 import SquarePackingArchive.Records.Square24

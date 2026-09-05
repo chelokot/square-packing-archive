@@ -33,6 +33,8 @@ authors, sources, and available formal proofs.
   [Friedman](docs/friedman-unavoidable-formalization.md),
   [Bentz lattice](docs/bentz-lattice-formalization.md), and
   [moving-configuration](docs/bentz-moving-unavoidable-formalization.md) notes.
+  Work on 6, 10, 13, 22, and 33 is tracked in the
+  [small-record proof status](docs/small-records-formalization.md).
 - A generated dashboard with a proof matrix, historical coverage graph, record
   timelines, source links, and an interactive packing viewer.
 - Viewer controls for zoom, pan, view rotation, square inspection, exact

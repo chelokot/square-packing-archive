@@ -2,6 +2,8 @@ import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
+import SquarePackingArchive.Records.Square6
+import SquarePackingArchive.Records.Square13
 import SquarePackingArchive.Records.Square10
 import SquarePackingArchive.Records.Square33
 import SquarePackingArchive.Records.Square8
@@ -19,6 +21,10 @@ import SquarePackingArchive.GridObstruction
 import SquarePackingArchive.Friedman
 import SquarePackingArchive.FriedmanStrip
 import SquarePackingArchive.MovingUnavoidable
+import SquarePackingArchive.StromquistPentagon
+import SquarePackingArchive.StromquistOwnership
+import SquarePackingArchive.BentzExceptionalSquare
+import SquarePackingArchive.BentzOrderedChords
 import SquarePackingArchive.Rectangle
 import SquarePackingArchive.Resource
 import SquarePackingArchive.NagamochiResource
@@ -56,6 +62,27 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.Square10.s10_le_goebel
 #print axioms SquarePackingArchive.Records.Square33.s33_lower_bound
 #print axioms SquarePackingArchive.Records.Square33.s33_eq_six
+#print axioms SquarePackingArchive.Packing.exists_closed_disjoint_family_in_larger_container
+#print axioms SquarePackingArchive.Records.Square6.center_free_closed_family_has_two_matchings
+#print axioms SquarePackingArchive.Records.Square6.SingletonPair.allowed
+#print axioms SquarePackingArchive.Records.Square6.corner_pair_forces_corner
+#print axioms SquarePackingArchive.Records.Square6.three_contacts_left_intercept
+#print axioms SquarePackingArchive.PlacedSquare.contains_triangleVertex_of_cross_nonnegative
+#print axioms SquarePackingArchive.Stromquist.lemma4_first
+#print axioms SquarePackingArchive.Stromquist.lemma4_second
+#print axioms SquarePackingArchive.Stromquist.lemma4_bentz_first
+#print axioms SquarePackingArchive.Stromquist.lemma4_bentz_second
+#print axioms SquarePackingArchive.Stromquist.lemma4_bentz_third
+#print axioms SquarePackingArchive.Stromquist.lemma5
+#print axioms SquarePackingArchive.Stromquist.TenPoints.unavoidable
+#print axioms SquarePackingArchive.Stromquist.TenPoints.exists_namedFamily_of_packing_below
+#print axioms SquarePackingArchive.Records.Square13.initialPoints_unavoidable
+#print axioms SquarePackingArchive.Records.Square13.packing_has_two_corner_restricted_points
+#print axioms SquarePackingArchive.Bentz.middle_exception_impossible
+#print axioms SquarePackingArchive.Bentz.bottom_exception_impossible
+#print axioms SquarePackingArchive.Bentz.vertical_unit_chord_of_center_le_eleven_tenths
+#print axioms SquarePackingArchive.Bentz.count_lt_cutoff_of_unit_chords_below
+#print axioms SquarePackingArchive.Bentz.count_lt_remaining_of_unit_chords_above
 #print axioms SquarePackingArchive.PlacedSquare.AxisAligned.contains_interiorGridPoint
 #print axioms SquarePackingArchive.Packing.covered_square_count_le_point_count
 #print axioms SquarePackingArchive.Packing.gridAvoidingSquares_card_lower_bound
