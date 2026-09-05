@@ -651,7 +651,7 @@
       "id": "exact-22-bentz",
       "n": 22,
       "relation": "exact",
-      "value": { "decimal": "5", "expression": "5" },
+      "value": { "decimal": "5", "expression": "5", "lean": "5" },
       "announcedAt": "2018-10",
       "contributors": [{ "author": "bentz", "role": "prover" }],
       "evidence": [
@@ -659,6 +659,14 @@
           "kind": "published-proof",
           "status": "published",
           "source": "bentz-2018"
+        },
+        {
+          "kind": "lean-proof",
+          "status": "lean-checked",
+          "source": "archive-research-2026",
+          "artifact": "formal/SquarePackingArchive/Records/Square22.lean",
+          "theorem": "SquarePackingArchive.Records.Square22.s22_eq_five",
+          "checkedAt": "2026-09-05"
         }
       ],
       "configuration": "square-22-grid",

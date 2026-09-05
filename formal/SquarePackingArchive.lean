@@ -59,6 +59,7 @@ import SquarePackingArchive.Records.Square24
 import SquarePackingArchive.Records.Square23
 import SquarePackingArchive.Records.Square34
 import SquarePackingArchive.Records.Square33
+import SquarePackingArchive.Records.Square22
 import SquarePackingArchive.Records.Square46
 import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square68

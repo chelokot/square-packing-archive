@@ -6,6 +6,7 @@ import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square10
 import SquarePackingArchive.Records.Square11
 import SquarePackingArchive.Records.Square15
+import SquarePackingArchive.Records.Square22
 import SquarePackingArchive.Records.Square23
 import SquarePackingArchive.Records.Square24
 import SquarePackingArchive.Records.Square33
@@ -68,6 +69,9 @@ example : SquarePackingArchive.IsMinimumSide 15 (4) :=
 
 example : SquarePackingArchive.IsMinimumSide 16 (4) :=
   SquarePackingArchive.Records.SquareNumbers.s16_eq_four
+
+example : SquarePackingArchive.IsMinimumSide 22 (5) :=
+  SquarePackingArchive.Records.Square22.s22_eq_five
 
 example : SquarePackingArchive.IsMinimumSide 23 (5) :=
   SquarePackingArchive.Records.Square23.s23_eq_five

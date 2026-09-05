@@ -20,6 +20,18 @@ lemma PlacedSquare.interiorContains_vertical_between
     · simpa [upper_eq] using upper_inside
   · simpa [← lower_eq] using lower_inside
 
+lemma PlacedSquare.interiorContains_horizontal_between
+    (square : PlacedSquare) {height lower middle upper : ℝ}
+    (lower_inside : square.InteriorContains ⟨lower, height⟩)
+    (upper_inside : square.InteriorContains ⟨upper, height⟩)
+    (lower_bound : lower ≤ middle) (upper_bound : middle ≤ upper) :
+    square.InteriorContains ⟨middle, height⟩ := by
+  exact (square.interiorContains_swap_iff ⟨middle, height⟩).1
+    (square.swap.interiorContains_vertical_between
+      ((square.interiorContains_swap_iff ⟨lower, height⟩).2 lower_inside)
+      ((square.interiorContains_swap_iff ⟨upper, height⟩).2 upper_inside)
+      lower_bound upper_bound)
+
 lemma PlacedSquare.exists_lower_vertical_interior
     (square : PlacedSquare) {line height : ℝ}
     (inside : square.InteriorContains ⟨line, height⟩) :

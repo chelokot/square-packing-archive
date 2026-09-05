@@ -1,20 +1,22 @@
 # Proof status: 6, 10, 13, 22, and 33 squares
 
-The complete minimum-side theorem is checked for **33 squares**:
-`SquarePackingArchive.Records.Square33.s33_eq_six : IsMinimumSide 33 6`.
+The complete minimum-side theorems are checked for **22 and 33 squares**:
 
-The other four exact results remain **Published · awaiting Lean**. A checked
+- `SquarePackingArchive.Records.Square22.s22_eq_five : IsMinimumSide 22 5`.
+- `SquarePackingArchive.Records.Square33.s33_eq_six : IsMinimumSide 33 6`.
+
+The other three exact results remain **Published · awaiting Lean**. A checked
 construction proves an upper bound; checked lemmas alone do not prove optimality.
 
 ## Completed parts
 
-| Squares | Checked in Lean                                                                                                                                                                                 | Still needed for optimality                                                         |
-| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| 6       | The two seven-point configurations, their incidence restrictions, the two possible center-free matchings, and explicit contact-coordinate identities.                                           | Excluding the remaining arrangements, including the center-covered case.            |
-| 10      | The exact Göbel construction, Stromquist's boundary quadrilateral and pentagon lemmas, the initial ten-point unavoidable set, and assignment of these points to a hypothetical smaller packing. | The subsequent point replacements and final contradiction.                          |
-| 13      | Bentz's initial sixteen-point unavoidable set and the conclusion that at least two corner points have singleton owners.                                                                         | The replacement-point lemmas and the adjacent/non-adjacent case analysis.           |
-| 22      | The exceptional-square distance inequalities and the boundary-chord estimate.                                                                                                                   | Connecting the moving configurations, their exceptional point, and the final count. |
-| 33      | The full lower bound and matching grid construction.                                                                                                                                            | Nothing.                                                                            |
+| Squares | Checked in Lean                                                                                                                                                                                 | Still needed for optimality                                               |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| 6       | The two seven-point configurations, their incidence restrictions, the two possible center-free matchings, and explicit contact-coordinate identities.                                           | Excluding the remaining arrangements, including the center-covered case.  |
+| 10      | The exact Göbel construction, Stromquist's boundary quadrilateral and pentagon lemmas, the initial ten-point unavoidable set, and assignment of these points to a hypothetical smaller packing. | The subsequent point replacements and final contradiction.                |
+| 13      | Bentz's initial sixteen-point unavoidable set and the conclusion that at least two corner points have singleton owners.                                                                         | The replacement-point lemmas and the adjacent/non-adjacent case analysis. |
+| 22      | The full lower bound and matching grid construction.                                                                                                                                            | Nothing.                                                                  |
+| 33      | The full lower bound and matching grid construction.                                                                                                                                            | Nothing.                                                                  |
 
 The initial configurations and geometric lemmas cover arbitrary rotations. The
 packing arguments start with interior-disjoint squares; where a proof needs

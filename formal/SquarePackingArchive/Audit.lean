@@ -6,6 +6,7 @@ import SquarePackingArchive.Records.Square6
 import SquarePackingArchive.Records.Square13
 import SquarePackingArchive.Records.Square10
 import SquarePackingArchive.Records.Square33
+import SquarePackingArchive.Records.Square22
 import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.Square15
 import SquarePackingArchive.Records.Square24
@@ -62,6 +63,8 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Records.Square10.s10_le_goebel
 #print axioms SquarePackingArchive.Records.Square33.s33_lower_bound
 #print axioms SquarePackingArchive.Records.Square33.s33_eq_six
+#print axioms SquarePackingArchive.Records.Square22.s22_lower_bound
+#print axioms SquarePackingArchive.Records.Square22.s22_eq_five
 #print axioms SquarePackingArchive.Packing.exists_closed_disjoint_family_in_larger_container
 #print axioms SquarePackingArchive.Records.Square6.center_free_closed_family_has_two_matchings
 #print axioms SquarePackingArchive.Records.Square6.SingletonPair.allowed

@@ -41,5 +41,31 @@ Its axiom audit lists only `propext`, `Classical.choice`, and `Quot.sound`.
 
 The main modules are `BentzSixRows.lean`, `BentzSixRowsShift.lean`,
 `BentzSixRowsEndpoint.lean`, `BentzSixRowsCombine.lean`, and `BentzLineCuts.lean`.
-The **22-square result remains separate**: its extra point makes the assignment
-argument different, and it is not marked Lean verified by this proof.
+
+## The 22-square proof
+
+The full theorem **s(22) = 5** is also checked on 2026-09-05:
+`SquarePackingArchive.Records.Square22.s22_eq_five : IsMinimumSide 22 5`.
+
+This case uses two staggered configurations: 22 red points and 23 blue points
+in five rows. The extra blue point means some points may be uncovered or share
+a square. A counting argument puts all such points in one square, unless just
+one point is uncovered. A reflection makes the leftmost blue points uniquely
+assigned; at most one of the three blue rows can obstruct horizontal motion.
+
+Endpoint replacements identify five distinct squares, one per row. Four reach
+the narrow left strip and therefore have unit-length chords on x = 451/500.
+For the remaining square, these four chords exclude specific points on that
+line. Exact distance inequalities then force a fifth unit chord. Five disjoint
+unit chords cannot fit in a container of side less than five. A 5×5 grid with
+three squares removed gives the matching upper bound.
+
+The formal argument may first enlarge a hypothetical container to a side of
+at least 4.999, still below five. This preserves the packing and supplies the
+rational margins used in the distance estimates. Both final theorems cover
+arbitrary rotations and allow squares to touch. Neither assumes any unproved
+geometric lemma.
+
+The 22-square modules are `BentzFiveRows.lean`, `BentzFiveRowsMotion.lean`,
+`BentzFiveRowsReflection.lean`, `BentzFiveRowsEndpoint.lean`,
+`BentzFiveRowsWitnesses.lean`, and `BentzFiveRowsContradiction.lean`.
