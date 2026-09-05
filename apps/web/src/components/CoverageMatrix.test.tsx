@@ -16,6 +16,22 @@ const cellMarkup = (count: number): string => {
 };
 
 describe("coverage matrix claim types", () => {
+  test("highlights upper-bound symbols without changing evidence colors", () => {
+    for (const count of [11, 12, 68, 69]) {
+      expect(cellMarkup(count)).toMatch(
+        /<span[^>]*class="[^"]*text-bound[^"]*"[^>]*>≤<\/span>/,
+      );
+    }
+    expect(cellMarkup(11)).toContain("bg-paper");
+    for (const count of [12, 68, 69]) {
+      expect(cellMarkup(count)).toContain("bg-forest-soft");
+    }
+    expect(cellMarkup(13)).not.toContain("text-bound");
+    expect(markup).toMatch(
+      /<span[^>]*class="[^"]*text-bound[^"]*"[^>]*>≤<\/span>/,
+    );
+  });
+
   test("bounds tooltips by the grid instead of the surrounding window", () => {
     expect(markup).toContain('class="@container grid grid-cols-10 gap-1"');
     for (let count = 1; count <= 100; count += 1) {

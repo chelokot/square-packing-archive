@@ -16,6 +16,7 @@ const colors = {
 } satisfies Record<VerificationLevel, { fill: string; ink: string }>;
 
 const emptyColors = { fill: "#fffef9", ink: "#686c62" };
+const upperBoundInk = "#a13f35";
 
 export const CoverageOverview = ({ archive }: { archive: ArchiveManifest }) => (
   <svg
@@ -78,7 +79,7 @@ export const CoverageOverview = ({ archive }: { archive: ArchiveManifest }) => (
                 y="31"
                 textAnchor="end"
                 fontSize="10"
-                fill={palette.ink}
+                fill={claim.relation === "upper" ? upperBoundInk : palette.ink}
               >
                 {claimRelationSymbols[claim.relation]}
               </text>
@@ -88,7 +89,11 @@ export const CoverageOverview = ({ archive }: { archive: ArchiveManifest }) => (
       })}
       {Object.entries(claimRelationSymbols).map(([relation, symbol], index) => (
         <g key={relation} transform={`translate(${22 + index * 130}, 282)`}>
-          <text fontFamily="Consolas, monospace" fontSize="14">
+          <text
+            fontFamily="Consolas, monospace"
+            fontSize="14"
+            fill={relation === "upper" ? upperBoundInk : undefined}
+          >
             {symbol}
           </text>
           <text x="18" fontSize="11">

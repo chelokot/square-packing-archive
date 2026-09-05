@@ -6,6 +6,23 @@ import { CoverageOverview } from "./CoverageOverview.tsx";
 const markup = renderToStaticMarkup(<CoverageOverview archive={archive} />);
 
 describe("README coverage overview", () => {
+  test("uses red only for upper-bound symbols, including the legend", () => {
+    const symbols = [
+      ...markup.matchAll(/<text[^>]*fill="(#a13f35)"[^>]*>([^<]*)<\/text>/g),
+    ];
+    expect(symbols).toHaveLength(
+      1 + [...markup.matchAll(/<title>n = \d+: Upper bound/g)].length,
+    );
+    expect(symbols.every((symbol) => symbol[2] === "≤")).toBe(true);
+    for (const count of [11, 12, 68, 69]) {
+      const cell = markup.match(new RegExp(`<g data-n="${count}"[^]*?</g>`));
+      expect(cell![0]).toContain('fill="#a13f35">≤</text>');
+      expect(cell![0]).toContain(
+        count === 11 ? 'fill="#f5f3ec"' : 'fill="#e1e9dc"',
+      );
+    }
+  });
+
   test("renders every square count exactly once in order", () => {
     const counts = [...markup.matchAll(/data-n="(\d+)"/g)].map((match) =>
       Number(match[1]),

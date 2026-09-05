@@ -84,7 +84,7 @@ export const CoverageMatrix = ({
               {claim !== undefined && (
                 <span
                   aria-hidden="true"
-                  className="absolute right-0.5 bottom-0.5 text-[0.6rem] leading-none"
+                  className={`absolute right-0.5 bottom-0.5 text-[0.6rem] leading-none ${claim.relation === "upper" ? "text-bound" : ""}`}
                 >
                   {claimRelationSymbols[claim.relation]}
                 </span>
@@ -102,7 +102,10 @@ export const CoverageMatrix = ({
       <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-[0.65rem] text-muted">
         {Object.entries(claimRelationSymbols).map(([relation, symbol]) => (
           <span key={relation} className="flex items-center gap-1.5">
-            <span className="font-mono text-xs" aria-hidden="true">
+            <span
+              className={`font-mono text-xs ${relation === "upper" ? "text-bound" : ""}`}
+              aria-hidden="true"
+            >
               {symbol}
             </span>
             {copy.claimRelations[relation as keyof typeof claimRelationSymbols]}
