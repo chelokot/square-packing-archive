@@ -28,7 +28,11 @@ Tracker records, publications, computational certificates, and Lean proofs are
 different evidence kinds. Every catalog claim must include its own `lean-proof`
 evidence, including inactive historical records. The other evidence kinds retain
 source provenance. Results awaiting formalization belong in GitHub issues.
-The public matrix uses color for exactness, not evidence status.
+The public matrix uses green for proved optima, amber for nontrivial bounds,
+and white for basic grid bounds, not evidence status. An upper bound is colored
+amber only when its displayed side is below `ceil(sqrt(n))`; a catalogued grid
+bound such as `s(12) ≤ 4` stays white. Exact claims take precedence, even when
+their optimal construction is a grid.
 
 Each Lean evidence record requires `checkedAt`, the full calendar date
 (`YYYY-MM-DD`) when that theorem was first recorded as checked for this claim.

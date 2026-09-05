@@ -6,10 +6,11 @@ import { CoverageOverview } from "./CoverageOverview.tsx";
 const markup = renderToStaticMarkup(<CoverageOverview archive={archive} />);
 
 describe("README coverage overview", () => {
-  test("shows only a number in each cell, with a two-color legend", () => {
-    expect(markup.match(/<text /g)).toHaveLength(105);
+  test("shows only a number in each cell, with a three-color legend", () => {
+    expect(markup.match(/<text /g)).toHaveLength(106);
     expect(markup).toContain("Proved optimal");
-    expect(markup).toContain("Bound only");
+    expect(markup).toContain("Nontrivial bound");
+    expect(markup).toContain("Grid bound");
     expect(markup).not.toContain("Lean verified");
     expect(markup).not.toContain(">≤</text>");
     expect(markup).not.toContain(">=</text>");
@@ -29,7 +30,11 @@ describe("README coverage overview", () => {
     [6, "Exact", "#e1e9dc"],
     [10, "Exact", "#e1e9dc"],
     [64, "Exact", "#e1e9dc"],
-    [69, "Upper bound", "#fffef9"],
+    [11, "Upper bound", "#f3e8d4"],
+    [12, "Upper bound", "#fffef9"],
+    [27, "Upper bound", "#f3e8d4"],
+    [50, "Upper bound", "#f3e8d4"],
+    [69, "Upper bound", "#f3e8d4"],
     [13, "Exact", "#e1e9dc"],
     [22, "Exact", "#e1e9dc"],
     [33, "Exact", "#e1e9dc"],
@@ -59,6 +64,9 @@ describe("README coverage overview", () => {
       "n = 69: Upper bound · s(69) ≤ 9 · Basic grid bound",
     );
     expect(updated).not.toContain("s(69) ≤ 8.8272");
+    expect(updated.match(/<g data-n="69"[^]*?<\/g>/)![0]).toContain(
+      'fill="#fffef9"',
+    );
   });
 
   test("does not manufacture verification without a baseline policy", () => {

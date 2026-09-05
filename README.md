@@ -10,10 +10,11 @@ side length. Squares may rotate; their interiors cannot overlap.
 
 **[Open the interactive archive →](https://chelokot.github.io/square-packing-archive/)**
 
-[![Packing results for 1–100 squares. Green marks proved optima; white marks bounds only. Click to explore.](docs/assets/coverage.svg)](https://chelokot.github.io/square-packing-archive/#explore)
+[![Packing results for 1–100 squares. Green: proved optimal; amber: nontrivial bound; white: basic grid bound. Click to explore.](docs/assets/coverage.svg)](https://chelokot.github.io/square-packing-archive/#explore)
 
 **Every result has a kernel-checked Lean proof.** Green cells mark proved optima;
-white cells mark bounds only. Select a count to inspect the packing, coordinates,
+amber cells mark nontrivial bounds; white cells mark basic grid bounds.
+Select a count to inspect the packing, coordinates,
 authors, sources, and proof.
 
 ## Selected results

@@ -28,9 +28,9 @@ export const copy = {
   matrixTitle: "Choose the number of squares",
   coverageOverviewTitle: "Packing results · 1–100 squares",
   coverageOverviewDescription:
-    "Green cells mark proved optima. White cells mark bounds only. Every result has a Lean proof.",
+    "Green cells mark proved optima. Amber cells mark nontrivial bounds. White cells mark basic grid bounds. Every result has a Lean proof.",
   coverageOverviewScope:
-    "Selected records + basic grid bounds · Green: proved optimal · White: bound only",
+    "Green: proved optimal · Amber: nontrivial bound · White: basic grid bound",
   claimRelations: {
     exact: "Exact",
     upper: "Upper bound",
@@ -39,7 +39,8 @@ export const copy = {
   matrixCellLabel: (count: number, description: string) =>
     `n = ${count}: ${description}`,
   matrixExact: "Proved optimal",
-  matrixBound: "Bound only",
+  matrixBound: "Nontrivial bound",
+  matrixGrid: "Grid bound",
   gridBaseline: "Basic grid bound",
   emptyStatus: "Not catalogued",
   viewerTitle: (count: number) => `${count} unit squares`,
@@ -96,7 +97,7 @@ export const copy = {
   coverageData: "Show yearly counts",
   proofTitle: "Every result has a proof",
   proofDescription:
-    "Every result in this archive requires a kernel-checked Lean proof. Green cells mark proved optima; white cells mark bounds only. Results awaiting formalization belong in GitHub issues.",
+    "Every result in this archive requires a kernel-checked Lean proof. Green cells mark proved optima; amber cells mark nontrivial bounds; white cells mark basic grid bounds. Results awaiting formalization belong in GitHub issues.",
   pendingResults: "Pending results & contributions",
   proofLink: "Read the Lean library",
   sourcesTitle: "Built on the work of others",

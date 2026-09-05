@@ -39,16 +39,21 @@ describe("coverage matrix", () => {
     expect(repeated).toContain(">34</span> proved optimal");
   });
 
-  test("uses green only for proved optima and white for bounds", () => {
+  test("distinguishes optima, nontrivial bounds and basic grids", () => {
     for (const count of [5, 6, 10, 13, 22, 33, 64]) {
       expect(cellMarkup(count)).toContain("bg-forest-soft");
     }
-    for (const count of [11, 12, 61, 68, 69, 100]) {
+    for (const count of [11, 27, 38, 50, 52, 67, 68, 69, 84]) {
+      expect(cellMarkup(count)).toContain("bg-ochre-soft");
+      expect(cellMarkup(count)).not.toContain("bg-forest-soft");
+    }
+    for (const count of [12, 61, 100]) {
       expect(cellMarkup(count)).toContain("bg-surface");
       expect(cellMarkup(count)).not.toContain("bg-forest-soft");
     }
     expect(markup).toContain("Proved optimal");
-    expect(markup).toContain("Bound only");
+    expect(markup).toContain("Nontrivial bound");
+    expect(markup).toContain("Grid bound");
   });
 
   test("offers exactly 100 direct selections without redundant controls or symbols", () => {
