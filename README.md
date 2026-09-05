@@ -5,177 +5,94 @@
 [![Code license](https://img.shields.io/badge/code-Apache--2.0-70ddff)](LICENSE)
 [![Data license](https://img.shields.io/badge/data-CC%20BY%204.0-b9a4ff)](LICENSE-DATA)
 
-How small a square can contain `n` unit squares? Squares may rotate, but their
-interiors cannot overlap. Browse the packings, historical results, and proofs.
+How small a square can contain `n` unit squares? Write `s(n)` for its minimum
+side length. Squares may rotate; their interiors cannot overlap.
 
 **[Open the interactive archive →](https://chelokot.github.io/square-packing-archive/)**
 
 [![Packing results for 1–100 squares. Green marks proved optima; white marks bounds only. Click to explore.](docs/assets/coverage.svg)](https://chelokot.github.io/square-packing-archive/#explore)
 
 **Every result has a kernel-checked Lean proof.** Green cells mark proved optima;
-white cells mark bounds only. Each result links to its authors, sources, and proof.
-Results awaiting formalization belong in [GitHub issues](https://github.com/chelokot/square-packing-archive/issues).
+white cells mark bounds only. Select a count to inspect the packing, coordinates,
+authors, sources, and proof.
 
-Counts without catalogued records show a **basic grid bound**, `s(n) ≤ ⌈√n⌉`,
-with a Lean proof and viewable coordinates. These derived bounds are not
-historical records and do not contribute to the record or exact-result counts.
+## Selected results
 
-## What is live
+Formalized published optima and checked upper-bound constructions:
 
-- A versioned canonical manifest with claims, authors, sources, provenance, and
-  immutable record lineage.
-- Curated historical exact results below 100 and selected historical upper-bound
-  progressions.
-- Lean-verified exact rational certificates for the archive's new upper bounds
-  `s(68) ≤ 8.80339` and `s(69) ≤ 8.8272`.
-- A Lean geometry model, a formal area theorem, a proof that `s(m²) = m` for
-  every `m`, and a rational separating-axis certificate checker with a proved
-  soundness theorem.
-- Exact finite-point proofs, a shared staggered-lattice theorem, and a
-  continuous-motion preservation theorem; see the
-  [Friedman](docs/friedman-unavoidable-formalization.md),
-  [Bentz lattice](docs/bentz-lattice-formalization.md), and
-  [moving-configuration](docs/bentz-moving-unavoidable-formalization.md) notes.
-  Exact results for 6, 10, 13, 22, and 33 are also fully checked; see the
-  [proof notes](docs/small-records-formalization.md), including
-  [corrections to Bentz's auxiliary sets for 13](docs/bentz-13-formalization.md).
-- A generated dashboard with a proof matrix, historical coverage graph, record
-  timelines, source links, and an interactive packing viewer.
-- Viewer controls for zoom, pan, view rotation, square inspection, exact
-  coordinates, and filtering by orientation group.
-- A shared `?n=` selection across the matrix, viewer, and record history;
-  search by number, author, year, or value; accessible square inspection.
-- Separate publication and Lean check dates. Historical coverage uses the
-  date each proof was recorded as checked, rather than its publication year.
+| Result                         | Background                                                                                             | Lean                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| `s(n²−2) = n`, integer `n ≥ 2` | [Replacement compensation proof](docs/nagamochi-compensation-proof.md)                                 | [Theorem](formal/SquarePackingArchive/NagamochiPackingTheorem.lean)    |
+| `s(6) = 3`                     | [Stromquist’s point-set argument](docs/small-records-formalization.md#why-six-squares-need-side-three) | [Theorem](formal/SquarePackingArchive/Records/Square6Exact.lean)       |
+| `s(10) = 3 + √2 / 2`           | [Stromquist’s point-set argument](docs/small-records-formalization.md)                                 | [Theorem](formal/SquarePackingArchive/Records/Square10Exact.lean)      |
+| `s(13) = 4`                    | [Bentz’s strategy, with corrected auxiliary sets](docs/bentz-13-formalization.md)                      | [Theorem](formal/SquarePackingArchive/Records/Square13Exact.lean)      |
+| `s(22) = 5`                    | [Bentz’s staggered-lattice argument](docs/bentz-lattice-formalization.md)                              | [Theorem](formal/SquarePackingArchive/Records/Square22.lean)           |
+| `s(33) = 6`                    | [Bentz’s staggered-lattice argument](docs/bentz-lattice-formalization.md)                              | [Theorem](formal/SquarePackingArchive/Records/Square33.lean)           |
+| `s(68) ≤ 8.80339`              | [Inspect the construction](https://chelokot.github.io/square-packing-archive/?n=68#explore)            | [Certificate proof](formal/SquarePackingArchive/Records/Square68.lean) |
+| `s(69) ≤ 8.8272`               | [Inspect the construction](https://chelokot.github.io/square-packing-archive/?n=69#explore)            | [Certificate proof](formal/SquarePackingArchive/Records/Square69.lean) |
 
-The historical catalog is intentionally incomplete at the first release. Pending
-records are tracked in issues; import work never invents metadata or silently
-upgrades evidence.
+### Nagamochi’s lemma and a replacement proof
 
-## Architecture
+The archive contains a [Lean-checked counterexample to Lemma 1](docs/nagamochi-score-counterexample.md)
+in Nagamochi’s 2005 paper. **It contradicts the individual-square score lemma,
+not the packing theorem.** A [replacement argument](docs/nagamochi-compensation-proof.md)
+proves `s(n²−2) = n` without assuming that lemma. It covers square containers,
+not the paper’s full rectangular-container theorem.
 
-```text
-archive/
-  manifest.json                 canonical metadata and record lineage
-  configurations/              exact rational packing certificates
-apps/web/                       generated React dashboard and SVG viewer
-packages/domain/                schema, validation, and pure derived views
-formal/SquarePackingArchive/    definitions, sound checker, and Lean theorems
-scripts/                        deterministic import and code generation
-```
+## What is checked
 
-`archive/manifest.json` and its referenced configuration files are the only
-editable source of archive facts. The web bundle and README matrix are generated
-from them with `bun run archive:build`; `bun run archive:check` rejects a stale
-README matrix. Both views use the same claim-selection rules. Lean
-record modules are also generated from the same rational configurations, while
-their shared soundness proof is maintained by hand.
+Every catalogued claim, including historical entries, is checked against a Lean
+theorem with the stated square count, relation, and exact formal value. The
+dependency audit permits only `propext`, `Classical.choice`, and `Quot.sound`;
+it rejects unfinished proofs, custom axioms, and native-evaluation oracles.
+See the [data model](docs/data-model.md) for provenance and display conventions.
 
-## Trust model
+An upper bound proves that a packing exists, not that it is optimal or best known.
+The historical catalog is incomplete. Counts without a catalogued record use
+the basic grid bound `s(n) ≤ ⌈√n⌉`; these do not count as historical records.
+Publication dates and formalization dates are kept separate.
 
-Every catalogued claim, including inactive historical records, must link to a
-Lean theorem proving its exact stated bound or equality. Schema validation rejects
-records without proof metadata; the generated Lean audit checks the theorem
-against the claim. CI must pass without unfinished proofs before publication.
-The audit rejects transitive axiom dependencies outside `propext`,
-`Classical.choice`, and `Quot.sound`.
-Source attribution is preserved separately from formal verification.
+## Run and verify
 
-A proof of an upper bound establishes a construction, not optimality. For example,
-the public 11-square construction proves `s(11) ≤ 3.88`; the stronger reported
-algebraic bound awaits formalization in [issue #16](https://github.com/chelokot/square-packing-archive/issues/16).
-
-## Development
-
-Install [Bun](https://bun.sh/) and [elan](https://github.com/leanprover/elan),
-then run:
+Requires [Bun](https://bun.sh/), Python 3, and [elan](https://github.com/leanprover/elan).
+The Bun dependencies, Lean toolchain, and Mathlib revision are pinned.
 
 ```console
-bun install
-bun run archive:build
-bun run check
-bun run test
-bun run build
-
-cd formal
-lake update
-lake exe cache get
-lake build
-```
-
-The [public site](https://chelokot.github.io/square-packing-archive/) is deployed
-to GitHub Pages by [the Pages workflow](.github/workflows/pages.yml) on pushes
-to `main`, after both the archive/web checks and Lean build pass.
-
-The web application runs locally with:
-
-```console
+bun install --frozen-lockfile
 bun run dev
 ```
 
-The optional private Sites preview uses the same app, built at the origin root:
+To check the site, archive, and proofs from the repository root:
 
 ```console
-bun run site:package
+bun run build
+bun run check
+bun run test
+(cd formal && lake exe cache get && lake --wfail build)
 ```
 
-This produces `dist/site.tar.gz` containing only the built static site and its
-Sites deployment metadata. The normal build retains the GitHub Pages base path.
-The static packaging script follows the Sites archive contract; the bundled
-Worker-only packaging helper and Sites Vite plugin are not used by this app.
+See the [development guide](docs/development.md) for architecture, imports,
+additional tests, and deployment. GitHub Pages updates only after CI passes.
 
-The social-preview artwork at `apps/web/public/og.png` was generated with the
-built-in imagegen tool using the prompt recorded in [the artwork notes](docs/site-artwork.md).
+## Contribute
 
-## Reproducible imports
+- **A result with a Lean proof:** open a pull request following [CONTRIBUTING.md](CONTRIBUTING.md).
+- **A result awaiting formalization:** open an [issue](https://github.com/chelokot/square-packing-archive/issues), with sources, coordinates, and attribution.
+- Corrections, historical sources, and viewer improvements are welcome too.
 
-Grid packings and the 5- and 10-square Göbel constructions are generated from
-recipes in the manifest. Exact coordinates, including square-root expressions,
-can be inspected and downloaded in the viewer. Every build checks containment
-and non-overlap using exact arithmetic; this is separate from Lean verification
-of the bound or optimality claim.
-
-The archive's two initial computational records are imported from the companion
-research workspace and reconstructed with exact rational orientations:
-
-```console
-python scripts/import-research-records.py \
-  ../square-packing-research/records/square-68.json \
-  archive/configurations/square-68.json
-
-python scripts/generate-lean-certificates.py \
-  archive/configurations/square-68.json \
-  formal/SquarePackingArchive/Records/Square68.lean
-```
-
-The importer replaces every floating angle with a rational tangent-half-angle.
-Consequently, `sin θ`, `cos θ`, containment, and all separating axes are exact
-rational expressions inside Lean.
+For example, the stronger reported 11-square bound is tracked in [issue #16](https://github.com/chelokot/square-packing-archive/issues/16);
+the public construction currently proves only `s(11) ≤ 3.88`.
 
 ## Sources and gratitude
 
-The initial historical catalog is grounded in
-[Erich Friedman's survey](https://doi.org/10.37236/28) and the current
-[Squares in Squares tracker](https://kingbird.myphotos.cc/packing/squares_in_squares.html),
-whose high-precision SVG work is maintained by David Ellsworth. The archive is
-not a replacement for either: it is the formal, structured layer their work
-makes possible. Every individual result retains discoverer, optimizer, prover,
-date, and source roles where available.
-
-See [ATTRIBUTION.md](ATTRIBUTION.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
-Source-specific proof limitations and corrections are recorded in
-[the Nagamochi 2005 notes](docs/nagamochi-2005-formalization.md). In particular,
-Lean checks a [counterexample to the universal resource-score premise](docs/nagamochi-score-counterexample.md);
-the packing result nevertheless holds: Lean now proves `s(n²−2)=n` for every
-integer `n ≥ 2`, using [a replacement compensation argument](docs/nagamochi-compensation-proof.md)
-and separate proofs for the small cases. The false lemma is not assumed.
-The reusable
-finite-piercing reduction and its current geometric coverage are tracked in
-[the Friedman unavoidable-point notes](docs/friedman-unavoidable-formalization.md).
+This archive builds on [Erich Friedman’s survey](https://doi.org/10.37236/28),
+the [Squares in Squares tracker](https://kingbird.myphotos.cc/packing/squares_in_squares.html)
+maintained by David Ellsworth, and the original authors linked from each result.
+Discoverers, optimizers, and provers retain their separate credits.
+See [ATTRIBUTION.md](ATTRIBUTION.md).
 
 ## License
 
-Code, generators, the web application, and Lean sources are available under
-Apache-2.0. Canonical metadata, original prose, and original generated
-visualizations are available under CC BY 4.0. Linked publications and external
-sites remain under their own terms.
+[Apache-2.0](LICENSE) for code and Lean sources; [CC BY 4.0](LICENSE-DATA) for archive
+metadata, original prose, and generated visualizations. Linked papers and
+external materials retain their own licenses.
