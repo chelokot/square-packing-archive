@@ -1,11 +1,6 @@
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Real.Basic
+import SquarePackingArchive.Problem
 
 namespace SquarePackingArchive
-
-structure Point where
-  x : ℝ
-  y : ℝ
 
 def Point.translate (horizontal vertical : ℝ) (point : Point) : Point :=
   ⟨point.x + horizontal, point.y + vertical⟩
@@ -50,11 +45,6 @@ lemma Point.reflectY_injective (coordinateSum : ℝ) :
   have := congrArg (Point.reflectY coordinateSum) equality
   simpa using this
 
-structure Frame where
-  cosine : ℝ
-  sine : ℝ
-  unit : cosine ^ 2 + sine ^ 2 = 1
-
 lemma Frame.cosine_le_one (frame : Frame) (cosine_nonnegative : 0 ≤ frame.cosine) :
     frame.cosine ≤ 1 := by
   nlinarith [frame.unit, sq_nonneg frame.sine]
@@ -82,14 +72,6 @@ def Frame.reflectY (frame : Frame) : Frame where
   cosine := frame.cosine
   sine := -frame.sine
   unit := by nlinarith [frame.unit]
-
-def Frame.place (frame : Frame) (localX localY : ℝ) : Point :=
-  ⟨localX * frame.cosine - localY * frame.sine,
-    localX * frame.sine + localY * frame.cosine⟩
-
-structure PlacedSquare where
-  center : Point
-  frame : Frame
 
 def PlacedSquare.translate
     (horizontal vertical : ℝ) (square : PlacedSquare) : PlacedSquare where
@@ -154,22 +136,6 @@ lemma PlacedSquare.firstQuadrant_sine_nonnegative (square : PlacedSquare) :
   simp only [PlacedSquare.firstQuadrant]
   split_ifs <;>
     rfl
-
-def PlacedSquare.point (square : PlacedSquare) (localX localY : ℝ) : Point :=
-  let offset := square.frame.place localX localY
-  ⟨square.center.x + offset.x, square.center.y + offset.y⟩
-
-def PlacedSquare.Contains (square : PlacedSquare) (point : Point) : Prop :=
-  ∃ localX localY : ℝ,
-    |localX| ≤ 1 / 2 ∧
-      |localY| ≤ 1 / 2 ∧
-        point = square.point localX localY
-
-def PlacedSquare.InteriorContains (square : PlacedSquare) (point : Point) : Prop :=
-  ∃ localX localY : ℝ,
-    |localX| < 1 / 2 ∧
-      |localY| < 1 / 2 ∧
-        point = square.point localX localY
 
 def PlacedSquare.localX (square : PlacedSquare) (point : Point) : ℝ :=
   (point.x - square.center.x) * square.frame.cosine +
@@ -325,9 +291,6 @@ lemma PlacedSquare.contains_iff_localCoordinates
   split_ifs <;>
     simp [PlacedSquare.rotateHalf, PlacedSquare.rotateThreeQuarter]
 
-def Container.Contains (side : ℝ) (point : Point) : Prop :=
-  0 ≤ point.x ∧ point.x ≤ side ∧ 0 ≤ point.y ∧ point.y ≤ side
-
 @[simp] lemma Container.swap_contains_iff (side : ℝ) (point : Point) :
     Container.Contains side point.swap ↔ Container.Contains side point := by
   simp only [Container.Contains, Point.swap]
@@ -346,9 +309,6 @@ def Container.Contains (side : ℝ) (point : Point) : Prop :=
   simp only [Container.Contains, Point.reflectY]
   constructor <;> rintro ⟨left, right, bottom, top⟩ <;>
     exact ⟨left, right, by linarith, by linarith⟩
-
-def PlacedSquare.Fits (square : PlacedSquare) (side : ℝ) : Prop :=
-  ∀ ⦃point⦄, square.Contains point → Container.Contains side point
 
 @[simp] lemma PlacedSquare.swap_fits_iff
     (square : PlacedSquare) (side : ℝ) :
@@ -401,9 +361,6 @@ def PlacedSquare.Fits (square : PlacedSquare) (side : ℝ) : Prop :=
   · intro fits point point_mem
     exact fits ((square.firstQuadrant_contains_iff point).1 point_mem)
 
-def PlacedSquare.InteriorDisjoint (left right : PlacedSquare) : Prop :=
-  ∀ point, ¬(left.InteriorContains point ∧ right.InteriorContains point)
-
 lemma PlacedSquare.InteriorDisjoint.symm
     {left right : PlacedSquare} (disjoint : left.InteriorDisjoint right) :
     right.InteriorDisjoint left := by
@@ -425,23 +382,6 @@ def PlacedSquare.SeparatedOn
       (right.center.x - left.center.x)
       (right.center.y - left.center.y)
       axisX axisY|
-
-structure Packing (squareCount : ℕ) (side : ℝ) where
-  squares : Fin squareCount → PlacedSquare
-  side_nonnegative : 0 ≤ side
-  fits : ∀ index, (squares index).Fits side
-  disjoint : ∀ left right, left ≠ right →
-    (squares left).InteriorDisjoint (squares right)
-
-def HasPacking (squareCount : ℕ) (side : ℝ) : Prop :=
-  Nonempty (Packing squareCount side)
-
-def IsLowerBound (squareCount : ℕ) (side : ℝ) : Prop :=
-  ∀ candidateSide, HasPacking squareCount candidateSide → side ≤ candidateSide
-
-def IsMinimumSide (squareCount : ℕ) (side : ℝ) : Prop :=
-  HasPacking squareCount side ∧
-    IsLowerBound squareCount side
 
 def Packing.reindex
     {sourceCount targetCount : ℕ} {side : ℝ}

@@ -7,6 +7,9 @@
 
 How small a square can contain `n` unit squares? Write `s(n)` for its minimum
 side length. Squares may rotate; their interiors cannot overlap.
+The [canonical Lean problem statement](formal/SquarePackingArchive/Problem.lean)
+defines exactly what `s(n) = x` means; the [plain-language guide](docs/problem-definition.md)
+explains it line by line.
 
 **[Open the interactive archive →](https://chelokot.github.io/square-packing-archive/)**
 
@@ -84,6 +87,8 @@ additional tests, and deployment. GitHub Pages updates only after CI passes.
 
 - **A result with a Lean proof:** open a pull request following [CONTRIBUTING.md](CONTRIBUTING.md).
 - **A result awaiting formalization:** open an [issue](https://github.com/chelokot/square-packing-archive/issues), with sources, coordinates, and attribution.
+- **An active proof proposal:** [the `s(61) = 8` explanation](docs/proofs/s61/README.md)
+  links its exact certificate, checker, sources, and remaining review work.
 - Corrections, historical sources, and viewer improvements are welcome too.
 
 For example, the stronger reported 11-square bound is tracked in [issue #16](https://github.com/chelokot/square-packing-archive/issues/16);

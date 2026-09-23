@@ -1,6 +1,7 @@
 import {
   activeClaims,
   explorerBoundFor,
+  isVerified,
   type CompiledArchive,
 } from "@square-packing/domain";
 import { copy } from "../copy.ts";
@@ -21,7 +22,7 @@ export const CoverageMatrix = ({
 }) => {
   const exactCount = new Set(
     activeClaims(archive)
-      .filter((claim) => claim.relation === "exact")
+      .filter((claim) => claim.relation === "exact" && isVerified(claim))
       .map(({ n }) => n),
   ).size;
   return (
