@@ -8,12 +8,17 @@ follows from the finite certificate in `s61-certificate.txt`, the metadata
 checker in `verify_s61_metadata.py`, and the integer-arithmetic verifier in
 `verify_interval.rs`. Independent review of the reduction and verifier is
 welcome before promoting this to a catalog result.
+The [short explanation and full citations](../../docs/proofs/s61/README.md)
+are written for readers who do not want to inspect the checker first.
 
-The prior published lower bound is about 7.8906, from Bašić and Slivková,
+Nagamochi's general bound gives `s(61) ≥ 1 + 4√3 ≈ 7.9282` in
+[Packing Unit Squares in a Rectangle](https://doi.org/10.37236/1934)
+(2005). Bašić and Slivková independently obtained the weaker but
+case-specific bound `s(61) ≥ 7.8906` through piercing in
 [On optimal piercing of a square](https://doi.org/10.1016/j.dam.2018.03.048)
 (2018, Theorem 10). Bentz proved the analogous `s(m²−3)=m` cases for `m=5,6`
 in [Optimal Packings of 22 and 33 Unit Squares in a Square](https://arxiv.org/abs/1606.03746).
-Neither result gives `s(61)=8`.
+None of these results gives `s(61)=8`.
 
 In plain language, the certificate places weighted dots in the 8-by-8
 container. Every unit square, however positioned or rotated, must cover dots
