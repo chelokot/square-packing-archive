@@ -26,6 +26,13 @@ An exact migration needs a formally justified real-number construction or
 another formally justified semantics for the relevant real algebra and order,
 plus the geometry and arithmetic library used by the existing proofs.
 
+The shared number-theory foundation is being developed separately in
+[`chelokot/bend-math`](https://github.com/chelokot/bend-math). Its current
+`Real.bend` defines general regular Cauchy sequences, but the ordered-field
+and completeness theorems are not yet proved. The archive must not import it
+as a replacement for Mathlib until those laws and the packing-specific bridge
+are checked.
+
 Until that foundation and all theorem translations pass a Bend2 proof gate,
 deleting the Lean proofs would remove the archive's present verification
 evidence. No existing green status should be relabeled as Bend2-checked merely
