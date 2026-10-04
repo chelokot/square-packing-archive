@@ -65,27 +65,30 @@ def Membership.above_of(TPL, +a: F, +b: F, order: Or(LE(a, b), LE(a, b) -> Empty
 def Membership.above(TPL, +a: F, +b: F, holds: B.Bits.Holds(Bool.not(Membership.decide(TC, a, b)))) -> O.FieldOrder.Strict(TC, b, a):
   Membership.above_of(TC, a, b, AX.le_decidable(a, b), holds)
 
-def Membership.inside(TPL, +square: P.Problem.Square<F, field>, +point: P.Problem.Point<F>) -> Bool:
-  +x: F = G.Geometry.local_x(TC, square, point)
-  +y: F = G.Geometry.local_y(TC, square, point)
+def Membership.within(TPL, +x: F, +y: F) -> Bool:
   Bool.and(Membership.decide(TC, x, HALF), Bool.and(Membership.decide(TC, NEG(HALF), x),
     Bool.and(Membership.decide(TC, y, HALF), Membership.decide(TC, NEG(HALF), y))))
 
-def Membership.contains(TPL, +square: P.Problem.Square<F, field>, +point: P.Problem.Point<F>,
-  +holds: B.Bits.Holds(Membership.inside(TC, square, point))) -> P.Problem.Containment<F, field, square, point>:
-  +x: F = G.Geometry.local_x(TC, square, point)
-  +y: F = G.Geometry.local_y(TC, square, point)
+def Membership.inside(TPL, +square: P.Problem.Square<F, field>, +point: P.Problem.Point<F>) -> Bool:
+  Membership.within(TC, G.Geometry.local_x(TC, square, point), G.Geometry.local_y(TC, square, point))
+
+def Membership.local_of(TPL, +x: F, +y: F, +holds: B.Bits.Holds(Membership.within(TC, x, y))) -> G.Geometry.Local<F, field, x, y>:
   +first: Bool = Membership.decide(TC, x, HALF)
   +second: Bool = Membership.decide(TC, NEG(HALF), x)
   +third: Bool = Membership.decide(TC, y, HALF)
   +fourth: Bool = Membership.decide(TC, NEG(HALF), y)
   +rest: Bool = Bool.and(second, Bool.and(third, fourth))
   +last: Bool = Bool.and(third, fourth)
-  G.Geometry.local_contains(TC, square, point, G.Local{
+  G.Local{
     Membership.below(TC, x, HALF, B.Bits.left(first, rest, holds)),
     Membership.below(TC, NEG(HALF), x, B.Bits.left(second, last, B.Bits.right(first, rest, holds))),
     Membership.below(TC, y, HALF, B.Bits.left(third, fourth, B.Bits.right(second, last, B.Bits.right(first, rest, holds)))),
-    Membership.below(TC, NEG(HALF), y, B.Bits.right(third, fourth, B.Bits.right(second, last, B.Bits.right(first, rest, holds))))})
+    Membership.below(TC, NEG(HALF), y, B.Bits.right(third, fourth, B.Bits.right(second, last, B.Bits.right(first, rest, holds))))}
+
+def Membership.contains(TPL, +square: P.Problem.Square<F, field>, +point: P.Problem.Point<F>,
+  +holds: B.Bits.Holds(Membership.inside(TC, square, point))) -> P.Problem.Containment<F, field, square, point>:
+  G.Geometry.local_contains(TC, square, point,
+    Membership.local_of(TC, G.Geometry.local_x(TC, square, point), G.Geometry.local_y(TC, square, point), holds))
 
 def Membership.inside_local(TPL, +x: F, +y: F, local: G.Geometry.Local<F, field, x, y>) ->
   B.Bits.Holds(Bool.and(Membership.decide(TC, x, HALF), Bool.and(Membership.decide(TC, NEG(HALF), x),
@@ -162,6 +165,20 @@ def Membership.when(TPL, +square: P.Problem.Square<F, field>, +point: P.Problem.
   yes: P.Problem.Containment<F, field, square, point> -> Goal, no: B.Bits.Holds(Bool.not(Membership.inside(TC, square, point))) -> Goal) -> Goal:
   Membership.when_split(TC, square, point, Goal, yes, no, B.Bits.split(Membership.inside(TC, square, point)))
 
+def Membership.local_split(TPL, +x: F, +y: F, -Goal: Type,
+  yes: G.Geometry.Local<F, field, x, y> -> Goal, no: Membership.Missing(TC, x, y) -> Goal,
+  split: Or(B.Bits.Holds(Membership.within(TC, x, y)), B.Bits.Holds(Bool.not(Membership.within(TC, x, y))))) -> Goal:
+  match split:
+    case Inl{inside}:
+      yes(Membership.local_of(TC, x, y, inside))
+    case Inr{outside}:
+      no(Membership.missing_from(TC, x, y, B.Bits.not_both(Membership.decide(TC, x, HALF),
+        Bool.and(Membership.decide(TC, NEG(HALF), x), Bool.and(Membership.decide(TC, y, HALF), Membership.decide(TC, NEG(HALF), y))), outside)))
+
+def Membership.when_local(TPL, +x: F, +y: F, -Goal: Type,
+  yes: G.Geometry.Local<F, field, x, y> -> Goal, no: Membership.Missing(TC, x, y) -> Goal) -> Goal:
+  Membership.local_split(TC, x, y, Goal, yes, no, B.Bits.split(Membership.within(TC, x, y)))
+
 def Membership.cases_missing(TPL, +x: F, +y: F, -Goal: Type, missing: Membership.Missing(TC, x, y),
   x_high: O.FieldOrder.Strict(TC, HALF, x) -> Goal, x_low: O.FieldOrder.Strict(TC, x, NEG(HALF)) -> Goal,
   y_high: O.FieldOrder.Strict(TC, HALF, y) -> Goal, y_low: O.FieldOrder.Strict(TC, y, NEG(HALF)) -> Goal) -> Goal:
@@ -195,6 +212,9 @@ def Membership.cases_of(TPL, +a: F, +b: F, -Goal: Type, order: Or(LE(a, b), LE(a
       yes(below)
     case Inr{above}:
       no(Unit{})
+
+def Membership.bind(-A: Type, -Goal: Type, value: A, body: A -> Goal) -> Goal:
+  body(value)
 
 def Membership.gap(TPL, +u: F, +v: F, +strict: O.FieldOrder.Strict(TC, u, v)) -> LE(ZERO, ADD(v, NEG(u))):
   S.Scaling.fact(TC, u, v, O.FieldOrder.le_of_lt(TC, u, v, O.FieldOrder.lt_of(TC, u, v, strict)))

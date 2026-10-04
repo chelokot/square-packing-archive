@@ -53,27 +53,30 @@ def Membership.above_of(~F: Kind(&2), ~field: K.Field<F>, +a: F, +b: F, order: O
 def Membership.above(~F: Kind(&2), ~field: K.Field<F>, +a: F, +b: F, holds: B.Bits.Holds(Bool.not(Membership.decide(~F, ~field, a, b)))) -> O.FieldOrder.Strict(~F, ~field, b, a):
   Membership.above_of(~F, ~field, a, b, K.Field.le_decidable(F, field)(a, b), holds)
 
-def Membership.inside(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<F, field>, +point: P.Problem.Point<F>) -> Bool:
-  +x: F = G.Geometry.local_x(~F, ~field, square, point)
-  +y: F = G.Geometry.local_y(~F, ~field, square, point)
+def Membership.within(~F: Kind(&2), ~field: K.Field<F>, +x: F, +y: F) -> Bool:
   Bool.and(Membership.decide(~F, ~field, x, A.Algebra.half(~F, ~field)), Bool.and(Membership.decide(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), x),
     Bool.and(Membership.decide(~F, ~field, y, A.Algebra.half(~F, ~field)), Membership.decide(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), y))))
 
-def Membership.contains(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<F, field>, +point: P.Problem.Point<F>,
-  +holds: B.Bits.Holds(Membership.inside(~F, ~field, square, point))) -> P.Problem.Containment<F, field, square, point>:
-  +x: F = G.Geometry.local_x(~F, ~field, square, point)
-  +y: F = G.Geometry.local_y(~F, ~field, square, point)
+def Membership.inside(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<F, field>, +point: P.Problem.Point<F>) -> Bool:
+  Membership.within(~F, ~field, G.Geometry.local_x(~F, ~field, square, point), G.Geometry.local_y(~F, ~field, square, point))
+
+def Membership.local_of(~F: Kind(&2), ~field: K.Field<F>, +x: F, +y: F, +holds: B.Bits.Holds(Membership.within(~F, ~field, x, y))) -> G.Geometry.Local<F, field, x, y>:
   +first: Bool = Membership.decide(~F, ~field, x, A.Algebra.half(~F, ~field))
   +second: Bool = Membership.decide(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), x)
   +third: Bool = Membership.decide(~F, ~field, y, A.Algebra.half(~F, ~field))
   +fourth: Bool = Membership.decide(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), y)
   +rest: Bool = Bool.and(second, Bool.and(third, fourth))
   +last: Bool = Bool.and(third, fourth)
-  G.Geometry.local_contains(~F, ~field, square, point, G.Local{
+  G.Local{
     Membership.below(~F, ~field, x, A.Algebra.half(~F, ~field), B.Bits.left(first, rest, holds)),
     Membership.below(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), x, B.Bits.left(second, last, B.Bits.right(first, rest, holds))),
     Membership.below(~F, ~field, y, A.Algebra.half(~F, ~field), B.Bits.left(third, fourth, B.Bits.right(second, last, B.Bits.right(first, rest, holds)))),
-    Membership.below(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), y, B.Bits.right(third, fourth, B.Bits.right(second, last, B.Bits.right(first, rest, holds))))})
+    Membership.below(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), y, B.Bits.right(third, fourth, B.Bits.right(second, last, B.Bits.right(first, rest, holds))))}
+
+def Membership.contains(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<F, field>, +point: P.Problem.Point<F>,
+  +holds: B.Bits.Holds(Membership.inside(~F, ~field, square, point))) -> P.Problem.Containment<F, field, square, point>:
+  G.Geometry.local_contains(~F, ~field, square, point,
+    Membership.local_of(~F, ~field, G.Geometry.local_x(~F, ~field, square, point), G.Geometry.local_y(~F, ~field, square, point), holds))
 
 def Membership.inside_local(~F: Kind(&2), ~field: K.Field<F>, +x: F, +y: F, local: G.Geometry.Local<F, field, x, y>) ->
   B.Bits.Holds(Bool.and(Membership.decide(~F, ~field, x, A.Algebra.half(~F, ~field)), Bool.and(Membership.decide(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), x),
@@ -148,6 +151,20 @@ def Membership.when(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<
   yes: P.Problem.Containment<F, field, square, point> -> Goal, no: B.Bits.Holds(Bool.not(Membership.inside(~F, ~field, square, point))) -> Goal) -> Goal:
   Membership.when_split(~F, ~field, square, point, Goal, yes, no, B.Bits.split(Membership.inside(~F, ~field, square, point)))
 
+def Membership.local_split(~F: Kind(&2), ~field: K.Field<F>, +x: F, +y: F, -Goal: Type,
+  yes: G.Geometry.Local<F, field, x, y> -> Goal, no: Membership.Missing(~F, ~field, x, y) -> Goal,
+  split: Or(B.Bits.Holds(Membership.within(~F, ~field, x, y)), B.Bits.Holds(Bool.not(Membership.within(~F, ~field, x, y))))) -> Goal:
+  match split:
+    case Inl{inside}:
+      yes(Membership.local_of(~F, ~field, x, y, inside))
+    case Inr{outside}:
+      no(Membership.missing_from(~F, ~field, x, y, B.Bits.not_both(Membership.decide(~F, ~field, x, A.Algebra.half(~F, ~field)),
+        Bool.and(Membership.decide(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), x), Bool.and(Membership.decide(~F, ~field, y, A.Algebra.half(~F, ~field)), Membership.decide(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), y))), outside)))
+
+def Membership.when_local(~F: Kind(&2), ~field: K.Field<F>, +x: F, +y: F, -Goal: Type,
+  yes: G.Geometry.Local<F, field, x, y> -> Goal, no: Membership.Missing(~F, ~field, x, y) -> Goal) -> Goal:
+  Membership.local_split(~F, ~field, x, y, Goal, yes, no, B.Bits.split(Membership.within(~F, ~field, x, y)))
+
 def Membership.cases_missing(~F: Kind(&2), ~field: K.Field<F>, +x: F, +y: F, -Goal: Type, missing: Membership.Missing(~F, ~field, x, y),
   x_high: O.FieldOrder.Strict(~F, ~field, A.Algebra.half(~F, ~field), x) -> Goal, x_low: O.FieldOrder.Strict(~F, ~field, x, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field))) -> Goal,
   y_high: O.FieldOrder.Strict(~F, ~field, A.Algebra.half(~F, ~field), y) -> Goal, y_low: O.FieldOrder.Strict(~F, ~field, y, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field))) -> Goal) -> Goal:
@@ -181,6 +198,9 @@ def Membership.cases_of(~F: Kind(&2), ~field: K.Field<F>, +a: F, +b: F, -Goal: T
       yes(below)
     case Inr{above}:
       no(Unit{})
+
+def Membership.bind(-A: Type, -Goal: Type, value: A, body: A -> Goal) -> Goal:
+  body(value)
 
 def Membership.gap(~F: Kind(&2), ~field: K.Field<F>, +u: F, +v: F, +strict: O.FieldOrder.Strict(~F, ~field, u, v)) -> A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), A.Algebra.add(~F, ~field, v, A.Algebra.neg(~F, ~field, u))):
   S.Scaling.fact(~F, ~field, u, v, O.FieldOrder.le_of_lt(~F, ~field, u, v, O.FieldOrder.lt_of(~F, ~field, u, v, strict)))

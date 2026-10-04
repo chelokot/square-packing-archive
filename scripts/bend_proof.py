@@ -12,9 +12,30 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'bend' / 'bend-math' / 'tools'))
 
+import atexit
+import json
+import os
+
 import certificate
 
 PREFIX = 'A.Algebra.'
+CACHE_PATH = pathlib.Path(os.environ.get('BEND_PROOF_CACHE', pathlib.Path.home() / '.cache' / 'bend-proof-certificates.json'))
+CACHE = json.loads(CACHE_PATH.read_text()) if CACHE_PATH.exists() else {}
+
+
+@atexit.register
+def save_cache():
+    CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CACHE_PATH.write_text(json.dumps(CACHE))
+
+
+def search(*arguments):
+    """certificate.search, remembered across runs because the generators ask the same questions again."""
+    key = json.dumps(arguments)
+    if key not in CACHE:
+        found = certificate.search(*arguments)
+        CACHE[key] = None if found is None else certificate.render(*found)
+    return CACHE[key]
 
 
 def expand(src):
@@ -57,12 +78,12 @@ def le(names, value_terms, fact_texts, fact_proofs, equation_texts, equation_pro
        required=True, tail=None):
     """Certificate for lower <= upper. With `tail`, the last facts and all values and equations are named lets."""
     frozen = tail['facts'] if tail else []
-    found = certificate.search(names, list(fact_texts) + frozen, list(equation_texts), f'({upper}) - ({lower})', list(squares), products)
+    found = search(names, list(fact_texts) + frozen, list(equation_texts), f'({upper}) - ({lower})', list(squares), products)
     if found is None:
         if not required:
             return None
         raise SystemExit(f'no certificate for {lower} <= {upper} from {fact_texts} and {equation_texts}')
-    denominator, terms = certificate.render(*found)
+    denominator, terms = found
     if tail:
         fact_list = chain_with(lambda e, rest: f'C.MoreExprs{{{e}, {rest}}}', [term(t, names) for t in fact_texts], tail['name'])
         proof_list = chain_with(lambda p, rest: f'C.Both{{{p}, {rest}}}', list(fact_proofs), tail['name'] + '_proofs')
@@ -81,13 +102,12 @@ def chain_with(constructor, items, end):
 
 
 def same(names, value_terms, equation_texts, equation_proofs, left, right):
-    forward = certificate.search(names, [], list(equation_texts), f'({right}) - ({left})', [], 0)
-    backward = certificate.search(names, [], list(equation_texts), f'({left}) - ({right})', [], 0)
-    if forward is None or backward is None or forward[0] or backward[0]:
+    forward = search(names, [], list(equation_texts), f'({right}) - ({left})', [], 0)
+    backward = search(names, [], list(equation_texts), f'({left}) - ({right})', [], 0)
+    if forward is None or backward is None or forward[0] != '0n' or backward[0] != '0n':
         raise SystemExit(f'no certificate for {left} = {right}')
     return (f'C.Certificate.same(TC, {values(*value_terms)}, {exprs(equation_texts, names)}, {facts(*equation_proofs)}, '
-            f'{term(left, names)}, {term(right, names)}, {certificate.render(*forward)[1]}, {certificate.render(*backward)[1]}, '
-            f'{{==}}, {{==}})')
+            f'{term(left, names)}, {term(right, names)}, {forward[1]}, {backward[1]}, {{==}}, {{==}})')
 
 
 class T:
@@ -350,6 +370,10 @@ def one_of(ctx, square, points, refuter, stricts=()):
             if proof is None:
                 raise SystemExit(f'no refutation with {[(u.text, v.text) for u, v, _ in found]}')
             return proof
+        if found:
+            early = refuter.refute(current, found, splits=[])
+            if early is not None:
+                return early
         lx, ly, _ = current.locals_of[tuple(c.text for c in points[i])]
         h = current.var_term('h')
         cases = [(h, lx), (lx, -h), (h, ly), (ly, -h)]
