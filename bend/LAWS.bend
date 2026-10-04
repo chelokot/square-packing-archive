@@ -4,6 +4,7 @@ import ./bend-math/FieldRing.bend as R
 import ./Problem.bend as P
 import ./Geometry.bend as G
 import ./Symmetry.bend as Y
+import ./bend-math/Certificate.bend as C
 
 law square6_has_packing_at_three:
   for ~F: Kind(&2)
@@ -129,3 +130,90 @@ law reflect_y_interior:
   for +point: P.Problem.Point<F>
   for inside: P.Problem.InteriorContainment<F, field, square, point>
   P.Problem.InteriorContainment<F, field, Y.Symmetry.reflect_y(~F, ~field, sum, square), Y.Symmetry.reflect_y_point(~F, ~field, sum, point)>
+
+law swap_fits:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  for +side: F
+  for fits: Y.Symmetry.Fits(~F, ~field, square, side)
+  Y.Symmetry.Fits(~F, ~field, Y.Symmetry.swap(~F, ~field, square), side)
+
+law swap_fits_back:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  for +side: F
+  for fits: Y.Symmetry.Fits(~F, ~field, Y.Symmetry.swap(~F, ~field, square), side)
+  Y.Symmetry.Fits(~F, ~field, square, side)
+
+law reflect_x_fits:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  for +side: F
+  for fits: Y.Symmetry.Fits(~F, ~field, square, side)
+  Y.Symmetry.Fits(~F, ~field, Y.Symmetry.reflect_x(~F, ~field, side, square), side)
+
+law reflect_x_fits_back:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  for +side: F
+  for fits: Y.Symmetry.Fits(~F, ~field, Y.Symmetry.reflect_x(~F, ~field, side, square), side)
+  Y.Symmetry.Fits(~F, ~field, square, side)
+
+law reflect_y_fits:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  for +side: F
+  for fits: Y.Symmetry.Fits(~F, ~field, square, side)
+  Y.Symmetry.Fits(~F, ~field, Y.Symmetry.reflect_y(~F, ~field, side, square), side)
+
+law reflect_y_fits_back:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  for +side: F
+  for fits: Y.Symmetry.Fits(~F, ~field, Y.Symmetry.reflect_y(~F, ~field, side, square), side)
+  Y.Symmetry.Fits(~F, ~field, square, side)
+
+law turn_fits:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  for +side: F
+  for fits: Y.Symmetry.Fits(~F, ~field, square, side)
+  Y.Symmetry.Fits(~F, ~field, Y.Symmetry.turn(~F, ~field, square), side)
+
+law turn_fits_back:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  for +side: F
+  for fits: Y.Symmetry.Fits(~F, ~field, Y.Symmetry.turn(~F, ~field, square), side)
+  Y.Symmetry.Fits(~F, ~field, square, side)
+
+law first_quadrant_fits:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  for +side: F
+  for fits: Y.Symmetry.Fits(~F, ~field, square, side)
+  Y.Symmetry.Fits(~F, ~field, Y.Symmetry.first_quadrant(~F, ~field, square), side)
+
+law first_quadrant_fits_back:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  for +side: F
+  for fits: Y.Symmetry.Fits(~F, ~field, Y.Symmetry.first_quadrant(~F, ~field, square), side)
+  Y.Symmetry.Fits(~F, ~field, square, side)
+
+law first_quadrant_signs:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for +square: P.Problem.Square<F, field>
+  C.Certificate.Both<K.Field.le(F, field)(K.Field.zero(F, field), P.Problem.cosine(F, field, Y.Symmetry.first_quadrant(~F, ~field, square))),
+    K.Field.le(F, field)(K.Field.zero(F, field), P.Problem.sine(F, field, Y.Symmetry.first_quadrant(~F, ~field, square)))>

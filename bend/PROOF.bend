@@ -48,3 +48,36 @@ def Laws.reflect_y_contains(F, field, sum, square, point, inside):
 
 def Laws.reflect_y_interior(F, field, sum, square, point, inside):
   Y.Symmetry.reflect_y_interior(~F, ~field, sum, square, point, inside)
+
+def Laws.swap_fits(F, field, square, side, fits):
+  Y.Symmetry.swap_fits(~F, ~field, square, side, fits)
+
+def Laws.swap_fits_back(F, field, square, side, fits):
+  Y.Symmetry.swap_fits_back(~F, ~field, square, side, fits)
+
+def Laws.reflect_x_fits(F, field, square, side, fits):
+  Y.Symmetry.reflect_x_fits(~F, ~field, square, side, fits)
+
+def Laws.reflect_x_fits_back(F, field, square, side, fits):
+  Y.Symmetry.reflect_x_fits_back(~F, ~field, square, side, fits)
+
+def Laws.reflect_y_fits(F, field, square, side, fits):
+  Y.Symmetry.reflect_y_fits(~F, ~field, square, side, fits)
+
+def Laws.reflect_y_fits_back(F, field, square, side, fits):
+  Y.Symmetry.reflect_y_fits_back(~F, ~field, square, side, fits)
+
+def Laws.turn_fits(F, field, square, side, fits):
+  Y.Symmetry.turn_fits(~F, ~field, square, side, fits)
+
+def Laws.turn_fits_back(F, field, square, side, fits):
+  Y.Symmetry.turn_fits_back(~F, ~field, square, side, fits)
+
+def Laws.first_quadrant_fits(F, field, square, side, fits):
+  Y.Symmetry.first_quadrant_fits(~F, ~field, square, side, fits)
+
+def Laws.first_quadrant_fits_back(F, field, square, side, fits):
+  Y.Symmetry.first_quadrant_fits_back(~F, ~field, square, side, fits)
+
+def Laws.first_quadrant_signs(F, field, square):
+  Y.Symmetry.first_quadrant_signs(~F, ~field, square)
