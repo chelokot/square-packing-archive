@@ -18,6 +18,36 @@ jobs:
       id-token: write
     uses: ./.github/workflows/pages.yml
 
+  bend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: actions/checkout@v4
+        with:
+          repository: bendlang/bend
+          ref: 79df8d9c40722ee9507a1e253f283b51025f9d6c
+          path: bend-lang
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - name: Install the Lean toolchain of the proven Bend kernel
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.34.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check generated Bend sources are up to date
+        run: |
+          python3 scripts/generate-bend-square6.py
+          git diff --exit-code -- bend/Square6.bend
+      - name: Check Bend proofs with the proven kernel
+        run: bun bend-lang/bend2/main.ts bend/PROOF.bend --verdict
+      - name: Reject unchecked Bend escape hatches
+        run: |
+          if grep -nE '@unsafe|\bforeign\b|\?TODO|\baxiom\b' bend/*.bend; then
+            exit 1
+          fi
+
   archive-and-web:
     runs-on: ubuntu-latest
     steps:
