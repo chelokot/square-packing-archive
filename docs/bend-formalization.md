@@ -74,7 +74,8 @@ port is dominated by Stromquist's point-set argument. The order of work:
    the interface gains a square root of nonnegative elements, and the model
    moves from the rationals to a field with that root.
 3. **Geometry layer in `bend/`.** Port the rest of `Geometry.lean` (local
-   coordinates are done; translations, swaps, reflections, quarter turns and
+   coordinates and the five symmetries of a square are done; fits and
+   packings under those symmetries, the first-quadrant normal form and
    separation remain), the symmetries in `PackingSymmetry.lean`, the
    unavoidable-set framework in `Unavoidable.lean`, and the scaling to a
    closed-disjoint family in `PackingPointCapacity.lean`.

@@ -2,6 +2,7 @@ import Base
 import ./LAWS.bend as Laws
 import ./Square6.bend as S
 import ./Geometry.bend as G
+import ./Symmetry.bend as Y
 
 def Laws.square6_has_packing_at_three(F, field):
   S.Square6.packing(~F, ~field)
@@ -17,3 +18,33 @@ def Laws.interior_iff_local_coordinates_forward(F, field, square, point, interio
 
 def Laws.interior_iff_local_coordinates_backward(F, field, square, point, local):
   G.Geometry.local_interior(~F, ~field, square, point, local)
+
+def Laws.translate_contains(F, field, horizontal, vertical, square, point, inside):
+  Y.Symmetry.translate_contains(~F, ~field, horizontal, vertical, square, point, inside)
+
+def Laws.translate_interior(F, field, horizontal, vertical, square, point, inside):
+  Y.Symmetry.translate_interior(~F, ~field, horizontal, vertical, square, point, inside)
+
+def Laws.swap_contains(F, field, square, point, inside):
+  Y.Symmetry.swap_contains(~F, ~field, square, point, inside)
+
+def Laws.swap_interior(F, field, square, point, inside):
+  Y.Symmetry.swap_interior(~F, ~field, square, point, inside)
+
+def Laws.turn_contains(F, field, square, point, inside):
+  Y.Symmetry.turn_contains(~F, ~field, square, point, inside)
+
+def Laws.turn_interior(F, field, square, point, inside):
+  Y.Symmetry.turn_interior(~F, ~field, square, point, inside)
+
+def Laws.reflect_x_contains(F, field, sum, square, point, inside):
+  Y.Symmetry.reflect_x_contains(~F, ~field, sum, square, point, inside)
+
+def Laws.reflect_x_interior(F, field, sum, square, point, inside):
+  Y.Symmetry.reflect_x_interior(~F, ~field, sum, square, point, inside)
+
+def Laws.reflect_y_contains(F, field, sum, square, point, inside):
+  Y.Symmetry.reflect_y_contains(~F, ~field, sum, square, point, inside)
+
+def Laws.reflect_y_interior(F, field, sum, square, point, inside):
+  Y.Symmetry.reflect_y_interior(~F, ~field, sum, square, point, inside)
