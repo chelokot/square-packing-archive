@@ -3,6 +3,8 @@ import ./LAWS.bend as Laws
 import ./Square6.bend as S
 import ./Geometry.bend as G
 import ./Symmetry.bend as Y
+import ./Packings.bend as Q
+import ./Scaling.bend as Z
 
 def Laws.square6_has_packing_at_three(F, field):
   S.Square6.packing(~F, ~field)
@@ -81,3 +83,15 @@ def Laws.first_quadrant_fits_back(F, field, square, side, fits):
 
 def Laws.first_quadrant_signs(F, field, square):
   Y.Symmetry.first_quadrant_signs(~F, ~field, square)
+
+def Laws.swap_packing(F, field, count, side, packing):
+  Q.Packings.swap(~F, ~field, ~count, ~side, ~packing)
+
+def Laws.reflect_x_packing(F, field, count, side, packing):
+  Q.Packings.reflect_x(~F, ~field, ~count, ~side, ~packing)
+
+def Laws.reflect_y_packing(F, field, count, side, packing):
+  Q.Packings.reflect_y(~F, ~field, ~count, ~side, ~packing)
+
+def Laws.closed_disjoint_family_in_larger_container(F, field, count, side, packing, target, less, nonempty):
+  Z.Scaling.closed_family(~F, ~field, ~count, ~side, ~packing, target, less, nonempty)

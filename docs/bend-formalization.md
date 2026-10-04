@@ -75,10 +75,10 @@ port is dominated by Stromquist's point-set argument. The order of work:
    moves from the rationals to a field with that root.
 3. **Geometry layer in `bend/`.** Port the rest of `Geometry.lean` (local
    coordinates, the five symmetries of a square, fitting under them and the
-   first-quadrant normal form are done; packings under the symmetries and
-   separation remain), the symmetries in `PackingSymmetry.lean`, the
-   unavoidable-set framework in `Unavoidable.lean`, and the scaling to a
-   closed-disjoint family in `PackingPointCapacity.lean`.
+   first-quadrant normal form, packings under the symmetries and the scaling
+   to a closed-disjoint family from `PackingPointCapacity.lean` are done;
+   separation remains), and the unavoidable-set framework in
+   `Unavoidable.lean`.
 4. **Finite combinatorics.** The incidence and pigeonhole steps over the nine
    key points need counting lemmas over Bend lists or bounded naturals.
 5. **Stromquist's argument.** Port the `StromquistSix*` files, then the final

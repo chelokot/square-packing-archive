@@ -4,6 +4,10 @@ import ./bend-math/FieldRing.bend as R
 import ./Problem.bend as P
 import ./Geometry.bend as G
 import ./Symmetry.bend as Y
+import ./Packings.bend as S
+import ./Scaling.bend as Z
+import ./bend-math/FieldOrder.bend as O
+import ./bend-math/Natural.bend as N
 import ./bend-math/Certificate.bend as C
 
 law square6_has_packing_at_three:
@@ -217,3 +221,38 @@ law first_quadrant_signs:
   for +square: P.Problem.Square<F, field>
   C.Certificate.Both<K.Field.le(F, field)(K.Field.zero(F, field), P.Problem.cosine(F, field, Y.Symmetry.first_quadrant(~F, ~field, square))),
     K.Field.le(F, field)(K.Field.zero(F, field), P.Problem.sine(F, field, Y.Symmetry.first_quadrant(~F, ~field, square)))>
+
+law swap_packing:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  P.Problem.Packing<F, field, count, side>
+
+law reflect_x_packing:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  P.Problem.Packing<F, field, count, side>
+
+law reflect_y_packing:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  P.Problem.Packing<F, field, count, side>
+
+law closed_disjoint_family_in_larger_container:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +target: F
+  for +less: O.FieldOrder.Strict(~F, ~field, side, target)
+  for +nonempty: N.Natural.Le(1n, count)
+  Z.Scaling.ClosedFamily<F, field, count, target>
