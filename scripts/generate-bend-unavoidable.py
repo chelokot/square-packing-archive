@@ -243,8 +243,74 @@ def Unavoidable.triangle(TPL, {", ".join(params)}) -> {goal}:
 '''
 
 
+def cross(a, b, c):
+    """Twice the oriented area of the triangle a, b, c."""
+    return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+
+
+def triangle_points():
+    """The triangle lemma for a square and three points in container coordinates, with the centre's
+    barycentric weights written as oriented areas."""
+    ctx = Context()
+    cx = ctx.var('cx', 'P.Problem.center_x(F, field, square)')
+    cy = ctx.var('cy', 'P.Problem.center_y(F, field, square)')
+    c = ctx.var('c', 'P.Problem.cosine(F, field, square)')
+    s = ctx.var('s', 'P.Problem.sine(F, field, square)')
+    ctx.raw_equation(((c * c + s * s) - 1).text, 'Unavoidable.unit(TC, square)')
+    px = [ctx.var(f'px{i}', f'px{i}') for i in range(3)]
+    py = [ctx.var(f'py{i}', f'py{i}') for i in range(3)]
+    points = list(zip(px, py))
+    centre = (cx, cy)
+    areas = [cross(centre, points[1], points[2]), cross(centre, points[2], points[0]), cross(centre, points[0], points[1])]
+    total = cross(points[0], points[1], points[2])
+    inverse = ctx.var('i', f'INV({total.bend})')
+    ctx.equal(total * inverse, num(1), f'AL.same_transitive(TC, MUL({total.bend}, INV({total.bend})), ONE, R.FieldRing.of_nat(TC, 1n), '
+              f'AL.mul_inverse(TC, {total.bend}, O.FieldOrder.lt_of(TC, ZERO, {total.bend}, positive)), S.Scaling.one_is_number(TC))')
+    params = [f'+{v}: F' for v in [f'px{i}' for i in range(3)] + [f'py{i}' for i in range(3)]]
+    for i in range(3):
+        ctx.nonnegative(areas[i], f'weight{i}')
+        params.append(f'+weight{i}: LE(ZERO, {areas[i].bend})')
+    ctx.nonnegative(total, f'O.FieldOrder.le_of_lt(TC, ZERO, {total.bend}, O.FieldOrder.lt_of(TC, ZERO, {total.bend}, positive))')
+    params.append(f'+positive: O.FieldOrder.Strict(TC, ZERO, {total.bend})')
+    for i, j in [(0, 1), (0, 2), (1, 2)]:
+        d = (px[i] - px[j]) * (px[i] - px[j]) + (py[i] - py[j]) * (py[i] - py[j])
+        ctx.below(d, num(1), f'distance{i}{j}')
+        params.append(f'+distance{i}{j}: LE({d.bend}, {num(1).bend})')
+    ws = [area * inverse for area in areas]
+    xs = [T(f'G.Geometry.local_x(TC, square, P.Point{{px{i}, py{i}}})', ((px[i] - cx) * c + (py[i] - cy) * s).text) for i in range(3)]
+    ys = [T(f'G.Geometry.local_y(TC, square, P.Point{{px{i}, py{i}}})', ((-(px[i] - cx)) * s + (py[i] - cy) * c).text) for i in range(3)]
+    ctx.derive('inverse_nonnegative', num(0), inverse, squares=[inverse])
+    facts = [ctx.le(num(0), w) for w in ws]
+    weight_sum = ws[0] + ws[1] + ws[2]
+    facts += [ctx.le(weight_sum, num(1), products=0), ctx.le(num(1), weight_sum, products=0)]
+    for coordinates in (xs, ys):
+        balance = ws[0] * coordinates[0] + ws[1] * coordinates[1] + ws[2] * coordinates[2]
+        facts += [ctx.le(balance, num(0), products=0), ctx.le(num(0), balance, products=0)]
+    for k, (i, j) in enumerate([(0, 1), (0, 2), (1, 2)]):
+        d = (xs[i] - xs[j]) * (xs[i] - xs[j]) + (ys[i] - ys[j]) * (ys[i] - ys[j])
+        facts.append(ctx.le(d, num(1), products=1, using=[3 + k + 1]))
+    goal = containments('square', [f'P.Point{{px{i}, py{i}}}' for i in range(3)], named=True)
+    locals_ = [f'G.Geometry.Local<F, field, {xs[i].bend}, {ys[i].bend}>' for i in range(3)]
+    found = lambda i, name: f'G.Geometry.local_contains(TC, square, P.Point{{px{i}, py{i}}}, {name})'
+    call = f'Unavoidable.triangle(TC, {", ".join(t.bend for t in xs + ys + ws)}, {", ".join(facts)})'
+    inner = f'M.Membership.either({locals_[1]}, {locals_[2]}, {goal}, rest, +second => Inr{{Inl{{{found(1, "second")}}}}}, +third => Inr{{Inr{{{found(2, "third")}}}}})'
+    return f'''
+def Unavoidable.unit(TPL, +square: P.Problem.Square<F, field>) ->
+  C.Certificate.Both<LE(ADD(ADD(MUL(P.Problem.cosine(F, field, square), P.Problem.cosine(F, field, square)),
+    MUL(P.Problem.sine(F, field, square), P.Problem.sine(F, field, square))), NEG(R.FieldRing.of_nat(TC, 1n))), ZERO),
+    LE(ZERO, ADD(ADD(MUL(P.Problem.cosine(F, field, square), P.Problem.cosine(F, field, square)),
+    MUL(P.Problem.sine(F, field, square), P.Problem.sine(F, field, square))), NEG(R.FieldRing.of_nat(TC, 1n))))>:
+  match square:
+    case P.Square{{+center, P.Frame{{+c, +s, +ub, +ua}}}}:
+      G.Geometry.unit(TC, c, s, ub, ua)
+
+def Unavoidable.triangle_points(TPL, +square: P.Problem.Square<F, field>, {", ".join(params)}) -> {goal}:
+{ctx.bindings(2)}  M.Membership.either({locals_[0]}, Or({locals_[1]}, {locals_[2]}), {goal}, {call}, +first => Inl{{{found(0, "first")}}}, rest => {inner})
+'''
+
+
 def main():
-    parts = [HEADER] + [corner(o) for o in CORNERS] + [pair(o) for o in ORIENTATIONS] + [direction(d) for d in DIRECTIONS] + [triangle_core()]
+    parts = [HEADER] + [corner(o) for o in CORNERS] + [pair(o) for o in ORIENTATIONS] + [direction(d) for d in DIRECTIONS] + [triangle_core(), triangle_points()]
     (ROOT / 'bend' / 'Unavoidable.bend').write_text(expand(''.join(parts)))
 
 

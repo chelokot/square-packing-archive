@@ -394,3 +394,72 @@ def containments(square, points, named=False):
     for point in reversed(points[:-1]):
         out = f'Or(P.Problem.Containment<F, field, {square}, {show(point)}>, {out})'
     return out
+
+
+def build(ctx, steps, goal, refuter, finish, stricts=()):
+    """Run proof steps in order, binding each derived fact, then call finish(ctx, stricts).
+
+    Steps: ('le', name, a, b, squares) proves a <= b by a certificate; ('lt', name, a, b) proves a < b by
+    refuting b <= a; ('cases', a, b, yes, no) splits on a <= b and runs the step lists `yes` and `no`.
+    """
+    stricts = list(stricts)
+    if not steps:
+        return finish(ctx, stricts)
+    step, rest = steps[0], steps[1:]
+    if step[0] == 'le':
+        _, name, a, b, squares = step
+        proof = ctx.le(a, b, squares, refuter.products)
+        after = ctx.copy()
+        after.below(a, b, name)
+        return f'M.Membership.bind(LE({lift(a).bend}, {lift(b).bend}), {goal}, {proof}, +{name} => {build(after, rest, goal, refuter, finish, stricts)})'
+    if step[0] == 'lt':
+        _, name, a, b = step
+        a, b = lift(a), lift(b)
+        bad = ctx.copy()
+        bad.below(b, a, f'{name}_bad')
+        refutation = refuter.refute(bad, stricts)
+        if refutation is None:
+            raise SystemExit(f'cannot prove {a.text} < {b.text}')
+        proof = f'O.FieldOrder.strict_of(TC, {a.bend}, {b.bend}, +{name}_bad => {refutation})'
+        after = ctx.copy()
+        after.nonnegative(b - a, gap(a, b, name))
+        return (f'M.Membership.bind(O.FieldOrder.Strict(TC, {a.bend}, {b.bend}), {goal}, {proof}, '
+                f'+{name} => {build(after, rest, goal, refuter, finish, stricts + [(a, b, name)])})')
+    if step[0] == 'le_refute':
+        _, name, a, b = step
+        a, b = lift(a), lift(b)
+        bad = ctx.copy()
+        bad.nonnegative(a - b, gap(b, a, f'{name}_bad'))
+        refutation = refuter.refute(bad, stricts + [(b, a, f'{name}_bad')])
+        if refutation is None:
+            raise SystemExit(f'cannot prove {a.text} <= {b.text} by contradiction')
+        kind = f'LE({a.bend}, {b.bend})'
+        proof = (f'M.Membership.by_cases(TC, {a.bend}, {b.bend}, {kind}, +{name}_ok => {name}_ok, '
+                 f'+{name}_bad => Empty.absurd({kind}, {refutation}))')
+        after = ctx.copy()
+        after.below(a, b, name)
+        return f'M.Membership.bind({kind}, {goal}, {proof}, +{name} => {build(after, rest, goal, refuter, finish, stricts)})'
+    if step[0] == 'outside':
+        _, square, point, outside = step
+        lx, ly, name = ctx.locals_of[tuple(c.text for c in point)]
+        h = ctx.var_term('h')
+        branches = []
+        for k, (u, v) in enumerate([(h, lx), (lx, -h), (h, ly), (ly, -h)]):
+            label = f'{outside}_{k}'
+            branch = ctx.copy()
+            branch.nonnegative(v - u, gap(u, v, label))
+            found = stricts + [(u, v, label)]
+            early = refuter.refute(branch, found, splits=[])
+            inner = f'Empty.absurd({goal}, {early})' if early is not None else build(branch, rest, goal, refuter, finish, found)
+            branches.append(f'+{label} => {inner}')
+        return f'M.Membership.outside(TC, {square}, {name}, {goal}, {outside}, {", ".join(branches)})'
+    if step[0] == 'cases':
+        _, name, a, b, yes, no = step
+        a, b = lift(a), lift(b)
+        low = ctx.copy()
+        low.below(a, b, name)
+        high = ctx.copy()
+        high.nonnegative(a - b, gap(b, a, name))
+        return (f'M.Membership.by_cases(TC, {a.bend}, {b.bend}, {goal}, +{name} => {build(low, yes + rest, goal, refuter, finish, stricts)}, '
+                f'+{name} => {build(high, no + rest, goal, refuter, finish, stricts + [(b, a, name)])})')
+    raise ValueError(step[0])

@@ -327,6 +327,39 @@ def Membership.corners_of(TPL, +square: P.Problem.Square<F, field>, +side: F, fi
 '''
 
 
+MOVES = '''
+def Membership.moved(TPL, +square: P.Problem.Square<F, field>, +first: P.Problem.Point<F>, +second: P.Problem.Point<F>,
+  +x_below: LE(P.Problem.x(F, first), P.Problem.x(F, second)), +x_above: LE(P.Problem.x(F, second), P.Problem.x(F, first)),
+  +y_below: LE(P.Problem.y(F, first), P.Problem.y(F, second)), +y_above: LE(P.Problem.y(F, second), P.Problem.y(F, first)),
+  +inside: P.Problem.Containment<F, field, square, first>) -> P.Problem.Containment<F, field, square, second>:
+  match inside:
+    case P.Containment{+lx, +ly, +a, +b, +c, +d, +xb, +xa, +yb, +ya}:
+      +x: F = ADD(P.Problem.center_x(F, field, square), ADD(MUL(lx, P.Problem.cosine(F, field, square)), NEG(MUL(ly, P.Problem.sine(F, field, square)))))
+      +y: F = ADD(P.Problem.center_y(F, field, square), ADD(MUL(lx, P.Problem.sine(F, field, square)), MUL(ly, P.Problem.cosine(F, field, square))))
+      P.Containment{lx, ly, a, b, c, d,
+        AX.le_transitive(P.Problem.x(F, second), P.Problem.x(F, first), x, x_above, xb),
+        AX.le_transitive(x, P.Problem.x(F, first), P.Problem.x(F, second), xa, x_below),
+        AX.le_transitive(P.Problem.y(F, second), P.Problem.y(F, first), y, y_above, yb),
+        AX.le_transitive(y, P.Problem.y(F, first), P.Problem.y(F, second), ya, y_below)}
+
+def Membership.outside_split(TPL, +first: P.Problem.Square<F, field>, +p: P.Problem.Point<F>, +second: P.Problem.Square<F, field>, +q: P.Problem.Point<F>,
+  back: P.Problem.Containment<F, field, second, q> -> P.Problem.Containment<F, field, first, p>,
+  +out: B.Bits.Holds(Bool.not(Membership.inside(TC, first, p))),
+  split: Or(B.Bits.Holds(Membership.inside(TC, second, q)), B.Bits.Holds(Bool.not(Membership.inside(TC, second, q))))) ->
+  B.Bits.Holds(Bool.not(Membership.inside(TC, second, q))):
+  match split:
+    case Inl{inside}:
+      Empty.absurd(B.Bits.Holds(Bool.not(Membership.inside(TC, second, q))), B.Bits.never(Membership.inside(TC, first, p),
+        Membership.inside_of(TC, first, p, back(Membership.contains(TC, second, q, inside))), out))
+    case Inr{outside}:
+      outside
+
+def Membership.outside_of(TPL, +first: P.Problem.Square<F, field>, +p: P.Problem.Point<F>, +second: P.Problem.Square<F, field>, +q: P.Problem.Point<F>,
+  back: P.Problem.Containment<F, field, second, q> -> P.Problem.Containment<F, field, first, p>,
+  +out: B.Bits.Holds(Bool.not(Membership.inside(TC, first, p)))) -> B.Bits.Holds(Bool.not(Membership.inside(TC, second, q))):
+  Membership.outside_split(TC, first, p, second, q, back, out, B.Bits.split(Membership.inside(TC, second, q)))
+'''
+
 TRANSPORTS = '''
 def Membership.swap_corners(TPL, +square: P.Problem.Square<F, field>, +side: F, +corners: Membership.Corners<F, field, square, side>) ->
   Membership.Corners<F, field, Y.Symmetry.swap(TC, square), side>:
@@ -348,4 +381,4 @@ def Membership.first_quadrant_corners(TPL, +square: P.Problem.Square<F, field>, 
     Y.Symmetry.first_quadrant_fits(TC, square, side, Membership.fits(TC, square, side, corners)), Y.Symmetry.first_quadrant_fits(TC, square, side, Membership.fits(TC, square, side, corners)), Y.Symmetry.first_quadrant_fits(TC, square, side, Membership.fits(TC, square, side, corners)), Y.Symmetry.first_quadrant_fits(TC, square, side, Membership.fits(TC, square, side, corners)))
 '''
 
-(ROOT / 'bend' / 'Membership.bend').write_text(expand(HEADER + DECISIONS + ELIMINATORS + CORNERS + fits_part() + TRANSPORTS))
+(ROOT / 'bend' / 'Membership.bend').write_text(expand(HEADER + DECISIONS + ELIMINATORS + CORNERS + fits_part() + MOVES + TRANSPORTS))

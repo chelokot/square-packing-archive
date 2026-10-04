@@ -273,6 +273,37 @@ def Membership.corners_of(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.S
     fourth(Membership.corner(~F, ~field, square, A.Algebra.half(~F, ~field), A.Algebra.half(~F, ~field)), Membership.corner_inside(~F, ~field, square, A.Algebra.half(~F, ~field), A.Algebra.half(~F, ~field),
       K.Field.le_reflexive(F, field)(A.Algebra.half(~F, ~field)), Membership.half_at_least(~F, ~field), K.Field.le_reflexive(F, field)(A.Algebra.half(~F, ~field)), Membership.half_at_least(~F, ~field)))}
 
+def Membership.moved(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<F, field>, +first: P.Problem.Point<F>, +second: P.Problem.Point<F>,
+  +x_below: A.Algebra.le(~F, ~field, P.Problem.x(F, first), P.Problem.x(F, second)), +x_above: A.Algebra.le(~F, ~field, P.Problem.x(F, second), P.Problem.x(F, first)),
+  +y_below: A.Algebra.le(~F, ~field, P.Problem.y(F, first), P.Problem.y(F, second)), +y_above: A.Algebra.le(~F, ~field, P.Problem.y(F, second), P.Problem.y(F, first)),
+  +inside: P.Problem.Containment<F, field, square, first>) -> P.Problem.Containment<F, field, square, second>:
+  match inside:
+    case P.Containment{+lx, +ly, +a, +b, +c, +d, +xb, +xa, +yb, +ya}:
+      +x: F = A.Algebra.add(~F, ~field, P.Problem.center_x(F, field, square), A.Algebra.add(~F, ~field, A.Algebra.mul(~F, ~field, lx, P.Problem.cosine(F, field, square)), A.Algebra.neg(~F, ~field, A.Algebra.mul(~F, ~field, ly, P.Problem.sine(F, field, square)))))
+      +y: F = A.Algebra.add(~F, ~field, P.Problem.center_y(F, field, square), A.Algebra.add(~F, ~field, A.Algebra.mul(~F, ~field, lx, P.Problem.sine(F, field, square)), A.Algebra.mul(~F, ~field, ly, P.Problem.cosine(F, field, square))))
+      P.Containment{lx, ly, a, b, c, d,
+        K.Field.le_transitive(F, field)(P.Problem.x(F, second), P.Problem.x(F, first), x, x_above, xb),
+        K.Field.le_transitive(F, field)(x, P.Problem.x(F, first), P.Problem.x(F, second), xa, x_below),
+        K.Field.le_transitive(F, field)(P.Problem.y(F, second), P.Problem.y(F, first), y, y_above, yb),
+        K.Field.le_transitive(F, field)(y, P.Problem.y(F, first), P.Problem.y(F, second), ya, y_below)}
+
+def Membership.outside_split(~F: Kind(&2), ~field: K.Field<F>, +first: P.Problem.Square<F, field>, +p: P.Problem.Point<F>, +second: P.Problem.Square<F, field>, +q: P.Problem.Point<F>,
+  back: P.Problem.Containment<F, field, second, q> -> P.Problem.Containment<F, field, first, p>,
+  +out: B.Bits.Holds(Bool.not(Membership.inside(~F, ~field, first, p))),
+  split: Or(B.Bits.Holds(Membership.inside(~F, ~field, second, q)), B.Bits.Holds(Bool.not(Membership.inside(~F, ~field, second, q))))) ->
+  B.Bits.Holds(Bool.not(Membership.inside(~F, ~field, second, q))):
+  match split:
+    case Inl{inside}:
+      Empty.absurd(B.Bits.Holds(Bool.not(Membership.inside(~F, ~field, second, q))), B.Bits.never(Membership.inside(~F, ~field, first, p),
+        Membership.inside_of(~F, ~field, first, p, back(Membership.contains(~F, ~field, second, q, inside))), out))
+    case Inr{outside}:
+      outside
+
+def Membership.outside_of(~F: Kind(&2), ~field: K.Field<F>, +first: P.Problem.Square<F, field>, +p: P.Problem.Point<F>, +second: P.Problem.Square<F, field>, +q: P.Problem.Point<F>,
+  back: P.Problem.Containment<F, field, second, q> -> P.Problem.Containment<F, field, first, p>,
+  +out: B.Bits.Holds(Bool.not(Membership.inside(~F, ~field, first, p)))) -> B.Bits.Holds(Bool.not(Membership.inside(~F, ~field, second, q))):
+  Membership.outside_split(~F, ~field, first, p, second, q, back, out, B.Bits.split(Membership.inside(~F, ~field, second, q)))
+
 def Membership.swap_corners(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<F, field>, +side: F, +corners: Membership.Corners<F, field, square, side>) ->
   Membership.Corners<F, field, Y.Symmetry.swap(~F, ~field, square), side>:
   Membership.corners_of(~F, ~field, Y.Symmetry.swap(~F, ~field, square), side, Y.Symmetry.swap_fits(~F, ~field, square, side, Membership.fits(~F, ~field, square, side, corners)), Y.Symmetry.swap_fits(~F, ~field, square, side, Membership.fits(~F, ~field, square, side, corners)), Y.Symmetry.swap_fits(~F, ~field, square, side, Membership.fits(~F, ~field, square, side, corners)), Y.Symmetry.swap_fits(~F, ~field, square, side, Membership.fits(~F, ~field, square, side, corners)))
