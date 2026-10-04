@@ -53,6 +53,13 @@ The historical catalog is incomplete. Counts without a catalogued record use
 the basic grid bound `s(n) ≤ ⌈√n⌉`; these do not count as historical records.
 Publication dates and formalization dates are kept separate.
 
+### Bend
+
+`s(6) ≤ 3` is also checked in [Bend 2](https://github.com/bendlang/bend) for
+every ordered field, against a Bend restatement of the canonical problem. See
+the [Bend formalization notes](docs/bend-formalization.md) for its meaning and
+the porting plan.
+
 ## Run and verify
 
 Requires [Bun](https://bun.sh/), Python 3, and [elan](https://github.com/leanprover/elan).

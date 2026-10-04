@@ -1,0 +1,3 @@
+[submodule "bend/bend-math"]
+	path = bend/bend-math
+	url = https://github.com/chelokot/bend-math.git
