@@ -216,6 +216,13 @@ def Membership.cases_of(TPL, +a: F, +b: F, -Goal: Type, order: Or(LE(a, b), LE(a
 def Membership.bind(-A: Type, -Goal: Type, value: A, body: A -> Goal) -> Goal:
   body(value)
 
+def Membership.either(-A: Type, -B: Type, -Goal: Type, choice: Or(A, B), left: A -> Goal, right: B -> Goal) -> Goal:
+  match choice:
+    case Inl{a}:
+      left(a)
+    case Inr{b}:
+      right(b)
+
 def Membership.gap(TPL, +u: F, +v: F, +strict: O.FieldOrder.Strict(TC, u, v)) -> LE(ZERO, ADD(v, NEG(u))):
   S.Scaling.fact(TC, u, v, O.FieldOrder.le_of_lt(TC, u, v, O.FieldOrder.lt_of(TC, u, v, strict)))
 

@@ -602,5 +602,6 @@ for e in range(1, ROWS):
 parts = ([HEADER, DEFINITIONS] + ENUMERATIONS + [edge_free(), avoid_cycle(), three_or_four()]
          + [finish(i) for i in range(ROWS)] + finds + [case_three()]
          + [center_or_single(i).replace('S_TERM', s_term()) for i in range(ROWS)] + [case_four(), MAIN])
-path = pathlib.Path(__file__).resolve().parent.parent / 'bend' / 'Incidence.bend'
-path.write_text('\n'.join(parts))
+if __name__ == '__main__':
+    path = pathlib.Path(__file__).resolve().parent.parent / 'bend' / 'Incidence.bend'
+    path.write_text('\n'.join(parts))

@@ -73,28 +73,50 @@ def Unavoidable.{name}(TPL, +square: P.Problem.Square<F, field>, +corners: M.Mem
 '''
 
 
-def corner(orientation):
-    place, back = ORIENTATIONS[orientation]
+CORNERS = {
+    'low_left': lambda x, y: (x, y),
+    'low_right': lambda x, y: (3 - x, y),
+    'high_left': lambda x, y: (x, 3 - y),
+    'high_right': lambda x, y: (3 - x, 3 - y),
+}
+
+
+def corner_spec(name):
+    back = CORNERS[name]
 
     def spec(sq, v):
         cx, cy = back(sq.cx, sq.cy)
         tx, ty = back(v['tx'], v['ty'])
         return [(tx, num(1)), (ty, num(1)), (cx, tx), (cy, ty)], [(v['tx'], v['ty'])]
-    return normal_lemma(f'{orientation}_corner', ['tx', 'ty'], spec, squares=[lambda q: q.c + q.s - 1])
+    return spec
 
 
-def pair(orientation):
+def corner(name):
+    """Lean's contains_cornerPoint at one corner of the container."""
+    return normal_lemma(f'{name}_corner', ['tx', 'ty'], corner_spec(name), squares=[lambda q: q.c + q.s - 1])
+
+
+PAIR_PARAMS = {'bottom': ['px', 'py', 'qx'], 'top': ['px', 'py', 'qx'], 'left': ['px', 'py', 'qy'], 'right': ['px', 'py', 'qy']}
+
+
+def pair_spec(orientation):
     place, back = ORIENTATIONS[orientation]
+    along_x = orientation in ('bottom', 'top')
 
     def spec(sq, v):
         cx, cy = back(sq.cx, sq.cy)
-        first = (v['left'], v['height'])
-        second = (v['left'] + v['gap'], v['height'])
-        image = [place(*first), place(*second)]
-        return ([(v['height'], num(1)), (num(0), v['gap']), (v['gap'], num(1)),
-                 (v['height'] + v['gap'] * (sq.c * sq.s), sq.c + sq.s),
-                 (v['left'], cx), (cx, v['left'] + v['gap']), (cy, v['height'])], image)
-    return normal_lemma(f'{orientation}_pair', ['left', 'height', 'gap'], spec,
+        first = (v['px'], v['py'])
+        second = (v['qx'], v['py']) if along_x else (v['px'], v['qy'])
+        left, height = back(*first)
+        gap = v['qx'] - v['px'] if along_x else v['qy'] - v['py']
+        return ([(height, num(1)), (num(0), gap), (gap, num(1)), (height + gap * (sq.c * sq.s), sq.c + sq.s),
+                 (left, cx), (cx, left + gap), (cy, height)], [first, second])
+    return spec
+
+
+def pair(orientation):
+    """Lean's contains_bottomPairWith along one side: the square holds the first or the second point."""
+    return normal_lemma(f'{orientation}_pair', PAIR_PARAMS[orientation], pair_spec(orientation),
                         squares=[lambda q: 1 - q.s, lambda q: 1 - q.c], splits=[(lambda q: q.c, lambda q: q.s)])
 
 
@@ -221,5 +243,10 @@ def Unavoidable.triangle(TPL, {", ".join(params)}) -> {goal}:
 '''
 
 
-parts = [HEADER] + [corner(o) for o in ORIENTATIONS] + [pair(o) for o in ORIENTATIONS] + [direction(d) for d in DIRECTIONS] + [triangle_core()]
-(ROOT / 'bend' / 'Unavoidable.bend').write_text(expand(''.join(parts)))
+def main():
+    parts = [HEADER] + [corner(o) for o in CORNERS] + [pair(o) for o in ORIENTATIONS] + [direction(d) for d in DIRECTIONS] + [triangle_core()]
+    (ROOT / 'bend' / 'Unavoidable.bend').write_text(expand(''.join(parts)))
+
+
+if __name__ == '__main__':
+    main()

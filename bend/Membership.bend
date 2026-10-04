@@ -202,6 +202,13 @@ def Membership.cases_of(~F: Kind(&2), ~field: K.Field<F>, +a: F, +b: F, -Goal: T
 def Membership.bind(-A: Type, -Goal: Type, value: A, body: A -> Goal) -> Goal:
   body(value)
 
+def Membership.either(-A: Type, -B: Type, -Goal: Type, choice: Or(A, B), left: A -> Goal, right: B -> Goal) -> Goal:
+  match choice:
+    case Inl{a}:
+      left(a)
+    case Inr{b}:
+      right(b)
+
 def Membership.gap(~F: Kind(&2), ~field: K.Field<F>, +u: F, +v: F, +strict: O.FieldOrder.Strict(~F, ~field, u, v)) -> A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), A.Algebra.add(~F, ~field, v, A.Algebra.neg(~F, ~field, u))):
   S.Scaling.fact(~F, ~field, u, v, O.FieldOrder.le_of_lt(~F, ~field, u, v, O.FieldOrder.lt_of(~F, ~field, u, v, strict)))
 
