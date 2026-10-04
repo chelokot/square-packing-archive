@@ -34,9 +34,11 @@ provides `half` with `half + half = 1`.
 
 ## Checked results
 
-| Result                          | Bend                                                                         |
-| ------------------------------- | ---------------------------------------------------------------------------- |
-| `HasPacking 6 3`, so `s(6) ≤ 3` | `Laws.square6_has_packing_at_three` in [`bend/LAWS.bend`](../bend/LAWS.bend) |
+| Result                                       | Bend                                                                         |
+| -------------------------------------------- | ---------------------------------------------------------------------------- |
+| `HasPacking 6 3`, so `s(6) ≤ 3`              | `Laws.square6_has_packing_at_three` in [`bend/LAWS.bend`](../bend/LAWS.bend) |
+| `PlacedSquare.contains_iff_localCoordinates` | `Laws.contains_iff_local_coordinates_forward` and `_backward`                |
+| the same for the open square                 | `Laws.interior_iff_local_coordinates_forward` and `_backward`                |
 
 The packing places six axis-aligned unit squares in a 3 by 2 grid.
 `bend/Grid.bend` proves that a grid cell fits in side 3 and that cells whose
@@ -57,19 +59,23 @@ The Lean proof of `s(6) = 3` depends on about 8,400 lines. Measure theory
 appears only for `side_positive`, and the upper bound is the grid above, so the
 port is dominated by Stromquist's point-set argument. The order of work:
 
-1. **Inequality certificates in `bend-math`.** The Lean geometry closes about
+1. **Inequality certificates in `bend-math`** (done: `Certificate.bend` and
+   `tools/certificate.py`). The Lean geometry closes about
    50 goals with `nlinarith`. Each such goal is an ordered-field inequality with
    a Positivstellensatz certificate: a nonnegative combination of hypothesis
-   products and squares equal to the goal. A Bend checker verifies the identity
-   with `FieldRing.equal` and the nonnegativity term by term. A script extracts
-   each goal from Lean and searches for an exact rational certificate.
+   products and squares equal to the goal. `Certificate.nonnegative` checks
+   the identity with `FieldRing.equal` and the sign of each term, and
+   `Certificate.same` checks `linear_combination` steps. The search script
+   finds exact certificates; `bend/Geometry.bend` uses it for the local
+   coordinate characterization.
 2. **Constants and square roots.** Fractions such as `4/5` need an inverse for
    nonzero naturals in the interface. `FriedmanStrip.lean` and
    `StromquistSixPoints.lean` use `Real.sqrt`; where it cannot be eliminated,
    the interface gains a square root of nonnegative elements, and the model
    moves from the rationals to a field with that root.
-3. **Geometry layer in `bend/`.** Port `Geometry.lean` (local coordinates,
-   containment, separation), the symmetries in `PackingSymmetry.lean`, the
+3. **Geometry layer in `bend/`.** Port the rest of `Geometry.lean` (local
+   coordinates are done; translations, swaps, reflections, quarter turns and
+   separation remain), the symmetries in `PackingSymmetry.lean`, the
    unavoidable-set framework in `Unavoidable.lean`, and the scaling to a
    closed-disjoint family in `PackingPointCapacity.lean`.
 4. **Finite combinatorics.** The incidence and pigeonhole steps over the nine
