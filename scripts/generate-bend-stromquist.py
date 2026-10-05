@@ -90,17 +90,17 @@ def Stromquist.noncenter_at{k}(TPL, +square: P.Problem.Square<F, field>,
 class Square(Context):
     """A context about `square` through its accessors, with the unit circle, the signs and the half."""
 
-    def __init__(self):
+    def __init__(self, square='square', signs=('cosine_sign', 'sine_sign')):
         super().__init__()
-        self.cx = self.var('cx', 'P.Problem.center_x(F, field, square)')
-        self.cy = self.var('cy', 'P.Problem.center_y(F, field, square)')
-        self.c = self.var('c', 'P.Problem.cosine(F, field, square)')
-        self.s = self.var('s', 'P.Problem.sine(F, field, square)')
+        self.cx = self.var('cx', f'P.Problem.center_x(F, field, {square})')
+        self.cy = self.var('cy', f'P.Problem.center_y(F, field, {square})')
+        self.c = self.var('c', f'P.Problem.cosine(F, field, {square})')
+        self.s = self.var('s', f'P.Problem.sine(F, field, {square})')
         self.h = self.var('h', 'HALF')
-        self.raw_equation(((self.c * self.c + self.s * self.s) - 1).text, f"{SELF['name']}unit(TC, square)")
+        self.raw_equation(((self.c * self.c + self.s * self.s) - 1).text, f"{SELF['name']}unit(TC, {square})")
         self.raw_equation('h + h - 1', 'S.Scaling.half_equation(TC)')
-        self.nonnegative(self.c, 'cosine_sign')
-        self.nonnegative(self.s, 'sine_sign')
+        self.nonnegative(self.c, signs[0])
+        self.nonnegative(self.s, signs[1])
         self.fresh = 0
 
     def name(self, stem):

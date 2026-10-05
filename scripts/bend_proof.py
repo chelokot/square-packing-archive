@@ -20,14 +20,13 @@ import time
 import certificate
 
 PREFIX = 'A.Algebra.'
-CACHE_PATH = pathlib.Path(os.environ.get('BEND_PROOF_CACHE', pathlib.Path.home() / '.cache' / 'bend-proof-certificates.json'))
-CACHE = json.loads(CACHE_PATH.read_text()) if CACHE_PATH.exists() else {}
+CACHE_PATH = pathlib.Path(__file__).with_name('bend-certificates.json')
+CACHE = json.loads(CACHE_PATH.read_text())
 
 
 @atexit.register
 def save_cache():
-    CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    CACHE_PATH.write_text(json.dumps(CACHE))
+    CACHE_PATH.write_text(json.dumps(CACHE, indent=2, sort_keys=True) + '\n')
 
 
 def search(*arguments):

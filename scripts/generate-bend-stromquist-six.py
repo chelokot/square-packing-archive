@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write bend/StromquistSix.bend: no six squares fit in a container of side less than 3.
 
-A packing of side `side < 3` scales to six squares that fit [0, 3]^2 with
+A packing of at least six squares in side `side < 3` scales to six squares that fit [0, 3]^2 with
 pairwise disjoint closed sets (bend/Scaling.bend). The facts about their key
 points from bend/Stromquist.bend and bend/Singletons.bend feed the counting
 core of bend/Incidence.bend, following StromquistSix.lean and Square6Exact.lean.
@@ -22,8 +22,8 @@ ST = load('stromquist', 'generate-bend-stromquist.py')
 IN = ST.INCIDENCE
 ROWS = range(6)
 THREE = ST.THREE
-TPL6 = '~F: Kind(&2), ~field: K.Field<F>, ~side: F, ~packing: P.Problem.Packing<F, field, 6n, side>'
-TC6 = '~F, ~field, ~side, ~packing'
+TPL6 = '~F: Kind(&2), ~field: K.Field<F>, ~count: Nat, ~side: F, ~packing: P.Problem.Packing<F, field, count, side>'
+TC6 = '~F, ~field, ~count, ~side, ~packing'
 
 HEADER = ST.HEADER + '''import ./bend-math/Natural.bend as N
 import ./Stromquist.bend as Q
@@ -32,18 +32,26 @@ import ./Singletons.bend as L
 '''
 
 
+def index(i):
+    return f'{i}n' if isinstance(i, int) else i
+
+
+def index_bound(i):
+    return 'Unit{}' if isinstance(i, int) else f'{i}_bound'
+
+
 def normal(i):
-    return f'StromquistSix.normal({TC6}, less, {i}n)'
+    return f'StromquistSix.normal({TC6}, six, less, {index(i)})'
 
 
 def square(i):
-    return f'StromquistSix.square({TC6}, less, {i}n)'
+    return f'StromquistSix.square({TC6}, six, less, {index(i)})'
 
 
 def args(i):
-    """Square, corners and signs of the normal form of square i."""
-    return (f'{normal(i)}, StromquistSix.corners({TC6}, less, {i}n, Unit{{}}), StromquistSix.cosine({TC6}, less, {i}n), '
-            f'StromquistSix.sine({TC6}, less, {i}n)')
+    """Square, corners and signs of the normal form of square i (a number or the name of a Nat)."""
+    return (f'{normal(i)}, StromquistSix.corners({TC6}, six, less, {index(i)}, {index_bound(i)}), StromquistSix.cosine({TC6}, six, less, {index(i)}), '
+            f'StromquistSix.sine({TC6}, six, less, {index(i)})')
 
 
 def bit(i, point):
@@ -55,55 +63,54 @@ def key(k):
 
 
 def disjoint(i, j, point, first, second):
-    """Empty from containments of `point` in the normal forms of squares i and j."""
+    """Empty from containments of `point` in the normal forms of squares i and j, named a and b with a proof `apart`."""
     back = lambda k, c: f'Y.Symmetry.first_quadrant_contains_back(TC, {square(k)}, {point}, {c})'
-    return (f'StromquistSix.disjoint({TC6}, less, {i}n, {j}n, Unit{{}}, Unit{{}}, different => StromquistSix.distinct{i}_{j}(different))'
-            f'({point}, {back(i, first)}, {back(j, second)})')
+    return (f'StromquistSix.disjoint({TC6}, six, less, {index(i)}, {index(j)}, {index_bound(i)}, {index_bound(j)}, '
+            f'same => StromquistSix.different({index(i)}, {index(j)}, apart, same))({point}, {back(i, first)}, {back(j, second)})')
 
 
-CLOSED = '~F, ~field, ~6n, ~side, ~packing'
+CLOSED = TC6
+NONEMPTY = 'N.Natural.le_transitive(1n, 6n, count, Unit{}, six)'
+
+
+def widen(index, bound):
+    return f'N.Natural.le_transitive(1n+{index}, 6n, count, {bound}, six)'
+
+
 ACCESSORS = f'''
-def StromquistSix.square({TPL6}, +less: O.FieldOrder.Strict(TC, side, {THREE}), +index: Nat) -> P.Problem.Square<F, field>:
+def StromquistSix.square({TPL6}, +six: N.Natural.Le(6n, count), +less: O.FieldOrder.Strict(TC, side, {THREE}), +index: Nat) -> P.Problem.Square<F, field>:
   S.Scaling.closed_square({CLOSED}, {THREE}, index)
 
-def StromquistSix.normal({TPL6}, +less: O.FieldOrder.Strict(TC, side, {THREE}), +index: Nat) -> P.Problem.Square<F, field>:
+def StromquistSix.normal({TPL6}, +six: N.Natural.Le(6n, count), +less: O.FieldOrder.Strict(TC, side, {THREE}), +index: Nat) -> P.Problem.Square<F, field>:
   Y.Symmetry.first_quadrant(TC, S.Scaling.closed_square({CLOSED}, {THREE}, index))
 
-def StromquistSix.corners({TPL6}, +less: O.FieldOrder.Strict(TC, side, {THREE}), +index: Nat, +bound: N.Natural.Le(1n+index, 6n)) ->
-  M.Membership.Corners<F, field, StromquistSix.normal({TC6}, less, index), {THREE}>:
+def StromquistSix.corners({TPL6}, +six: N.Natural.Le(6n, count), +less: O.FieldOrder.Strict(TC, side, {THREE}), +index: Nat, +bound: N.Natural.Le(1n+index, 6n)) ->
+  M.Membership.Corners<F, field, StromquistSix.normal({TC6}, six, less, index), {THREE}>:
   M.Membership.first_quadrant_corners(TC, S.Scaling.closed_square({CLOSED}, {THREE}, index), {THREE},
     M.Membership.corners_of(TC, S.Scaling.closed_square({CLOSED}, {THREE}, index), {THREE},
-      {', '.join([f"S.Scaling.closed_fits({CLOSED}, {THREE}, less, Unit{{}}, index, bound)"] * 4)}))
+      {', '.join([f"S.Scaling.closed_fits({CLOSED}, {THREE}, less, {NONEMPTY}, index, {widen('index', 'bound')})"] * 4)}))
 
-def StromquistSix.cosine({TPL6}, +less: O.FieldOrder.Strict(TC, side, {THREE}), +index: Nat) ->
-  LE(ZERO, P.Problem.cosine(F, field, StromquistSix.normal({TC6}, less, index))):
-  C.Certificate.first(LE(ZERO, P.Problem.cosine(F, field, StromquistSix.normal({TC6}, less, index))),
-    LE(ZERO, P.Problem.sine(F, field, StromquistSix.normal({TC6}, less, index))),
+def StromquistSix.cosine({TPL6}, +six: N.Natural.Le(6n, count), +less: O.FieldOrder.Strict(TC, side, {THREE}), +index: Nat) ->
+  LE(ZERO, P.Problem.cosine(F, field, StromquistSix.normal({TC6}, six, less, index))):
+  C.Certificate.first(LE(ZERO, P.Problem.cosine(F, field, StromquistSix.normal({TC6}, six, less, index))),
+    LE(ZERO, P.Problem.sine(F, field, StromquistSix.normal({TC6}, six, less, index))),
     Y.Symmetry.first_quadrant_signs(TC, S.Scaling.closed_square({CLOSED}, {THREE}, index)))
 
-def StromquistSix.sine({TPL6}, +less: O.FieldOrder.Strict(TC, side, {THREE}), +index: Nat) ->
-  LE(ZERO, P.Problem.sine(F, field, StromquistSix.normal({TC6}, less, index))):
-  C.Certificate.second(LE(ZERO, P.Problem.cosine(F, field, StromquistSix.normal({TC6}, less, index))),
-    LE(ZERO, P.Problem.sine(F, field, StromquistSix.normal({TC6}, less, index))),
+def StromquistSix.sine({TPL6}, +six: N.Natural.Le(6n, count), +less: O.FieldOrder.Strict(TC, side, {THREE}), +index: Nat) ->
+  LE(ZERO, P.Problem.sine(F, field, StromquistSix.normal({TC6}, six, less, index))):
+  C.Certificate.second(LE(ZERO, P.Problem.cosine(F, field, StromquistSix.normal({TC6}, six, less, index))),
+    LE(ZERO, P.Problem.sine(F, field, StromquistSix.normal({TC6}, six, less, index))),
     Y.Symmetry.first_quadrant_signs(TC, S.Scaling.closed_square({CLOSED}, {THREE}, index)))
 
-def StromquistSix.disjoint({TPL6}, +less: O.FieldOrder.Strict(TC, side, {THREE}), +left: Nat, +right: Nat,
+def StromquistSix.disjoint({TPL6}, +six: N.Natural.Le(6n, count), +less: O.FieldOrder.Strict(TC, side, {THREE}), +left: Nat, +right: Nat,
   +left_bound: N.Natural.Le(1n+left, 6n), +right_bound: N.Natural.Le(1n+right, 6n), different: {{left == right : Nat}} -> Empty) ->
-  @point: P.Problem.Point<F> -> P.Problem.Containment<F, field, StromquistSix.square({TC6}, less, left), point> ->
-  P.Problem.Containment<F, field, StromquistSix.square({TC6}, less, right), point> -> Empty:
-  S.Scaling.closed_disjoint({CLOSED}, {THREE}, less, Unit{{}}, left, right, left_bound, right_bound, different)
+  @point: P.Problem.Point<F> -> P.Problem.Containment<F, field, StromquistSix.square({TC6}, six, less, left), point> ->
+  P.Problem.Containment<F, field, StromquistSix.square({TC6}, six, less, right), point> -> Empty:
+  S.Scaling.closed_disjoint({CLOSED}, {THREE}, less, {NONEMPTY}, left, right, {widen('left', 'left_bound')}, {widen('right', 'right_bound')}, different)
 '''
 
-LESS = f'+less: O.FieldOrder.Strict(TC, side, {THREE})'
+LESS = f'+six: N.Natural.Le(6n, count), +less: O.FieldOrder.Strict(TC, side, {THREE})'
 NONTRIVIAL = '+nontrivial: O.FieldOrder.Strict(TC, ZERO, ONE)'
-
-
-def distinct(i, j):
-    return f'''
-def StromquistSix.distinct{i}_{j}(different: {{{i}n == {j}n : Nat}}) -> Empty:
-  %different : B.Bits.Holds(Bool.not(Nat.is_eq(_, {j}n)))
-  Unit{{}}
-'''
 
 
 def row(i):
@@ -125,10 +132,22 @@ def apart_chain(i, j, points):
     return proof
 
 
-def apart(i, j):
+PAIR = '+a: Nat, +b: Nat, +a_bound: N.Natural.Le(1n+a, 6n), +b_bound: N.Natural.Le(1n+b, 6n), +apart: B.Bits.Holds(Bool.not(Nat.is_eq(a, b)))'
+
+
+def key_apart():
     return f'''
-def StromquistSix.apart{i}_{j}({TPL6}, {LESS}) -> B.Bits.Holds(Bool.not(B.Bits.meet({row(i)}, {row(j)}))):
-  {apart_chain(i, j, [key(k) for k in range(9)])}
+def StromquistSix.key_apart({TPL6}, {LESS}, {PAIR}) -> B.Bits.Holds(Bool.not(B.Bits.meet({row('a')}, {row('b')}))):
+  {apart_chain('a', 'b', [key(k) for k in range(9)])}
+'''
+
+
+def extra_apart(orientation):
+    points = [ST.point_term(v) for v in ST.extra_points(orientation)]
+    rows = lambda name: f'Q.Stromquist.extra_row_{orientation}(TC, {normal(name)})'
+    return f'''
+def StromquistSix.extra_apart_{orientation}({TPL6}, {LESS}, {PAIR}) -> B.Bits.Holds(Bool.not(B.Bits.meet({rows('a')}, {rows('b')}))):
+  {apart_chain('a', 'b', points)}
 '''
 
 
@@ -183,27 +202,39 @@ def StromquistSix.is_eq_self(n: Nat) -> B.Bits.Holds(Nat.is_eq(n, n)):
     case 1n+p:
       StromquistSix.is_eq_self(p)
 
+def StromquistSix.apart_swap(left: Nat, right: Nat, +apart: B.Bits.Holds(Bool.not(Nat.is_eq(left, right)))) ->
+  B.Bits.Holds(Bool.not(Nat.is_eq(right, left))):
+  match left right:
+    case 0n 0n:
+      apart
+    case 0n 1n+q:
+      Unit{{}}
+    case 1n+p 0n:
+      Unit{{}}
+    case 1n+p 1n+q:
+      StromquistSix.apart_swap(p, q, apart)
+
 def StromquistSix.different(+left: Nat, +right: Nat, +apart: B.Bits.Holds(Bool.not(Nat.is_eq(left, right))), same: {{left == right : Nat}}) -> Empty:
-  %same : B.Bits.Holds(Bool.not(Nat.is_eq(_, right)))
-  B.Bits.never(Nat.is_eq(right, right), StromquistSix.is_eq_self(right), apart)
+  B.Bits.never(Nat.is_eq(right, right), StromquistSix.is_eq_self(right),
+    B.Bits.transport(Bool.not(Nat.is_eq(left, right)), Bool.not(Nat.is_eq(right, right)),
+      Equal.cong(Nat, Bool, x => Bool.not(Nat.is_eq(x, right)), left, right, same), apart))
 '''
 
 
 def generic_square(name):
-    return f'StromquistSix.normal({TC6}, less, {name})'
+    return f'StromquistSix.normal({TC6}, six, less, {name})'
 
 
 def generic_args(name):
-    return (f'{generic_square(name)}, StromquistSix.corners({TC6}, less, {name}, {name}_bound), StromquistSix.cosine({TC6}, less, {name}), '
-            f'StromquistSix.sine({TC6}, less, {name})')
+    return (f'{generic_square(name)}, StromquistSix.corners({TC6}, six, less, {name}, {name}_bound), StromquistSix.cosine({TC6}, six, less, {name}), '
+            f'StromquistSix.sine({TC6}, six, less, {name})')
 
 
 def meet(corner, middle):
     """Two squares holding only the adjacent keys `corner` and `middle` share a point (StromquistSixSingletons.lean)."""
     ops = symmetry_to_base(corner, middle)
-    ctx = ST.Square()
-    a = ST.Transport(ops, ctx, generic_square('a'), f'StromquistSix.corners({TC6}, less, a, a_bound)')
-    b = ST.Transport(ops, ctx, generic_square('b'), f'StromquistSix.corners({TC6}, less, b, b_bound)')
+    a, b = (ST.Transport(ops, None, generic_square(name), f'StromquistSix.corners({TC6}, six, less, {name}, {name}_bound)') for name in 'ab')
+    a.ctx, b.ctx = (ST.Square(t.normal, t.signs) for t in (a, b))
     pre = lambda t, k: key_of(t.preimage(KEY_VALUES[k]))
     alone = lambda name, k: f'I.Incidence.alone{k}({", ".join(f"M.Membership.inside(TC, {generic_square(name)}, {key(x)})" for x in range(9))}, {name}_single, {name}_key)'
     def alone_part(name, k, x):
@@ -225,8 +256,8 @@ def meet(corner, middle):
     def finish(point, name):
         first, moved = a.backward_any(point, f'C.Certificate.first({contained(a.normal, point)}, {contained(b.normal, point)}, {name})')
         second, _ = b.backward_any(point, f'C.Certificate.second({contained(a.normal, point)}, {contained(b.normal, point)}, {name})')
-        back = lambda k, c: f'Y.Symmetry.first_quadrant_contains_back(TC, StromquistSix.square({TC6}, less, {k}), {moved}, {c})'
-        return (f'StromquistSix.disjoint({TC6}, less, a, b, a_bound, b_bound, same => StromquistSix.different(a, b, apart, same))'
+        back = lambda k, c: f'Y.Symmetry.first_quadrant_contains_back(TC, StromquistSix.square({TC6}, six, less, {k}), {moved}, {c})'
+        return (f'StromquistSix.disjoint({TC6}, six, less, a, b, a_bound, b_bound, same => StromquistSix.different(a, b, apart, same))'
                 f'({moved}, {back("a", first)}, {back("b", second)})')
     single = lambda name: f'I.Incidence.single(Q.Stromquist.row(TC, {generic_square(name)}))'
     return f'''
@@ -245,7 +276,8 @@ def bound(i):
     return 'Unit{}'
 
 
-def lonely(i, j):
+def lonely_pair():
+    i, j = 'a', 'b'
     """No two squares hold single adjacent key points."""
     s_i, s_j = single(i), single(j)
     touches = lambda pairs: f'B.Bits.touches({pairs}, {row(i)}, {row(j)})'
@@ -262,8 +294,9 @@ def lonely(i, j):
             return (f'B.Bits.never(Bool.and({s_j}, {bit(j, key(4))}), B.Bits.both({s_j}, {bit(j, key(4))}, single_j, {bq}), '
                     f'I.Incidence.single_not_center({bits_of(j)}, {perimeter(j)}))')
         if p in CORNER_KEYS:
-            return f'StromquistSix.meet{p}_{q}({TC6}, less, {i}n, {j}n, Unit{{}}, Unit{{}}, Unit{{}}, single_i, {bp}, single_j, {bq})'
-        return f'StromquistSix.meet{q}_{p}({TC6}, less, {j}n, {i}n, Unit{{}}, Unit{{}}, Unit{{}}, single_j, {bq}, single_i, {bp})'
+            return f'StromquistSix.meet{p}_{q}({TC6}, six, less, a, b, a_bound, b_bound, apart, single_i, {bp}, single_j, {bq})'
+        return (f'StromquistSix.meet{q}_{p}({TC6}, six, less, b, a, b_bound, a_bound, StromquistSix.apart_swap(a, b, apart), '
+                f'single_j, {bq}, single_i, {bp})')
 
     def eliminate(k, holds):
         if k == len(IN.ORDERED):
@@ -279,7 +312,7 @@ def lonely(i, j):
             f'M.Membership.bind(B.Bits.Holds({s_j}), Empty, B.Bits.left({s_j}, {t}, B.Bits.right({s_i}, {inner}, holds)), +single_j => '
             f'{eliminate(0, f"B.Bits.right({s_j}, {t}, B.Bits.right({s_i}, {inner}, holds))")}))')
     return f'''
-def StromquistSix.lonely{i}_{j}({TPL6}, {LESS}, {NONTRIVIAL}) -> B.Bits.Holds(Bool.not(I.Incidence.lonely({row(i)}, {row(j)}))):
+def StromquistSix.lonely_pair({TPL6}, {LESS}, {NONTRIVIAL}, {PAIR}) -> B.Bits.Holds(Bool.not(I.Incidence.lonely({row(i)}, {row(j)}))):
   B.Bits.not_of(I.Incidence.lonely({row(i)}, {row(j)}), +holds => {body})
 '''
 
@@ -287,50 +320,65 @@ def StromquistSix.lonely{i}_{j}({TPL6}, {LESS}, {NONTRIVIAL}) -> B.Bits.Holds(Bo
 CENTER_OF = {7: 'north', 1: 'south', 5: 'east', 3: 'west'}
 
 
-def center(i):
-    """No square holds exactly the centre and one neighbour (StromquistSix.lean, no_closed_family_center_pair)."""
-    patterns = []
-    for n in IN.NEIGHBOURS:
-        literals = [bit(i, key(k)) if k in (4, n) else f'Bool.not({bit(i, key(k))})' for k in range(9)]
-        patterns.append((n, literals))
+def center_pattern(n):
+    """No square holds exactly the centre and the neighbour n (StromquistSix.lean, no_closed_family_center_pair)."""
+    names = NAMES
+    literals = [bit('i', key(k)) if k in (4, n) else f'Bool.not({bit("i", key(k))})' for k in range(9)]
+    holds = lefts(literals, 'holds')
+    orientation = CENTER_OF[n]
+    transport = ST.Transport(ST.CENTER_ORIENTATIONS[orientation], None)
+    missing = [key_of(transport.preimage(v)) for v in ST.NORTH['missing']]
+    points = [ST.point_term(v) for v in ST.extra_points(orientation)]
+    lemma = lambda index: (f'Q.Stromquist.center_{orientation}{index}(TC, {args("i")}, nontrivial, '
+                           f'M.Membership.contains(TC, {normal("i")}, {key(4)}, {holds[4]}), M.Membership.contains(TC, {normal("i")}, {key(n)}, {holds[n]}), '
+                           + ', '.join(holds[m] for m in missing) + ')')
+    bits = ', '.join(bit(r, point) for r in names for point in points)
+    anys = ', '.join(f'Q.Stromquist.extra_{orientation}(TC, {args(r)}, nontrivial)' for r in names[1:])
+    marked = [bit('i', points[k]) for k in (1, 3, 4, 5)]
+    crowd = (f'B.Bits.both({marked[0]}, {IN.ands(marked[1:])}, {holds[n]}, B.Bits.both({marked[1]}, {IN.ands(marked[2:])}, '
+             f'M.Membership.inside_of(TC, {normal("i")}, {points[3]}, {lemma(0)}), B.Bits.both({marked[2]}, {marked[3]}, '
+             f'M.Membership.inside_of(TC, {normal("i")}, {points[4]}, {lemma(1)}), {holds[4]})))')
+    aparts = ', '.join(f'StromquistSix.extra_apart_{orientation}({TC6}, six, less, {names[x]}, {names[y]}, {names[x]}_bound, {names[y]}_bound, apart{x}_{y})'
+                       for x, y in PAIRS)
+    return f'''
+def StromquistSix.center_pattern{n}({TPL6}, {LESS}, {NONTRIVIAL}, {ROWS_PARAMS}, +holds: B.Bits.Holds({IN.ands(literals)})) -> Empty:
+  I.Incidence.crowded({bits}, {anys}, {crowd}, {aparts})
+'''
 
-    def refute(n, literals):
-        holds = lefts(literals, 'holds')
-        orientation = CENTER_OF[n]
-        transport = ST.Transport(ST.CENTER_ORIENTATIONS[orientation], None)
-        missing = [key_of(transport.preimage(v)) for v in ST.NORTH['missing']]
-        extra = ST.extra_points(orientation)
-        lemma = lambda index: (f'Q.Stromquist.center_{orientation}{index}(TC, {args(i)}, nontrivial, '
-                               f'M.Membership.contains(TC, {normal(i)}, {key(4)}, {holds[4]}), M.Membership.contains(TC, {normal(i)}, {key(n)}, {holds[n]}), '
-                               + ', '.join(holds[m] for m in missing) + ')')
-        order = [i] + [r for r in ROWS if r != i]
-        points = [ST.point_term(v) for v in extra]
-        bits = ', '.join(bit(r, point) for r in order for point in points)
-        anys = ', '.join(f'Q.Stromquist.extra_{orientation}(TC, {args(r)}, nontrivial)' for r in order[1:])
-        marked = [bit(i, points[k]) for k in (1, 3, 4, 5)]
-        crowd = (f'B.Bits.both({marked[0]}, {IN.ands(marked[1:])}, {holds[n]}, B.Bits.both({marked[1]}, {IN.ands(marked[2:])}, '
-                 f'M.Membership.inside_of(TC, {normal(i)}, {points[3]}, {lemma(0)}), B.Bits.both({marked[2]}, {marked[3]}, '
-                 f'M.Membership.inside_of(TC, {normal(i)}, {points[4]}, {lemma(1)}), {holds[4]})))')
-        aparts = ', '.join(apart_chain(order[a], order[b], points) for a in range(6) for b in range(a + 1, 6))
-        return f'I.Incidence.crowded({bits}, {anys}, {crowd}, {aparts})'
-    terms = [IN.ands(literals) for _, literals in patterns]
+
+NAMES = ['i'] + [f'r{k}' for k in range(1, 6)]
+PAIRS = [(x, y) for x in range(6) for y in range(x + 1, 6)]
+ROWS_PARAMS = ', '.join([f'+{r}: Nat, +{r}_bound: N.Natural.Le(1n+{r}, 6n)' for r in NAMES]
+                        + [f'+apart{x}_{y}: B.Bits.Holds(Bool.not(Nat.is_eq({NAMES[x]}, {NAMES[y]})))' for x, y in PAIRS])
+ROWS_ARGS = ', '.join([f'{r}, {r}_bound' for r in NAMES] + [f'apart{x}_{y}' for x, y in PAIRS])
+
+
+def center():
+    """No square holds the centre with one neighbour and nothing else."""
+    terms = [IN.ands([bit('i', key(k)) if k in (4, n) else f'Bool.not({bit("i", key(k))})' for k in range(9)]) for n in IN.NEIGHBOURS]
     proof = None
-    for k in reversed(range(len(patterns))):
-        n, literals = patterns[k]
-        here = f'B.Bits.not_of({terms[k]}, +holds => {refute(n, literals)})'
+    for k in reversed(range(len(terms))):
+        n = IN.NEIGHBOURS[k]
+        here = f'B.Bits.not_of({terms[k]}, +holds => StromquistSix.center_pattern{n}({TC6}, six, less, nontrivial, {ROWS_ARGS}, holds))'
         proof = here if proof is None else f'B.Bits.neither({terms[k]}, {IN.ors(terms[k + 1:])}, {here}, {proof})'
     return f'''
-def StromquistSix.center{i}({TPL6}, {LESS}, {NONTRIVIAL}) -> B.Bits.Holds(Bool.not(I.Incidence.center_pair({row(i)}))):
+def StromquistSix.center({TPL6}, {LESS}, {NONTRIVIAL}, {ROWS_PARAMS}) -> B.Bits.Holds(Bool.not(I.Incidence.center_pair({row('i')}))):
   {proof}
 '''
+
+
+def center_of(i):
+    order = [i] + [r for r in ROWS if r != i]
+    rows = ', '.join(f'{r}n, Unit{{}}' for r in order) + ', ' + ', '.join('Unit{}' for x in range(6) for y in range(x + 1, 6))
+    return f'StromquistSix.center({TC6}, six, less, nontrivial, {rows})'
 
 
 def final():
     bits = ', '.join(bit(i, key(k)) for i in ROWS for k in range(9))
     facts = ([perimeter(i) for i in ROWS] + [f'Q.Stromquist.pair_ok(TC, {args(i)})' for i in ROWS]
-             + [f'StromquistSix.center{i}({TC6}, less, nontrivial)' for i in ROWS]
-             + [f'StromquistSix.apart{i}_{j}({TC6}, less)' for i in ROWS for j in ROWS if i != j]
-             + [f'StromquistSix.lonely{i}_{j}({TC6}, less, nontrivial)' for i in ROWS for j in ROWS if i != j])
+             + [center_of(i) for i in ROWS]
+             + [f'StromquistSix.key_apart({TC6}, six, less, {i}n, {j}n, Unit{{}}, Unit{{}}, Unit{{}})' for i in ROWS for j in ROWS if i != j]
+             + [f'StromquistSix.lonely_pair({TC6}, six, less, nontrivial, {i}n, {j}n, Unit{{}}, Unit{{}}, Unit{{}})' for i in ROWS for j in ROWS if i != j])
     ctx = Context()
     one = ctx.var('one', 'ONE')
     ctx.equal(one, num(1), 'S.Scaling.one_is_number(TC)')
@@ -343,20 +391,19 @@ def StromquistSix.nontrivial({TPL6}, {LESS}) -> O.FieldOrder.Strict(TC, ZERO, ON
       O.FieldOrder.lt_of(TC, side, {THREE}, less)(S.Scaling.anything(TC, {THREE}, side, {broken}))),
     +positive => positive)
 
-def StromquistSix.contradiction({TPL6}, {LESS}, {NONTRIVIAL}) -> Empty:
-  I.Incidence.impossible({bits}, {", ".join(facts)})
-
-def StromquistSix.lower_bound({TPL6}) -> LE({THREE}, side):
+def StromquistSix.lower_bound({TPL6}, +six: N.Natural.Le(6n, count)) -> LE({THREE}, side):
   M.Membership.by_cases(TC, {THREE}, side, LE({THREE}, side), +enough => enough,
-    +less => Empty.absurd(LE({THREE}, side), StromquistSix.contradiction({TC6}, less, StromquistSix.nontrivial({TC6}, less))))
+    +less => Empty.absurd(LE({THREE}, side), M.Membership.bind(O.FieldOrder.Strict(TC, ZERO, ONE), Empty, StromquistSix.nontrivial({TC6}, six, less),
+      +nontrivial => I.Incidence.impossible({bits}, {", ".join(facts)}))))
 '''
 
 
 def main():
     pairs = [(i, j) for i in ROWS for j in ROWS if i != j]
     corner_pairs = [(c, m) for c in CORNER_KEYS for m in range(9) if m != 4 and ((c, m) in IN.ADJACENT or (m, c) in IN.ADJACENT)]
-    parts = ([HEADER, ACCESSORS, GENERIC] + [distinct(i, j) for i, j in pairs] + [apart(i, j) for i, j in pairs]
-             + [meet(c, m) for c, m in corner_pairs] + [lonely(i, j) for i, j in pairs] + [center(i) for i in ROWS] + [final()])
+    parts = ([HEADER, ACCESSORS, GENERIC, key_apart()] + [extra_apart(o) for o in ST.CENTER_ORIENTATIONS]
+             + [meet(c, m) for c, m in corner_pairs] + [lonely_pair()] + [center_pattern(n) for n in IN.NEIGHBOURS]
+             + [center(), final()])
     (ROOT / 'bend' / 'StromquistSix.bend').write_text(expand(''.join(parts)))
 
 
