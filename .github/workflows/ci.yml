@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: chelokot/bend
-          ref: 668a3401a1e0c3282e520dd5638c87ff7f3f67be
+          ref: 5a82b8f1d18bd8a73daac5196e8553eda484a9d3
           path: bend-lang
       - uses: oven-sh/setup-bun@v2
         with:
