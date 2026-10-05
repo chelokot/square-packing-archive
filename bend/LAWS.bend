@@ -9,11 +9,21 @@ import ./Scaling.bend as Z
 import ./bend-math/FieldOrder.bend as O
 import ./bend-math/Natural.bend as N
 import ./bend-math/Certificate.bend as C
+import ./bend-math/FieldAlgebra.bend as A
 
 law square6_has_packing_at_three:
   for ~F: Kind(&2)
   for ~field: K.Field<F>
   P.Problem.Packing<F, field, 6n, R.FieldRing.of_nat(~F, ~field, 3n)>
+
+law square6_lower_bound:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +six: N.Natural.Le(6n, count)
+  A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 3n), side)
 
 law contains_iff_local_coordinates_forward:
   for ~F: Kind(&2)

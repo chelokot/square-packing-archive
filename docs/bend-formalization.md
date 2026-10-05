@@ -34,11 +34,12 @@ provides `half` with `half + half = 1`.
 
 ## Checked results
 
-| Result                                       | Bend                                                                         |
-| -------------------------------------------- | ---------------------------------------------------------------------------- |
-| `HasPacking 6 3`, so `s(6) ≤ 3`              | `Laws.square6_has_packing_at_three` in [`bend/LAWS.bend`](../bend/LAWS.bend) |
-| `PlacedSquare.contains_iff_localCoordinates` | `Laws.contains_iff_local_coordinates_forward` and `_backward`                |
-| the same for the open square                 | `Laws.interior_iff_local_coordinates_forward` and `_backward`                |
+| Result                                                | Bend                                                                         |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `HasPacking 6 3`, so `s(6) ≤ 3`                       | `Laws.square6_has_packing_at_three` in [`bend/LAWS.bend`](../bend/LAWS.bend) |
+| `HasPacking n side → 6 ≤ n → 3 ≤ side`, so `s(6) = 3` | `Laws.square6_lower_bound`                                                   |
+| `PlacedSquare.contains_iff_localCoordinates`          | `Laws.contains_iff_local_coordinates_forward` and `_backward`                |
+| the same for the open square                          | `Laws.interior_iff_local_coordinates_forward` and `_backward`                |
 
 The packing places six axis-aligned unit squares in a 3 by 2 grid.
 `bend/Grid.bend` proves that a grid cell fits in side 3 and that cells whose
@@ -53,36 +54,40 @@ git submodule update --init
 bun /path/to/bend/bend2/main.ts bend/PROOF.bend --verdict
 ```
 
-## Plan for the remaining proofs
+## The lower bound
 
-The Lean proof of `s(6) = 3` depends on about 8,400 lines. Measure theory
-appears only for `side_positive`, and the upper bound is the grid above, so the
-port is dominated by Stromquist's point-set argument. The order of work:
+`bend/StromquistSix.bend` ports Stromquist's argument from the
+`StromquistSix*` Lean files. The law takes a packing of any `count ≥ 6`
+squares: the kernel checks a generic proof only when each `~` parameter has a
+model, and a packing has one when `count` is a parameter (at zero squares) but
+not at a fixed six. Its first six squares give the theorem for six.
 
-1. **Inequality certificates in `bend-math`** (done: `Certificate.bend` and
-   `tools/certificate.py`). The Lean geometry closes about
-   50 goals with `nlinarith`. Each such goal is an ordered-field inequality with
-   a Positivstellensatz certificate: a nonnegative combination of hypothesis
-   products and squares equal to the goal. `Certificate.nonnegative` checks
-   the identity with `FieldRing.equal` and the sign of each term, and
-   `Certificate.same` checks `linear_combination` steps. The search script
-   finds exact certificates; `bend/Geometry.bend` uses it for the local
-   coordinate characterization.
-2. **Constants and square roots.** Fractions such as `4/5` need an inverse for
-   nonzero naturals in the interface. `FriedmanStrip.lean` and
-   `StromquistSixPoints.lean` use `Real.sqrt`; where it cannot be eliminated,
-   the interface gains a square root of nonnegative elements, and the model
-   moves from the rationals to a field with that root.
-3. **Geometry layer in `bend/`.** Port the rest of `Geometry.lean` (local
-   coordinates, the five symmetries of a square, fitting under them and the
-   first-quadrant normal form, packings under the symmetries and the scaling
-   to a closed-disjoint family from `PackingPointCapacity.lean` are done;
-   separation remains), and the unavoidable-set framework in
-   `Unavoidable.lean`.
-4. **Finite combinatorics.** The incidence and pigeonhole steps over the nine
-   key points need counting lemmas over Bend lists or bounded naturals.
-5. **Stromquist's argument.** Port the `StromquistSix*` files, then the final
-   `IsMinimumSide 6 3`. Later records reuse layers 1 to 4.
+A packing of side less than 3 scales to six
+squares that fit `[0, 3]^2` with pairwise disjoint closed squares
+(`bend/Scaling.bend`). Each square is moved into first-quadrant normal form by
+the symmetries of the container (`bend/Symmetry.bend`), and its incidences with
+the nine key points `{1, 3/2, 2}^2` and the extra points of the centre
+patterns become Booleans decided by the field order (`bend/Membership.bend`).
+
+The geometric facts about one square are stated in normal form and proved by
+inequality certificates: it holds a key point (`bend/Unavoidable.bend`, the
+perimeter and unavoidable triangles of `Unavoidable.lean`), the pairs it can
+hold, the centre patterns and their extra points (`bend/Stromquist.bend`), and
+the boundary points shared by two squares holding adjacent single key points
+(`bend/Singletons.bend`). Disjointness turns them into constraints on the 54
+incidence bits, and `bend/Incidence.bend` shows by a Boolean case analysis
+that no six rows satisfy them.
+
+The certificates are found by `bend-math/tools/certificate.py` and stored in
+`scripts/bend-certificates.json`, so the generators rewrite every `.bend`
+file without a solver:
+
+```console
+for generator in scripts/generate-bend-*.py; do python3 "$generator"; done
+```
+
+Square roots do not appear: where `StromquistSixPoints.lean` bounds
+`cosine + sine` by `√2`, the Bend proof uses the rational bound `17/12`.
 
 Bend issues met along the way are tracked in
 [`bend-math/docs/bend-issues.md`](https://github.com/chelokot/bend-math/blob/main/docs/bend-issues.md).

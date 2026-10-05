@@ -38,8 +38,14 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check generated Bend sources are up to date
         run: |
-          python3 scripts/generate-bend-square6.py
-          git diff --exit-code -- bend/Square6.bend
+          for generator in scripts/generate-bend-*.py; do python3 "$generator"; done
+          git diff --exit-code -- bend scripts/bend-certificates.json
+      - name: Add swap for the kernel check
+        run: |
+          sudo fallocate -l 40G /mnt/bend-swap
+          sudo chmod 600 /mnt/bend-swap
+          sudo mkswap /mnt/bend-swap
+          sudo swapon /mnt/bend-swap
       - name: Check Bend proofs with the proven kernel
         run: bun bend-lang/bend2/main.ts bend/PROOF.bend --verdict
       - name: Reject unchecked Bend escape hatches

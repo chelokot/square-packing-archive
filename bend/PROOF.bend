@@ -5,9 +5,13 @@ import ./Geometry.bend as G
 import ./Symmetry.bend as Y
 import ./Packings.bend as Q
 import ./Scaling.bend as Z
+import ./StromquistSix.bend as Six
 
 def Laws.square6_has_packing_at_three(F, field):
   S.Square6.packing(~F, ~field)
+
+def Laws.square6_lower_bound(F, field, count, side, packing, six):
+  Six.StromquistSix.lower_bound(~F, ~field, ~count, ~side, ~packing, six)
 
 def Laws.contains_iff_local_coordinates_forward(F, field, square, point, containment):
   G.Geometry.contains_local(~F, ~field, square, point, containment)
