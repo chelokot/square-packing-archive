@@ -36,13 +36,14 @@ COORDINATES = [num(1), num(1) + H, num(2)]
 KEYS = [(COORDINATES[k % 3], COORDINATES[k // 3]) for k in range(9)]
 CENTER = 4
 THREE = 'R.FieldRing.of_nat(TC, 3n)'
+SELF = {'name': 'Stromquist.'}
 SQUARE_PARAMS = (f'+square: P.Problem.Square<F, field>, +corners: M.Membership.Corners<F, field, square, {THREE}>, '
                  '+cosine_sign: LE(ZERO, P.Problem.cosine(F, field, square)), +sine_sign: LE(ZERO, P.Problem.sine(F, field, square))')
 SQUARE_ARGS = 'square, corners, cosine_sign, sine_sign'
 
 
 def key(k):
-    return f'Stromquist.key{k}(TC)'
+    return f"{SELF['name']}key{k}(TC)"
 
 
 def basics():
@@ -96,7 +97,7 @@ class Square(Context):
         self.c = self.var('c', 'P.Problem.cosine(F, field, square)')
         self.s = self.var('s', 'P.Problem.sine(F, field, square)')
         self.h = self.var('h', 'HALF')
-        self.raw_equation(((self.c * self.c + self.s * self.s) - 1).text, 'Stromquist.unit(TC, square)')
+        self.raw_equation(((self.c * self.c + self.s * self.s) - 1).text, f"{SELF['name']}unit(TC, square)")
         self.raw_equation('h + h - 1', 'S.Scaling.half_equation(TC)')
         self.nonnegative(self.c, 'cosine_sign')
         self.nonnegative(self.s, 'sine_sign')
@@ -114,7 +115,34 @@ class Square(Context):
                 continue
             FRACTIONS.add(value)
             self.var(term.text, term.bend)
-            self.equal(num(value.denominator) * term, num(value.numerator), f'Stromquist.{fraction_name(value)}(TC, nontrivial)')
+            self.equal(num(value.denominator) * term, num(value.numerator), f"{SELF['name']}{fraction_name(value)}(TC, nontrivial)")
+
+    def corner_facts(self, names):
+        """Facts from a matched Corners record whose fields are named <corner>_<side>."""
+        signs = {'low_low': (-1, -1), 'low_high': (-1, 1), 'high_low': (1, -1), 'high_high': (1, 1)}
+        for name in names:
+            a, b = signs[name]
+            lx = self.h if a > 0 else -self.h
+            ly = self.h if b > 0 else -self.h
+            x = self.cx + (lx * self.c - ly * self.s)
+            y = self.cy + (lx * self.s + ly * self.c)
+            self.nonnegative(x, f'{name}_left')
+            self.below(x, num(3), f'{name}_right')
+            self.nonnegative(y, f'{name}_bottom')
+            self.below(y, num(3), f'{name}_top')
+
+    def local_terms_point(self, point, tag):
+        """Variables for the local coordinates of a point given by terms."""
+        x, y = point
+        polynomial_x = (x - self.cx) * self.c + (y - self.cy) * self.s
+        polynomial_y = (-(x - self.cx)) * self.s + (y - self.cy) * self.c
+        bend_point = f'P.Point{{{x.bend}, {y.bend}}}'
+        lx = self.var(f'lx{tag}', f'G.Geometry.local_x(TC, square, {bend_point})')
+        ly = self.var(f'ly{tag}', f'G.Geometry.local_y(TC, square, {bend_point})')
+        self.equal(lx, polynomial_x, f'S.Scaling.pair(TC, {lx.bend}, {polynomial_x.bend}, AX.le_reflexive({lx.bend}), AX.le_reflexive({lx.bend}))')
+        self.equal(ly, polynomial_y, f'S.Scaling.pair(TC, {ly.bend}, {polynomial_y.bend}, AX.le_reflexive({ly.bend}), AX.le_reflexive({ly.bend}))')
+        self.locals_of[(x.text, y.text)] = (lx, ly, bend_point)
+        return point
 
     def local_point(self, values, tag):
         """Variables for the local coordinates of a rational point."""
@@ -605,18 +633,19 @@ def point_term(values):
 class Transport:
     """Move facts about `square` along a chain of symmetries of [0, 3]^2 and into first-quadrant normal form."""
 
-    def __init__(self, ops, ctx):
+    def __init__(self, ops, ctx, square='square', corners='corners'):
         self.ops = ops
         self.ctx = ctx
-        squares = ['square']
+        self.base = square
+        squares = [square]
         for op in ops:
             squares.append(OPS[op]['square'](squares[-1]))
         self.squares = squares
         self.moved = squares[-1]
         self.normal = f'Y.Symmetry.first_quadrant(TC, {self.moved})'
-        corners = 'corners'
         for q, op in zip(squares, ops):
             corners = OPS[op]['corners'](q, corners)
+        self.base_corners = corners
         self.corners = f'M.Membership.first_quadrant_corners(TC, {self.moved}, {THREE}, {corners})'
         signs = f'Y.Symmetry.first_quadrant_signs(TC, {self.moved})'
         cosine = f'LE(ZERO, P.Problem.cosine(F, field, {self.normal}))'
@@ -657,13 +686,21 @@ class Transport:
         for q, op in reversed(list(zip(self.squares, self.ops))):
             current = OPS[op]['back'](q, f'P.Point{{{terms[0].bend}, {terms[1].bend}}}', current)
             terms = OPS[op]['terms'](*terms)
-        return self.move('square', terms, point_of(self.preimage(values)), current)
+        return self.move(self.base, terms, point_of(self.preimage(values)), current)
+
+    def backward_any(self, point, containment):
+        """Containment(normal, point) to Containment(base square, preimage of point) for any point term."""
+        current = f'Y.Symmetry.first_quadrant_contains_back(TC, {self.moved}, {point}, {containment})'
+        for q, op in reversed(list(zip(self.squares, self.ops))):
+            current = OPS[op]['back'](q, point, current)
+            point = OPS[op]['point'](point)
+        return current, point
 
     def outside(self, values, out):
         """Holds(not inside(square, point)) to Holds(not inside(normal, image point))."""
         image = self.image(values)
         back = self.backward(image, 'moved_inside')
-        return (f'M.Membership.outside_of(TC, square, {point_term(values)}, {self.normal}, {point_term(image)}, '
+        return (f'M.Membership.outside_of(TC, {self.base}, {point_term(values)}, {self.normal}, {point_term(image)}, '
                 f'moved_inside => {back}, {out})')
 
 
@@ -810,8 +847,62 @@ def Stromquist.extra_base(TPL, {SQUARE_PARAMS}, +nontrivial: O.FieldOrder.Strict
 '''
 
 
+def extra_points(orientation):
+    """The extra points of an orientation, in the order of EXTRA."""
+    transport = Transport(CENTER_ORIENTATIONS[orientation], None)
+    return [transport.preimage(values) for values in EXTRA]
+
+
+def extra_rows():
+    out = ''
+    for orientation in CENTER_ORIENTATIONS:
+        bits = ', '.join(f'M.Membership.inside(TC, square, {point_term(v)})' for v in extra_points(orientation))
+        out += f'''
+def Stromquist.extra_row_{orientation}(TPL, +square: P.Problem.Square<F, field>) -> List<&2, Bool>:
+  I.Incidence.row8({bits})
+'''
+    return out
+
+
+def or_at(bits, position, proof):
+    """Holds of the or-chain of bits from Holds of one of them."""
+    tail = bits[position + 1:]
+    if tail:
+        proof = f'B.Bits.first({bits[position]}, {ors(tail)}, {proof})'
+    for j in reversed(range(position)):
+        proof = f'B.Bits.second({bits[j]}, {ors(bits[j + 1:])}, {proof})'
+    return proof
+
+
+def extra_transport(orientation):
+    ops = CENTER_ORIENTATIONS[orientation]
+    ctx = Square()
+    transport = Transport(ops, ctx)
+    actual = extra_points(orientation)
+    ctx.use_fractions([v for point in EXTRA + actual for v in point])
+    bits = [f'M.Membership.inside(TC, square, {point_term(v)})' for v in actual]
+    goal = f'B.Bits.Holds({ors(bits)})'
+    call = f'Stromquist.extra_base(TC, {transport.normal}, {transport.corners}, {transport.signs[0]}, {transport.signs[1]}, nontrivial)'
+
+    def convert(k, containment):
+        back = transport.backward(EXTRA[k], containment)
+        return or_at(bits, k, f'M.Membership.inside_of(TC, square, {point_term(actual[k])}, {back})')
+
+    def eliminate(k, term):
+        if k == len(EXTRA) - 1:
+            return convert(k, term)
+        left = f'P.Problem.Containment<F, field, {transport.normal}, {point_term(EXTRA[k])}>'
+        right = containments(transport.normal, [point_term(v) for v in EXTRA[k + 1:]], named=True)
+        return f'M.Membership.either({left}, {right}, {goal}, {term}, +found{k} => {convert(k, f"found{k}")}, rest{k} => {eliminate(k + 1, f"rest{k}")})'
+    return f'''
+def Stromquist.extra_{orientation}(TPL, {SQUARE_PARAMS}, +nontrivial: O.FieldOrder.Strict(TC, ZERO, ONE)) ->
+  B.Bits.Holds(I.Incidence.any8(Stromquist.extra_row_{orientation}(TC, square))):
+  {eliminate(0, call)}
+'''
+
+
 def main():
-    parts = [basics(), perimeter()] + [clause(a, b, xs) for (a, b), xs in INCIDENCE.PAIRS.items()] + [pair_ok()] + [center_base(0), center_base(1)] + [center_transport(o, i) for o in CENTER_ORIENTATIONS for i in (0, 1)] + [extra_base()]
+    parts = [basics(), perimeter()] + [clause(a, b, xs) for (a, b), xs in INCIDENCE.PAIRS.items()] + [pair_ok()] + [center_base(0), center_base(1)] + [center_transport(o, i) for o in CENTER_ORIENTATIONS for i in (0, 1)] + [extra_base(), extra_rows()] + [extra_transport(o) for o in CENTER_ORIENTATIONS]
     denominators = sorted({v.denominator for v in FRACTIONS})
     parts = [HEADER] + [inverse_lemma(m) for m in denominators] + [fraction_lemma(v) for v in sorted(FRACTIONS)] + parts
     (ROOT / 'bend' / 'Stromquist.bend').write_text(expand(''.join(parts)))

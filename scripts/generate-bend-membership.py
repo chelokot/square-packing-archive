@@ -6,7 +6,7 @@ coordinates. `Membership.Corners` records that the four corners of a square
 lie in the container; unlike a `Fits` function it is data, so a proof can use
 it many times, and `Membership.fits` turns it back into `Fits`.
 """
-from bend_proof import ROOT, Context, T, expand
+from bend_proof import ROOT, Context, T, expand, num
 
 HEADER = '''import Base
 import ./bend-math/Field.bend as K
@@ -327,6 +327,25 @@ def Membership.corners_of(TPL, +square: P.Problem.Square<F, field>, +side: F, fi
 '''
 
 
+def strict_product():
+    """The product of two positive elements is positive."""
+    ctx = Context()
+    a, b, i = ctx.var('a', 'a'), ctx.var('b', 'b'), ctx.var('i', 'INV(a)')
+    ctx.equal(a * i, num(1), 'AL.same_transitive(TC, MUL(a, INV(a)), ONE, R.FieldRing.of_nat(TC, 1n), '
+              'AL.mul_inverse(TC, a, O.FieldOrder.lt_of(TC, ZERO, a, first)), S.Scaling.one_is_number(TC))')
+    ctx.nonnegative(a, 'O.FieldOrder.le_of_lt(TC, ZERO, a, O.FieldOrder.lt_of(TC, ZERO, a, first))')
+    inverse = ctx.le(num(0), i, squares=[i])
+    ctx.nonnegative(i, 'inverse_nonnegative')
+    ctx.below(a * b, num(0), 'not_positive')
+    proof = ctx.le(b, num(0))
+    return f'''
+def Membership.strict_product(TPL, +a: F, +b: F, +first: O.FieldOrder.Strict(TC, ZERO, a), +second: O.FieldOrder.Strict(TC, ZERO, b)) ->
+  O.FieldOrder.Strict(TC, ZERO, MUL(a, b)):
+  +inverse_nonnegative: LE(ZERO, INV(a)) = {inverse}
+  O.FieldOrder.strict_of(TC, ZERO, MUL(a, b), +not_positive => O.FieldOrder.lt_of(TC, ZERO, b, second)({proof}))
+'''
+
+
 MOVES = '''
 def Membership.moved(TPL, +square: P.Problem.Square<F, field>, +first: P.Problem.Point<F>, +second: P.Problem.Point<F>,
   +x_below: LE(P.Problem.x(F, first), P.Problem.x(F, second)), +x_above: LE(P.Problem.x(F, second), P.Problem.x(F, first)),
@@ -381,4 +400,4 @@ def Membership.first_quadrant_corners(TPL, +square: P.Problem.Square<F, field>, 
     Y.Symmetry.first_quadrant_fits(TC, square, side, Membership.fits(TC, square, side, corners)), Y.Symmetry.first_quadrant_fits(TC, square, side, Membership.fits(TC, square, side, corners)), Y.Symmetry.first_quadrant_fits(TC, square, side, Membership.fits(TC, square, side, corners)), Y.Symmetry.first_quadrant_fits(TC, square, side, Membership.fits(TC, square, side, corners)))
 '''
 
-(ROOT / 'bend' / 'Membership.bend').write_text(expand(HEADER + DECISIONS + ELIMINATORS + CORNERS + fits_part() + MOVES + TRANSPORTS))
+(ROOT / 'bend' / 'Membership.bend').write_text(expand(HEADER + DECISIONS + ELIMINATORS + CORNERS + fits_part() + MOVES + TRANSPORTS + strict_product()))

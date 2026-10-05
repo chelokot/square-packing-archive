@@ -170,6 +170,16 @@ ENUMERATIONS = [
 ]
 
 
+def alone(p):
+    others = [k for k in range(POINTS) if k != p]
+    conclusion = ands([f"Bool.not({get(R, k)})" for k in others])
+    return enumeration(f'alone{p}', [(f'B.Bits.Holds({SINGLE})', single), (f'B.Bits.Holds({get(R, p)})', lambda v: v[p])],
+                       (f'B.Bits.Holds({conclusion})', lambda v: all(not v[k] for k in others)))
+
+
+ENUMERATIONS += [alone(p) for p in range(POINTS)]
+
+
 def edge_free():
     lines = ['def Incidence.edge_free(wu: Bool, wv: Bool, vu: Bool, vv: Bool, covered: B.Bits.Holds(Bool.or(wu, wv)),',
              '  first: B.Bits.Holds(Bool.not(Bool.and(wu, vu))), second: B.Bits.Holds(Bool.not(Bool.and(wv, vv)))) ->',
@@ -590,6 +600,77 @@ def case_four():
 '''
 
 
+def crowded():
+    """Six pairwise disjoint rows of eight bits, each nonempty and the first with four given bits, are impossible."""
+    width = 8
+    marked = [1, 3, 4, 5]
+    bit8 = lambda i, k: f'c{i}_{k}'
+    row8 = lambda i: 'Incidence.row8(' + ', '.join(bit8(i, k) for k in range(width)) + ')'
+    v8 = 'Incidence.row8(' + ', '.join(f'v{k}' for k in range(width)) + ')'
+    definitions = f'''
+def Incidence.row8({', '.join(f'+b{k}: Bool' for k in range(width))}) -> List<&2, Bool>:
+  {chain(lambda b, rest: f'Con{{{b}, {rest}}}', [f'b{k}' for k in range(width)], 'Nil{}')}
+
+def Incidence.any8(+v: List<&2, Bool>) -> Bool:
+  {ors([get('v', k) for k in range(width)])}
+
+def Incidence.marked(+v: List<&2, Bool>) -> Bool:
+  {ands([get('v', k) for k in marked])}
+'''
+
+    def enumerate8(name, hypothesis, test, conclusion):
+        params = ', '.join([f'+v{k}: Bool' for k in range(width)] + [f'h0: B.Bits.Holds({hypothesis}({v8}))'])
+        lines = [f'def Incidence.{name}({params}) ->', f'  N.Natural.Le({conclusion}n, B.Bits.count({v8})):',
+                 '  match ' + ' '.join(f'v{k}' for k in range(width)) + ':']
+        for bits in itertools.product([False, True], repeat=width):
+            lines.append('    case ' + ' '.join('True{}' if b else 'False{}' for b in bits) + ':')
+            if not test(bits):
+                lines.append('      match h0:')
+            else:
+                assert sum(bits) >= conclusion
+                lines.append('      Unit{}')
+        return '\n'.join(lines) + '\n'
+    definitions += enumerate8('any_count', 'Incidence.any8', any, 1)
+    definitions += enumerate8('marked_count', 'Incidence.marked', lambda b: all(b[k] for k in marked), 4)
+    bits = [bit8(i, k) for i in range(ROWS) for k in range(width)]
+    facts = ([(f'any{i}', f'B.Bits.Holds(Incidence.any8({row8(i)}))') for i in range(1, ROWS)]
+             + [('crowd', f'B.Bits.Holds(Incidence.marked({row8(0)}))')]
+             + [(f'apart{i}_{j}', f'B.Bits.Holds(Bool.not(B.Bits.meet({row8(i)}, {row8(j)})))') for i in range(ROWS) for j in range(i + 1, ROWS)])
+    params = ', '.join([f'+{b}: Bool' for b in bits] + [f'+{n}: {t}' for n, t in facts])
+    lets = ''.join(f'  +r{i}: List<&2, Bool> = {row8(i)}\n' for i in range(ROWS))
+    lets += ''.join(f'  +U{i}: List<&2, Bool> = B.Bits.union({"r0" if i == 1 else f"U{i - 1}"}, r{i})\n' for i in range(1, ROWS))
+    atoms = [f'B.Bits.count(r{i})' for i in range(ROWS)] + [f'B.Bits.count(U{i})' for i in range(1, ROWS)]
+    lets += '  +values: R.Ring.Values = ' + chain(lambda a, rest: f'R.Value{{{a}, {rest}}}', atoms, 'R.NoValues{}') + '\n'
+    index = {a: i for i, a in enumerate(atoms)}
+    atom8 = lambda text: ('atom', index[text])
+
+    def meet(i, target):
+        if i == 0:
+            return f'apart0_{target}'
+        return f'B.Bits.apart_union({"r0" if i == 1 else f"U{i - 1}"}, r{i}, r{target}, {meet(i - 1, target)}, apart{i}_{target})'
+    found = [(const(4), atom8('B.Bits.count(r0)'), f'Incidence.marked_count({", ".join(bit8(0, k) for k in range(width))}, crowd)')]
+    found += [(const(1), atom8(f'B.Bits.count(r{i})'), f'Incidence.any_count({", ".join(bit8(i, k) for k in range(width))}, any{i})')
+              for i in range(1, ROWS)]
+    for i in range(1, ROWS):
+        previous = atom8('B.Bits.count(r0)') if i == 1 else atom8(f'B.Bits.count(U{i - 1})')
+        lhs = ('sum', previous, atom8(f'B.Bits.count(r{i})'))
+        rhs = atom8(f'B.Bits.count(U{i})')
+        equation = f'B.Bits.count_union({"r0" if i == 1 else f"U{i - 1}"}, r{i}, {meet(i - 1, i)})'
+        pair = f'N.Natural.le_both_from_eq(B.Bits.count(U{i}), R.Ring.eval(values, {expr(lhs)}), {equation})'
+        found.append((lhs, rhs, f'Pair.snd(N.Natural.Le(B.Bits.count(U{i}), R.Ring.eval(values, {expr(lhs)})), '
+                                f'N.Natural.Le(R.Ring.eval(values, {expr(lhs)}), B.Bits.count(U{i})), {pair})'))
+    found.append((atom8('B.Bits.count(U5)'), const(width), 'B.Bits.count_at_most_length(U5)'))
+    global INDEX
+    saved = INDEX
+    INDEX = index
+    proof = refute(found)
+    INDEX = saved
+    return definitions + f'''
+def Incidence.crowded({params}) -> Empty:
+{lets}  {proof}
+'''
+
+
 HEADER = '''import Base
 import ./bend-math/Bits.bend as B
 import ./bend-math/Natural.bend as N
@@ -601,7 +682,7 @@ for e in range(1, ROWS):
     finds.append(find(e).replace('U_PREFIX', union_term(e - 1)))
 parts = ([HEADER, DEFINITIONS] + ENUMERATIONS + [edge_free(), avoid_cycle(), three_or_four()]
          + [finish(i) for i in range(ROWS)] + finds + [case_three()]
-         + [center_or_single(i).replace('S_TERM', s_term()) for i in range(ROWS)] + [case_four(), MAIN])
+         + [center_or_single(i).replace('S_TERM', s_term()) for i in range(ROWS)] + [case_four(), MAIN, crowded()])
 if __name__ == '__main__':
     path = pathlib.Path(__file__).resolve().parent.parent / 'bend' / 'Incidence.bend'
     path.write_text('\n'.join(parts))

@@ -15,6 +15,7 @@ sys.path.insert(0, str(ROOT / 'bend' / 'bend-math' / 'tools'))
 import atexit
 import json
 import os
+import time
 
 import certificate
 
@@ -33,8 +34,16 @@ def search(*arguments):
     """certificate.search, remembered across runs because the generators ask the same questions again."""
     key = json.dumps(arguments)
     if key not in CACHE:
+        started = time.time()
+        if os.environ.get('BEND_PROOF_LOG'):
+            pathlib.Path(os.environ['BEND_PROOF_LOG']).write_text(key)
+            print(f'search goal {arguments[3][:150]} facts {len(arguments[1])} squares {len(arguments[4])} products {arguments[5]}', file=sys.stderr, flush=True)
         found = certificate.search(*arguments)
         CACHE[key] = None if found is None else certificate.render(*found)
+        if len(CACHE) % 25 == 0:
+            save_cache()
+        if os.environ.get('BEND_PROOF_LOG') and time.time() - started > 1:
+            print(f'{time.time() - started:.1f}s {found is not None} goal {arguments[3][:120]} facts {len(arguments[1])}', file=sys.stderr, flush=True)
     return CACHE[key]
 
 
@@ -76,9 +85,11 @@ def term(text, names):
 
 def le(names, value_terms, fact_texts, fact_proofs, equation_texts, equation_proofs, lower, upper, squares=(), products=2,
        required=True, tail=None):
-    """Certificate for lower <= upper. With `tail`, the last facts and all values and equations are named lets."""
+    """Certificate for lower <= upper. With `tail`, the last facts and all values and equations are named lets,
+    and `equation_texts` are the equations added after the freeze."""
     frozen = tail['facts'] if tail else []
-    found = search(names, list(fact_texts) + frozen, list(equation_texts), f'({upper}) - ({lower})', list(squares), products)
+    frozen_equations = tail['equation_texts'] if tail else []
+    found = search(names, list(fact_texts) + frozen, list(equation_texts) + frozen_equations, f'({upper}) - ({lower})', list(squares), products)
     if found is None:
         if not required:
             return None
@@ -86,9 +97,11 @@ def le(names, value_terms, fact_texts, fact_proofs, equation_texts, equation_pro
     denominator, terms = found
     if tail:
         fact_list = chain_with(lambda e, rest: f'C.MoreExprs{{{e}, {rest}}}', [term(t, names) for t in fact_texts], tail['name'])
-        proof_list = chain_with(lambda p, rest: f'C.Both{{{p}, {rest}}}', list(fact_proofs), tail['name'] + '_proofs')
-        return (f'C.Certificate.le(TC, {tail["values"]}, {fact_list}, {proof_list}, {tail["equations"]}, '
-                f'{tail["equations"]}_proofs, {term(lower, names)}, {term(upper, names)}, {denominator}, {terms}, {{==}})')
+        proof_list = chain_with(lambda p, rest: f'C.Both{{{p}, {rest}}}', list(fact_proofs), tail.get('proofs', tail['name'] + '_proofs'))
+        equation_list = chain_with(lambda e, rest: f'C.MoreExprs{{{e}, {rest}}}', [term(t, names) for t in equation_texts], tail['equations'])
+        equation_proof_list = chain_with(lambda p, rest: f'C.Both{{{p}, {rest}}}', list(equation_proofs), tail['equations'] + '_proofs')
+        return (f'C.Certificate.le(TC, {tail["values"]}, {fact_list}, {proof_list}, {equation_list}, '
+                f'{equation_proof_list}, {term(lower, names)}, {term(upper, names)}, {denominator}, {terms}, {{==}})')
     return (f'C.Certificate.le(TC, {values(*value_terms)}, {exprs(fact_texts, names)}, {facts(*fact_proofs)}, '
             f'{exprs(equation_texts, names)}, {facts(*equation_proofs)}, {term(lower, names)}, {term(upper, names)}, '
             f'{denominator}, {terms}, {{==}})')
@@ -163,17 +176,21 @@ class Context:
         self.lets = []
         self.tail = None
         self.locals_of = {}
+        self.history = []
 
     def var(self, name, bend):
         self.names.append(name)
         self.terms.append(bend)
         return T(bend, name)
 
-    def nonnegative(self, value, proof):
+    def nonnegative(self, value, proof, name=None):
         self.facts.append((value.text, proof))
+        self.history.append((value.text, proof, name or (proof if proof.isidentifier() else None)))
 
     def below(self, a, b, proof):
-        self.facts.append(((b - a).text, f'S.Scaling.fact(TC, {a.bend}, {b.bend}, {proof})'))
+        fact = ((b - a).text, f'S.Scaling.fact(TC, {a.bend}, {b.bend}, {proof})')
+        self.facts.append(fact)
+        self.history.append(fact + (proof,))
 
     def equal(self, a, b, proof):
         self.equations.append(((a - b).text, f'S.Scaling.equation(TC, {a.bend}, {b.bend}, {proof})'))
@@ -181,11 +198,17 @@ class Context:
     def raw_equation(self, text, proof):
         self.equations.append((text, proof))
 
-    def le(self, a, b, squares=(), products=2, using=None, required=True):
-        chosen = self.facts if using is None else [self.facts[i] for i in using]
+    def le(self, a, b, squares=(), products=2, using=None, required=True, only=None):
+        tail = self.tail
+        if only is not None:
+            chosen = [(text, proof) for text, proof, name in self.history if name in only]
+            if tail is not None:
+                tail = dict(tail, facts=[], name='C.NoExprs{}', proofs='Unit{}')
+        else:
+            chosen = self.facts if using is None else [self.facts[i] for i in using]
         return le(self.names, self.terms, [f for f, _ in chosen], [p for _, p in chosen],
                   [e for e, _ in self.equations], [p for _, p in self.equations], lift(a).text, lift(b).text,
-                  [s.text if isinstance(s, T) else s for s in squares], products, required, self.tail)
+                  [s.text if isinstance(s, T) else s for s in squares], products, required, tail)
 
     def freeze(self, name):
         """Bind the current facts (and, the first time, the values and equations) as lets named after `name`."""
@@ -194,7 +217,9 @@ class Context:
             self.lets.append(f'+{name}_equations: C.Certificate.Exprs = {exprs([e for e, _ in self.equations], self.names)}')
             self.lets.append(f'+{name}_equations_proofs: C.Certificate.Equations(TC, {name}_values, {name}_equations) = '
                              f'{facts(*[p for _, p in self.equations])}')
-            base = {'values': f'{name}_values', 'equations': f'{name}_equations', 'facts': [], 'name': 'C.NoExprs{}'}
+            base = {'values': f'{name}_values', 'equations': f'{name}_equations', 'facts': [], 'name': 'C.NoExprs{}',
+                    'equation_texts': [e for e, _ in self.equations]}
+            self.equations = []
             tail_proofs = 'Unit{}'
         else:
             base = dict(self.tail)
@@ -203,7 +228,7 @@ class Context:
         proof_list = chain_with(lambda p, rest: f'C.Both{{{p}, {rest}}}', [p for _, p in self.facts], tail_proofs)
         self.lets.append(f'+{name}: C.Certificate.Exprs = {fact_list}')
         self.lets.append(f'+{name}_proofs: C.Certificate.Facts(TC, {base["values"]}, {name}) = {proof_list}')
-        self.tail = {'values': base['values'], 'equations': base['equations'],
+        self.tail = {'values': base['values'], 'equations': base['equations'], 'equation_texts': base['equation_texts'],
                      'facts': [f for f, _ in self.facts] + base['facts'], 'name': name}
         self.facts = []
 
@@ -214,6 +239,7 @@ class Context:
         other.facts = list(self.facts)
         other.equations = list(self.equations)
         other.lets = list(self.lets)
+        other.history = list(self.history)
         return other
 
     def derive(self, name, a, b, squares=(), products=2):
@@ -314,10 +340,11 @@ def gap(u, v, name):
 class Refuter:
     """Refute a case from strict facts `u < v`: prove `v <= u` for one of them, splitting on comparisons if needed."""
 
-    def __init__(self, squares=(), products=2, splits=()):
+    def __init__(self, squares=(), products=2, splits=(), only=None):
         self.squares = list(squares)
         self.products = products
         self.splits = list(splits)
+        self.only = only
         self.fresh = 0
 
     def name(self, stem):
@@ -326,19 +353,24 @@ class Refuter:
 
     def refute(self, ctx, stricts, splits=None):
         splits = self.splits if splits is None else splits
-        for u, v, name in stricts:
-            cert = ctx.le(v, u, self.squares, self.products, required=False)
-            if cert is not None:
-                return f'O.FieldOrder.lt_of(TC, {u.bend}, {v.bend}, {name})({cert})'
+        attempts = self.products if isinstance(self.products, tuple) else (self.products,)
+        for products in attempts:
+            for u, v, name in stricts:
+                only = None if self.only is None else self.only + [n for _, _, n in stricts]
+                cert = ctx.le(v, u, self.squares, products, required=False, only=only)
+                if cert is not None:
+                    return f'O.FieldOrder.lt_of(TC, {u.bend}, {v.bend}, {name})({cert})'
         for k, (a, b) in enumerate(splits):
             yes, no = self.name('below'), self.name('above')
+            if self.only is not None:
+                self.only = self.only + [yes, no]
             low = ctx.copy()
             low.below(a, b, yes)
             first = self.refute(low, stricts, splits[k + 1:])
             if first is None:
                 continue
             high = ctx.copy()
-            high.nonnegative(a - b, gap(b, a, no))
+            high.nonnegative(a - b, gap(b, a, no), no)
             second = self.refute(high, stricts + [(b, a, no)], splits[k + 1:])
             if second is None:
                 continue
@@ -381,7 +413,7 @@ def one_of(ctx, square, points, refuter, stricts=()):
         for k, (u, v) in enumerate(cases):
             name = f'miss{i}_{k}'
             branch = current.copy()
-            branch.nonnegative(v - u, gap(u, v, name))
+            branch.nonnegative(v - u, gap(u, v, name), name)
             branches.append(f'+{name} => {missing(i + 1, branch, found + [(u, v, name)])}')
         return f'M.Membership.outside(TC, {square}, {names[i]}, Empty, outside{i}, {", ".join(branches)})'
 
@@ -407,30 +439,77 @@ def build(ctx, steps, goal, refuter, finish, stricts=()):
         return finish(ctx, stricts)
     step, rest = steps[0], steps[1:]
     if step[0] == 'le':
-        _, name, a, b, squares = step
-        proof = ctx.le(a, b, squares, refuter.products)
+        _, name, a, b, squares = step[:5]
+        options = step[5] if len(step) > 5 else {}
+        proof = ctx.le(a, b, squares, options.get('products', refuter.products), only=options.get('only'))
         after = ctx.copy()
         after.below(a, b, name)
         return f'M.Membership.bind(LE({lift(a).bend}, {lift(b).bend}), {goal}, {proof}, +{name} => {build(after, rest, goal, refuter, finish, stricts)})'
     if step[0] == 'lt':
-        _, name, a, b = step
+        _, name, a, b = step[:4]
+        options = step[4] if len(step) > 4 else {}
         a, b = lift(a), lift(b)
         bad = ctx.copy()
         bad.below(b, a, f'{name}_bad')
-        refutation = refuter.refute(bad, stricts)
+        if 'only' in options:
+            refutation = None
+            for u, v, strict in stricts:
+                if strict in options['only'] and refutation is None:
+                    cert = bad.le(v, u, options.get('squares', ()), options.get('products', 2),
+                                  required=False, only=options['only'] + [f'{name}_bad'])
+                    if cert is not None:
+                        refutation = f'O.FieldOrder.lt_of(TC, {u.bend}, {v.bend}, {strict})({cert})'
+        else:
+            saved = refuter.products
+            refuter.products = options.get('products', saved)
+            refutation = refuter.refute(bad, stricts)
+            refuter.products = saved
         if refutation is None:
             raise SystemExit(f'cannot prove {a.text} < {b.text}')
         proof = f'O.FieldOrder.strict_of(TC, {a.bend}, {b.bend}, +{name}_bad => {refutation})'
         after = ctx.copy()
-        after.nonnegative(b - a, gap(a, b, name))
+        after.nonnegative(b - a, gap(a, b, name), name)
         return (f'M.Membership.bind(O.FieldOrder.Strict(TC, {a.bend}, {b.bend}), {goal}, {proof}, '
                 f'+{name} => {build(after, rest, goal, refuter, finish, stricts + [(a, b, name)])})')
+    if step[0] == 'equation':
+        _, a, b, proof = step
+        after = ctx.copy()
+        after.equal(lift(a), lift(b), proof)
+        return build(after, rest, goal, refuter, finish, stricts)
+    if step[0] == 'given_lt':
+        _, name, a, b, proof = step
+        a, b = lift(a), lift(b)
+        after = ctx.copy()
+        after.nonnegative(b - a, gap(a, b, name), name)
+        return (f'M.Membership.bind(O.FieldOrder.Strict(TC, {a.bend}, {b.bend}), {goal}, {proof}, '
+                f'+{name} => {build(after, rest, goal, refuter, finish, stricts + [(a, b, name)])})')
+    if step[0] == 'try':
+        for option in step[1]:
+            try:
+                build(ctx, [option], goal, refuter, lambda current, found: 'probe', stricts)
+            except SystemExit as failure:
+                if os.environ.get('BEND_PROOF_TRY'):
+                    print(f'try {option[1]} with {[n for _, _, n in stricts]}: {str(failure)[:150]}', file=sys.stderr, flush=True)
+                continue
+            return build(ctx, [option] + rest, goal, refuter, finish, stricts)
+        return build(ctx, rest, goal, refuter, finish, stricts)
     if step[0] == 'le_refute':
-        _, name, a, b = step
+        _, name, a, b = step[:4]
         a, b = lift(a), lift(b)
         bad = ctx.copy()
-        bad.nonnegative(a - b, gap(b, a, f'{name}_bad'))
-        refutation = refuter.refute(bad, stricts + [(b, a, f'{name}_bad')])
+        bad.nonnegative(a - b, gap(b, a, f'{name}_bad'), f'{name}_bad')
+        options = step[4] if len(step) > 4 else {}
+        if 'only' in options:
+            proof_le = bad.le(a, b, options.get('squares', ()), options.get('products', 2), only=options['only'] + [f'{name}_bad'])
+            refutation = f'O.FieldOrder.lt_of(TC, {b.bend}, {a.bend}, {name}_bad)({proof_le})'
+        elif 'splits' in options:
+            refutation = Refuter(options.get('squares', ()), options.get('products', 2), options['splits']).refute(
+                bad, stricts + [(b, a, f'{name}_bad')])
+        else:
+            saved = refuter.products
+            refuter.products = options.get('products', saved)
+            refutation = refuter.refute(bad, stricts + [(b, a, f'{name}_bad')])
+            refuter.products = saved
         if refutation is None:
             raise SystemExit(f'cannot prove {a.text} <= {b.text} by contradiction')
         kind = f'LE({a.bend}, {b.bend})'
@@ -447,7 +526,7 @@ def build(ctx, steps, goal, refuter, finish, stricts=()):
         for k, (u, v) in enumerate([(h, lx), (lx, -h), (h, ly), (ly, -h)]):
             label = f'{outside}_{k}'
             branch = ctx.copy()
-            branch.nonnegative(v - u, gap(u, v, label))
+            branch.nonnegative(v - u, gap(u, v, label), label)
             found = stricts + [(u, v, label)]
             early = refuter.refute(branch, found, splits=[])
             inner = f'Empty.absurd({goal}, {early})' if early is not None else build(branch, rest, goal, refuter, finish, found)
@@ -459,7 +538,28 @@ def build(ctx, steps, goal, refuter, finish, stricts=()):
         low = ctx.copy()
         low.below(a, b, name)
         high = ctx.copy()
-        high.nonnegative(a - b, gap(b, a, name))
+        high.nonnegative(a - b, gap(b, a, name), name)
         return (f'M.Membership.by_cases(TC, {a.bend}, {b.bend}, {goal}, +{name} => {build(low, yes + rest, goal, refuter, finish, stricts)}, '
                 f'+{name} => {build(high, no + rest, goal, refuter, finish, stricts + [(b, a, name)])})')
     raise ValueError(step[0])
+
+
+def rendered_le(names, values_text, fact_texts, fact_proofs_text, equation_texts, equation_proofs_text, lower, upper,
+                squares=(), products=2):
+    """Certificate for lower <= upper with the values and proofs already written as Bend."""
+    found = search(names, list(fact_texts), list(equation_texts), f'({upper}) - ({lower})', list(squares), products)
+    if found is None:
+        raise SystemExit(f'no certificate for {lower} <= {upper}')
+    denominator, terms = found
+    return (f'C.Certificate.le(TC, {values_text}, {exprs(fact_texts, names)}, {fact_proofs_text}, {exprs(equation_texts, names)}, '
+            f'{equation_proofs_text}, {term(lower, names)}, {term(upper, names)}, {denominator}, {terms}, {{==}})')
+
+
+def rendered_same(names, values_text, equation_texts, equation_proofs_text, left, right):
+    """Certificate for left = right with the values and proofs already written as Bend."""
+    forward = search(names, [], list(equation_texts), f'({right}) - ({left})', [], 0)
+    backward = search(names, [], list(equation_texts), f'({left}) - ({right})', [], 0)
+    if forward is None or backward is None or forward[0] != '0n' or backward[0] != '0n':
+        raise SystemExit(f'no certificate for {left} = {right}')
+    return (f'C.Certificate.same(TC, {values_text}, {exprs(equation_texts, names)}, {equation_proofs_text}, '
+            f'{term(left, names)}, {term(right, names)}, {forward[1]}, {backward[1]}, {{==}}, {{==}})')
