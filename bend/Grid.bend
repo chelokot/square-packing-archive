@@ -55,12 +55,12 @@ def Grid.regroup(~F: Kind(&2), ~field: K.Field<F>, +h: F, +k: F, +l: F) -> A.Alg
     R.Plus{R.Plus{R.Variable{0n}, R.Variable{1n}}, R.Variable{2n}},
     R.Plus{R.Plus{R.Variable{0n}, R.Variable{2n}}, R.Variable{1n}}, {==})
 
-def Grid.coordinate_bounds(~F: Kind(&2), ~field: K.Field<F>, +offset: Nat, +local: F, +coordinate: F,
-  offset_small: N.Natural.Le(offset, 2n),
+def Grid.coordinate_bounds(~F: Kind(&2), ~field: K.Field<F>, +size: Nat, +offset: Nat, +local: F, +coordinate: F,
+  offset_small: N.Natural.Le(offset, size),
   at_most: A.Algebra.le(~F, ~field, local, A.Algebra.half(~F, ~field)), at_least: A.Algebra.le(~F, ~field, A.Algebra.neg(~F, ~field, A.Algebra.half(~F, ~field)), local),
   below: A.Algebra.le(~F, ~field, coordinate, A.Algebra.add(~F, ~field, A.Algebra.add(~F, ~field, A.Algebra.half(~F, ~field), R.FieldRing.of_nat(~F, ~field, offset)), local)),
   above: A.Algebra.le(~F, ~field, A.Algebra.add(~F, ~field, A.Algebra.add(~F, ~field, A.Algebra.half(~F, ~field), R.FieldRing.of_nat(~F, ~field, offset)), local), coordinate)) ->
-  A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), coordinate) & A.Algebra.le(~F, ~field, coordinate, R.FieldRing.of_nat(~F, ~field, 3n)):
+  A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), coordinate) & A.Algebra.le(~F, ~field, coordinate, R.FieldRing.of_nat(~F, ~field, 1n+size)):
   +h: F = A.Algebra.half(~F, ~field)
   +k: F = R.FieldRing.of_nat(~F, ~field, offset)
   +center: F = A.Algebra.add(~F, ~field, A.Algebra.add(~F, ~field, h, k), local)
@@ -74,26 +74,26 @@ def Grid.coordinate_bounds(~F: Kind(&2), ~field: K.Field<F>, +offset: Nat, +loca
           O.FieldOrder.zero_le_of_nat(~F, ~field, offset)),
         A.Algebra.add_zero(~F, ~field, A.Algebra.zero(~F, ~field)), A.Algebra.same_symmetric(~F, ~field, center, moved, Grid.regroup(~F, ~field, h, k, local))),
       above),
-    K.Field.le_transitive(F, field)(coordinate, center, R.FieldRing.of_nat(~F, ~field, 3n), below,
-      A.Algebra.le_respects(~F, ~field, moved, A.Algebra.add(~F, ~field, A.Algebra.add(~F, ~field, h, h), R.FieldRing.of_nat(~F, ~field, 2n)), center, R.FieldRing.of_nat(~F, ~field, 3n),
-        O.FieldOrder.le_add_both(~F, ~field, A.Algebra.add(~F, ~field, h, local), A.Algebra.add(~F, ~field, h, h), k, R.FieldRing.of_nat(~F, ~field, 2n),
+    K.Field.le_transitive(F, field)(coordinate, center, R.FieldRing.of_nat(~F, ~field, 1n+size), below,
+      A.Algebra.le_respects(~F, ~field, moved, A.Algebra.add(~F, ~field, A.Algebra.add(~F, ~field, h, h), R.FieldRing.of_nat(~F, ~field, size)), center, R.FieldRing.of_nat(~F, ~field, 1n+size),
+        O.FieldOrder.le_add_both(~F, ~field, A.Algebra.add(~F, ~field, h, local), A.Algebra.add(~F, ~field, h, h), k, R.FieldRing.of_nat(~F, ~field, size),
           O.FieldOrder.le_add_left(~F, ~field, local, h, h, at_most),
-          O.FieldOrder.of_nat_le(~F, ~field, offset, 2n, offset_small)),
+          O.FieldOrder.of_nat_le(~F, ~field, offset, size, offset_small)),
         A.Algebra.same_symmetric(~F, ~field, center, moved, Grid.regroup(~F, ~field, h, k, local)),
-        A.Algebra.add_respects_left(~F, ~field, A.Algebra.add(~F, ~field, h, h), A.Algebra.one(~F, ~field), R.FieldRing.of_nat(~F, ~field, 2n), K.Field.half_double(F, field))))
+        A.Algebra.add_respects_left(~F, ~field, A.Algebra.add(~F, ~field, h, h), A.Algebra.one(~F, ~field), R.FieldRing.of_nat(~F, ~field, size), K.Field.half_double(F, field))))
   )
 
-def Grid.in_container(~F: Kind(&2), ~field: K.Field<F>, +point: P.Problem.Point<F>,
-  x_bounds: A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), P.Problem.x(F, point)) & A.Algebra.le(~F, ~field, P.Problem.x(F, point), R.FieldRing.of_nat(~F, ~field, 3n)),
-  y_bounds: A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), P.Problem.y(F, point)) & A.Algebra.le(~F, ~field, P.Problem.y(F, point), R.FieldRing.of_nat(~F, ~field, 3n))) ->
-  P.Problem.InContainer<F, field, R.FieldRing.of_nat(~F, ~field, 3n), point>:
+def Grid.in_container(~F: Kind(&2), ~field: K.Field<F>, +size: Nat, +point: P.Problem.Point<F>,
+  x_bounds: A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), P.Problem.x(F, point)) & A.Algebra.le(~F, ~field, P.Problem.x(F, point), R.FieldRing.of_nat(~F, ~field, 1n+size)),
+  y_bounds: A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), P.Problem.y(F, point)) & A.Algebra.le(~F, ~field, P.Problem.y(F, point), R.FieldRing.of_nat(~F, ~field, 1n+size))) ->
+  P.Problem.InContainer<F, field, R.FieldRing.of_nat(~F, ~field, 1n+size), point>:
   (left, right) = x_bounds
   (bottom, top) = y_bounds
   P.InContainer{left, right, bottom, top}
 
-def Grid.fits(~F: Kind(&2), ~field: K.Field<F>, +column: Nat, +row: Nat, column_small: N.Natural.Le(column, 2n), row_small: N.Natural.Le(row, 2n),
+def Grid.fits(~F: Kind(&2), ~field: K.Field<F>, +size: Nat, +column: Nat, +row: Nat, column_small: N.Natural.Le(column, size), row_small: N.Natural.Le(row, size),
   +point: P.Problem.Point<F>, containment: P.Problem.Containment<F, field, Grid.cell(~F, ~field, column, row), point>) ->
-  P.Problem.InContainer<F, field, R.FieldRing.of_nat(~F, ~field, 3n), point>:
+  P.Problem.InContainer<F, field, R.FieldRing.of_nat(~F, ~field, 1n+size), point>:
   match containment:
     case P.Containment{+local_x, +local_y, x_at_most, x_at_least, y_at_most, y_at_least, x_is_below, x_is_above, y_is_below, y_is_above}:
       +center_x: F = A.Algebra.add(~F, ~field, A.Algebra.half(~F, ~field), R.FieldRing.of_nat(~F, ~field, column))
@@ -102,11 +102,11 @@ def Grid.fits(~F: Kind(&2), ~field: K.Field<F>, +column: Nat, +row: Nat, column_
       +y: F = P.Problem.y(F, point)
       +offset_x: F = A.Algebra.add(~F, ~field, center_x, A.Algebra.add(~F, ~field, A.Algebra.mul(~F, ~field, local_x, Grid.unit(~F, ~field)), A.Algebra.neg(~F, ~field, A.Algebra.mul(~F, ~field, local_y, A.Algebra.zero(~F, ~field)))))
       +offset_y: F = A.Algebra.add(~F, ~field, center_y, A.Algebra.add(~F, ~field, A.Algebra.mul(~F, ~field, local_x, A.Algebra.zero(~F, ~field)), A.Algebra.mul(~F, ~field, local_y, Grid.unit(~F, ~field))))
-      Grid.in_container(~F, ~field, point,
-        Grid.coordinate_bounds(~F, ~field, column, local_x, x, column_small, x_at_most, x_at_least,
+      Grid.in_container(~F, ~field, size, point,
+        Grid.coordinate_bounds(~F, ~field, size, column, local_x, x, column_small, x_at_most, x_at_least,
           A.Algebra.le_respects(~F, ~field, x, offset_x, x, A.Algebra.add(~F, ~field, center_x, local_x), x_is_below, A.Algebra.same_reflexive(~F, ~field, x), Grid.local_x(~F, ~field, center_x, local_x, local_y)),
           A.Algebra.le_respects(~F, ~field, offset_x, x, A.Algebra.add(~F, ~field, center_x, local_x), x, x_is_above, Grid.local_x(~F, ~field, center_x, local_x, local_y), A.Algebra.same_reflexive(~F, ~field, x))),
-        Grid.coordinate_bounds(~F, ~field, row, local_y, y, row_small, y_at_most, y_at_least,
+        Grid.coordinate_bounds(~F, ~field, size, row, local_y, y, row_small, y_at_most, y_at_least,
           A.Algebra.le_respects(~F, ~field, y, offset_y, y, A.Algebra.add(~F, ~field, center_y, local_y), y_is_below, A.Algebra.same_reflexive(~F, ~field, y), Grid.local_y(~F, ~field, center_y, local_x, local_y)),
           A.Algebra.le_respects(~F, ~field, offset_y, y, A.Algebra.add(~F, ~field, center_y, local_y), y, y_is_above, Grid.local_y(~F, ~field, center_y, local_x, local_y), A.Algebra.same_reflexive(~F, ~field, y))))
 

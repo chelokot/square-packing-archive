@@ -55,7 +55,7 @@ Publication dates and formalization dates are kept separate.
 
 ### Bend
 
-`s(6) = 3` is also checked in [Bend 2](https://github.com/bendlang/bend) for
+`s(n)` for n = 1, 2, 3, 4, 6, 7, 8 and 9 is also checked in [Bend 2](https://github.com/bendlang/bend) for
 every ordered field, against a Bend restatement of the canonical problem. See
 the [Bend formalization notes](docs/bend-formalization.md) for its meaning and
 the structure of the proof.

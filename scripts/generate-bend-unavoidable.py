@@ -37,8 +37,8 @@ ORIENTATIONS = {
 }
 
 
-def normal_lemma(name, params, spec, squares=(), splits=(), derive=True):
-    """Emit a lemma for a normal square: hypotheses `a <= b` from spec(square, params) give one of its points."""
+def normal_lemma(name, params, spec, squares=(), splits=(), derive=True, module='Unavoidable', side=3):
+    """Emit a lemma for a normal square fitting [0, side]^2: hypotheses `a <= b` from spec(square, params) give one of its points."""
     signature_params = {p: T(p, p) for p in params}
     hyps, points = spec(SIGNATURE, signature_params)
     ctx = SquareContext()
@@ -46,7 +46,7 @@ def normal_lemma(name, params, spec, squares=(), splits=(), derive=True):
     values = {p: ctx.var(p, p) for p in params}
     ctx.nonnegative(ctx.c, 'cosine_sign')
     ctx.nonnegative(ctx.s, 'sine_sign')
-    ctx.corner_facts(h, num(3))
+    ctx.corner_facts(h, num(side))
     proof_hyps, proof_points = spec(ctx, values)
     for k, (a, b) in enumerate(proof_hyps):
         ctx.below(a, b, f'hyp{k}')
@@ -64,7 +64,7 @@ def normal_lemma(name, params, spec, squares=(), splits=(), derive=True):
     param_text = ''.join(f', +{p}: F' for p in params)
     hyp_text = ''.join(f',\n  +hyp{k}: LE({a.bend}, {b.bend})' for k, (a, b) in enumerate(hyps))
     return f'''
-def Unavoidable.{name}(TPL, +square: P.Problem.Square<F, field>, +corners: M.Membership.Corners<F, field, square, {THREE}>,
+def {module}.{name}(TPL, +square: P.Problem.Square<F, field>, +corners: M.Membership.Corners<F, field, square, R.FieldRing.of_nat(TC, {side}n)>,
   +cosine_sign: LE(ZERO, P.Problem.cosine(F, field, square)), +sine_sign: LE(ZERO, P.Problem.sine(F, field, square)){param_text}{hyp_text}) ->
   {containments('square', points)}:
   match square corners:

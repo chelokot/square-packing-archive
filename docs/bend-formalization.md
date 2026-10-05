@@ -34,18 +34,33 @@ provides `half` with `half + half = 1`.
 
 ## Checked results
 
-| Result                                                | Bend                                                                         |
-| ----------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `HasPacking 6 3`, so `s(6) ≤ 3`                       | `Laws.square6_has_packing_at_three` in [`bend/LAWS.bend`](../bend/LAWS.bend) |
-| `HasPacking n side → 6 ≤ n → 3 ≤ side`, so `s(6) = 3` | `Laws.square6_lower_bound`                                                   |
-| `PlacedSquare.contains_iff_localCoordinates`          | `Laws.contains_iff_local_coordinates_forward` and `_backward`                |
-| the same for the open square                          | `Laws.interior_iff_local_coordinates_forward` and `_backward`                |
+| Result                                       | Bend                                                                                                      |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `s(1) = 1`                                   | `Laws.square1_has_packing_at_one` and `Laws.square1_lower_bound` in [`bend/LAWS.bend`](../bend/LAWS.bend) |
+| `s(2) = s(3) = s(4) = 2`                     | `Laws.square4_has_packing_at_two`, `Laws.fewer_squares` and `Laws.square2_lower_bound`                    |
+| `s(6) = 3`                                   | `Laws.square6_has_packing_at_three` and `Laws.square6_lower_bound`                                        |
+| `s(7) = s(8) = s(9) = 3`                     | `Laws.square9_has_packing_at_three`, `Laws.fewer_squares` and `Laws.square6_lower_bound`                  |
+| `PlacedSquare.contains_iff_localCoordinates` | `Laws.contains_iff_local_coordinates_forward` and `_backward`                                             |
+| the same for the open square                 | `Laws.interior_iff_local_coordinates_forward` and `_backward`                                             |
 
-The packing places six axis-aligned unit squares in a 3 by 2 grid.
-`bend/Grid.bend` proves that a grid cell fits in side 3 and that cells whose
+Each lower bound is stated for a packing of at least that many squares, so
+`square2_lower_bound` also covers three and four squares, and
+`square6_lower_bound` covers seven to nine. `fewer_squares` keeps the first
+squares of a packing, which turns the grids of four and nine squares into
+packings of two, three, seven and eight.
+
+The upper bounds place axis-aligned unit squares row by row in a k by k grid.
+`bend/Grid.bend` proves that a grid cell fits in side k and that cells whose
 centres differ by at least 1 in one coordinate have disjoint interiors;
-`scripts/generate-bend-square6.py` writes the case analysis over the 36 ordered
-index pairs in `bend/Square6.bend`.
+`scripts/generate-bend-grid-packings.py` writes the case analysis over the
+ordered index pairs in `bend/Square1.bend`, `bend/Square4.bend`,
+`bend/Square6.bend` and `bend/Square9.bend`.
+
+`bend/Small.bend` proves the lower bounds for one and two squares, following
+`NearSquare.lean`: the corners of a square in first-quadrant normal form are
+`cosine + sine ≥ 1` apart, and a square that fits `[0, 2]^2` contains `(1, 1)`,
+so two squares in side less than 2, scaled to closed-disjoint squares in
+`[0, 2]^2`, would share that point.
 
 Run the check with Bend at the pinned revision and Lean 4.34.0:
 
