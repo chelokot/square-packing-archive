@@ -1,17 +1,39 @@
 import Base
 import ./LAWS.bend as Laws
+import ./Square1.bend as S1
+import ./Square4.bend as S4
 import ./Square6.bend as S
+import ./Square9.bend as S9
+import ./Small.bend as Sm
 import ./Geometry.bend as G
 import ./Symmetry.bend as Y
 import ./Packings.bend as Q
 import ./Scaling.bend as Z
 import ./StromquistSix.bend as Six
 
+def Laws.square1_has_packing_at_one(F, field):
+  S1.Square1.packing(~F, ~field)
+
+def Laws.square1_lower_bound(F, field, count, side, packing, one):
+  Sm.Small.lower_bound_one(~F, ~field, ~count, ~side, ~packing, one)
+
+def Laws.square4_has_packing_at_two(F, field):
+  S4.Square4.packing(~F, ~field)
+
+def Laws.square2_lower_bound(F, field, count, side, packing, two):
+  Sm.Small.lower_bound_two(~F, ~field, ~count, ~side, ~packing, two)
+
 def Laws.square6_has_packing_at_three(F, field):
   S.Square6.packing(~F, ~field)
 
 def Laws.square6_lower_bound(F, field, count, side, packing, six):
   Six.StromquistSix.lower_bound(~F, ~field, ~count, ~side, ~packing, six)
+
+def Laws.square9_has_packing_at_three(F, field):
+  S9.Square9.packing(~F, ~field)
+
+def Laws.fewer_squares(F, field, count, side, packing, fewer, at_most):
+  Q.Packings.restrict(~F, ~field, ~count, ~side, ~packing, ~fewer, at_most)
 
 def Laws.contains_iff_local_coordinates_forward(F, field, square, point, containment):
   G.Geometry.contains_local(~F, ~field, square, point, containment)

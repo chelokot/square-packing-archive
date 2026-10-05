@@ -108,3 +108,14 @@ def Packings.reflect_y(~F: Kind(&2), ~field: K.Field<F>, ~count: Nat, ~side: F, 
       Packings.reflect_y_disjoint(~F, ~field, ~count, ~side, ~packing, left, right, left_bound, right_bound, different, point, first, second)
   }
 
+
+def Packings.restrict(~F: Kind(&2), ~field: K.Field<F>, ~count: Nat, ~side: F, ~packing: P.Problem.Packing<F, field, count, side>, ~fewer: Nat,
+  +at_most: N.Natural.Le(fewer, count)) -> P.Problem.Packing<F, field, fewer, side>:
+  P.Packing{
+    Packings.squares(F, field, count, side, packing),
+    Packings.side_nonnegative(F, field, count, side, packing),
+    +index => bound => Packings.fits(F, field, count, side, packing)(index, N.Natural.le_transitive(1n+index, fewer, count, bound, at_most)),
+    +left => +right => left_bound => right_bound =>
+      Packings.disjoint(F, field, count, side, packing)(left, right, N.Natural.le_transitive(1n+left, fewer, count, left_bound, at_most),
+        N.Natural.le_transitive(1n+right, fewer, count, right_bound, at_most))
+  }

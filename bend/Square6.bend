@@ -121,7 +121,7 @@ def Square6.square(~F: Kind(&2), ~field: K.Field<F>, +index: Nat) -> P.Problem.S
 def Square6.fits(~F: Kind(&2), ~field: K.Field<F>, +index: Nat, bound: N.Natural.Le(1n+index, 6n), +point: P.Problem.Point<F>,
   containment: P.Problem.Containment<F, field, Square6.square(~F, ~field, index), point>) ->
   P.Problem.InContainer<F, field, R.FieldRing.of_nat(~F, ~field, 3n), point>:
-  Q.Grid.fits(~F, ~field, Square6.column(index), Square6.row(index), Square6.column_small(index), Square6.row_small(index), point, containment)
+  Q.Grid.fits(~F, ~field, 2n, Square6.column(index), Square6.row(index), Square6.column_small(index), Square6.row_small(index), point, containment)
 
 def Square6.disjoint(~F: Kind(&2), ~field: K.Field<F>, +left: Nat, +right: Nat,
   left_bound: N.Natural.Le(1n+left, 6n), right_bound: N.Natural.Le(1n+right, 6n),

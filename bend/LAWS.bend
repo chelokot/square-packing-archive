@@ -11,6 +11,34 @@ import ./bend-math/Natural.bend as N
 import ./bend-math/Certificate.bend as C
 import ./bend-math/FieldAlgebra.bend as A
 
+law square1_has_packing_at_one:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  P.Problem.Packing<F, field, 1n, R.FieldRing.of_nat(~F, ~field, 1n)>
+
+law square1_lower_bound:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +one: N.Natural.Le(1n, count)
+  A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 1n), side)
+
+law square4_has_packing_at_two:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  P.Problem.Packing<F, field, 4n, R.FieldRing.of_nat(~F, ~field, 2n)>
+
+law square2_lower_bound:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +two: N.Natural.Le(2n, count)
+  A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 2n), side)
+
 law square6_has_packing_at_three:
   for ~F: Kind(&2)
   for ~field: K.Field<F>
@@ -24,6 +52,21 @@ law square6_lower_bound:
   for ~packing: P.Problem.Packing<F, field, count, side>
   for +six: N.Natural.Le(6n, count)
   A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 3n), side)
+
+law square9_has_packing_at_three:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  P.Problem.Packing<F, field, 9n, R.FieldRing.of_nat(~F, ~field, 3n)>
+
+law fewer_squares:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for ~fewer: Nat
+  for +at_most: N.Natural.Le(fewer, count)
+  P.Problem.Packing<F, field, fewer, side>
 
 law contains_iff_local_coordinates_forward:
   for ~F: Kind(&2)
