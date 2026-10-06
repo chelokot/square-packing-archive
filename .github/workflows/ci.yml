@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: bendlang/bend
-          ref: 79df8d9c40722ee9507a1e253f283b51025f9d6c
+          ref: 1487e77dee69bf5fbf3b9d291c523082856440f7
           path: bend-lang
       - uses: oven-sh/setup-bun@v2
         with:
@@ -40,12 +40,6 @@ jobs:
         run: |
           for generator in scripts/generate-bend-*.py; do python3 "$generator"; done
           git diff --exit-code -- bend scripts/bend-certificates.json
-      - name: Add swap for the kernel check
-        run: |
-          sudo fallocate -l 40G /mnt/bend-swap
-          sudo chmod 600 /mnt/bend-swap
-          sudo mkswap /mnt/bend-swap
-          sudo swapon /mnt/bend-swap
       - name: Check Bend proofs with the proven kernel
         run: bun bend-lang/bend2/main.ts bend/PROOF.bend --verdict
       - name: Reject unchecked Bend escape hatches
