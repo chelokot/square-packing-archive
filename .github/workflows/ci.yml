@@ -26,8 +26,8 @@ jobs:
           submodules: true
       - uses: actions/checkout@v4
         with:
-          repository: chelokot/bend
-          ref: 50bf29c5288156eb9823d81a9410e7939b308998
+          repository: bendlang/bend
+          ref: d052d4f351787900b169133aa4bd955029349cca
           path: bend-lang
       - uses: oven-sh/setup-bun@v2
         with:
