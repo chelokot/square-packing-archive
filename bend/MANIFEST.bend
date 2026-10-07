@@ -69,6 +69,15 @@ law exact_4_grid_lower:
   for +at_least: N.Natural.Le(4n, count)
   A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 2n), side)
 
+law upper_5_goebel_construction_upper:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~root: F
+  for +root_below: A.Algebra.le(~F, ~field, A.Algebra.mul(~F, ~field, root, root), R.FieldRing.of_nat(~F, ~field, 2n))
+  for +root_above: A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 2n), A.Algebra.mul(~F, ~field, root, root))
+  for +root_sign: A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), root)
+  P.Problem.Packing<F, field, 5n, A.Algebra.add(~F, ~field, R.FieldRing.of_nat(~F, ~field, 2n), A.Algebra.mul(~F, ~field, root, A.Algebra.half(~F, ~field)))>
+
 law exact_5_goebel_upper:
   for ~F: Kind(&2)
   for ~field: K.Field<F>

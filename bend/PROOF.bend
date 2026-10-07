@@ -43,6 +43,9 @@ def Manifest.exact_4_grid_lower(F, field, count, side, packing, at_least):
 def Manifest.exact_5_goebel_upper(F, field, root, root_below, root_above, root_sign):
   Fv.Five.packing(~F, ~field, root, root_below, root_above, root_sign)
 
+def Manifest.upper_5_goebel_construction_upper(F, field, root, root_below, root_above, root_sign):
+  Fv.Five.packing(~F, ~field, root, root_below, root_above, root_sign)
+
 def Manifest.exact_5_goebel_lower(F, field, count, side, packing, root, root_below, root_above, root_sign, at_least):
   Fv.Five.lower_bound(~F, ~field, ~count, ~side, ~packing, root, root_below, root_above, root_sign, at_least)
 
