@@ -241,8 +241,7 @@ export const manifestSchema = z.object({
       through: z.number().int().positive().max(100),
       proof: z.object({
         source: identifier,
-        artifact: leanArtifactSchema,
-        theorem: leanTheoremSchema,
+        artifact: z.literal(bendManifest),
         checkedAt: z.iso.date(),
       }),
     })

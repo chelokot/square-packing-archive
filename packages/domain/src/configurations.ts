@@ -49,8 +49,7 @@ export const gridConfiguration = (
       orientationReconstruction: "Axis-aligned grid: cosine = 1, sine = 0",
     },
     provenance: {
-      source:
-        "formal/SquarePackingArchive/Records/SquareNumbers.lean#gridPacking",
+      source: "bend/Grids.bend#Grids.packing",
       sourceOptimizedContainerSide: String(side),
       importedAt,
     },

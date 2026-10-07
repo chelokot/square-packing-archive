@@ -39,7 +39,7 @@ describe("grid coordinates", () => {
     }
   });
 
-  test("matches the column-major ordering of Lean gridPacking", () => {
+  test("matches the column-major ordering of Bend Grids.packing", () => {
     const configuration = gridConfiguration(
       "square-6-grid",
       6,

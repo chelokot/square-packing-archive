@@ -41,24 +41,27 @@ side `v`, and a lower bound `v ≤ s(n)` is the law `<claim>_lower`, `v ≤ side
 for every packing of at least `n` squares. `bend/PROOF.bend` proves each law, so
 `--verdict` checks every claim exactly as the catalog states it.
 
-| Claims                   | Proofs in `bend/PROOF.bend`                                          |
-| ------------------------ | -------------------------------------------------------------------- |
-| `s(1) = 1`               | the 1 by 1 grid and `Small.lower_bound_one`                          |
-| `s(2) = s(3) = s(4) = 2` | the first squares of the 2 by 2 grid and `Small.lower_bound_two`     |
-| `s(6) = 3`               | the 3 by 2 grid and `StromquistSix.lower_bound`                      |
-| `s(7) = s(8) = s(9) = 3` | the first squares of the 3 by 3 grid and `StromquistSix.lower_bound` |
+| Claims                   | Proofs in `bend/PROOF.bend`                     |
+| ------------------------ | ----------------------------------------------- |
+| `s(1) = 1`               | `Grids.packing` and `Small.lower_bound_one`     |
+| `s(2) = s(3) = s(4) = 2` | `Grids.packing` and `Small.lower_bound_two`     |
+| `s(6) = 3`               | `Grids.packing` and `StromquistSix.lower_bound` |
+| `s(7) = s(8) = s(9) = 3` | `Grids.packing` and `StromquistSix.lower_bound` |
 
 `bend/LAWS.bend` keeps the general laws: the local coordinates of a square
 (`Laws.contains_iff_local_coordinates_forward` and `_backward`, and the same
 for the open square), the symmetries of packings, `Laws.fewer_squares`, and
 the scaling to a closed-disjoint family.
 
-The upper bounds place axis-aligned unit squares row by row in a k by k grid.
-`bend/Grid.bend` proves that a grid cell fits in side k and that cells whose
-centres differ by at least 1 in one coordinate have disjoint interiors;
-`scripts/generate-bend-grid-packings.py` writes the case analysis over the
-ordered index pairs in `bend/Square1.bend`, `bend/Square4.bend`,
-`bend/Square6.bend` and `bend/Square9.bend`.
+The upper bounds, and the basic grid bound `s(n) ≤ ⌈√n⌉` the site shows for
+counts without a catalogued claim, are one theorem: `bend/Grids.bend` packs
+any `n ≤ k²` axis-aligned unit squares in side `k`, column by column. Square
+`i` sits in the cell whose column is the quotient and whose row is the
+remainder of `i` by `k`, built by `Grids.place` with the proof that
+`quotient · k + remainder = i`. `bend/Grid.bend` proves that a cell fits in side
+`k` and that cells whose positions differ by at least 1 in one coordinate have
+disjoint interiors; two different indices differ in their remainder or, with
+equal remainders, in their quotient.
 
 `bend/Small.bend` proves the lower bounds for one and two squares, following
 `NearSquare.lean`'s two-square argument: the corners of a square in first-quadrant normal form are

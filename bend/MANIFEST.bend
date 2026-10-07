@@ -5,6 +5,14 @@ import ./bend-math/FieldRing.bend as R
 import ./bend-math/Natural.bend as N
 import ./Problem.bend as P
 
+law grid_baseline:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~size: Nat
+  for ~count: Nat
+  for +fits: N.Natural.Le(count, Nat.mul(1n+size, 1n+size))
+  P.Problem.Packing<F, field, count, R.FieldRing.of_nat(~F, ~field, 1n+size)>
+
 law exact_1_grid_upper:
   for ~F: Kind(&2)
   for ~field: K.Field<F>
