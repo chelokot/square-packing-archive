@@ -44,8 +44,16 @@ for every packing of at least `n` squares. `bend/PROOF.bend` proves each law, so
 | Claims                      | Proofs in `bend/PROOF.bend`                     |
 | --------------------------- | ----------------------------------------------- |
 | `s(2) = s(3) = 2`           | `Grids.packing` and `Small.lower_bound_two`     |
+| `s(5) = 2 + √2/2`           | `Five.packing` and `Five.lower_bound`           |
 | `s(6) = s(7) = s(8) = 3`    | `Grids.packing` and `StromquistSix.lower_bound` |
 | `s(k²) = k` for `1 ≤ k ≤ 9` | `Grids.packing` and `Chords.lower_bound`        |
+
+A value with `√2` is stated for every `root ≥ 0` of the field with
+`root · root = 2`: the laws of `s(5)` take such a root, so they hold in every
+ordered field that has one. `bend/Five.bend` packs four axis-aligned squares in
+the corners and one turned by 45° in the middle, and proves the lower bound as
+`Square5.lean` does: a square that fits `[0, 2 + √2/2]²` contains one of four
+points, and five closed-disjoint squares cannot share four points.
 
 `bend/LAWS.bend` keeps the general laws: the local coordinates of a square
 (`Laws.contains_iff_local_coordinates_forward` and `_backward`, and the same

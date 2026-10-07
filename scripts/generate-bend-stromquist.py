@@ -40,6 +40,7 @@ SELF = {'name': 'Stromquist.'}
 SQUARE_PARAMS = (f'+square: P.Problem.Square<F, field>, +corners: M.Membership.Corners<F, field, square, {THREE}>, '
                  '+cosine_sign: LE(ZERO, P.Problem.cosine(F, field, square)), +sine_sign: LE(ZERO, P.Problem.sine(F, field, square))')
 SQUARE_ARGS = 'square, corners, cosine_sign, sine_sign'
+CONTAINED_ARGS = f'square, {THREE}, corners, cosine_sign, sine_sign'
 
 
 def key(k):
@@ -294,8 +295,8 @@ def lemma_hyps(ctx, hyps):
 
 def corner_call(ctx, leaves, name, k):
     tx, ty = KEYS[k]
-    hyps, _ = U.corner_spec(name)(ctx, {'tx': tx, 'ty': ty})
-    call = f'U.Unavoidable.{name}_corner(TC, {SQUARE_ARGS}, {tx.bend}, {ty.bend}, {lemma_hyps(ctx, hyps)})'
+    hyps, _ = U.corner_spec(name)(ctx, {'tx': tx, 'ty': ty}, num(3))
+    call = f'U.Unavoidable.{name}_corner(TC, {CONTAINED_ARGS}, {tx.bend}, {ty.bend}, {lemma_hyps(ctx, hyps)})'
     return leaves.finish([(k, key(k))], call)
 
 
@@ -303,9 +304,9 @@ def pair_call(ctx, leaves, side, first, second):
     (px, py), (qx, qy) = KEYS[first], KEYS[second]
     names = U.PAIR_PARAMS[side]
     values = {'px': px, 'py': py, 'qx': qx, 'qy': qy}
-    hyps, _ = U.pair_spec(side)(ctx, values)
+    hyps, _ = U.pair_spec(side)(ctx, values, num(3))
     args = ', '.join(values[n].bend for n in names)
-    call = f'U.Unavoidable.{side}_pair(TC, {SQUARE_ARGS}, {args}, {lemma_hyps(ctx, hyps)})'
+    call = f'U.Unavoidable.{side}_pair(TC, {CONTAINED_ARGS}, {args}, {lemma_hyps(ctx, hyps)})'
     return leaves.finish([(first, key(first)), (second, key(second))], call)
 
 
@@ -772,15 +773,15 @@ def point_leaf(node, ctx, goal, convert):
         values = node[1]
         tx, ty = point_of(values)
         name = corner_name(values)
-        hyps, _ = U.corner_spec(name)(ctx, {'tx': tx, 'ty': ty})
-        return convert(values, f'U.Unavoidable.{name}_corner(TC, {SQUARE_ARGS}, {tx.bend}, {ty.bend}, {lemma_hyps(ctx, hyps)})')
+        hyps, _ = U.corner_spec(name)(ctx, {'tx': tx, 'ty': ty}, num(3))
+        return convert(values, f'U.Unavoidable.{name}_corner(TC, {CONTAINED_ARGS}, {tx.bend}, {ty.bend}, {lemma_hyps(ctx, hyps)})')
     if kind == 'pair':
         side, first, second = side_of_values(node[1], node[2])
         (px, py), (qx, qy) = point_of(first), point_of(second)
         values = {'px': px, 'py': py, 'qx': qx, 'qy': qy}
-        hyps, _ = U.pair_spec(side)(ctx, values)
+        hyps, _ = U.pair_spec(side)(ctx, values, num(3))
         args = ', '.join(values[n].bend for n in U.PAIR_PARAMS[side])
-        call = f'U.Unavoidable.{side}_pair(TC, {SQUARE_ARGS}, {args}, {lemma_hyps(ctx, hyps)})'
+        call = f'U.Unavoidable.{side}_pair(TC, {CONTAINED_ARGS}, {args}, {lemma_hyps(ctx, hyps)})'
         a, b = point_term(first), point_term(second)
         return (f'M.Membership.either(P.Problem.Containment<F, field, square, {a}>, P.Problem.Containment<F, field, square, {b}>, {goal}, '
                 f'{call}, +first => {convert(first, "first")}, +second => {convert(second, "second")})')

@@ -30,24 +30,27 @@ SIGNATURE = SimpleNamespace(
     c=T('P.Problem.cosine(F, field, square)', 'c'), s=T('P.Problem.sine(F, field, square)', 's'))
 
 ORIENTATIONS = {
-    'bottom': (lambda x, y: (x, y), lambda x, y: (x, y)),
-    'top': (lambda x, y: (x, 3 - y), lambda x, y: (x, 3 - y)),
-    'left': (lambda x, y: (y, x), lambda x, y: (y, x)),
-    'right': (lambda x, y: (3 - y, x), lambda x, y: (y, 3 - x)),
+    'bottom': (lambda x, y, side: (x, y), lambda x, y, side: (x, y)),
+    'top': (lambda x, y, side: (x, side - y), lambda x, y, side: (x, side - y)),
+    'left': (lambda x, y, side: (y, x), lambda x, y, side: (y, x)),
+    'right': (lambda x, y, side: (side - y, x), lambda x, y, side: (y, side - x)),
 }
 
 
-def normal_lemma(name, params, spec, squares=(), splits=(), derive=True, module='Unavoidable', side=3):
-    """Emit a lemma for a normal square fitting [0, side]^2: hypotheses `a <= b` from spec(square, params) give one of its points."""
+def normal_lemma(name, params, spec, squares=(), splits=(), derive=True, module='Unavoidable', side=None):
+    """Emit a lemma for a normal square fitting [0, side]^2, for a given side or one more parameter `side`:
+    hypotheses `a <= b` from spec(square, params, side) give one of its points."""
     signature_params = {p: T(p, p) for p in params}
-    hyps, points = spec(SIGNATURE, signature_params)
+    signature_side = num(side) if side is not None else T('side', 'side')
+    hyps, points = spec(SIGNATURE, signature_params, signature_side)
     ctx = SquareContext()
     h = ctx.half()
     values = {p: ctx.var(p, p) for p in params}
+    container = num(side) if side is not None else ctx.var('side', 'side')
     ctx.nonnegative(ctx.c, 'cosine_sign')
     ctx.nonnegative(ctx.s, 'sine_sign')
-    ctx.corner_facts(h, num(side))
-    proof_hyps, proof_points = spec(ctx, values)
+    ctx.corner_facts(h, container)
+    proof_hyps, proof_points = spec(ctx, values, container)
     for k, (a, b) in enumerate(proof_hyps):
         ctx.below(a, b, f'hyp{k}')
     q = ctx.bind_square()
@@ -64,7 +67,7 @@ def normal_lemma(name, params, spec, squares=(), splits=(), derive=True, module=
     param_text = ''.join(f', +{p}: F' for p in params)
     hyp_text = ''.join(f',\n  +hyp{k}: LE({a.bend}, {b.bend})' for k, (a, b) in enumerate(hyps))
     return f'''
-def {module}.{name}(TPL, +square: P.Problem.Square<F, field>, +corners: M.Membership.Corners<F, field, square, R.FieldRing.of_nat(TC, {side}n)>,
+def {module}.{name}(TPL, +square: P.Problem.Square<F, field>, {'' if side is not None else '+side: F, '}+corners: M.Membership.Corners<F, field, square, {signature_side.bend}>,
   +cosine_sign: LE(ZERO, P.Problem.cosine(F, field, square)), +sine_sign: LE(ZERO, P.Problem.sine(F, field, square)){param_text}{hyp_text}) ->
   {containments('square', points)}:
   match square corners:
@@ -74,19 +77,19 @@ def {module}.{name}(TPL, +square: P.Problem.Square<F, field>, +corners: M.Member
 
 
 CORNERS = {
-    'low_left': lambda x, y: (x, y),
-    'low_right': lambda x, y: (3 - x, y),
-    'high_left': lambda x, y: (x, 3 - y),
-    'high_right': lambda x, y: (3 - x, 3 - y),
+    'low_left': lambda x, y, side: (x, y),
+    'low_right': lambda x, y, side: (side - x, y),
+    'high_left': lambda x, y, side: (x, side - y),
+    'high_right': lambda x, y, side: (side - x, side - y),
 }
 
 
 def corner_spec(name):
     back = CORNERS[name]
 
-    def spec(sq, v):
-        cx, cy = back(sq.cx, sq.cy)
-        tx, ty = back(v['tx'], v['ty'])
+    def spec(sq, v, side):
+        cx, cy = back(sq.cx, sq.cy, side)
+        tx, ty = back(v['tx'], v['ty'], side)
         return [(tx, num(1)), (ty, num(1)), (cx, tx), (cy, ty)], [(v['tx'], v['ty'])]
     return spec
 
@@ -103,11 +106,11 @@ def pair_spec(orientation):
     place, back = ORIENTATIONS[orientation]
     along_x = orientation in ('bottom', 'top')
 
-    def spec(sq, v):
-        cx, cy = back(sq.cx, sq.cy)
+    def spec(sq, v, side):
+        cx, cy = back(sq.cx, sq.cy, side)
         first = (v['px'], v['py'])
         second = (v['qx'], v['py']) if along_x else (v['px'], v['qy'])
-        left, height = back(*first)
+        left, height = back(*first, side)
         gap = v['qx'] - v['px'] if along_x else v['qy'] - v['py']
         return ([(height, num(1)), (num(0), gap), (gap, num(1)), (height + gap * (sq.c * sq.s), sq.c + sq.s),
                  (left, cx), (cx, left + gap), (cy, height)], [first, second])
