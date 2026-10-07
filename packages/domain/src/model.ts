@@ -10,17 +10,33 @@ import type {
 
 export type VerificationLevel =
   | "computational-evidence"
-  | "lean-verified"
+  | "formally-verified"
   | "published-unformalized"
   | "reported";
+
+export type FormalProof = Evidence & { kind: "lean-proof" | "bend-proof" };
+
+export const isFormalProof = (evidence: Evidence): evidence is FormalProof =>
+  (evidence.kind === "lean-proof" && evidence.status === "lean-checked") ||
+  (evidence.kind === "bend-proof" && evidence.status === "bend-checked");
+
+export const bendLawNames = (
+  claim: Pick<Claim, "id" | "relation">,
+): readonly string[] => {
+  const base = `Manifest.${claim.id.replaceAll("-", "_")}`;
+  return [
+    ...(claim.relation === "lower" ? [] : [`${base}_upper`]),
+    ...(claim.relation === "upper" ? [] : [`${base}_lower`]),
+  ];
+};
 
 const isPublishedProof = (evidence: Evidence): boolean =>
   evidence.status === "published" &&
   (evidence.kind === "published-proof" || evidence.kind === "elementary-proof");
 
 const evidenceLevel = (evidence: Evidence): VerificationLevel => {
-  if (evidence.kind === "lean-proof" && evidence.status === "lean-checked") {
-    return "lean-verified";
+  if (isFormalProof(evidence)) {
+    return "formally-verified";
   }
   if (isPublishedProof(evidence)) {
     return "published-unformalized";
@@ -38,7 +54,7 @@ const verificationPriority: Readonly<Record<VerificationLevel, number>> = {
   reported: 0,
   "computational-evidence": 1,
   "published-unformalized": 2,
-  "lean-verified": 3,
+  "formally-verified": 3,
 };
 
 export const verificationLevel = (
@@ -53,7 +69,7 @@ export const verificationLevel = (
     );
 
 export const isVerified = (claim: Claim): boolean =>
-  verificationLevel(claim) === "lean-verified";
+  verificationLevel(claim) === "formally-verified";
 
 export const ratioToNumber = (ratio: Ratio): number =>
   Number(ratio.numerator) / Number(ratio.denominator);
@@ -124,9 +140,7 @@ export const exactCoverageByYear = (
     }));
   const verified = exactClaims.flatMap((claim) =>
     claim.evidence.flatMap((evidence) =>
-      evidence.kind === "lean-proof" &&
-      evidence.status === "lean-checked" &&
-      evidence.checkedAt !== undefined
+      isFormalProof(evidence) && evidence.checkedAt !== undefined
         ? [{ n: claim.n, year: Number(evidence.checkedAt.slice(0, 4)) }]
         : [],
     ),

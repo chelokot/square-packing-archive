@@ -28,9 +28,9 @@ def lean_evidence(
     checked = []
     for claim in manifest["claims"]:
         proofs = [item for item in claim["evidence"] if item["kind"] == "lean-proof"]
-        if not proofs:
+        if not proofs and not any(item["kind"] == "bend-proof" for item in claim["evidence"]):
             raise ValueError(
-                f"{claim['id']}: catalog claims require a Lean proof; "
+                f"{claim['id']}: catalog claims require a Lean or Bend proof; "
                 "keep unformalized proposals in issues"
             )
         checked.extend((claim, proof) for proof in proofs)

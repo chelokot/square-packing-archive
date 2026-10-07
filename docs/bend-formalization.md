@@ -34,20 +34,24 @@ provides `half` with `half + half = 1`.
 
 ## Checked results
 
-| Result                                       | Bend                                                                                                      |
-| -------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `s(1) = 1`                                   | `Laws.square1_has_packing_at_one` and `Laws.square1_lower_bound` in [`bend/LAWS.bend`](../bend/LAWS.bend) |
-| `s(2) = s(3) = s(4) = 2`                     | `Laws.square4_has_packing_at_two`, `Laws.fewer_squares` and `Laws.square2_lower_bound`                    |
-| `s(6) = 3`                                   | `Laws.square6_has_packing_at_three` and `Laws.square6_lower_bound`                                        |
-| `s(7) = s(8) = s(9) = 3`                     | `Laws.square9_has_packing_at_three`, `Laws.fewer_squares` and `Laws.square6_lower_bound`                  |
-| `PlacedSquare.contains_iff_localCoordinates` | `Laws.contains_iff_local_coordinates_forward` and `_backward`                                             |
-| the same for the open square                 | `Laws.interior_iff_local_coordinates_forward` and `_backward`                                             |
+Each catalog claim with a Bend proof is a law of `bend/MANIFEST.bend`, which
+`scripts/generate-bend-manifest.py` writes from `archive/manifest.json`: an
+upper bound `s(n) ≤ v` is the law `<claim>_upper`, a packing of `n` squares in
+side `v`, and a lower bound `v ≤ s(n)` is the law `<claim>_lower`, `v ≤ side`
+for every packing of at least `n` squares. `bend/PROOF.bend` proves each law, so
+`--verdict` checks every claim exactly as the catalog states it.
 
-Each lower bound is stated for a packing of at least that many squares, so
-`square2_lower_bound` also covers three and four squares, and
-`square6_lower_bound` covers seven to nine. `fewer_squares` keeps the first
-squares of a packing, which turns the grids of four and nine squares into
-packings of two, three, seven and eight.
+| Claims                   | Proofs in `bend/PROOF.bend`                                          |
+| ------------------------ | -------------------------------------------------------------------- |
+| `s(1) = 1`               | the 1 by 1 grid and `Small.lower_bound_one`                          |
+| `s(2) = s(3) = s(4) = 2` | the first squares of the 2 by 2 grid and `Small.lower_bound_two`     |
+| `s(6) = 3`               | the 3 by 2 grid and `StromquistSix.lower_bound`                      |
+| `s(7) = s(8) = s(9) = 3` | the first squares of the 3 by 3 grid and `StromquistSix.lower_bound` |
+
+`bend/LAWS.bend` keeps the general laws: the local coordinates of a square
+(`Laws.contains_iff_local_coordinates_forward` and `_backward`, and the same
+for the open square), the symmetries of packings, `Laws.fewer_squares`, and
+the scaling to a closed-disjoint family.
 
 The upper bounds place axis-aligned unit squares row by row in a k by k grid.
 `bend/Grid.bend` proves that a grid cell fits in side k and that cells whose
@@ -57,7 +61,7 @@ ordered index pairs in `bend/Square1.bend`, `bend/Square4.bend`,
 `bend/Square6.bend` and `bend/Square9.bend`.
 
 `bend/Small.bend` proves the lower bounds for one and two squares, following
-`NearSquare.lean`: the corners of a square in first-quadrant normal form are
+`NearSquare.lean`'s two-square argument: the corners of a square in first-quadrant normal form are
 `cosine + sine ≥ 1` apart, and a square that fits `[0, 2]^2` contains `(1, 1)`,
 so two squares in side less than 2, scaled to closed-disjoint squares in
 `[0, 2]^2`, would share that point.
@@ -101,8 +105,8 @@ file without a solver:
 for generator in scripts/generate-bend-*.py; do python3 "$generator"; done
 ```
 
-Square roots do not appear: where `StromquistSixPoints.lean` bounds
-`cosine + sine` by `√2`, the Bend proof uses the rational bound `17/12`.
+Square roots do not appear: where the Lean proof bounded `cosine + sine` by
+`√2`, the Bend proof uses the rational bound `17/12`.
 
 Bend issues met along the way are tracked in
 [`bend-math/docs/bend-issues.md`](https://github.com/chelokot/bend-math/blob/main/docs/bend-issues.md).

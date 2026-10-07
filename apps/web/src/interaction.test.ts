@@ -1,3 +1,4 @@
+import { isFormalProof } from "@square-packing/domain";
 import { describe, expect, test } from "vitest";
 import { archive } from "./archive.ts";
 import { countFromSearch } from "./selection.ts";
@@ -58,11 +59,9 @@ describe("catalog search", () => {
         claim.contributors.some(({ author }) => author === "friedman"),
       ),
     ).toBe(true);
-    expect(
-      result.every((claim) =>
-        claim.evidence.some((evidence) => evidence.kind === "lean-proof"),
-      ),
-    ).toBe(true);
+    expect(result.every((claim) => claim.evidence.some(isFormalProof))).toBe(
+      true,
+    );
     expect(
       filterClaims(archive.claims, archive, "no-such-author"),
     ).toHaveLength(0);

@@ -1,10 +1,8 @@
-import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.SquareNumbers
 import SquarePackingArchive.Records.GridBounds
 import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square6
-import SquarePackingArchive.Records.Square6Exact
 import SquarePackingArchive.Records.Square13
 import SquarePackingArchive.Records.Square13Exact
 import SquarePackingArchive.BentzThirteenR2Repair
@@ -64,10 +62,7 @@ import SquarePackingArchive.NagamochiCounterexample
 import SquarePackingArchive.NagamochiCanonicalTerminal
 import SquarePackingArchive.Nagamochi
 
-#print axioms SquarePackingArchive.Records.Basic.s1_eq_one
 #print axioms SquarePackingArchive.Records.GridBounds.grid_hasPacking
-#print axioms SquarePackingArchive.Records.Square6.s6_lower_bound
-#print axioms SquarePackingArchive.Records.Square6.s6_eq_three
 #print axioms SquarePackingArchive.Records.Square10.s10_le_goebel
 #print axioms SquarePackingArchive.Records.Square10.s10_lower_bound
 #print axioms SquarePackingArchive.Records.Square10.s10_eq_goebel
@@ -183,8 +178,6 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.Nagamochi.score_gt_three_halves_of_two_bottom_points
 #print axioms SquarePackingArchive.Nagamochi.augmentedScore_gt_three_halves_of_two_bottom_points
 #print axioms SquarePackingArchive.Records.SquareNumbers.squareNumber_isMinimumSide
-#print axioms SquarePackingArchive.Records.SquareNumbers.s4_eq_two
-#print axioms SquarePackingArchive.Records.SquareNumbers.s9_eq_three
 #print axioms SquarePackingArchive.Records.SquareNumbers.s16_eq_four
 #print axioms SquarePackingArchive.Records.SquareNumbers.s25_eq_five
 #print axioms SquarePackingArchive.Records.SquareNumbers.s36_eq_six
@@ -204,8 +197,6 @@ import SquarePackingArchive.Nagamochi
 #print axioms SquarePackingArchive.PlacedSquare.contains_shortRectangleVertex
 #print axioms SquarePackingArchive.PlacedSquare.contains_translatedShortRectangleVertex
 #print axioms SquarePackingArchive.Records.Square8.points_unavoidable
-#print axioms SquarePackingArchive.Records.Square8.s8_lower_bound
-#print axioms SquarePackingArchive.Records.Square8.s8_eq_three
 #print axioms SquarePackingArchive.Records.Square15.contains_bottomBand
 #print axioms SquarePackingArchive.Records.Square15.contains_middleBand
 #print axioms SquarePackingArchive.Records.Square15.contains_topBand

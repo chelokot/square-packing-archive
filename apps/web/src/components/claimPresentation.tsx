@@ -1,7 +1,10 @@
 import {
+  bendLawNames,
+  isFormalProof,
   isGridBaseline,
   type Claim,
   type CompiledArchive,
+  type FormalProof,
   type ExplorerBound,
 } from "@square-packing/domain";
 import { copy, repositoryUrl } from "../copy.ts";
@@ -19,6 +22,14 @@ export const claimValue = (
 
 export const explorerBoundDescription = (bound: ExplorerBound): string =>
   `${copy.claimRelations[bound.relation]} · ${claimValue(bound)}${isGridBaseline(bound) ? ` · ${copy.gridBaseline}` : ""}`;
+
+export const proofTitle = (
+  bound: ExplorerBound,
+  evidence: FormalProof,
+): string =>
+  evidence.kind === "bend-proof" && !isGridBaseline(bound)
+    ? bendLawNames(bound).join(", ")
+    : evidence.theorem!;
 
 export const contributorNames = (
   archive: CompiledArchive,
@@ -42,13 +53,11 @@ export const ClaimLinks = ({
   const sources = [
     ...new Set(
       claim.evidence
-        .filter((evidence) => evidence.kind !== "lean-proof")
+        .filter((evidence) => !isFormalProof(evidence))
         .map((evidence) => evidence.source),
     ),
   ];
-  const proofs = claim.evidence.filter(
-    (evidence) => evidence.kind === "lean-proof",
-  );
+  const proofs = claim.evidence.filter(isFormalProof);
   return (
     <div className="flex flex-wrap gap-x-3 gap-y-2 text-xs text-forest">
       {sources.map((id) => {
@@ -66,12 +75,12 @@ export const ClaimLinks = ({
       })}
       {proofs.map((evidence) => (
         <a
-          key={evidence.theorem}
+          key={proofTitle(claim, evidence)}
           href={`${repositoryUrl}/blob/main/${evidence.artifact}`}
-          title={evidence.theorem}
+          title={proofTitle(claim, evidence)}
           className="underline decoration-forest/30 underline-offset-4"
         >
-          {copy.proof}
+          {copy.proof[evidence.kind]}
         </a>
       ))}
     </div>

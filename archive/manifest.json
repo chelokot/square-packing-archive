@@ -524,7 +524,7 @@
       "value": {
         "decimal": "1",
         "expression": "1",
-        "lean": "1"
+        "bend": "R.FieldRing.of_nat(~F, ~field, 1n)"
       },
       "announcedAt": "1975",
       "contributors": [],
@@ -535,12 +535,11 @@
           "source": "friedman-survey"
         },
         {
-          "kind": "lean-proof",
-          "status": "lean-checked",
+          "kind": "bend-proof",
+          "status": "bend-checked",
           "source": "archive-research-2026",
-          "artifact": "formal/SquarePackingArchive/Records/Basic.lean",
-          "theorem": "SquarePackingArchive.Records.Basic.s1_eq_one",
-          "checkedAt": "2026-08-16"
+          "artifact": "bend/MANIFEST.bend",
+          "checkedAt": "2026-10-05"
         }
       ],
       "configuration": "square-1-grid",
@@ -553,7 +552,7 @@
       "value": {
         "decimal": "2",
         "expression": "2",
-        "lean": "2"
+        "bend": "R.FieldRing.of_nat(~F, ~field, 2n)"
       },
       "announcedAt": "1979",
       "contributors": [
@@ -569,12 +568,11 @@
           "source": "friedman-survey"
         },
         {
-          "kind": "lean-proof",
-          "status": "lean-checked",
+          "kind": "bend-proof",
+          "status": "bend-checked",
           "source": "archive-research-2026",
-          "artifact": "formal/SquarePackingArchive/Records/NearSquare.lean",
-          "theorem": "SquarePackingArchive.Records.NearSquare.s2_eq_two",
-          "checkedAt": "2026-08-16"
+          "artifact": "bend/MANIFEST.bend",
+          "checkedAt": "2026-10-05"
         }
       ],
       "configuration": "square-2-grid",
@@ -587,7 +585,7 @@
       "value": {
         "decimal": "2",
         "expression": "2",
-        "lean": "2"
+        "bend": "R.FieldRing.of_nat(~F, ~field, 2n)"
       },
       "announcedAt": "1979",
       "contributors": [
@@ -603,12 +601,11 @@
           "source": "friedman-survey"
         },
         {
-          "kind": "lean-proof",
-          "status": "lean-checked",
+          "kind": "bend-proof",
+          "status": "bend-checked",
           "source": "archive-research-2026",
-          "artifact": "formal/SquarePackingArchive/Records/NearSquare.lean",
-          "theorem": "SquarePackingArchive.Records.NearSquare.s3_eq_two",
-          "checkedAt": "2026-08-16"
+          "artifact": "bend/MANIFEST.bend",
+          "checkedAt": "2026-10-05"
         }
       ],
       "configuration": "square-3-grid",
@@ -621,7 +618,7 @@
       "value": {
         "decimal": "2",
         "expression": "2",
-        "lean": "2"
+        "bend": "R.FieldRing.of_nat(~F, ~field, 2n)"
       },
       "announcedAt": "1975",
       "contributors": [],
@@ -632,12 +629,11 @@
           "source": "friedman-survey"
         },
         {
-          "kind": "lean-proof",
-          "status": "lean-checked",
+          "kind": "bend-proof",
+          "status": "bend-checked",
           "source": "archive-research-2026",
-          "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s4_eq_two",
-          "checkedAt": "2026-08-16"
+          "artifact": "bend/MANIFEST.bend",
+          "checkedAt": "2026-10-05"
         }
       ],
       "configuration": "square-4-grid",
@@ -718,7 +714,7 @@
       "value": {
         "decimal": "3",
         "expression": "3",
-        "lean": "3"
+        "bend": "R.FieldRing.of_nat(~F, ~field, 3n)"
       },
       "announcedAt": "2001-06",
       "contributors": [
@@ -743,12 +739,11 @@
           "source": "stromquist-2003"
         },
         {
-          "kind": "lean-proof",
-          "status": "lean-checked",
+          "kind": "bend-proof",
+          "status": "bend-checked",
           "source": "archive-research-2026",
-          "artifact": "formal/SquarePackingArchive/Records/Square6Exact.lean",
-          "theorem": "SquarePackingArchive.Records.Square6.s6_eq_three",
-          "checkedAt": "2026-09-05"
+          "artifact": "bend/MANIFEST.bend",
+          "checkedAt": "2026-10-05"
         }
       ],
       "configuration": "square-6-grid",
@@ -761,7 +756,7 @@
       "value": {
         "decimal": "3",
         "expression": "3",
-        "lean": "3"
+        "bend": "R.FieldRing.of_nat(~F, ~field, 3n)"
       },
       "announcedAt": "1999",
       "contributors": [
@@ -777,12 +772,11 @@
           "source": "friedman-survey"
         },
         {
-          "kind": "lean-proof",
-          "status": "lean-checked",
+          "kind": "bend-proof",
+          "status": "bend-checked",
           "source": "archive-research-2026",
-          "artifact": "formal/SquarePackingArchive/Records/Square7.lean",
-          "theorem": "SquarePackingArchive.Records.Square7.s7_eq_three",
-          "checkedAt": "2026-09-05"
+          "artifact": "bend/MANIFEST.bend",
+          "checkedAt": "2026-10-05"
         }
       ],
       "configuration": "square-7-grid",
@@ -795,7 +789,7 @@
       "value": {
         "decimal": "3",
         "expression": "3",
-        "lean": "3"
+        "bend": "R.FieldRing.of_nat(~F, ~field, 3n)"
       },
       "announcedAt": "1999",
       "contributors": [
@@ -811,12 +805,11 @@
           "source": "friedman-survey"
         },
         {
-          "kind": "lean-proof",
-          "status": "lean-checked",
+          "kind": "bend-proof",
+          "status": "bend-checked",
           "source": "archive-research-2026",
-          "artifact": "formal/SquarePackingArchive/Records/Square8.lean",
-          "theorem": "SquarePackingArchive.Records.Square8.s8_eq_three",
-          "checkedAt": "2026-08-29"
+          "artifact": "bend/MANIFEST.bend",
+          "checkedAt": "2026-10-05"
         }
       ],
       "configuration": "square-8-grid",
@@ -829,7 +822,7 @@
       "value": {
         "decimal": "3",
         "expression": "3",
-        "lean": "3"
+        "bend": "R.FieldRing.of_nat(~F, ~field, 3n)"
       },
       "announcedAt": "1975",
       "contributors": [],
@@ -840,12 +833,11 @@
           "source": "friedman-survey"
         },
         {
-          "kind": "lean-proof",
-          "status": "lean-checked",
+          "kind": "bend-proof",
+          "status": "bend-checked",
           "source": "archive-research-2026",
-          "artifact": "formal/SquarePackingArchive/Records/SquareNumbers.lean",
-          "theorem": "SquarePackingArchive.Records.SquareNumbers.s9_eq_three",
-          "checkedAt": "2026-08-16"
+          "artifact": "bend/MANIFEST.bend",
+          "checkedAt": "2026-10-05"
         }
       ],
       "configuration": "square-9-grid",

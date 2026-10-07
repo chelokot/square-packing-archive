@@ -24,6 +24,13 @@ export const FormalizationPanel = ({
           {copy.proofLink}
           <ArrowUpRight className="size-4" aria-hidden="true" />
         </a>
+        <a
+          href={`${repositoryUrl}/tree/main/bend`}
+          className="inline-flex items-center gap-1"
+        >
+          {copy.bendProofLink}
+          <ArrowUpRight className="size-4" aria-hidden="true" />
+        </a>
         <a href={`${repositoryUrl}/blob/main/archive/manifest.json`}>
           {copy.dataLink}
         </a>

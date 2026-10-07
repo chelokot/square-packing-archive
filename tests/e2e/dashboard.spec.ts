@@ -91,9 +91,18 @@ test("the catalog searches formalized results without an evidence filter", async
   await expect(catalog.getByRole("combobox")).toHaveCount(0);
   await expect(catalog.locator("tbody tr")).toHaveCount(claims.length);
   for (const row of await catalog.locator("tbody tr").all()) {
-    await expect(row.getByRole("link", { name: "Lean proof" })).not.toHaveCount(
-      0,
-    );
+    await expect(
+      row.getByRole("link", { name: /^(Lean|Bend) proof$/ }),
+    ).not.toHaveCount(0);
+  }
+  const bendProofs = catalog.getByRole("link", { name: "Bend proof" });
+  await expect(bendProofs).toHaveCount(
+    claims.filter((claim) =>
+      claim.evidence.some((evidence) => evidence.kind === "bend-proof"),
+    ).length,
+  );
+  for (const link of await bendProofs.all()) {
+    await expect(link).toHaveAttribute("href", /\/bend\/MANIFEST\.bend$/);
   }
   await catalog.getByRole("searchbox").fill("Nagamochi");
   const nagamochiClaims = claims.filter((claim) =>

@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { claimSchema, evidenceSchema, manifestSchema } from "./schema.ts";
 import type { Claim } from "./schema.ts";
 import {
+  bendLawNames,
   exactCoverageByYear,
   isVerified,
   strongestClaimFor,
@@ -51,13 +52,31 @@ describe("verificationLevel", () => {
     expect(isVerified(claim)).toBeFalse();
   });
 
+  test("reserves verified status for kernel-checked Lean or Bend evidence", () => {
+    const bendClaim = claimSchema.parse({
+      ...claim,
+      value: { decimal: "1", bend: "R.FieldRing.of_nat(~F, ~field, 1n)" },
+      evidence: [
+        {
+          kind: "bend-proof",
+          status: "bend-checked",
+          source: "example-source",
+          artifact: "bend/MANIFEST.bend",
+          checkedAt: "2026-10-05",
+        },
+      ],
+    });
+    expect(verificationLevel(bendClaim)).toBe("formally-verified");
+    expect(isVerified(bendClaim)).toBeTrue();
+  });
+
   test("reserves verified status for Lean evidence", () => {
     const leanClaim = claimSchema.parse({
       ...claim,
       value: { decimal: "1", lean: "1" },
       evidence: [leanEvidence],
     });
-    expect(verificationLevel(leanClaim)).toBe("lean-verified");
+    expect(verificationLevel(leanClaim)).toBe("formally-verified");
     expect(isVerified(leanClaim)).toBeTrue();
   });
 
@@ -285,5 +304,22 @@ describe("exactCoverageByYear", () => {
       ),
     ).toEqual([{ year: 1975, published: 1, verified: 0 }]);
     expect(exactCoverageByYear(archiveWith([]))).toEqual([]);
+  });
+});
+
+describe("bendLawNames", () => {
+  test("names the laws of bend/MANIFEST.bend that each relation states", () => {
+    expect(
+      bendLawNames({ id: "exact-6-kearney-shiu", relation: "exact" }),
+    ).toEqual([
+      "Manifest.exact_6_kearney_shiu_upper",
+      "Manifest.exact_6_kearney_shiu_lower",
+    ]);
+    expect(bendLawNames({ id: "upper-5-goebel", relation: "upper" })).toEqual([
+      "Manifest.upper_5_goebel_upper",
+    ]);
+    expect(bendLawNames({ id: "lower-11-example", relation: "lower" })).toEqual(
+      ["Manifest.lower_11_example_lower"],
+    );
   });
 });

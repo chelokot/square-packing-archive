@@ -22,13 +22,13 @@ export const copy = {
   viewLayout: (count: number) => `View n = ${count}`,
   history: "Results & history",
   boundHistory: "Improving upper bounds · selected historical records",
-  codeLicense: "Code & Lean · Apache-2.0",
+  codeLicense: "Code & proofs · Apache-2.0",
   dataLicense: "Archive data · CC BY 4.0",
   contribute: "Submit a result",
   matrixTitle: "Choose the number of squares",
   coverageOverviewTitle: "Packing results · 1–100 squares",
   coverageOverviewDescription:
-    "Green cells mark proved optima. Amber cells mark nontrivial bounds. White cells mark basic grid bounds. Every result has a Lean proof.",
+    "Green cells mark proved optima. Amber cells mark nontrivial bounds. White cells mark basic grid bounds. Every result has a Lean or Bend proof.",
   coverageOverviewScope:
     "Green: proved optimal · Amber: nontrivial bound · White: basic grid bound",
   claimRelations: {
@@ -84,7 +84,7 @@ export const copy = {
   },
   elementary: "Elementary construction",
   source: "Source",
-  proof: "Lean proof",
+  proof: { "lean-proof": "Lean proof", "bend-proof": "Bend proof" },
   historyTitle: (count: number) => `The record for n = ${count}`,
   noHistory: "No results catalogued for this n yet.",
   historical: "Historical",
@@ -97,9 +97,10 @@ export const copy = {
   coverageData: "Show yearly counts",
   proofTitle: "Every result has a proof",
   proofDescription:
-    "Every result in this archive requires a kernel-checked Lean proof. Green cells mark proved optima; amber cells mark nontrivial bounds; white cells mark basic grid bounds. Results awaiting formalization belong in GitHub issues.",
+    "Every result in this archive requires a kernel-checked proof in Lean or Bend. Green cells mark proved optima; amber cells mark nontrivial bounds; white cells mark basic grid bounds. Results awaiting formalization belong in GitHub issues.",
   pendingResults: "Pending results & contributions",
   proofLink: "Read the Lean library",
+  bendProofLink: "Read the Bend proofs",
   sourcesTitle: "Built on the work of others",
   sourcesDescription:
     "The surveys and record trackers below are the foundations of this archive. Each result links to its contributors and source; publications retain their own licenses.",

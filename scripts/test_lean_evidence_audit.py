@@ -27,15 +27,23 @@ class LeanEvidenceAuditTests(unittest.TestCase):
                 with self.subTest(active=active, kind=kind):
                     claim = {"id": "pending-result", "active": active,
                              "evidence": [{"kind": kind, "status": status}]}
-                    with self.assertRaisesRegex(ValueError, "pending-result: catalog claims require a Lean proof"):
+                    with self.assertRaisesRegex(ValueError, "pending-result: catalog claims require a Lean or Bend proof"):
                         generator["render"]({"claims": [claim], "configurations": []})
+
+    def test_a_claim_proved_in_bend_is_left_to_the_bend_manifest(self):
+        claim = {"id": "bend-result", "evidence": [
+            {"kind": "bend-proof", "status": "bend-checked", "artifact": "bend/MANIFEST.bend"}
+        ]}
+        audit = generator["render"]({"claims": [claim], "configurations": []})
+        self.assertNotIn("bend-result", audit)
+        self.assertNotIn("example", audit)
 
     def test_a_verified_claim_does_not_hide_an_unformalized_historical_claim(self):
         checked = {"id": "checked-result", "evidence": [
             dict(GRID_POLICY["proof"], kind="lean-proof", status="lean-checked")
         ]}
         pending = {"id": "historical-result", "active": False, "evidence": []}
-        with self.assertRaisesRegex(ValueError, "historical-result: catalog claims require a Lean proof"):
+        with self.assertRaisesRegex(ValueError, "historical-result: catalog claims require a Lean or Bend proof"):
             generator["render"]({"claims": [checked, pending], "configurations": []})
 
     def test_a_lean_label_still_requires_valid_status_artifact_theorem_and_target(self):
@@ -119,7 +127,7 @@ class LeanEvidenceAuditTests(unittest.TestCase):
 
     def test_existing_evidence_and_explicit_grid_checks_remain(self):
         proof = dict(GRID_POLICY["proof"], kind="lean-proof", status="lean-checked")
-        proof["theorem"] = "SquarePackingArchive.Records.SquareNumbers.s4_eq_two"
+        proof["theorem"] = "SquarePackingArchive.Records.SquareNumbers.s16_eq_four"
         manifest = {
             "claims": [{"id": "test-exact", "relation": "exact", "n": 4,
                         "value": {"lean": "2"}, "evidence": [proof]}],

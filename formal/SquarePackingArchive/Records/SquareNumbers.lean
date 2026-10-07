@@ -107,15 +107,6 @@ theorem squareNumber_isMinimumSide (size : ℕ) :
     push_cast at area_bound
     nlinarith
 
-theorem s1_eq_one : IsMinimumSide 1 1 := by
-  simpa using squareNumber_isMinimumSide 1
-
-theorem s4_eq_two : IsMinimumSide 4 2 := by
-  simpa using squareNumber_isMinimumSide 2
-
-theorem s9_eq_three : IsMinimumSide 9 3 := by
-  simpa using squareNumber_isMinimumSide 3
-
 theorem s16_eq_four : IsMinimumSide 16 4 := by
   simpa using squareNumber_isMinimumSide 4
 
