@@ -19,7 +19,7 @@ def Manifest.exact_1_grid_upper(F, field):
   Gs.Grids.packing(~F, ~field, 0n, 1n, Unit{})
 
 def Manifest.exact_1_grid_lower(F, field, count, side, packing, at_least):
-  Sm.Small.lower_bound_one(~F, ~field, ~count, ~side, ~packing, at_least)
+  Ch.Chords.lower_bound(~F, ~field, ~count, ~side, ~packing, 1n, at_least)
 
 def Manifest.exact_2_goebel_upper(F, field):
   Gs.Grids.packing(~F, ~field, 1n, 2n, Unit{})
@@ -37,7 +37,7 @@ def Manifest.exact_4_grid_upper(F, field):
   Gs.Grids.packing(~F, ~field, 1n, 4n, Unit{})
 
 def Manifest.exact_4_grid_lower(F, field, count, side, packing, at_least):
-  Sm.Small.lower_bound_two(~F, ~field, ~count, ~side, ~packing, N.Natural.le_transitive(2n, 4n, count, Unit{}, at_least))
+  Ch.Chords.lower_bound(~F, ~field, ~count, ~side, ~packing, 2n, at_least)
 
 def Manifest.exact_6_kearney_shiu_upper(F, field):
   Gs.Grids.packing(~F, ~field, 2n, 6n, Unit{})
@@ -61,7 +61,43 @@ def Manifest.exact_9_grid_upper(F, field):
   Gs.Grids.packing(~F, ~field, 2n, 9n, Unit{})
 
 def Manifest.exact_9_grid_lower(F, field, count, side, packing, at_least):
-  Six.StromquistSix.lower_bound(~F, ~field, ~count, ~side, ~packing, N.Natural.le_transitive(6n, 9n, count, Unit{}, at_least))
+  Ch.Chords.lower_bound(~F, ~field, ~count, ~side, ~packing, 3n, at_least)
+
+def Manifest.exact_16_grid_upper(F, field):
+  Gs.Grids.packing(~F, ~field, 3n, 16n, Unit{})
+
+def Manifest.exact_16_grid_lower(F, field, count, side, packing, at_least):
+  Ch.Chords.lower_bound(~F, ~field, ~count, ~side, ~packing, 4n, at_least)
+
+def Manifest.exact_25_grid_upper(F, field):
+  Gs.Grids.packing(~F, ~field, 4n, 25n, Unit{})
+
+def Manifest.exact_25_grid_lower(F, field, count, side, packing, at_least):
+  Ch.Chords.lower_bound(~F, ~field, ~count, ~side, ~packing, 5n, at_least)
+
+def Manifest.exact_36_grid_upper(F, field):
+  Gs.Grids.packing(~F, ~field, 5n, 36n, Unit{})
+
+def Manifest.exact_36_grid_lower(F, field, count, side, packing, at_least):
+  Ch.Chords.lower_bound(~F, ~field, ~count, ~side, ~packing, 6n, at_least)
+
+def Manifest.exact_49_grid_upper(F, field):
+  Gs.Grids.packing(~F, ~field, 6n, 49n, Unit{})
+
+def Manifest.exact_49_grid_lower(F, field, count, side, packing, at_least):
+  Ch.Chords.lower_bound(~F, ~field, ~count, ~side, ~packing, 7n, at_least)
+
+def Manifest.exact_64_grid_upper(F, field):
+  Gs.Grids.packing(~F, ~field, 7n, 64n, Unit{})
+
+def Manifest.exact_64_grid_lower(F, field, count, side, packing, at_least):
+  Ch.Chords.lower_bound(~F, ~field, ~count, ~side, ~packing, 8n, at_least)
+
+def Manifest.exact_81_grid_upper(F, field):
+  Gs.Grids.packing(~F, ~field, 8n, 81n, Unit{})
+
+def Manifest.exact_81_grid_lower(F, field, count, side, packing, at_least):
+  Ch.Chords.lower_bound(~F, ~field, ~count, ~side, ~packing, 9n, at_least)
 
 def Laws.fewer_squares(F, field, count, side, packing, fewer, at_most):
   Q.Packings.restrict(~F, ~field, ~count, ~side, ~packing, ~fewer, at_most)

@@ -41,12 +41,11 @@ side `v`, and a lower bound `v ≤ s(n)` is the law `<claim>_lower`, `v ≤ side
 for every packing of at least `n` squares. `bend/PROOF.bend` proves each law, so
 `--verdict` checks every claim exactly as the catalog states it.
 
-| Claims                   | Proofs in `bend/PROOF.bend`                     |
-| ------------------------ | ----------------------------------------------- |
-| `s(1) = 1`               | `Grids.packing` and `Small.lower_bound_one`     |
-| `s(2) = s(3) = s(4) = 2` | `Grids.packing` and `Small.lower_bound_two`     |
-| `s(6) = 3`               | `Grids.packing` and `StromquistSix.lower_bound` |
-| `s(7) = s(8) = s(9) = 3` | `Grids.packing` and `StromquistSix.lower_bound` |
+| Claims                      | Proofs in `bend/PROOF.bend`                     |
+| --------------------------- | ----------------------------------------------- |
+| `s(2) = s(3) = 2`           | `Grids.packing` and `Small.lower_bound_two`     |
+| `s(6) = s(7) = s(8) = 3`    | `Grids.packing` and `StromquistSix.lower_bound` |
+| `s(k²) = k` for `1 ≤ k ≤ 9` | `Grids.packing` and `Chords.lower_bound`        |
 
 `bend/LAWS.bend` keeps the general laws: the local coordinates of a square
 (`Laws.contains_iff_local_coordinates_forward` and `_backward`, and the same

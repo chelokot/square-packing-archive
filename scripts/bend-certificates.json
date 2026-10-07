@@ -7227,6 +7227,21 @@
     "0n",
     "C.MoreTerms{C.Product{1n, C.MoreIndices{0n, C.NoIndices{}}, R.Number{1n}}, C.MoreTerms{C.Multiple{0n, R.Number{1n}}, C.NoTerms{}}}"
   ],
+  "[[\"root\", \"square\", \"count\", \"side\"], [\"((side*side) + (-(count)))\", \"(count + (-(square)))\", \"side\", \"root\", \"(root + (-(side)))\", \"((root + (-(side))) + (-(0)))\", \"((root + side) + (-(0)))\", \"(((root + (-(side)))*(root + side)) + (-(0)))\"], [\"(square + (-((root*root))))\"], \"(0) - (((root + (-(side)))*(root + side)))\", [], 2]": [
+    "0n",
+    "C.MoreTerms{C.Product{1n, C.MoreIndices{0n, C.NoIndices{}}, R.Number{1n}}, C.MoreTerms{C.Product{1n, C.MoreIndices{1n, C.NoIndices{}}, R.Number{1n}}, C.MoreTerms{C.Multiple{0n, R.Number{1n}}, C.NoTerms{}}}}"
+  ],
+  "[[\"root\", \"square\", \"count\", \"side\"], [\"((side*side) + (-(count)))\", \"(count + (-(square)))\", \"side\", \"root\", \"(root + (-(side)))\", \"((root + (-(side))) + (-(0)))\", \"((root + side) + (-(0)))\", \"(((root + (-(side)))*(root + side)) + (-(0)))\"], [\"(square + (-((root*root))))\"], \"(0) - ((root + (-(side))))\", [], 2]": null,
+  "[[\"root\", \"square\", \"count\", \"side\"], [\"((side*side) + (-(count)))\", \"(count + (-(square)))\", \"side\", \"root\", \"(root + (-(side)))\", \"((root + (-(side))) + (-(0)))\", \"((root + side) + (-(0)))\", \"(((root + (-(side)))*(root + side)) + (-(0)))\"], [\"(square + (-((root*root))))\"], \"(0) - ((root + side))\", [], 2]": null,
+  "[[\"root\", \"square\", \"count\", \"side\"], [\"((side*side) + (-(count)))\", \"(count + (-(square)))\", \"side\", \"root\", \"(root + (-(side)))\", \"((root + (-(side))) + (-(0)))\", \"((root + side) + (-(0)))\", \"(((root + (-(side)))*(root + side)) + (-(0)))\"], [\"(square + (-((root*root))))\"], \"(side) - (root)\", [], 2]": null,
+  "[[\"root\", \"square\", \"count\", \"side\"], [\"((side*side) + (-(count)))\", \"(count + (-(square)))\", \"side\", \"root\", \"(root + (-(side)))\", \"((root + (-(side))) + (-(0)))\", \"(0 + (-((root + side))))\"], [\"(square + (-((root*root))))\"], \"(side) - (root)\", [], 2]": [
+    "0n",
+    "C.MoreTerms{C.Product{2n, C.MoreIndices{2n, C.NoIndices{}}, R.Number{1n}}, C.MoreTerms{C.Product{1n, C.MoreIndices{6n, C.NoIndices{}}, R.Number{1n}}, C.NoTerms{}}}"
+  ],
+  "[[\"root\", \"square\", \"count\", \"side\"], [\"((side*side) + (-(count)))\", \"(count + (-(square)))\", \"side\", \"root\", \"(root + (-(side)))\", \"(0 + (-((root + (-(side))))))\"], [\"(square + (-((root*root))))\"], \"(side) - (root)\", [], 2]": [
+    "0n",
+    "C.MoreTerms{C.Product{1n, C.MoreIndices{5n, C.NoIndices{}}, R.Number{1n}}, C.NoTerms{}}"
+  ],
   "[[\"t\", \"i\", \"side\"], [\"1 - t*i\", \"side\"], [\"(t*i)*side - t\"], \"(side) - (t)\", [], 2]": [
     "0n",
     "C.MoreTerms{C.Product{1n, C.MoreIndices{0n, C.MoreIndices{1n, C.NoIndices{}}}, R.Number{1n}}, C.MoreTerms{C.Multiple{0n, R.Number{1n}}, C.NoTerms{}}}"
