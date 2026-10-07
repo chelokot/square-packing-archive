@@ -27,7 +27,7 @@ CENTER = f'P.Point{{{ONE}, {ONE}}}'
 
 def center():
     """A normal square fitting [0, 2]^2 contains (1, 1)."""
-    return U.normal_lemma('center', [], lambda sq, v: ([], [(num(1), num(1))]), squares=[lambda q: q.c + q.s - 1],
+    return U.normal_lemma('center', [], lambda sq, v, side: ([], [(num(1), num(1))]), squares=[lambda q: q.c + q.s - 1],
                           module='Small', side=2)
 
 

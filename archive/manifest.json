@@ -645,7 +645,7 @@
       "value": {
         "decimal": "2.70710678118654",
         "expression": "2 + √2 / 2",
-        "lean": "2 + Real.sqrt 2 / 2"
+        "bend": "A.Algebra.add(~F, ~field, R.FieldRing.of_nat(~F, ~field, 2n), A.Algebra.mul(~F, ~field, root, A.Algebra.half(~F, ~field)))"
       },
       "announcedAt": "1979",
       "contributors": [
@@ -661,12 +661,11 @@
           "source": "friedman-survey"
         },
         {
-          "kind": "lean-proof",
-          "status": "lean-checked",
+          "kind": "bend-proof",
+          "status": "bend-checked",
           "source": "archive-research-2026",
-          "artifact": "formal/SquarePackingArchive/Records/Square5.lean",
-          "theorem": "SquarePackingArchive.Records.Square5.s5_le_goebel",
-          "checkedAt": "2026-08-29"
+          "artifact": "bend/MANIFEST.bend",
+          "checkedAt": "2026-10-07"
         }
       ],
       "configuration": "square-5-goebel",
@@ -679,7 +678,7 @@
       "value": {
         "decimal": "2.70710678118654",
         "expression": "2 + √2 / 2",
-        "lean": "2 + Real.sqrt 2 / 2"
+        "bend": "A.Algebra.add(~F, ~field, R.FieldRing.of_nat(~F, ~field, 2n), A.Algebra.mul(~F, ~field, root, A.Algebra.half(~F, ~field)))"
       },
       "announcedAt": "1979",
       "contributors": [
@@ -695,12 +694,11 @@
           "source": "friedman-survey"
         },
         {
-          "kind": "lean-proof",
-          "status": "lean-checked",
+          "kind": "bend-proof",
+          "status": "bend-checked",
           "source": "archive-research-2026",
-          "artifact": "formal/SquarePackingArchive/Records/Square5.lean",
-          "theorem": "SquarePackingArchive.Records.Square5.s5_eq_goebel",
-          "checkedAt": "2026-08-29"
+          "artifact": "bend/MANIFEST.bend",
+          "checkedAt": "2026-10-07"
         }
       ],
       "configuration": "square-5-goebel",

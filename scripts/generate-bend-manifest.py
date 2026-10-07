@@ -3,7 +3,8 @@
 
 The grid baseline is a packing of any n <= k^2 squares in side k. An upper
 bound s(n) <= v is a packing of n squares in side v. A lower bound
-v <= s(n) holds for every packing of at least n squares. bend/PROOF.bend fills
+v <= s(n) holds for every packing of at least n squares. A value written with
+`root` is stated for every root >= 0 of root * root = 2. bend/PROOF.bend fills
 each law, so `bend bend/PROOF.bend --verdict` checks every claim as the
 catalog states it.
 """
@@ -25,13 +26,23 @@ def law_name(claim, bound):
     return claim['id'].replace('-', '_') + '_' + bound
 
 
+ROOT_BINDER = '''
+  for ~root: F'''
+ROOT_FACTS = '''
+  for +root_below: A.Algebra.le(~F, ~field, A.Algebra.mul(~F, ~field, root, root), R.FieldRing.of_nat(~F, ~field, 2n))
+  for +root_above: A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 2n), A.Algebra.mul(~F, ~field, root, root))
+  for +root_sign: A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), root)'''
+
+
 def laws(claim):
+    """The laws of a claim; a value with `root` holds for every square root of 2 in the field."""
     n, value = claim['n'], claim['value']['bend']
+    binder, facts = (ROOT_BINDER, ROOT_FACTS) if 'root' in value else ('', '')
     if claim['relation'] in ('exact', 'upper'):
         yield f'''
 law {law_name(claim, 'upper')}:
   for ~F: Kind(&2)
-  for ~field: K.Field<F>
+  for ~field: K.Field<F>{binder}{facts}
   P.Problem.Packing<F, field, {n}n, {value}>
 '''
     if claim['relation'] in ('exact', 'lower'):
@@ -41,7 +52,7 @@ law {law_name(claim, 'lower')}:
   for ~field: K.Field<F>
   for ~count: Nat
   for ~side: F
-  for ~packing: P.Problem.Packing<F, field, count, side>
+  for ~packing: P.Problem.Packing<F, field, count, side>{binder}{facts}
   for +at_least: N.Natural.Le({n}n, count)
   A.Algebra.le(~F, ~field, {value}, side)
 '''

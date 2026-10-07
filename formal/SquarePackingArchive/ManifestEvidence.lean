@@ -26,7 +26,6 @@ import SquarePackingArchive.Records.Square33
 import SquarePackingArchive.Records.Square34
 import SquarePackingArchive.Records.Square40Tracker
 import SquarePackingArchive.Records.Square46
-import SquarePackingArchive.Records.Square5
 import SquarePackingArchive.Records.Square50SchadtEllsworth
 import SquarePackingArchive.Records.Square53EllsworthReconstructed
 import SquarePackingArchive.Records.Square65Tracker
@@ -37,12 +36,6 @@ import SquarePackingArchive.Records.Square82Tracker
 import SquarePackingArchive.Records.Square85Tracker
 import SquarePackingArchive.Records.Square86Friedman
 import SquarePackingArchive.Records.Square89Tracker
-
-example : SquarePackingArchive.HasPacking 5 (2 + Real.sqrt 2 / 2) :=
-  SquarePackingArchive.Records.Square5.s5_le_goebel
-
-example : SquarePackingArchive.IsMinimumSide 5 (2 + Real.sqrt 2 / 2) :=
-  SquarePackingArchive.Records.Square5.s5_eq_goebel
 
 example : SquarePackingArchive.HasPacking 10 (3 + Real.sqrt 2 / 2) :=
   SquarePackingArchive.Records.Square10.s10_le_goebel
@@ -274,8 +267,6 @@ assert_standard_axioms SquarePackingArchive.Records.Square40Tracker.upper_bound
 assert_standard_axioms SquarePackingArchive.Records.Square46.s46_eq_seven
 assert_standard_axioms SquarePackingArchive.Records.Square46.s47_eq_seven
 assert_standard_axioms SquarePackingArchive.Records.Square46.s48_eq_seven
-assert_standard_axioms SquarePackingArchive.Records.Square5.s5_eq_goebel
-assert_standard_axioms SquarePackingArchive.Records.Square5.s5_le_goebel
 assert_standard_axioms SquarePackingArchive.Records.Square50SchadtEllsworth.s50_le_7_57142857142857
 assert_standard_axioms SquarePackingArchive.Records.Square53EllsworthReconstructed.upper_bound
 assert_standard_axioms SquarePackingArchive.Records.Square65Tracker.upper_bound
