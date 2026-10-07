@@ -54,15 +54,6 @@ def Stromquist.key{k}(TPL) -> P.Problem.Point<F>:
     out += f'''
 def Stromquist.row(TPL, +square: P.Problem.Square<F, field>) -> List<&2, Bool>:
   I.Incidence.row({", ".join(f"M.Membership.inside(TC, square, {key(k)})" for k in range(9))})
-
-def Stromquist.unit(TPL, +square: P.Problem.Square<F, field>) ->
-  C.Certificate.Both<LE(ADD(ADD(MUL(P.Problem.cosine(F, field, square), P.Problem.cosine(F, field, square)),
-    MUL(P.Problem.sine(F, field, square), P.Problem.sine(F, field, square))), NEG(R.FieldRing.of_nat(TC, 1n))), ZERO),
-    LE(ZERO, ADD(ADD(MUL(P.Problem.cosine(F, field, square), P.Problem.cosine(F, field, square)),
-    MUL(P.Problem.sine(F, field, square), P.Problem.sine(F, field, square))), NEG(R.FieldRing.of_nat(TC, 1n))))>:
-  match square:
-    case P.Square{{+center, P.Frame{{+c, +s, +ub, +ua}}}}:
-      G.Geometry.unit(TC, c, s, ub, ua)
 '''
     order = [k for k in range(9) if k != CENTER]
     for position, k in enumerate(order):
@@ -97,7 +88,7 @@ class Square(Context):
         self.c = self.var('c', f'P.Problem.cosine(F, field, {square})')
         self.s = self.var('s', f'P.Problem.sine(F, field, {square})')
         self.h = self.var('h', 'HALF')
-        self.raw_equation(((self.c * self.c + self.s * self.s) - 1).text, f"{SELF['name']}unit(TC, {square})")
+        self.raw_equation(((self.c * self.c + self.s * self.s) - 1).text, f"G.Geometry.square_unit(TC, {square})")
         self.raw_equation('h + h - 1', 'S.Scaling.half_equation(TC)')
         self.nonnegative(self.c, signs[0])
         self.nonnegative(self.s, signs[1])

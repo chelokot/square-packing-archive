@@ -10,6 +10,7 @@ import ./bend-math/FieldRing.bend as R
 import ./bend-math/Natural.bend as N
 import ./Scaling.bend as Z
 import ./StromquistSix.bend as Six
+import ./Chords.bend as Ch
 
 def Manifest.grid_baseline(F, field, size, count, fits):
   Gs.Grids.packing(~F, ~field, size, count, fits)
@@ -151,3 +152,6 @@ def Laws.reflect_y_packing(F, field, count, side, packing):
 
 def Laws.closed_disjoint_family_in_larger_container(F, field, count, side, packing, target, less, nonempty):
   Z.Scaling.closed_family(~F, ~field, ~count, ~side, ~packing, target, less, nonempty)
+
+def Laws.vertical_chords_fit_the_side(F, field, count, side, packing, x):
+  Ch.Chords.covered(~F, ~field, ~count, ~side, ~packing, x)

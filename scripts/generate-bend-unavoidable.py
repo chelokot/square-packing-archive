@@ -256,7 +256,7 @@ def triangle_points():
     cy = ctx.var('cy', 'P.Problem.center_y(F, field, square)')
     c = ctx.var('c', 'P.Problem.cosine(F, field, square)')
     s = ctx.var('s', 'P.Problem.sine(F, field, square)')
-    ctx.raw_equation(((c * c + s * s) - 1).text, 'Unavoidable.unit(TC, square)')
+    ctx.raw_equation(((c * c + s * s) - 1).text, 'G.Geometry.square_unit(TC, square)')
     px = [ctx.var(f'px{i}', f'px{i}') for i in range(3)]
     py = [ctx.var(f'py{i}', f'py{i}') for i in range(3)]
     points = list(zip(px, py))
@@ -295,15 +295,6 @@ def triangle_points():
     call = f'Unavoidable.triangle(TC, {", ".join(t.bend for t in xs + ys + ws)}, {", ".join(facts)})'
     inner = f'M.Membership.either({locals_[1]}, {locals_[2]}, {goal}, rest, +second => Inr{{Inl{{{found(1, "second")}}}}}, +third => Inr{{Inr{{{found(2, "third")}}}}})'
     return f'''
-def Unavoidable.unit(TPL, +square: P.Problem.Square<F, field>) ->
-  C.Certificate.Both<LE(ADD(ADD(MUL(P.Problem.cosine(F, field, square), P.Problem.cosine(F, field, square)),
-    MUL(P.Problem.sine(F, field, square), P.Problem.sine(F, field, square))), NEG(R.FieldRing.of_nat(TC, 1n))), ZERO),
-    LE(ZERO, ADD(ADD(MUL(P.Problem.cosine(F, field, square), P.Problem.cosine(F, field, square)),
-    MUL(P.Problem.sine(F, field, square), P.Problem.sine(F, field, square))), NEG(R.FieldRing.of_nat(TC, 1n))))>:
-  match square:
-    case P.Square{{+center, P.Frame{{+c, +s, +ub, +ua}}}}:
-      G.Geometry.unit(TC, c, s, ub, ua)
-
 def Unavoidable.triangle_points(TPL, +square: P.Problem.Square<F, field>, {", ".join(params)}) -> {goal}:
 {ctx.bindings(2)}  M.Membership.either({locals_[0]}, Or({locals_[1]}, {locals_[2]}), {goal}, {call}, +first => Inl{{{found(0, "first")}}}, rest => {inner})
 '''

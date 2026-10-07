@@ -212,3 +212,12 @@ def Geometry.local_interior(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem
         C.Certificate.same(~F, ~field, values, Geometry.unit_equations(), equations,
           R.Variable{7n}, Geometry.offset_y_expr(Geometry.local_x_expr(), Geometry.local_y_expr()),
           Geometry.term(0n, R.Plus{Geometry.one_times(7n), R.Negate{Geometry.one_times(1n)}}, C.NoTerms{}), Geometry.term(0n, R.Plus{R.Negate{Geometry.one_times(7n)}, Geometry.one_times(1n)}, C.NoTerms{}), {==}, {==}))
+
+def Geometry.square_unit(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<F, field>) ->
+  C.Certificate.Both<A.Algebra.le(~F, ~field, A.Algebra.add(~F, ~field, A.Algebra.add(~F, ~field, A.Algebra.mul(~F, ~field, P.Problem.cosine(F, field, square), P.Problem.cosine(F, field, square)),
+    A.Algebra.mul(~F, ~field, P.Problem.sine(F, field, square), P.Problem.sine(F, field, square))), A.Algebra.neg(~F, ~field, R.FieldRing.of_nat(~F, ~field, 1n))), A.Algebra.zero(~F, ~field)),
+    A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), A.Algebra.add(~F, ~field, A.Algebra.add(~F, ~field, A.Algebra.mul(~F, ~field, P.Problem.cosine(F, field, square), P.Problem.cosine(F, field, square)),
+    A.Algebra.mul(~F, ~field, P.Problem.sine(F, field, square), P.Problem.sine(F, field, square))), A.Algebra.neg(~F, ~field, R.FieldRing.of_nat(~F, ~field, 1n))))>:
+  match square:
+    case P.Square{+center, P.Frame{+c, +s, +ub, +ua}}:
+      Geometry.unit(~F, ~field, c, s, ub, ua)

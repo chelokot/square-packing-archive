@@ -50,8 +50,17 @@ for every packing of at least `n` squares. `bend/PROOF.bend` proves each law, so
 
 `bend/LAWS.bend` keeps the general laws: the local coordinates of a square
 (`Laws.contains_iff_local_coordinates_forward` and `_backward`, and the same
-for the open square), the symmetries of packings, `Laws.fewer_squares`, and
-the scaling to a closed-disjoint family.
+for the open square), the symmetries of packings, `Laws.fewer_squares`, the
+scaling to a closed-disjoint family, and the chord bound below.
+
+`bend/Chords.bend`, written by `scripts/generate-bend-chords.py`, starts the
+area argument for `s(k²) = k`. A square in first-quadrant normal form meets the
+vertical line at `x` in an open chord whose ends are piecewise linear in `x`,
+with breakpoints at the abscissae of its vertices. Points strictly inside the
+chord are interior points of the square, and the chord of a square that fits
+`[0, side]^2` lies in `[0, side]`. Chords of squares with disjoint interiors do
+not overlap, so `Laws.vertical_chords_fit_the_side` bounds the total length of
+the chords of a packing at any `x` by `side`.
 
 The upper bounds, and the basic grid bound `s(n) ≤ ⌈√n⌉` the site shows for
 counts without a catalogued claim, are one theorem: `bend/Grids.bend` packs

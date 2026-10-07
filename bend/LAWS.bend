@@ -10,6 +10,8 @@ import ./bend-math/FieldOrder.bend as O
 import ./bend-math/Natural.bend as N
 import ./bend-math/Certificate.bend as C
 import ./bend-math/FieldAlgebra.bend as A
+import ./bend-math/Intervals.bend as I
+import ./Chords.bend as Ch
 
 law fewer_squares:
   for ~F: Kind(&2)
@@ -262,3 +264,13 @@ law closed_disjoint_family_in_larger_container:
   for +less: O.FieldOrder.Strict(~F, ~field, side, target)
   for +nonempty: N.Natural.Le(1n, count)
   Z.Scaling.ClosedFamily<F, field, count, target>
+
+law vertical_chords_fit_the_side:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +x: F
+  A.Algebra.le(~F, ~field, I.Intervals.total(~F, ~field, Ch.Chords.chords(~F, ~field, ~count, ~side, ~packing, x, count)),
+    I.Intervals.minus(~F, ~field, side, A.Algebra.zero(~F, ~field)))
