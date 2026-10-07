@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Write bend/MANIFEST.bend: a law for each claim with a Bend proof, stated from archive/manifest.json.
 
-An upper bound s(n) <= v is a packing of n squares in side v. A lower bound
+The grid baseline is a packing of any n <= k^2 squares in side k. An upper
+bound s(n) <= v is a packing of n squares in side v. A lower bound
 v <= s(n) holds for every packing of at least n squares. bend/PROOF.bend fills
 each law, so `bend bend/PROOF.bend --verdict` checks every claim as the
 catalog states it.
@@ -46,9 +47,20 @@ law {law_name(claim, 'lower')}:
 '''
 
 
+GRID_BASELINE = '''
+law grid_baseline:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~size: Nat
+  for ~count: Nat
+  for +fits: N.Natural.Le(count, Nat.mul(1n+size, 1n+size))
+  P.Problem.Packing<F, field, count, R.FieldRing.of_nat(~F, ~field, 1n+size)>
+'''
+
+
 def main():
     manifest = json.loads((ROOT / 'archive' / 'manifest.json').read_text())
-    parts = [HEADER]
+    parts = [HEADER] + ([GRID_BASELINE] if 'gridBaseline' in manifest else [])
     for claim in manifest['claims']:
         if any(proof['kind'] == 'bend-proof' for proof in claim['evidence']):
             parts.extend(laws(claim))

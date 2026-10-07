@@ -11,6 +11,8 @@ export type GridBaseline = Pick<Claim, "n" | "value" | "evidence"> & {
 
 export type ExplorerBound = Claim | GridBaseline;
 
+export const gridBaselineLaw = "Manifest.grid_baseline";
+
 export const isGridBaseline = (bound: ExplorerBound): bound is GridBaseline =>
   "kind" in bound && bound.kind === "grid-baseline";
 
@@ -37,9 +39,9 @@ export const gridBaselineFor = (
     value: {
       decimal: String(side),
       expression: String(side),
-      lean: String(side),
+      bend: `R.FieldRing.of_nat(~F, ~field, ${side}n)`,
     },
-    evidence: [{ ...policy.proof, kind: "lean-proof", status: "lean-checked" }],
+    evidence: [{ ...policy.proof, kind: "bend-proof", status: "bend-checked" }],
   };
 };
 

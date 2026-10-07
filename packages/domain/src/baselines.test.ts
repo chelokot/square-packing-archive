@@ -34,9 +34,8 @@ const archive = manifestSchema.parse({
     through: 100,
     proof: {
       source: "archive-research",
-      artifact: "formal/SquarePackingArchive/Records/GridBounds.lean",
-      theorem: "SquarePackingArchive.Records.GridBounds.grid_hasPacking",
-      checkedAt: "2026-09-05",
+      artifact: "bend/MANIFEST.bend",
+      checkedAt: "2026-10-07",
     },
   },
 });
@@ -49,8 +48,8 @@ describe("derived grid bounds", () => {
       expect((baseline.side - 1) ** 2).toBeLessThan(count);
       expect(baseline.relation).toBe("upper");
       expect(verificationLevel(baseline)).toBe("formally-verified");
-      expect(baseline.evidence[0]!.theorem).toBe(
-        archive.gridBaseline!.proof.theorem,
+      expect(baseline.evidence[0]!.artifact).toBe(
+        archive.gridBaseline!.proof.artifact,
       );
       const configuration = gridBaselineConfiguration(baseline);
       expect(configuration.n).toBe(count);
@@ -116,8 +115,11 @@ describe("derived grid bounds", () => {
     const policy = archive.gridBaseline!;
     for (const proof of [
       { ...policy.proof, checkedAt: undefined },
-      { ...policy.proof, artifact: "not-lean" },
-      { ...policy.proof, theorem: "" },
+      { ...policy.proof, artifact: "not-bend" },
+      {
+        ...policy.proof,
+        artifact: "formal/SquarePackingArchive/Records/GridBounds.lean",
+      },
     ]) {
       expect(
         manifestSchema.safeParse({

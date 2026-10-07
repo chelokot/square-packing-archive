@@ -1,5 +1,6 @@
 import {
   bendLawNames,
+  gridBaselineLaw,
   isFormalProof,
   isGridBaseline,
   type Claim,
@@ -27,9 +28,11 @@ export const proofTitle = (
   bound: ExplorerBound,
   evidence: FormalProof,
 ): string =>
-  evidence.kind === "bend-proof" && !isGridBaseline(bound)
-    ? bendLawNames(bound).join(", ")
-    : evidence.theorem!;
+  evidence.kind === "lean-proof"
+    ? evidence.theorem!
+    : isGridBaseline(bound)
+      ? gridBaselineLaw
+      : bendLawNames(bound).join(", ");
 
 export const contributorNames = (
   archive: CompiledArchive,

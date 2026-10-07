@@ -40,11 +40,9 @@ describe("packing reconstructions", () => {
     expect(markup).toContain("s(61) ≤ 8");
     expect(markup).not.toContain("Lean verified");
     expect(markup).toContain(
-      'href="https://github.com/chelokot/square-packing-archive/blob/main/formal/SquarePackingArchive/Records/GridBounds.lean"',
+      'href="https://github.com/chelokot/square-packing-archive/blob/main/bend/MANIFEST.bend"',
     );
-    expect(markup).toContain(
-      'title="SquarePackingArchive.Records.GridBounds.grid_hasPacking"',
-    );
+    expect(markup).toContain('title="Manifest.grid_baseline"');
     expect(markup.match(/data-square-id=/g)).toHaveLength(61);
   });
 

@@ -17,7 +17,7 @@ test("an uncatalogued selection uses the same verified grid bound throughout the
   expect(markup).not.toContain("Rotated packings");
   expect(markup).toContain("Every result has a proof");
   expect(markup).toContain(
-    'href="https://github.com/chelokot/square-packing-archive/blob/main/formal/SquarePackingArchive/Records/GridBounds.lean"',
+    'href="https://github.com/chelokot/square-packing-archive/blob/main/bend/MANIFEST.bend"',
   );
   expect(markup).toContain("No results catalogued for this n yet.");
   expect(markup).toContain(">34</span> proved optimal");

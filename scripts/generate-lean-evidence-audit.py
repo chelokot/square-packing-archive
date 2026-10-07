@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import re
 from pathlib import Path
 from typing import Any
@@ -78,44 +77,11 @@ def render(manifest: dict[str, Any]) -> str:
     modules = {"SquarePackingArchive.EvidenceAudit"}
     modules.update(module_name(item.get("artifact", "")) for _, item in evidence)
     audited_theorems = {theorem_name(item) for _, item in evidence}
-    baseline_checks = ""
-    if "gridBaseline" in manifest:
-        policy = manifest["gridBaseline"]
-        through = policy["through"]
-        if type(through) is not int or through < 1:
-            raise ValueError(f"invalid grid baseline count: {through}")
-        proof = policy["proof"]
-        modules.add(module_name(proof.get("artifact", "")))
-        theorem = proof_theorem_name(proof)
-        audited_theorems.add(theorem)
-        baseline_checks = "\n\n".join(
-            f"example : SquarePackingArchive.HasPacking {count} {side} := by\n"
-            f"  simpa using {theorem} (count := {count}) (side := {side}) (by norm_num)"
-            for count, side in (
-                (count, math.isqrt(count - 1) + 1)
-                for count in range(1, through + 1)
-            )
-        )
     imports = "\n".join(f"import {module}" for module in sorted(modules))
     checks = "\n\n".join(
         f"example : {expected_type(claim)} :=\n  {theorem_name(item)}"
         for claim, item in evidence
     )
-    grids = [reference for reference in manifest["configurations"]
-             if reference.get("recipe") == "grid"]
-    grid_checks = "\n\n".join(
-        f"example : SquarePackingArchive.HasPacking {reference['n']} {reference['side']} := by\n"
-        f"  simpa using SquarePackingArchive.HasPacking.mono (targetCount := {reference['n']}) (SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking {reference['side']}) (by norm_num)"
-        for reference in grids
-    )
-    if grid_checks:
-        audited_theorems.update((
-            "SquarePackingArchive.HasPacking.mono",
-            "SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking",
-        ))
-        checks += "\n\n" + grid_checks
-    if baseline_checks:
-        checks += "\n\n" + baseline_checks
     axiom_checks = "\n".join(
         f"assert_standard_axioms {theorem}" for theorem in sorted(audited_theorems)
     )

@@ -9,6 +9,7 @@ import {
   exactCoverageByYear,
   bendLawNames,
   claimsByYear,
+  gridBaselineLaw,
   isFormalProof,
 } from "@square-packing/domain";
 
@@ -169,7 +170,7 @@ describe("compiled archive", () => {
     );
   });
 
-  test("every claim proved in Bend is stated by the laws of bend/MANIFEST.bend", () => {
+  test("every claim proved in Bend, and the grid baseline, is stated by a law of bend/MANIFEST.bend", () => {
     const manifest = readFileSync(
       new URL("../../../bend/MANIFEST.bend", import.meta.url),
       "utf8",
@@ -183,7 +184,7 @@ describe("compiled archive", () => {
       )
       .flatMap(bendLawNames);
     expect(claimed.length).toBeGreaterThan(0);
-    expect(declared.sort()).toEqual(claimed.sort());
+    expect(declared.sort()).toEqual([...claimed, gridBaselineLaw].sort());
   });
 
   test("every catalogued result has its own checked proof, including historical entries", () => {

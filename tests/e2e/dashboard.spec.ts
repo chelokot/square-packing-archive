@@ -69,8 +69,8 @@ test("matrix, viewer, history and shared URL follow the same selection", async (
   await expect(page.locator("#viewer")).toContainText("s(61) ≤ 8");
   await expect(page.locator("#viewer")).not.toContainText("Lean verified");
   await expect(
-    page.locator("#viewer").getByRole("link", { name: "Lean proof" }),
-  ).toHaveAttribute("href", /Records\/GridBounds\.lean$/);
+    page.locator("#viewer").getByRole("link", { name: "Bend proof" }),
+  ).toHaveAttribute("href", /\/bend\/MANIFEST\.bend$/);
   await expect(
     page.locator("#matrix").getByRole("button", {
       name: "n = 61: Upper bound · s(61) ≤ 8 · Basic grid bound",
