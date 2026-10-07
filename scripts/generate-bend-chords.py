@@ -8,8 +8,12 @@ lo = cy + (-1/2 - c u)/s when u <= (s - c)/2, else cy + (-1/2 + s u)/c, and
 hi = cy + (1/2 - c u)/s when u >= (c - s)/2, else cy + (1/2 + s u)/c.
 The four thresholds are the abscissae of the vertices. Every point strictly
 inside the chord lies in the interior of the square, and the chord of a
-square fitting [0, side]^2 lies in [0, side].
+square fitting [0, side]^2 lies in [0, side], so the chords of a packing fit
+[0, side]. The area of the square left of x is piecewise quadratic with the
+same breakpoints, and between breakpoints it grows by the chord length at the
+midpoint; sweeping all breakpoints gives n <= side^2 for n squares.
 """
+import itertools
 from types import SimpleNamespace
 
 from bend_proof import ROOT, Context, Refuter, SquareContext, T, build, expand, num
@@ -22,6 +26,7 @@ import ./bend-math/FieldOrder.bend as O
 import ./bend-math/Certificate.bend as C
 import ./bend-math/Intervals.bend as I
 import ./bend-math/Natural.bend as N
+import ./bend-math/Sweep.bend as W
 import ./Problem.bend as P
 import ./Packings.bend as Pk
 import ./Geometry.bend as G
@@ -62,9 +67,9 @@ def comparisons(x, thresholds):
 
 
 def dispatch(leaf, depth):
-    """Nested matches on the four decisions with leaf(None) for an empty chord and leaf((low, high)) otherwise."""
-    lines = [(0, 'match left:'), (1, 'case Inl{+left}:'), (2, leaf(None)), (1, 'case Inr{left}:'), (2, 'match right:'),
-             (3, 'case Inl{+right}:'), (4, leaf(None)), (3, 'case Inr{right}:'), (4, 'match low:')]
+    """Nested matches on the four decisions with leaf('before') or leaf('after') for an empty chord and leaf((low, high)) otherwise."""
+    lines = [(0, 'match left:'), (1, 'case Inl{+left}:'), (2, leaf('before')), (1, 'case Inr{left}:'), (2, 'match right:'),
+             (3, 'case Inl{+right}:'), (4, leaf('after')), (3, 'case Inr{right}:'), (4, 'match low:')]
     for low in ('Inl', 'Inr'):
         lines += [(5, f'case {low}{{{"+" if low == "Inl" else ""}low}}:'), (6, 'match high:')]
         for high in ('Inl', 'Inr'):
@@ -80,6 +85,37 @@ SIGNS = '+cosine_sign: LE(ZERO, P.Problem.cosine(F, field, square)), +sine_sign:
 SIGNS_BOTH = 'LE(ZERO, P.Problem.cosine(F, field, square)), LE(ZERO, P.Problem.sine(F, field, square))'
 PACKING = '~count: Nat, ~side: F, ~packing: P.Problem.Packing<F, field, count, side>'
 PACKED = '~count, ~side, ~packing'
+CLEANS = ', '.join(f'+{name}_clean: Either<&2, &2, LE({t.bend}, a), LE(b, {t.bend})>' for name, t in THRESHOLDS.items())
+
+
+REGIONS = {'before': 'before', 'after': 'after', ('Inl', 'Inr'): 'rising', ('Inr', 'Inl'): 'falling',
+           ('Inl', 'Inl'): 'sine', ('Inr', 'Inr'): 'cosine'}
+
+
+def swept(v, x, region, inverses):
+    """The area of the square left of x and the length of its chord, as polynomials valid on the closure of a region."""
+    c, s = v['c'], v['s']
+    u = x - v['cx']
+    reach = (c + s) * H
+    both = inverses['s'] * inverses['c']
+    return {'before': (num(0), num(0)), 'after': (num(1), num(0)),
+            ('Inl', 'Inr'): (both * (u + reach) * (u + reach) * H, both * (u + reach)),
+            ('Inr', 'Inl'): (1 - both * (reach - u) * (reach - u) * H, both * (reach - u)),
+            ('Inl', 'Inl'): (inverses['s'] * (u + s * H), inverses['s']),
+            ('Inr', 'Inr'): (inverses['c'] * (u + c * H), inverses['c'])}[region]
+
+
+def region_facts(v, x, region):
+    """The conditions on x for a region, as (name, lower, upper): closed for the area, strict for the chord length."""
+    thresholds = thresholds_of(v)
+    if region == 'before':
+        return [('region_left', x, thresholds['left'])]
+    if region == 'after':
+        return [('region_right', thresholds['right'], x)]
+    low, high = region
+    return [('region_left', thresholds['left'], x), ('region_right', x, thresholds['right']),
+            ('region_low', *((x, thresholds['low']) if low == 'Inl' else (thresholds['low'], x))),
+            ('region_high', *((thresholds['high'], x) if high == 'Inl' else (x, thresholds['high'])))]
 
 
 def chord_defs():
@@ -91,10 +127,13 @@ def Chords.{name}_end(TPL, {SQUARE}) -> F:
 ''' for name, term in thresholds_of(v).items())
 
     def leaf(sides):
-        if sides is None:
+        if not isinstance(sides, tuple):
             return 'I.Interval{ZERO, ZERO}'
         _, lo, hi = chord_ends(v, X, sides, inverses)
         return f'I.Interval{{{lo.bend}, {hi.bend}}}'
+
+    def area(sides):
+        return swept(v, X, sides, inverses)[0].bend
 
     decide = ', '.join(f'K.Field.le_decidable(F, field)({a.bend}, {b.bend})' for _, a, b in comparisons(X, THRESHOLDS))
     return thresholds + f'''
@@ -102,6 +141,11 @@ def Chords.chord_by(TPL, {SQUARE}, +x: F, {DECISIONS}) -> I.Intervals.Interval<F
 {dispatch(leaf, 1)}
 def Chords.chord(TPL, {SQUARE}, +x: F) -> I.Intervals.Interval<F>:
   Chords.chord_by(TC, square, x, {decide})
+
+def Chords.area_by(TPL, {SQUARE}, +x: F, {DECISIONS}) -> F:
+{dispatch(area, 1)}
+def Chords.area(TPL, {SQUARE}, +x: F) -> F:
+  Chords.area_by(TC, square, x, {decide})
 '''
 
 
@@ -130,6 +174,20 @@ def signs(ctx, v):
     ctx.nonnegative(v['s'], 'sine_sign')
 
 
+def inverse_vars(ctx, v):
+    return {key: ctx.var('i' + key, f'INV({v[key].bend})') for key in ('s', 'c')}
+
+
+def positivity(v, inverses, key):
+    """Steps proving that the scalar `key` is positive and binding its inverse."""
+    positive = f'{key}_positive'
+    return [('lt', positive, num(0), v[key]),
+            ('equation', v[key] * inverses[key], num(1),
+             f'AL.same_transitive(TC, MUL({v[key].bend}, INV({v[key].bend})), ONE, R.FieldRing.of_nat(TC, 1n), '
+             f'AL.mul_inverse(TC, {v[key].bend}, O.FieldOrder.lt_of(TC, ZERO, {v[key].bend}, {positive})), S.Scaling.one_is_number(TC))'),
+            ('le', f'{key}_inverse_nonnegative', num(0), inverses[key], [inverses[key]])]
+
+
 def nonempty(ctx, v, x, low, high):
     """Add the decisions of a nonempty chord to ctx; return the steps for its strict facts and inverses, and its ends."""
     steps, gaps = [], []
@@ -140,15 +198,10 @@ def nonempty(ctx, v, x, low, high):
         else:
             steps.append(('given_lt', name, b, a, f'O.FieldOrder.strict_of(TC, {b.bend}, {a.bend}, {name})'))
             gaps.append(a - b)
-    inverses = {key: ctx.var('i' + key, f'INV({v[key].bend})') for key in ('s', 'c')}
+    inverses = inverse_vars(ctx, v)
     used, lo, hi = chord_ends(v, x, (low, high), inverses)
     for key in dict.fromkeys(used):
-        positive = f'{key}_positive'
-        steps += [('lt', positive, num(0), v[key]),
-                  ('equation', v[key] * inverses[key], num(1),
-                   f'AL.same_transitive(TC, MUL({v[key].bend}, INV({v[key].bend})), ONE, R.FieldRing.of_nat(TC, 1n), '
-                   f'AL.mul_inverse(TC, {v[key].bend}, O.FieldOrder.lt_of(TC, ZERO, {v[key].bend}, {positive})), S.Scaling.one_is_number(TC))'),
-                  ('le', f'{key}_inverse_nonnegative', num(0), inverses[key], [inverses[key]])]
+        steps += positivity(v, inverses, key)
     return SimpleNamespace(steps=steps, gaps=gaps, lo=lo, hi=hi, used=used, inverses=inverses)
 
 
@@ -160,7 +213,7 @@ def interior_leaf(sides):
     signs(ctx, v)
     point = 'P.Point{x, y}'
     goal = f'P.Problem.InteriorContainment<F, field, square, {point}>'
-    if sides is None:
+    if not isinstance(sides, tuple):
         empty = [('given_lt', 'above', num(0), y, 'above'), ('given_lt', 'below', y, num(0), 'below')]
         return build(ctx, empty, goal, Refuter(), absurd(goal, Refuter()))
     chord = nonempty(ctx, v, x, *sides)
@@ -201,7 +254,7 @@ def interior_leaf(sides):
 
 def inside_leaf(sides):
     """The chord of a square whose corners fit [0, side]^2 lies in [0, side]."""
-    if sides is None:
+    if not isinstance(sides, tuple):
         return 'C.Both{AX.le_reflexive(ZERO), C.Both{AX.le_reflexive(ZERO), side_nonnegative}}'
     ctx = SquareContext()
     h = ctx.half()
@@ -224,7 +277,7 @@ def inside_leaf(sides):
 
 def flat_leaf(sides):
     """A chord whose ends do not increase is the empty chord at zero."""
-    if sides is None:
+    if not isinstance(sides, tuple):
         return 'AX.le_reflexive(ZERO)'
     ctx, v, _ = accessor_context()
     signs(ctx, v)
@@ -295,6 +348,311 @@ def Chords.meet_by(TPL, {params},
 
 def Chords.meet(TPL, {params}) -> I.Intervals.Apart(TC, first, second):
   Chords.meet_by(TC, first, second, first_low, second_low, first_flat, second_flat, clash, {decide})
+'''
+
+
+def pair(current, a, b):
+    return f'S.Scaling.pair(TC, {a.bend}, {b.bend}, {current.le(a, b)}, {current.le(b, a)})'
+
+
+def degenerate(ctx, v, inverses, steps):
+    """Steps for the boundary cases of a region: a scalar that vanishes, a collapsed field, an inverse that exists."""
+    steps = list(steps)
+    used = {step[1] for step in steps if step[0] == 'lt'}
+    candidates = [[('le', f'{key}_nonpositive', v[key], num(0), []),
+                   ('equation', v[key], num(0), f'S.Scaling.pair(TC, {v[key].bend}, ZERO, {key}_nonpositive, {"cosine" if key == "c" else "sine"}_sign)')]
+                  for key in ('s', 'c')]
+    collapse = [('le', 'collapsed', num(1), num(0), []),
+                ('equation', num(1), num(0), f'S.Scaling.pair(TC, {num(1).bend}, ZERO, collapsed, O.FieldOrder.zero_le_of_nat(TC, 1n))')]
+    candidates.append(collapse)
+    for key in ('s', 'c'):
+        if f'{key}_positive' not in used:
+            candidates += [positivity(v, inverses, key),
+                           [('cases', f'{key}_split', v[key], num(0), collapse,
+                             [('given_lt', f'{key}_positive', num(0), v[key], f'{key}_split')] + positivity(v, inverses, key)[1:])]]
+    for candidate in candidates:
+        try:
+            build(ctx, steps + candidate, 'Empty', Refuter(), lambda current, stricts: 'probe')
+        except SystemExit:
+            continue
+        steps += candidate
+    return steps
+
+
+def region_leaf(region, measure, sides):
+    """At an x in the closure of `region`, the area is the region's polynomial; strictly inside it, so is the chord length."""
+    ctx, v, h = accessor_context()
+    signs(ctx, v)
+    x = ctx.var('x', 'x')
+    thresholds = thresholds_of(v)
+    if isinstance(sides, tuple):
+        chord = nonempty(ctx, v, x, *sides)
+        inverses, steps, lo, hi = chord.inverses, chord.steps, chord.lo, chord.hi
+        decided = [(name, a, b) for (name, a, b), choice in zip(comparisons(x, thresholds), ('Inr', 'Inr', *sides)) if choice == 'Inl']
+    else:
+        inverses, steps, lo, hi = inverse_vars(ctx, v), [], num(0), num(0)
+        decided = [('left', x, thresholds['left']) if sides == 'before' else ('right', thresholds['right'], x)]
+        ctx.below(*decided[0][1:], decided[0][0])
+    facts = region_facts(v, x, region)
+    if measure == 'length':
+        steps += [('given_lt', name, a, b, name) for name, a, b in facts]
+    else:
+        for name, a, b in facts:
+            ctx.below(a, b, name)
+        steps += [('equation', a, b, f'S.Scaling.pair(TC, {a.bend}, {b.bend}, {first}, {second})')
+                  for first, a, b in decided for second, a2, b2 in facts if (a2.text, b2.text) == (b.text, a.text)]
+    area = swept(v, x, sides, inverses)[0]
+    polynomial, slope = swept(v, x, region, inverses)
+    left, right = (area, polynomial) if measure == 'area' else (hi - lo, slope)
+    goal = f'SAME({left.bend}, {right.bend})'
+
+    def finish(current, stricts):
+        refutation = Refuter().refute(current, stricts)
+        if refutation is not None:
+            return f'Empty.absurd({goal}, {refutation})'
+        return pair(current, left, right)
+
+    try:
+        return build(ctx, steps, goal, Refuter(), finish)
+    except SystemExit:
+        return build(ctx, degenerate(ctx, v, inverses, steps), goal, Refuter(), finish)
+
+
+def regions():
+    out = ''
+    v = accessors()
+    inverses = {key: T(f'INV({v[key].bend})', 'i' + key) for key in ('s', 'c')}
+    decide = ', '.join(f'K.Field.le_decidable(F, field)({a.bend}, {b.bend})' for _, a, b in comparisons(X, THRESHOLDS))
+    for region, name in REGIONS.items():
+        polynomial, slope = swept(v, X, region, inverses)
+        facts = region_facts(v, X, region)
+        closed = ', '.join(f'+{fact}: LE({a.bend}, {b.bend})' for fact, a, b in facts)
+        strict = ', '.join(f'+{fact}: O.FieldOrder.Strict(TC, {a.bend}, {b.bend})' for fact, a, b in facts)
+        given = ', '.join(fact for fact, _, _ in facts)
+        out += f'''
+def Chords.{name}_area_by(TPL, {SQUARE}, {SIGNS}, +x: F, {closed}, {DECISIONS}) ->
+  SAME(Chords.area_by(TC, square, x, left, right, low, high), {polynomial.bend}):
+{dispatch(lambda sides: region_leaf(region, 'area', sides), 1)}
+def Chords.{name}_area(TPL, {SQUARE}, {SIGNS}, +x: F, {closed}) -> SAME(Chords.area(TC, square, x), {polynomial.bend}):
+  Chords.{name}_area_by(TC, square, cosine_sign, sine_sign, x, {given}, {decide})
+
+def Chords.{name}_length_by(TPL, {SQUARE}, {SIGNS}, +x: F, {strict}, {DECISIONS}) ->
+  SAME(I.Intervals.length(TC, {CHORD}), {slope.bend}):
+{dispatch(lambda sides: region_leaf(region, 'length', sides), 1)}
+def Chords.{name}_length(TPL, {SQUARE}, {SIGNS}, +x: F, {strict}) -> SAME(I.Intervals.length(TC, Chords.chord(TC, square, x)), {slope.bend}):
+  Chords.{name}_length_by(TC, square, cosine_sign, sine_sign, x, {given}, {decide})
+'''
+    return out
+
+
+def strip_leaf(cleans):
+    """Area gained between a and b with no vertex abscissa strictly between: (b - a) times the chord length at the midpoint."""
+    ctx, v, h = accessor_context()
+    a, b = ctx.var('a', 'a'), ctx.var('b', 'b')
+    inverses = inverse_vars(ctx, v)
+    thresholds = thresholds_of(v)
+    names = ('left', 'right', 'low', 'high')
+    sides = dict(zip(names, cleans))
+    if sides['left'] == 'Inr':
+        region = 'before'
+    elif sides['right'] == 'Inl':
+        region = 'after'
+    else:
+        region = ('Inl' if sides['low'] == 'Inr' else 'Inr', 'Inl' if sides['high'] == 'Inl' else 'Inr')
+    name = REGIONS[region]
+    ctx.below(a, b, 'order')
+    for threshold in names:
+        t = thresholds[threshold]
+        ctx.below(*((t, a) if sides[threshold] == 'Inl' else (b, t)), f'{threshold}_clean')
+
+    def closed_at(x):
+        proofs = []
+        for fact, lower, upper in region_facts(v, x, region):
+            threshold = fact.removeprefix('region_')
+            t = thresholds[threshold]
+            clean = f'{threshold}_clean'
+            if sides[threshold] == 'Inl':
+                proofs.append(clean if x is a else f'I.Intervals.le_trans(TC, {t.bend}, a, b, {clean}, order)')
+            else:
+                proofs.append(clean if x is b else f'I.Intervals.le_trans(TC, a, b, {t.bend}, order, {clean})')
+        return ', '.join(proofs)
+
+    area_a, area_b = (ctx.var(f'area_{p}', f'Chords.area(TC, square, {p})') for p in ('a', 'b'))
+    middle = (a + b) * h
+    length = ctx.var('length', f'I.Intervals.length(TC, Chords.chord(TC, square, {middle.bend}))')
+    polynomial = lambda x: swept(v, x, region, inverses)[0]
+    slope = swept(v, middle, region, inverses)[1]
+    sign_args = 'cosine_sign, sine_sign'
+    steps = [('equation', area_a, polynomial(a), f'Chords.{name}_area(TC, square, {sign_args}, a, {closed_at(a)})'),
+             ('equation', area_b, polynomial(b), f'Chords.{name}_area(TC, square, {sign_args}, b, {closed_at(b)})')]
+    stricts = [(f'middle_{fact}', lower, upper) for fact, lower, upper in region_facts(v, middle, region)]
+    proper = ([('lt', fact, lower, upper) for fact, lower, upper in stricts] +
+              [('equation', length, slope, f'Chords.{name}_length(TC, square, {sign_args}, {middle.bend}, {", ".join(f for f, _, _ in stricts)})')])
+    flat = [('equation', b, a, f'S.Scaling.pair(TC, b, a, flat, order)')]
+    steps.append(('cases', 'flat', b, a, flat, proper))
+    lhs, rhs = area_b - area_a, (b - a) * length
+    goal = f'SAME({lhs.bend}, {rhs.bend})'
+    return build(ctx, steps, goal, Refuter(), lambda current, stricts: pair(current, lhs, rhs))
+
+
+def strip():
+    leaves = ''.join(f'''
+    case {" ".join(f"{side}{{+{name}_clean}}" for side, name in zip(sides, THRESHOLDS))}:
+      {strip_leaf(sides)}''' for sides in itertools.product(('Inl', 'Inr'), repeat=4))
+    middle = 'MUL(ADD(a, b), HALF)'
+    return f'''
+def Chords.strip(TPL, {SQUARE}, {SIGNS}, +a: F, +b: F, +order: LE(a, b), {CLEANS}) ->
+  SAME(ADD(Chords.area(TC, square, b), NEG(Chords.area(TC, square, a))),
+    MUL(ADD(b, NEG(a)), I.Intervals.length(TC, Chords.chord(TC, square, {middle})))):
+  match left_clean right_clean low_clean high_clean:{leaves}
+'''
+
+
+def combined(terms, equations, lhs, rhs):
+    """Same(lhs, rhs) for terms named by their Bend source, from equations (left, right, proof of Same)."""
+    ctx = Context()
+    named = {name: ctx.var(name, bend) for name, bend in terms}
+    ctx.var('h', 'HALF')
+    ctx.raw_equation('h + h - 1', 'S.Scaling.half_equation(TC)')
+    for left, right, proof in equations(named):
+        ctx.equal(left, right, proof)
+    left, right = lhs(named), rhs(named)
+    return pair(ctx, left, right)
+
+
+def endpoint(name, region, x):
+    """The area of a fitting square in normal form at the container's edge x."""
+    ctx = SquareContext()
+    h = ctx.half()
+    side = ctx.var('side', 'side')
+    v = {'cx': ctx.cx, 'cy': ctx.cy, 'c': ctx.c, 's': ctx.s}
+    ctx.corner_facts(h, side)
+    point = {'ZERO': num(0), 'side': side}[x]
+    proofs = ', '.join(ctx.le(lower, upper) for _, lower, upper in region_facts(v, point, region))
+    value = swept(v, point, region, inverse_vars(ctx, v))[0]
+    return f'''
+def Chords.{name}(TPL, {SQUARE}, +side: F, +corners: M.Membership.Corners<F, field, square, side>,
+  +signs: C.Certificate.Both<{SIGNS_BOTH}>) -> SAME(Chords.area(TC, square, {x}), {value.bend}):
+  match square corners signs:
+    case {ctx.square_pattern()} {ctx.corners_pattern()} C.Both{{+cosine_sign, +sine_sign}}:
+      Chords.{REGIONS[region]}_area(TC, {ctx.square()}, cosine_sign, sine_sign, {point.bend}, {proofs})
+'''
+
+
+def area_bound():
+    square = lambda index: f'Pk.Packings.squares(F, field, count, side, packing)({index})'
+    normal = lambda index: f'Chords.normal(TC, {PACKED}, {index})'
+    signs = lambda index: f'Y.Symmetry.first_quadrant_signs(TC, {square(index)})'
+    mass = lambda x, n: f'Chords.mass(TC, {PACKED}, {x}, {n})'
+    area = lambda index, x: f'Chords.area(TC, {normal(index)}, {x})'
+    middle = 'MUL(ADD(a, b), HALF)'
+    total = lambda n: f'I.Intervals.total(TC, Chords.chords(TC, {PACKED}, {middle}, {n}))'
+    length = lambda index: f'I.Intervals.length(TC, Chords.at(TC, {PACKED}, {middle}, {index}))'
+    clean_names = ', '.join(f'{name}_clean' for name in THRESHOLDS)
+    gained_step = combined(
+        [('area_b', area('p', 'b')), ('area_a', area('p', 'a')), ('mass_b', mass('b', 'p')), ('mass_a', mass('a', 'p')),
+         ('length', length('p')), ('total', total('p')), ('a', 'a'), ('b', 'b')],
+        lambda t: [(t['area_b'] - t['area_a'], (t['b'] - t['a']) * t['length'],
+                    f'Chords.strip_signed(TC, {normal("p")}, {signs("p")}, a, b, order, {clean_names})'),
+                   (t['mass_b'] - t['mass_a'], (t['b'] - t['a']) * t['total'], f'Chords.gained(TC, {PACKED}, a, b, order, p, rest)')],
+        lambda t: (t['area_b'] + t['mass_b']) - (t['area_a'] + t['mass_a']), lambda t: (t['b'] - t['a']) * (t['length'] + t['total']))
+    gained_zero = combined([('a', 'a'), ('b', 'b')], lambda t: [], lambda t: num(0) - num(0), lambda t: (t['b'] - t['a']) * num(0))
+    potential = lambda x: f'Chords.potential(TC, {PACKED}, {x})'
+    vertices = f'Chords.vertices(TC, {PACKED}, count)'
+    descent = Context()
+    terms = {name: descent.var(name, bend) for name, bend in
+             [('mass_b', mass('b', 'count')), ('mass_a', mass('a', 'count')), ('total', total('count')), ('a', 'a'), ('b', 'b'), ('side', 'side')]}
+    descent.below(terms['a'], terms['b'], 'order')
+    descent.below(terms['total'], terms['side'] - num(0), f'Chords.covered(TC, {PACKED}, {middle})')
+    descent.equal(terms['mass_b'] - terms['mass_a'], (terms['b'] - terms['a']) * terms['total'], f'Chords.gained(TC, {PACKED}, a, b, order, count, clean)')
+    descent_proof = descent.le(terms['mass_b'] - terms['side'] * terms['b'], terms['mass_a'] - terms['side'] * terms['a'])
+    start_step = combined([('area', area('p', 'ZERO')), ('mass', mass('ZERO', 'p'))],
+                          lambda t: [(t['area'], num(0), f'Chords.start(TC, {normal("p")}, side, Chords.corners_at(TC, {PACKED}, p, bound), {signs("p")})'),
+                                     (t['mass'], num(0), f'Chords.mass_start(TC, {PACKED}, p, N.Natural.le_transitive(p, 1n+p, count, Chords.le_successor(p), bound))')],
+                          lambda t: t['area'] + t['mass'], lambda t: num(0))
+    finish_step = combined([('area', area('p', 'side')), ('mass', mass('side', 'p')), ('count', 'R.FieldRing.of_nat(TC, 1n+p)'), ('previous', 'R.FieldRing.of_nat(TC, p)')],
+                           lambda t: [(t['area'], num(1), f'Chords.finish(TC, {normal("p")}, side, Chords.corners_at(TC, {PACKED}, p, bound), {signs("p")})'),
+                                      (t['mass'], t['previous'], f'Chords.mass_finish(TC, {PACKED}, p, N.Natural.le_transitive(p, 1n+p, count, Chords.le_successor(p), bound))'),
+                                      (t['count'], num(1) + t['previous'], 'R.FieldRing.of_nat_add(TC, 1n, p)')],
+                           lambda t: t['area'] + t['mass'], lambda t: t['count'])
+    bound = Context()
+    terms = {name: bound.var(name, bend) for name, bend in
+             [('mass_side', mass('side', 'count')), ('mass_zero', mass('ZERO', 'count')), ('count', 'R.FieldRing.of_nat(TC, count)'), ('side', 'side')]}
+    bound.below(terms['mass_side'] - terms['side'] * terms['side'], terms['mass_zero'] - terms['side'] * num(0), f'Chords.swept(TC, {PACKED})')
+    bound.equal(terms['mass_side'], terms['count'], f'Chords.mass_finish(TC, {PACKED}, count, N.Natural.le_reflexive(count))')
+    bound.equal(terms['mass_zero'], num(0), f'Chords.mass_start(TC, {PACKED}, count, N.Natural.le_reflexive(count))')
+    bound_proof = bound.le(terms['count'], terms['side'] * terms['side'])
+    return endpoint('start', 'before', 'ZERO') + endpoint('finish', 'after', 'side') + f'''
+def Chords.strip_signed(TPL, {SQUARE}, +signs: C.Certificate.Both<{SIGNS_BOTH}>, +a: F, +b: F, +order: LE(a, b), {CLEANS}) ->
+  SAME(ADD(Chords.area(TC, square, b), NEG(Chords.area(TC, square, a))),
+    MUL(ADD(b, NEG(a)), I.Intervals.length(TC, Chords.chord(TC, square, {middle})))):
+  match signs:
+    case C.Both{{+cosine_sign, +sine_sign}}:
+      Chords.strip(TC, square, cosine_sign, sine_sign, a, b, order, {clean_names})
+
+def Chords.vertices(TPL, {PACKING}, +n: Nat) -> List<&2, F>:
+  match n:
+    case 0n:
+      Nil{{}}
+    case 1n+p:
+      {" <> ".join(f"Chords.{name}_end(TC, {normal('p')})" for name in THRESHOLDS)} <> Chords.vertices(TC, {PACKED}, p)
+
+def Chords.mass(TPL, {PACKING}, +x: F, +n: Nat) -> F:
+  match n:
+    case 0n:
+      ZERO
+    case 1n+p:
+      ADD({area('p', 'x')}, {mass('x', 'p')})
+
+def Chords.gained(TPL, {PACKING}, +a: F, +b: F, +order: LE(a, b), +n: Nat, +clean: W.Sweep.Clean(F, field, a, b, Chords.vertices(TC, {PACKED}, n))) ->
+  SAME(ADD({mass('b', 'n')}, NEG({mass('a', 'n')})), MUL(ADD(b, NEG(a)), {total('n')})):
+  match n clean:
+    case 0n Unit{{}}:
+      {gained_zero}
+    case 1n+p C.Both{{+left_clean, C.Both{{+right_clean, C.Both{{+low_clean, C.Both{{+high_clean, +rest}}}}}}}}:
+      {gained_step}
+
+def Chords.potential(TPL, {PACKING}, +x: F) -> F:
+  ADD({mass('x', 'count')}, NEG(MUL(side, x)))
+
+def Chords.descent(TPL, {PACKING}, +a: F, +b: F, +order: LE(a, b), +clean: W.Sweep.Clean(F, field, a, b, Chords.vertices(TC, {PACKED}, count))) ->
+  LE({potential('b')}, {potential('a')}):
+  {descent_proof}
+
+def Chords.sweep(TPL, {PACKING}, +pending: List<&2, F>, +a: F, +b: F, +order: LE(a, b),
+  +marked: W.Sweep.Marked(F, field, a, b, pending, {vertices})) -> LE({potential('b')}, {potential('a')}):
+  match pending:
+    case Nil{{}}:
+      Chords.descent(TC, {PACKED}, a, b, order, W.Sweep.clean(TC, a, b, {vertices}, marked))
+    case +split <> rest:
+      W.Sweep.cases_of(TC, split, a, LE({potential('b')}, {potential('a')}), K.Field.le_decidable(F, field)(split, a),
+        +left => Chords.sweep(TC, {PACKED}, rest, a, b, order, W.Sweep.skip(TC, a, b, split, rest, {vertices}, Inl{{left}}, marked)),
+        +inside_left => W.Sweep.cases_of(TC, b, split, LE({potential('b')}, {potential('a')}), K.Field.le_decidable(F, field)(b, split),
+          +right => Chords.sweep(TC, {PACKED}, rest, a, b, order, W.Sweep.skip(TC, a, b, split, rest, {vertices}, Inr{{right}}, marked)),
+          +inside_right => AX.le_transitive({potential('b')}, {potential('split')}, {potential('a')},
+            Chords.sweep(TC, {PACKED}, rest, split, b, inside_right, W.Sweep.right(TC, a, b, split, rest, {vertices}, inside_left, marked)),
+            Chords.sweep(TC, {PACKED}, rest, a, split, inside_left, W.Sweep.left(TC, a, b, split, rest, {vertices}, inside_right, marked)))))
+
+def Chords.swept(TPL, {PACKING}) -> LE({potential('side')}, {potential('ZERO')}):
+  Chords.sweep(TC, {PACKED}, {vertices}, ZERO, side, Pk.Packings.side_nonnegative(F, field, count, side, packing),
+    W.Sweep.marked_members(TC, ZERO, side, {vertices}, {vertices}, W.Sweep.members_self(TC, {vertices})))
+
+def Chords.mass_start(TPL, {PACKING}, +n: Nat, +bound: N.Natural.Le(n, count)) -> SAME({mass('ZERO', 'n')}, ZERO):
+  match n:
+    case 0n:
+      AL.same_reflexive(TC, ZERO)
+    case 1n+p:
+      {start_step}
+
+def Chords.mass_finish(TPL, {PACKING}, +n: Nat, +bound: N.Natural.Le(n, count)) -> SAME({mass('side', 'n')}, R.FieldRing.of_nat(TC, n)):
+  match n:
+    case 0n:
+      AL.same_reflexive(TC, ZERO)
+    case 1n+p:
+      {finish_step}
+
+def Chords.count_bound(TPL, {PACKING}) -> LE(R.FieldRing.of_nat(TC, count), MUL(side, side)):
+  {bound_proof}
 '''
 
 
@@ -382,10 +740,12 @@ def Chords.chords(TPL, {PACKING}, +x: F, +n: Nat) -> List<&2, I.Intervals.Interv
     case 1n+p:
       {at('p')} <> {chords('p')}
 
+def Chords.corners_at(TPL, {PACKING}, +index: Nat, +bound: N.Natural.Le(1n+index, count)) -> M.Membership.Corners<F, field, {normal('index')}, side>:
+  M.Membership.first_quadrant_corners(TC, {square('index')}, side, M.Membership.corners_of(TC, {square('index')}, side, {fits}, {fits}, {fits}, {fits}))
+
 def Chords.inside_at(TPL, {PACKING}, +x: F, +index: Nat, +bound: N.Natural.Le(1n+index, count)) ->
   I.Intervals.Inside(TC, ZERO, side, {at('index')}):
-  Chords.inside(TC, {normal('index')}, side,
-    M.Membership.first_quadrant_corners(TC, {square('index')}, side, M.Membership.corners_of(TC, {square('index')}, side, {fits}, {fits}, {fits}, {fits})),
+  Chords.inside(TC, {normal('index')}, side, Chords.corners_at(TC, {PACKED}, index, bound),
     Pk.Packings.side_nonnegative(F, field, count, side, packing), Y.Symmetry.first_quadrant_signs(TC, {square('index')}), x)
 
 def Chords.apart_at(TPL, {PACKING}, +x: F, +left: Nat, +right: Nat, +left_bound: N.Natural.Le(1n+left, count), +right_bound: N.Natural.Le(1n+right, count),
@@ -428,7 +788,7 @@ def Chords.covered(TPL, {PACKING}, +x: F) -> LE(I.Intervals.total(TC, {chords('c
 
 
 def main():
-    parts = [HEADER, chord_defs(), lemmas(), meet(), assembly()]
+    parts = [HEADER, chord_defs(), lemmas(), meet(), assembly(), regions(), strip(), area_bound()]
     (ROOT / 'bend' / 'Chords.bend').write_text(expand(''.join(parts)))
 
 

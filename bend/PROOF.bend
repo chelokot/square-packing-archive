@@ -155,3 +155,6 @@ def Laws.closed_disjoint_family_in_larger_container(F, field, count, side, packi
 
 def Laws.vertical_chords_fit_the_side(F, field, count, side, packing, x):
   Ch.Chords.covered(~F, ~field, ~count, ~side, ~packing, x)
+
+def Laws.squares_fit_by_area(F, field, count, side, packing):
+  Ch.Chords.count_bound(~F, ~field, ~count, ~side, ~packing)

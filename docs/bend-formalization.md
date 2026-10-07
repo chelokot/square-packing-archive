@@ -51,7 +51,7 @@ for every packing of at least `n` squares. `bend/PROOF.bend` proves each law, so
 `bend/LAWS.bend` keeps the general laws: the local coordinates of a square
 (`Laws.contains_iff_local_coordinates_forward` and `_backward`, and the same
 for the open square), the symmetries of packings, `Laws.fewer_squares`, the
-scaling to a closed-disjoint family, and the chord bound below.
+scaling to a closed-disjoint family, and the chord and area bounds below.
 
 `bend/Chords.bend`, written by `scripts/generate-bend-chords.py`, starts the
 area argument for `s(k²) = k`. A square in first-quadrant normal form meets the
@@ -61,6 +61,16 @@ chord are interior points of the square, and the chord of a square that fits
 `[0, side]^2` lies in `[0, side]`. Chords of squares with disjoint interiors do
 not overlap, so `Laws.vertical_chords_fit_the_side` bounds the total length of
 the chords of a packing at any `x` by `side`.
+
+`Laws.squares_fit_by_area` turns the chord bound into the area bound: a packing
+of `n` unit squares in side `s` has `n ≤ s²`. `Chords.area` is the area of a
+square left of `x`, piecewise quadratic in `x` with the same breakpoints. On an
+interval `[a, b]` with no vertex abscissa strictly inside, the area gained is
+`(b − a)` times the chord length at the midpoint (`Chords.strip`); the midpoint
+is used because the chord length of an axis-aligned square jumps at its sides.
+So `Σ area(x) − s·x` does not increase between breakpoints, and `Chords.sweep`
+carries that across all `4n` vertex abscissae with the bookkeeping of
+`bend-math/Sweep.bend`. Each area is 0 at `x = 0` and 1 at `x = s`.
 
 The upper bounds, and the basic grid bound `s(n) ≤ ⌈√n⌉` the site shows for
 counts without a catalogued claim, are one theorem: `bend/Grids.bend` packs
