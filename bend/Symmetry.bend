@@ -713,6 +713,29 @@ def Symmetry.first_quadrant_contains_back(~F: Kind(&2), ~field: K.Field<F>, +squ
   Symmetry.quadrant_contains_back(~F, ~field, square, point,
     K.Field.le_decidable(F, field)(A.Algebra.zero(~F, ~field), P.Problem.cosine(F, field, square)), K.Field.le_decidable(F, field)(A.Algebra.zero(~F, ~field), P.Problem.sine(F, field, square)), inside)
 
+def Symmetry.quadrant_interior_back(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<F, field>, +point: P.Problem.Point<F>,
+  cosine_sign: Or(A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), P.Problem.cosine(F, field, square)), A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), P.Problem.cosine(F, field, square)) -> Empty),
+  sine_sign: Or(A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), P.Problem.sine(F, field, square)), A.Algebra.le(~F, ~field, A.Algebra.zero(~F, ~field), P.Problem.sine(F, field, square)) -> Empty),
+  inside: P.Problem.InteriorContainment<F, field, Symmetry.quadrant_by(~F, ~field, square, cosine_sign, sine_sign), point>) ->
+  P.Problem.InteriorContainment<F, field, square, point>:
+  match cosine_sign sine_sign:
+    case Inl{a} Inl{b}:
+      inside
+    case Inl{a} Inr{b}:
+      Symmetry.turn_interior_back(~F, ~field, square, point, inside)
+    case Inr{a} Inl{b}:
+      Symmetry.turn_interior_back(~F, ~field, square, point,
+        Symmetry.turn_interior_back(~F, ~field, Symmetry.turn(~F, ~field, square), point,
+          Symmetry.turn_interior_back(~F, ~field, Symmetry.turn(~F, ~field, Symmetry.turn(~F, ~field, square)), point, inside)))
+    case Inr{a} Inr{b}:
+      Symmetry.turn_interior_back(~F, ~field, square, point, Symmetry.turn_interior_back(~F, ~field, Symmetry.turn(~F, ~field, square), point, inside))
+
+def Symmetry.first_quadrant_interior_back(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<F, field>, +point: P.Problem.Point<F>,
+  inside: P.Problem.InteriorContainment<F, field, Symmetry.first_quadrant(~F, ~field, square), point>) ->
+  P.Problem.InteriorContainment<F, field, square, point>:
+  Symmetry.quadrant_interior_back(~F, ~field, square, point,
+    K.Field.le_decidable(F, field)(A.Algebra.zero(~F, ~field), P.Problem.cosine(F, field, square)), K.Field.le_decidable(F, field)(A.Algebra.zero(~F, ~field), P.Problem.sine(F, field, square)), inside)
+
 def Symmetry.first_quadrant_fits(~F: Kind(&2), ~field: K.Field<F>, +square: P.Problem.Square<F, field>, +side: F, fits: Symmetry.Fits(~F, ~field, square, side)) ->
   Symmetry.Fits(~F, ~field, Symmetry.first_quadrant(~F, ~field, square), side):
   +point => inside => fits(point, Symmetry.first_quadrant_contains_back(~F, ~field, square, point, inside))
