@@ -2,7 +2,7 @@
 
 The complete minimum-side theorems are checked for **all five square counts**:
 
-- `SquarePackingArchive.Records.Square6.s6_eq_three : IsMinimumSide 6 3`.
+- `s(6) = 3`, now in Bend: the laws `Manifest.exact_6_kearney_shiu_upper` and `_lower` of `bend/MANIFEST.bend` ([Bend notes](bend-formalization.md)).
 - `SquarePackingArchive.Records.Square10.s10_eq_goebel : IsMinimumSide 10 (3 + Real.sqrt 2 / 2)`.
 - `SquarePackingArchive.Records.Square13.s13_eq_four : IsMinimumSide 13 4`.
 - `SquarePackingArchive.Records.Square22.s22_eq_five : IsMinimumSide 22 5`.
@@ -29,7 +29,7 @@ squares, a contradiction. The proof handles arbitrary rotations and touching
 squares: a hypothetical packing with side below three is first transformed into
 a closed-disjoint family fitting side three.
 
-The final theorem is in `formal/SquarePackingArchive/Records/Square6Exact.lean`.
+The proof is in Bend; see the [Bend notes](bend-formalization.md#the-lower-bound).
 
 ## Why ten squares need side 3 + √2 / 2
 

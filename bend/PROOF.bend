@@ -1,5 +1,6 @@
 import Base
 import ./LAWS.bend as Laws
+import ./MANIFEST.bend as Manifest
 import ./Square1.bend as S1
 import ./Square4.bend as S4
 import ./Square6.bend as S
@@ -8,29 +9,58 @@ import ./Small.bend as Sm
 import ./Geometry.bend as G
 import ./Symmetry.bend as Y
 import ./Packings.bend as Q
+import ./bend-math/FieldRing.bend as R
+import ./bend-math/Natural.bend as N
 import ./Scaling.bend as Z
 import ./StromquistSix.bend as Six
 
-def Laws.square1_has_packing_at_one(F, field):
+def Manifest.exact_1_grid_upper(F, field):
   S1.Square1.packing(~F, ~field)
 
-def Laws.square1_lower_bound(F, field, count, side, packing, one):
-  Sm.Small.lower_bound_one(~F, ~field, ~count, ~side, ~packing, one)
+def Manifest.exact_1_grid_lower(F, field, count, side, packing, at_least):
+  Sm.Small.lower_bound_one(~F, ~field, ~count, ~side, ~packing, at_least)
 
-def Laws.square4_has_packing_at_two(F, field):
+def Manifest.exact_2_goebel_upper(F, field):
+  Q.Packings.restrict(~F, ~field, ~4n, ~R.FieldRing.of_nat(~F, ~field, 2n), ~S4.Square4.packing(~F, ~field), ~2n, Unit{})
+
+def Manifest.exact_2_goebel_lower(F, field, count, side, packing, at_least):
+  Sm.Small.lower_bound_two(~F, ~field, ~count, ~side, ~packing, at_least)
+
+def Manifest.exact_3_goebel_upper(F, field):
+  Q.Packings.restrict(~F, ~field, ~4n, ~R.FieldRing.of_nat(~F, ~field, 2n), ~S4.Square4.packing(~F, ~field), ~3n, Unit{})
+
+def Manifest.exact_3_goebel_lower(F, field, count, side, packing, at_least):
+  Sm.Small.lower_bound_two(~F, ~field, ~count, ~side, ~packing, N.Natural.le_transitive(2n, 3n, count, Unit{}, at_least))
+
+def Manifest.exact_4_grid_upper(F, field):
   S4.Square4.packing(~F, ~field)
 
-def Laws.square2_lower_bound(F, field, count, side, packing, two):
-  Sm.Small.lower_bound_two(~F, ~field, ~count, ~side, ~packing, two)
+def Manifest.exact_4_grid_lower(F, field, count, side, packing, at_least):
+  Sm.Small.lower_bound_two(~F, ~field, ~count, ~side, ~packing, N.Natural.le_transitive(2n, 4n, count, Unit{}, at_least))
 
-def Laws.square6_has_packing_at_three(F, field):
+def Manifest.exact_6_kearney_shiu_upper(F, field):
   S.Square6.packing(~F, ~field)
 
-def Laws.square6_lower_bound(F, field, count, side, packing, six):
-  Six.StromquistSix.lower_bound(~F, ~field, ~count, ~side, ~packing, six)
+def Manifest.exact_6_kearney_shiu_lower(F, field, count, side, packing, at_least):
+  Six.StromquistSix.lower_bound(~F, ~field, ~count, ~side, ~packing, at_least)
 
-def Laws.square9_has_packing_at_three(F, field):
+def Manifest.exact_7_friedman_upper(F, field):
+  Q.Packings.restrict(~F, ~field, ~9n, ~R.FieldRing.of_nat(~F, ~field, 3n), ~S9.Square9.packing(~F, ~field), ~7n, Unit{})
+
+def Manifest.exact_7_friedman_lower(F, field, count, side, packing, at_least):
+  Six.StromquistSix.lower_bound(~F, ~field, ~count, ~side, ~packing, N.Natural.le_transitive(6n, 7n, count, Unit{}, at_least))
+
+def Manifest.exact_8_friedman_upper(F, field):
+  Q.Packings.restrict(~F, ~field, ~9n, ~R.FieldRing.of_nat(~F, ~field, 3n), ~S9.Square9.packing(~F, ~field), ~8n, Unit{})
+
+def Manifest.exact_8_friedman_lower(F, field, count, side, packing, at_least):
+  Six.StromquistSix.lower_bound(~F, ~field, ~count, ~side, ~packing, N.Natural.le_transitive(6n, 8n, count, Unit{}, at_least))
+
+def Manifest.exact_9_grid_upper(F, field):
   S9.Square9.packing(~F, ~field)
+
+def Manifest.exact_9_grid_lower(F, field, count, side, packing, at_least):
+  Six.StromquistSix.lower_bound(~F, ~field, ~count, ~side, ~packing, N.Natural.le_transitive(6n, 9n, count, Unit{}, at_least))
 
 def Laws.fewer_squares(F, field, count, side, packing, fewer, at_most):
   Q.Packings.restrict(~F, ~field, ~count, ~side, ~packing, ~fewer, at_most)

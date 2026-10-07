@@ -3,7 +3,7 @@
 
 Six rows of nine bits record which key points of the 3 by 3 grid each square
 contains.  From facts about single rows and pairs of rows the core derives a
-contradiction, following StromquistSixIncidence.lean: rows that hold a single
+contradiction, following Stromquist's incidence count: rows that hold a single
 point form an independent set of the perimeter, so there are three or four of
 them, and either case forces two rows through the centre or a row equal to the
 centre and one neighbour.

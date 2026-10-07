@@ -40,8 +40,8 @@ For `s(8)`, Lean checks Friedman's seven rational piercing points at
 corners, six perimeter strips, and six internal triangles. The unavoidable
 set and finite pigeonhole theorem give `IsLowerBound 8 3`; the ordinary
 three-by-three grid with one square removed supplies the matching packing.
-Thus `SquarePackingArchive.Records.Square8.s8_eq_three` kernel-checks the exact
-historical result.
+The catalog's `s(8) = 3` is now proved in Bend from the `s(6)` lower bound; these
+seven points remain the base of the Lean proof of `s(7) = 3`.
 
 The formal geometry library also checks Friedman's Lemma 4. A unit square
 whose center lies in a `1 × 0.4` rectangle contains one of the four rectangle

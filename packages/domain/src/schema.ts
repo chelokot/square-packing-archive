@@ -6,6 +6,7 @@ const decimal = z.string().regex(/^\d+(?:\.\d+)?$/);
 const leanArtifactSchema = z
   .string()
   .regex(/^formal\/SquarePackingArchive(?:\/[A-Za-z0-9_]+)+\.lean$/);
+const bendManifest = "bend/MANIFEST.bend";
 const leanTheoremSchema = z
   .string()
   .regex(/^SquarePackingArchive(?:\.[A-Za-z_][A-Za-z0-9_']*)+$/);
@@ -35,6 +36,7 @@ export const valueSchema = z.object({
   decimal,
   expression: z.string().min(1).optional(),
   lean: z.string().min(1).optional(),
+  bend: z.string().min(1).optional(),
   polynomial: z.string().min(1).optional(),
 });
 
@@ -48,12 +50,14 @@ export const evidenceSchema = z
     kind: z.enum([
       "elementary-construction",
       "elementary-proof",
+      "bend-proof",
       "interval-certificate",
       "lean-proof",
       "published-proof",
       "tracker-record",
     ]),
     status: z.enum([
+      "bend-checked",
       "computationally-checked",
       "lean-checked",
       "published",
@@ -97,19 +101,54 @@ export const evidenceSchema = z
           });
         }
       }
-    } else if (evidence.status === "lean-checked") {
-      context.addIssue({
-        code: "custom",
-        message: "Only Lean evidence can be lean-checked",
-        path: ["status"],
-      });
-    }
-    if (evidence.kind !== "lean-proof" && evidence.checkedAt !== undefined) {
-      context.addIssue({
-        code: "custom",
-        message: "Only Lean evidence can declare checkedAt",
-        path: ["checkedAt"],
-      });
+    } else if (evidence.kind === "bend-proof") {
+      if (evidence.status !== "bend-checked") {
+        context.addIssue({
+          code: "custom",
+          message: "Bend evidence must be bend-checked",
+          path: ["status"],
+        });
+      }
+      if (evidence.artifact !== bendManifest) {
+        context.addIssue({
+          code: "custom",
+          message: `Bend evidence must point to ${bendManifest}`,
+          path: ["artifact"],
+        });
+      }
+      if (evidence.theorem !== undefined) {
+        context.addIssue({
+          code: "custom",
+          message:
+            "Bend evidence names no theorem: its laws follow the claim id",
+          path: ["theorem"],
+        });
+      }
+      if (evidence.checkedAt === undefined) {
+        context.addIssue({
+          code: "custom",
+          message: "Bend evidence requires checkedAt",
+          path: ["checkedAt"],
+        });
+      }
+    } else {
+      if (
+        evidence.status === "lean-checked" ||
+        evidence.status === "bend-checked"
+      ) {
+        context.addIssue({
+          code: "custom",
+          message: "Only Lean or Bend evidence can be kernel-checked",
+          path: ["status"],
+        });
+      }
+      if (evidence.checkedAt !== undefined) {
+        context.addIssue({
+          code: "custom",
+          message: "Only Lean or Bend evidence can declare checkedAt",
+          path: ["checkedAt"],
+        });
+      }
     }
   });
 
@@ -137,13 +176,27 @@ export const claimSchema = z
         path: ["value", "lean"],
       });
     }
+    if (
+      claim.value.bend === undefined &&
+      claim.evidence.some((evidence) => evidence.kind === "bend-proof")
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "Bend-verified claim requires value.bend",
+        path: ["value", "bend"],
+      });
+    }
   });
 
 export const catalogClaimSchema = claimSchema.refine(
-  (claim) => claim.evidence.some((evidence) => evidence.kind === "lean-proof"),
+  (claim) =>
+    claim.evidence.some(
+      (evidence) =>
+        evidence.kind === "lean-proof" || evidence.kind === "bend-proof",
+    ),
   {
     message:
-      "Catalog claims require a Lean proof; keep unformalized proposals in issues",
+      "Catalog claims require a Lean or Bend proof; keep unformalized proposals in issues",
     path: ["evidence"],
   },
 );

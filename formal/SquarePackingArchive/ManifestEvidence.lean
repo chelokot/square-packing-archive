@@ -1,13 +1,11 @@
 import SquarePackingArchive.EvidenceAudit
 import SquarePackingArchive.NagamochiAugmented
 import SquarePackingArchive.NagamochiPackingTheorem
-import SquarePackingArchive.Records.Basic
 import SquarePackingArchive.Records.GoebelStrip
 import SquarePackingArchive.Records.GridBounds
 import SquarePackingArchive.Records.HistoricalQuadraticReconstructions
 import SquarePackingArchive.Records.HistoricalRadicalBounds
 import SquarePackingArchive.Records.HistoricalUpperBounds
-import SquarePackingArchive.Records.NearSquare
 import SquarePackingArchive.Records.Square10
 import SquarePackingArchive.Records.Square10Exact
 import SquarePackingArchive.Records.Square11
@@ -36,44 +34,17 @@ import SquarePackingArchive.Records.Square65Tracker
 import SquarePackingArchive.Records.Square66Tracker
 import SquarePackingArchive.Records.Square68
 import SquarePackingArchive.Records.Square69
-import SquarePackingArchive.Records.Square6Exact
-import SquarePackingArchive.Records.Square7
-import SquarePackingArchive.Records.Square8
 import SquarePackingArchive.Records.Square82Tracker
 import SquarePackingArchive.Records.Square85Tracker
 import SquarePackingArchive.Records.Square86Friedman
 import SquarePackingArchive.Records.Square89Tracker
 import SquarePackingArchive.Records.SquareNumbers
 
-example : SquarePackingArchive.IsMinimumSide 1 (1) :=
-  SquarePackingArchive.Records.Basic.s1_eq_one
-
-example : SquarePackingArchive.IsMinimumSide 2 (2) :=
-  SquarePackingArchive.Records.NearSquare.s2_eq_two
-
-example : SquarePackingArchive.IsMinimumSide 3 (2) :=
-  SquarePackingArchive.Records.NearSquare.s3_eq_two
-
-example : SquarePackingArchive.IsMinimumSide 4 (2) :=
-  SquarePackingArchive.Records.SquareNumbers.s4_eq_two
-
 example : SquarePackingArchive.HasPacking 5 (2 + Real.sqrt 2 / 2) :=
   SquarePackingArchive.Records.Square5.s5_le_goebel
 
 example : SquarePackingArchive.IsMinimumSide 5 (2 + Real.sqrt 2 / 2) :=
   SquarePackingArchive.Records.Square5.s5_eq_goebel
-
-example : SquarePackingArchive.IsMinimumSide 6 (3) :=
-  SquarePackingArchive.Records.Square6.s6_eq_three
-
-example : SquarePackingArchive.IsMinimumSide 7 (3) :=
-  SquarePackingArchive.Records.Square7.s7_eq_three
-
-example : SquarePackingArchive.IsMinimumSide 8 (3) :=
-  SquarePackingArchive.Records.Square8.s8_eq_three
-
-example : SquarePackingArchive.IsMinimumSide 9 (3) :=
-  SquarePackingArchive.Records.SquareNumbers.s9_eq_three
 
 example : SquarePackingArchive.HasPacking 10 (3 + Real.sqrt 2 / 2) :=
   SquarePackingArchive.Records.Square10.s10_le_goebel
@@ -673,7 +644,6 @@ example : SquarePackingArchive.HasPacking 100 10 := by
   simpa using SquarePackingArchive.Records.GridBounds.grid_hasPacking (count := 100) (side := 10) (by norm_num)
 
 assert_standard_axioms SquarePackingArchive.HasPacking.mono
-assert_standard_axioms SquarePackingArchive.Records.Basic.s1_eq_one
 assert_standard_axioms SquarePackingArchive.Records.GoebelStrip.s27_le_goebel
 assert_standard_axioms SquarePackingArchive.Records.GoebelStrip.s38_le_goebel
 assert_standard_axioms SquarePackingArchive.Records.GoebelStrip.s52_le_goebel
@@ -695,8 +665,6 @@ assert_standard_axioms SquarePackingArchive.Records.HistoricalUpperBounds.s68_le
 assert_standard_axioms SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_ellsworth_2025
 assert_standard_axioms SquarePackingArchive.Records.HistoricalUpperBounds.s69_le_morandi_cantrell_2023
 assert_standard_axioms SquarePackingArchive.Records.NearSquare.s14_eq_four
-assert_standard_axioms SquarePackingArchive.Records.NearSquare.s2_eq_two
-assert_standard_axioms SquarePackingArchive.Records.NearSquare.s3_eq_two
 assert_standard_axioms SquarePackingArchive.Records.NearSquare.s62_eq_eight
 assert_standard_axioms SquarePackingArchive.Records.NearSquare.s63_eq_eight
 assert_standard_axioms SquarePackingArchive.Records.NearSquare.s79_eq_nine
@@ -731,13 +699,10 @@ assert_standard_axioms SquarePackingArchive.Records.Square5.s5_eq_goebel
 assert_standard_axioms SquarePackingArchive.Records.Square5.s5_le_goebel
 assert_standard_axioms SquarePackingArchive.Records.Square50SchadtEllsworth.s50_le_7_57142857142857
 assert_standard_axioms SquarePackingArchive.Records.Square53EllsworthReconstructed.upper_bound
-assert_standard_axioms SquarePackingArchive.Records.Square6.s6_eq_three
 assert_standard_axioms SquarePackingArchive.Records.Square65Tracker.upper_bound
 assert_standard_axioms SquarePackingArchive.Records.Square66Tracker.upper_bound
 assert_standard_axioms SquarePackingArchive.Records.Square68.s68_le_8_80339
 assert_standard_axioms SquarePackingArchive.Records.Square69.s69_le_8_8272
-assert_standard_axioms SquarePackingArchive.Records.Square7.s7_eq_three
-assert_standard_axioms SquarePackingArchive.Records.Square8.s8_eq_three
 assert_standard_axioms SquarePackingArchive.Records.Square82Tracker.upper_bound
 assert_standard_axioms SquarePackingArchive.Records.Square85Tracker.upper_bound
 assert_standard_axioms SquarePackingArchive.Records.Square86Friedman.upper_bound
@@ -746,8 +711,6 @@ assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s16_eq_four
 assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s25_eq_five
 assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s36_eq_six
 assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s49_eq_seven
-assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s4_eq_two
 assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s64_eq_eight
 assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s81_eq_nine
-assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s9_eq_three
 assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.squareNumber_hasPacking

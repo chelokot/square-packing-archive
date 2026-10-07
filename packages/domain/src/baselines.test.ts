@@ -48,7 +48,7 @@ describe("derived grid bounds", () => {
       expect(baseline.side ** 2).toBeGreaterThanOrEqual(count);
       expect((baseline.side - 1) ** 2).toBeLessThan(count);
       expect(baseline.relation).toBe("upper");
-      expect(verificationLevel(baseline)).toBe("lean-verified");
+      expect(verificationLevel(baseline)).toBe("formally-verified");
       expect(baseline.evidence[0]!.theorem).toBe(
         archive.gridBaseline!.proof.theorem,
       );

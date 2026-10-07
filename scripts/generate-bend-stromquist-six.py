@@ -4,7 +4,7 @@
 A packing of at least six squares in side `side < 3` scales to six squares that fit [0, 3]^2 with
 pairwise disjoint closed sets (bend/Scaling.bend). The facts about their key
 points from bend/Stromquist.bend and bend/Singletons.bend feed the counting
-core of bend/Incidence.bend, following StromquistSix.lean and Square6Exact.lean.
+core of bend/Incidence.bend, following Stromquist's argument.
 """
 import importlib.util
 
@@ -231,7 +231,7 @@ def generic_args(name):
 
 
 def meet(corner, middle):
-    """Two squares holding only the adjacent keys `corner` and `middle` share a point (StromquistSixSingletons.lean)."""
+    """Two squares holding only the adjacent keys `corner` and `middle` share a point."""
     ops = symmetry_to_base(corner, middle)
     a, b = (ST.Transport(ops, None, generic_square(name), f'StromquistSix.corners({TC6}, six, less, {name}, {name}_bound)') for name in 'ab')
     a.ctx, b.ctx = (ST.Square(t.normal, t.signs) for t in (a, b))
@@ -321,7 +321,7 @@ CENTER_OF = {7: 'north', 1: 'south', 5: 'east', 3: 'west'}
 
 
 def center_pattern(n):
-    """No square holds exactly the centre and the neighbour n (StromquistSix.lean, no_closed_family_center_pair)."""
+    """No square holds exactly the centre and the neighbour n."""
     names = NAMES
     literals = [bit('i', key(k)) if k in (4, n) else f'Bool.not({bit("i", key(k))})' for k in range(9)]
     holds = lefts(literals, 'holds')

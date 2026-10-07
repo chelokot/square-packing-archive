@@ -557,10 +557,4 @@ theorem points_unavoidable : Unavoidable points 3 := by
                 · exact ⟨6, top_mem⟩
                 · exact ⟨3, center_mem⟩
 
-theorem s8_lower_bound : IsLowerBound 8 3 := by
-  simpa using lowerBound_succ_of_unavoidable points_unavoidable
-
-theorem s8_eq_three : IsMinimumSide 8 3 := by
-  exact ⟨by simpa using NearSquare.squareMinusOne_hasPacking 3, s8_lower_bound⟩
-
 end SquarePackingArchive.Records.Square8

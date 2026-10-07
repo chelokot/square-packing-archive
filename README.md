@@ -12,7 +12,7 @@ side length. Squares may rotate; their interiors cannot overlap.
 
 [![Packing results for 1–100 squares. Green: proved optimal; amber: nontrivial bound; white: basic grid bound. Click to explore.](docs/assets/coverage.svg)](https://chelokot.github.io/square-packing-archive/#explore)
 
-**Every result has a kernel-checked Lean proof.** Green cells mark proved optima;
+**Every result has a kernel-checked Lean or Bend proof.** Green cells mark proved optima;
 amber cells mark nontrivial bounds; white cells mark basic grid bounds.
 Select a count to inspect the packing, coordinates,
 authors, sources, and proof.
@@ -21,10 +21,10 @@ authors, sources, and proof.
 
 Formalized published optima and checked upper-bound constructions:
 
-| Result                         | Background                                                                                             | Lean                                                                   |
+| Result                         | Background                                                                                             | Proof                                                                  |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
 | `s(n²−2) = n`, integer `n ≥ 2` | [Replacement compensation proof](docs/nagamochi-compensation-proof.md)                                 | [Theorem](formal/SquarePackingArchive/NagamochiPackingTheorem.lean)    |
-| `s(6) = 3`                     | [Stromquist’s point-set argument](docs/small-records-formalization.md#why-six-squares-need-side-three) | [Theorem](formal/SquarePackingArchive/Records/Square6Exact.lean)       |
+| `s(6) = 3`                     | [Stromquist’s point-set argument](docs/small-records-formalization.md#why-six-squares-need-side-three) | [Bend laws](bend/MANIFEST.bend)                                        |
 | `s(10) = 3 + √2 / 2`           | [Stromquist’s point-set argument](docs/small-records-formalization.md)                                 | [Theorem](formal/SquarePackingArchive/Records/Square10Exact.lean)      |
 | `s(13) = 4`                    | [Bentz’s strategy, with corrected auxiliary sets](docs/bentz-13-formalization.md)                      | [Theorem](formal/SquarePackingArchive/Records/Square13Exact.lean)      |
 | `s(22) = 5`                    | [Bentz’s staggered-lattice argument](docs/bentz-lattice-formalization.md)                              | [Theorem](formal/SquarePackingArchive/Records/Square22.lean)           |
@@ -43,9 +43,11 @@ not the paper’s full rectangular-container theorem.
 ## What is checked
 
 Every catalogued claim, including historical entries, is checked against a Lean
-theorem with the stated square count, relation, and exact formal value. The
-dependency audit permits only `propext`, `Classical.choice`, and `Quot.sound`;
-it rejects unfinished proofs, custom axioms, and native-evaluation oracles.
+theorem or a Bend law with the stated square count, relation, and exact formal
+value. The Lean dependency audit permits only `propext`, `Classical.choice`, and
+`Quot.sound`; it rejects unfinished proofs, custom axioms, and native-evaluation
+oracles. Bend laws are checked by Bend's proven kernel, and the claims are moving
+from Lean to Bend (see the [Bend notes](docs/bend-formalization.md)).
 See the [data model](docs/data-model.md) for provenance and display conventions.
 
 An upper bound proves that a packing exists, not that it is optimal or best known.

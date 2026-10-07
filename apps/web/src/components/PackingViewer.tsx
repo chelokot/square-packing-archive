@@ -1,6 +1,7 @@
 import {
   exactToNumber,
   type ExplorerBound,
+  isFormalProof,
   isGridBaseline,
   type PackingConfiguration,
 } from "@square-packing/domain";
@@ -23,7 +24,7 @@ import {
   squareAngle,
   viewportTransform,
 } from "../geometry.ts";
-import { claimValue } from "./claimPresentation.tsx";
+import { claimValue, proofTitle } from "./claimPresentation.tsx";
 
 const groupColors = [
   "#a8b997",
@@ -79,9 +80,7 @@ export const PackingViewer = ({
   );
   const selected = squares.find((square) => square.id === selectedId);
   const proof =
-    claim === undefined
-      ? undefined
-      : claim.evidence.find((evidence) => evidence.kind === "lean-proof");
+    claim === undefined ? undefined : claim.evidence.find(isFormalProof);
 
   const zoom = (factor: number) =>
     setViewport((current) => ({
@@ -475,13 +474,13 @@ export const PackingViewer = ({
             ? ` · ${copy.gridBaseline}`
             : ""}
         </p>
-        {proof === undefined ? null : (
+        {claim === undefined || proof === undefined ? null : (
           <a
             className="text-xs text-forest underline decoration-forest/30 underline-offset-4"
             href={`${repositoryUrl}/blob/main/${proof.artifact}`}
-            title={proof.theorem}
+            title={proofTitle(claim, proof)}
           >
-            {copy.proof}
+            {copy.proof[proof.kind]}
           </a>
         )}
       </div>

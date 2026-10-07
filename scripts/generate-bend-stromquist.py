@@ -4,7 +4,7 @@
 For a square in first-quadrant normal form that fits [0, 3]^2, `Stromquist.row`
 records which of the nine key points (1 + i/2, 1 + j/2) it contains. The
 lemmas here give the facts that bend/Incidence.bend consumes, following
-StromquistSixPoints.lean, StromquistSixAdjacency.lean and StromquistSixCenter.lean.
+Stromquist's point, adjacency and centre lemmas.
 """
 import importlib.util
 from fractions import Fraction
@@ -468,7 +468,7 @@ def local_terms(ctx, k, tag):
 
 
 def clause(first, second, others):
-    """A square holding keys `first` and `second` holds one of `others` (StromquistSixAdjacency.lean)."""
+    """A square holding keys `first` and `second` holds one of `others`."""
     ctx = Square()
     for tag, k in (('a', first), ('b', second)):
         lx, ly = local_terms(ctx, k, tag)
@@ -573,7 +573,7 @@ NORTH = {'center': (Fraction(3, 2), Fraction(3, 2)), 'neighbour': (Fraction(3, 2
 
 
 def center_base(index):
-    """StromquistSixCenter.lean for the north neighbour: the square holds an extra point near the top."""
+    """Stromquist's centre lemma for the north neighbour: the square holds an extra point near the top."""
     ctx = Square()
     ctx.use_fractions([Fraction(3, 5), Fraction(4, 5)] + [v for point in NORTH['extra'] for v in point])
     center = contained(ctx, NORTH['center'], 'center')

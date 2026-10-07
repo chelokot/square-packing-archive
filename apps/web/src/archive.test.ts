@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { assert, describe, expect, test } from "vitest";
 import { archive } from "./archive.ts";
 import { contributorNames } from "./components/claimPresentation.tsx";
@@ -6,7 +7,9 @@ import {
   isGridBaseline,
   gridBaselineConfiguration,
   exactCoverageByYear,
+  bendLawNames,
   claimsByYear,
+  isFormalProof,
 } from "@square-packing/domain";
 
 describe("compiled archive", () => {
@@ -166,18 +169,32 @@ describe("compiled archive", () => {
     );
   });
 
+  test("every claim proved in Bend is stated by the laws of bend/MANIFEST.bend", () => {
+    const manifest = readFileSync(
+      new URL("../../../bend/MANIFEST.bend", import.meta.url),
+      "utf8",
+    );
+    const declared = [...manifest.matchAll(/^law (\w+):$/gm)].map(
+      ([, name]) => `Manifest.${name}`,
+    );
+    const claimed = archive.claims
+      .filter((claim) =>
+        claim.evidence.some((evidence) => evidence.kind === "bend-proof"),
+      )
+      .flatMap(bendLawNames);
+    expect(claimed.length).toBeGreaterThan(0);
+    expect(declared.sort()).toEqual(claimed.sort());
+  });
+
   test("every catalogued result has its own checked proof, including historical entries", () => {
     const publishedExact = archive.claims.filter(
       (claim) => claim.active && claim.relation === "exact",
     );
-    const leanChecked = archive.claims.filter((claim) =>
-      claim.evidence.some(
-        (evidence) =>
-          evidence.kind === "lean-proof" && evidence.status === "lean-checked",
-      ),
+    const checked = archive.claims.filter((claim) =>
+      claim.evidence.some(isFormalProof),
     );
     expect(publishedExact.length).toBeGreaterThan(0);
-    expect(leanChecked.length).toBe(archive.claims.length);
+    expect(checked.length).toBe(archive.claims.length);
     expect(archive.claims.some(({ id }) => id === "upper-11-trump")).toBe(
       false,
     );

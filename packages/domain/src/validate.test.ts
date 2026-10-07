@@ -18,9 +18,17 @@ const leanProof = evidenceSchema.parse({
   kind: "lean-proof",
   status: "lean-checked",
   source: "example-source",
-  artifact: "formal/SquarePackingArchive/Records/Basic.lean",
-  theorem: "SquarePackingArchive.Records.Basic.s1_eq_one",
+  artifact: "formal/SquarePackingArchive/Records/SquareNumbers.lean",
+  theorem: "SquarePackingArchive.Records.SquareNumbers.s16_eq_four",
   checkedAt: "2026-09-05",
+});
+
+const bendProof = evidenceSchema.parse({
+  kind: "bend-proof",
+  status: "bend-checked",
+  source: "example-source",
+  artifact: "bend/MANIFEST.bend",
+  checkedAt: "2026-10-05",
 });
 
 const historicalClaim = claimSchema.parse({
@@ -37,6 +45,12 @@ const historicalClaim = claimSchema.parse({
 const checkedClaim: Claim = {
   ...historicalClaim,
   evidence: [publication, leanProof],
+};
+
+const bendClaim: Claim = {
+  ...historicalClaim,
+  value: { decimal: "1", bend: "R.FieldRing.of_nat(~F, ~field, 1n)" },
+  evidence: [publication, bendProof],
 };
 
 const archiveWith = (claims: readonly Claim[]) =>
@@ -64,14 +78,14 @@ const compiledWith = (claims: readonly Claim[]) => ({
   configurationData: [],
 });
 
-describe("Lean-only catalog publication", () => {
+describe("Formal-proof-only catalog publication", () => {
   test.each([true, false])(
     "rejects an unformalized claim with active=%s",
     (active) => {
       const claim = { ...historicalClaim, active };
       const archive = archiveWith([claim]);
       expect(validateArchiveReferences(archive, [])).toContain(
-        `${claim.id}: Catalog claims require a Lean proof; keep unformalized proposals in issues`,
+        `${claim.id}: Catalog claims require a Lean or Bend proof; keep unformalized proposals in issues`,
       );
       const parsed = compiledArchiveSchema.safeParse(compiledWith([claim]));
       expect(parsed.success).toBeFalse();
@@ -86,6 +100,38 @@ describe("Lean-only catalog publication", () => {
     expect(validateArchiveReferences(archive, [])).toEqual([]);
     const compiled = compiledArchiveSchema.parse(compiledWith([checkedClaim]));
     expect(compiled.claims[0]).toEqual(checkedClaim);
+  });
+
+  test("accepts a Bend proof as the claim's formal evidence", () => {
+    expect(validateArchiveReferences(archiveWith([bendClaim]), [])).toEqual([]);
+    expect(
+      compiledArchiveSchema.parse(compiledWith([bendClaim])).claims,
+    ).toEqual([bendClaim]);
+  });
+
+  test("rejects Bend evidence that names a theorem, another artifact, a Lean status, no date, or no Bend value", () => {
+    const malformedClaims: Claim[] = [
+      {
+        ...bendClaim,
+        evidence: [{ ...bendProof, theorem: "Manifest.exact_1_grid_upper" }],
+      },
+      {
+        ...bendClaim,
+        evidence: [{ ...bendProof, artifact: "bend/LAWS.bend" }],
+      },
+      { ...bendClaim, evidence: [{ ...bendProof, status: "lean-checked" }] },
+      { ...bendClaim, evidence: [{ ...bendProof, checkedAt: undefined }] },
+      { ...bendClaim, value: { decimal: "1" } },
+    ];
+    for (const claim of malformedClaims) {
+      expect(
+        validateArchiveReferences({ ...archiveWith([]), claims: [claim] }, [])
+          .length,
+      ).toBeGreaterThan(0);
+      expect(
+        compiledArchiveSchema.safeParse(compiledWith([claim])).success,
+      ).toBeFalse();
+    }
   });
 
   test("requires each claim's own proof rather than another proof for the same n", () => {
