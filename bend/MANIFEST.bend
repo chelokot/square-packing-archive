@@ -124,3 +124,87 @@ law exact_9_grid_lower:
   for ~packing: P.Problem.Packing<F, field, count, side>
   for +at_least: N.Natural.Le(9n, count)
   A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 3n), side)
+
+law exact_16_grid_upper:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  P.Problem.Packing<F, field, 16n, R.FieldRing.of_nat(~F, ~field, 4n)>
+
+law exact_16_grid_lower:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +at_least: N.Natural.Le(16n, count)
+  A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 4n), side)
+
+law exact_25_grid_upper:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  P.Problem.Packing<F, field, 25n, R.FieldRing.of_nat(~F, ~field, 5n)>
+
+law exact_25_grid_lower:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +at_least: N.Natural.Le(25n, count)
+  A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 5n), side)
+
+law exact_36_grid_upper:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  P.Problem.Packing<F, field, 36n, R.FieldRing.of_nat(~F, ~field, 6n)>
+
+law exact_36_grid_lower:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +at_least: N.Natural.Le(36n, count)
+  A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 6n), side)
+
+law exact_49_grid_upper:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  P.Problem.Packing<F, field, 49n, R.FieldRing.of_nat(~F, ~field, 7n)>
+
+law exact_49_grid_lower:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +at_least: N.Natural.Le(49n, count)
+  A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 7n), side)
+
+law exact_64_grid_upper:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  P.Problem.Packing<F, field, 64n, R.FieldRing.of_nat(~F, ~field, 8n)>
+
+law exact_64_grid_lower:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +at_least: N.Natural.Le(64n, count)
+  A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 8n), side)
+
+law exact_81_grid_upper:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  P.Problem.Packing<F, field, 81n, R.FieldRing.of_nat(~F, ~field, 9n)>
+
+law exact_81_grid_lower:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  for +at_least: N.Natural.Le(81n, count)
+  A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, 9n), side)

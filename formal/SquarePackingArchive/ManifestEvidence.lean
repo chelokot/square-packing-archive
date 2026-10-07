@@ -37,7 +37,6 @@ import SquarePackingArchive.Records.Square82Tracker
 import SquarePackingArchive.Records.Square85Tracker
 import SquarePackingArchive.Records.Square86Friedman
 import SquarePackingArchive.Records.Square89Tracker
-import SquarePackingArchive.Records.SquareNumbers
 
 example : SquarePackingArchive.HasPacking 5 (2 + Real.sqrt 2 / 2) :=
   SquarePackingArchive.Records.Square5.s5_le_goebel
@@ -78,9 +77,6 @@ example : SquarePackingArchive.IsMinimumSide 14 (4) :=
 example : SquarePackingArchive.IsMinimumSide 15 (4) :=
   SquarePackingArchive.Records.Square15.s15_eq_four
 
-example : SquarePackingArchive.IsMinimumSide 16 (4) :=
-  SquarePackingArchive.Records.SquareNumbers.s16_eq_four
-
 example : SquarePackingArchive.IsMinimumSide 22 (5) :=
   SquarePackingArchive.Records.Square22.s22_eq_five
 
@@ -89,9 +85,6 @@ example : SquarePackingArchive.IsMinimumSide 23 (5) :=
 
 example : SquarePackingArchive.IsMinimumSide 24 (5) :=
   SquarePackingArchive.Records.Square24.s24_eq_five
-
-example : SquarePackingArchive.IsMinimumSide 25 (5) :=
-  SquarePackingArchive.Records.SquareNumbers.s25_eq_five
 
 example : SquarePackingArchive.IsMinimumSide 33 (6) :=
   SquarePackingArchive.Records.Square33.s33_eq_six
@@ -102,9 +95,6 @@ example : SquarePackingArchive.IsMinimumSide 34 (6) :=
 example : SquarePackingArchive.IsMinimumSide 35 (6) :=
   SquarePackingArchive.Records.Square34.s35_eq_six
 
-example : SquarePackingArchive.IsMinimumSide 36 (6) :=
-  SquarePackingArchive.Records.SquareNumbers.s36_eq_six
-
 example : SquarePackingArchive.IsMinimumSide 46 (7) :=
   SquarePackingArchive.Records.Square46.s46_eq_seven
 
@@ -114,17 +104,11 @@ example : SquarePackingArchive.IsMinimumSide 47 (7) :=
 example : SquarePackingArchive.IsMinimumSide 48 (7) :=
   SquarePackingArchive.Records.Square46.s48_eq_seven
 
-example : SquarePackingArchive.IsMinimumSide 49 (7) :=
-  SquarePackingArchive.Records.SquareNumbers.s49_eq_seven
-
 example : SquarePackingArchive.IsMinimumSide 62 (8) :=
   SquarePackingArchive.Records.NearSquare.s62_eq_eight
 
 example : SquarePackingArchive.IsMinimumSide 63 (8) :=
   SquarePackingArchive.Records.NearSquare.s63_eq_eight
-
-example : SquarePackingArchive.IsMinimumSide 64 (8) :=
-  SquarePackingArchive.Records.SquareNumbers.s64_eq_eight
 
 example : SquarePackingArchive.HasPacking 68 (((880357394752856 : ℚ) / 100000000000000 : ℝ)) :=
   SquarePackingArchive.Records.HistoricalUpperBounds.s68_le_schadt_2025
@@ -146,9 +130,6 @@ example : SquarePackingArchive.IsMinimumSide 79 (9) :=
 
 example : SquarePackingArchive.IsMinimumSide 80 (9) :=
   SquarePackingArchive.Records.NearSquare.s80_eq_nine
-
-example : SquarePackingArchive.IsMinimumSide 81 (9) :=
-  SquarePackingArchive.Records.SquareNumbers.s81_eq_nine
 
 example : SquarePackingArchive.IsMinimumSide 98 (10) :=
   SquarePackingArchive.Records.NearSquare.s98_eq_ten
@@ -305,9 +286,3 @@ assert_standard_axioms SquarePackingArchive.Records.Square82Tracker.upper_bound
 assert_standard_axioms SquarePackingArchive.Records.Square85Tracker.upper_bound
 assert_standard_axioms SquarePackingArchive.Records.Square86Friedman.upper_bound
 assert_standard_axioms SquarePackingArchive.Records.Square89Tracker.upper_bound
-assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s16_eq_four
-assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s25_eq_five
-assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s36_eq_six
-assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s49_eq_seven
-assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s64_eq_eight
-assert_standard_axioms SquarePackingArchive.Records.SquareNumbers.s81_eq_nine

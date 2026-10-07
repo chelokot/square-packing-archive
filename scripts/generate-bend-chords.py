@@ -582,6 +582,22 @@ def area_bound():
     bound.equal(terms['mass_side'], terms['count'], f'Chords.mass_finish(TC, {PACKED}, count, N.Natural.le_reflexive(count))')
     bound.equal(terms['mass_zero'], num(0), f'Chords.mass_start(TC, {PACKED}, count, N.Natural.le_reflexive(count))')
     bound_proof = bound.le(terms['count'], terms['side'] * terms['side'])
+    lower = Context()
+    terms = {name: lower.var(name, bend) for name, bend in
+             [('root', 'R.FieldRing.of_nat(TC, k)'), ('square', 'R.FieldRing.of_nat(TC, Nat.mul(k, k))'),
+              ('count', 'R.FieldRing.of_nat(TC, count)'), ('side', 'side')]}
+    root, side = terms['root'], terms['side']
+    lower.below(terms['count'], side * side, f'Chords.count_bound(TC, {PACKED})')
+    lower.below(terms['square'], terms['count'], 'O.FieldOrder.of_nat_le(TC, Nat.mul(k, k), count, at_least)')
+    lower.equal(terms['square'], root * root, 'R.FieldRing.of_nat_mul(TC, k, k)')
+    lower.nonnegative(side, 'Pk.Packings.side_nonnegative(F, field, count, side, packing)')
+    lower.nonnegative(root, 'O.FieldOrder.zero_le_of_nat(TC, k)')
+    goal = f'LE({root.bend}, side)'
+    lower_proof = build(lower, [('cases', 'enough', root, side, [], [
+        ('lt', 'gap', num(0), root - side), ('lt', 'sum', num(0), root + side),
+        ('given_lt', 'product', num(0), (root - side) * (root + side),
+         f'M.Membership.strict_product(TC, {(root - side).bend}, {(root + side).bend}, gap, sum)')])],
+        goal, Refuter(), lambda current, stricts: f'Empty.absurd({goal}, {Refuter().refute(current, stricts)})' if stricts else 'enough')
     return endpoint('start', 'before', 'ZERO') + endpoint('finish', 'after', 'side') + f'''
 def Chords.strip_signed(TPL, {SQUARE}, +signs: C.Certificate.Both<{SIGNS_BOTH}>, +a: F, +b: F, +order: LE(a, b), {CLEANS}) ->
   SAME(ADD(Chords.area(TC, square, b), NEG(Chords.area(TC, square, a))),
@@ -653,6 +669,9 @@ def Chords.mass_finish(TPL, {PACKING}, +n: Nat, +bound: N.Natural.Le(n, count)) 
 
 def Chords.count_bound(TPL, {PACKING}) -> LE(R.FieldRing.of_nat(TC, count), MUL(side, side)):
   {bound_proof}
+
+def Chords.lower_bound(TPL, {PACKING}, +k: Nat, +at_least: N.Natural.Le(Nat.mul(k, k), count)) -> LE(R.FieldRing.of_nat(TC, k), side):
+  {lower_proof}
 '''
 
 

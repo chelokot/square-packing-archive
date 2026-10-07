@@ -57,8 +57,10 @@ Publication dates and formalization dates are kept separate.
 
 ### Bend
 
-`s(n)` for n = 1, 2, 3, 4, 6, 7, 8 and 9 is also checked in [Bend 2](https://github.com/bendlang/bend) for
-every ordered field, against a Bend restatement of the canonical problem. See
+`s(n)` for n = 2, 3, 6, 7 and 8, and `s(k²) = k` for `1 ≤ k ≤ 9`, are also
+checked in [Bend 2](https://github.com/bendlang/bend) for every ordered field,
+against a Bend restatement of the canonical problem. The square numbers follow
+from the area bound `n ≤ side²`, proved in Bend by sweeping vertical chords. See
 the [Bend formalization notes](docs/bend-formalization.md) for its meaning and
 the structure of the proof.
 
