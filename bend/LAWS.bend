@@ -274,3 +274,11 @@ law vertical_chords_fit_the_side:
   for +x: F
   A.Algebra.le(~F, ~field, I.Intervals.total(~F, ~field, Ch.Chords.chords(~F, ~field, ~count, ~side, ~packing, x, count)),
     I.Intervals.minus(~F, ~field, side, A.Algebra.zero(~F, ~field)))
+
+law squares_fit_by_area:
+  for ~F: Kind(&2)
+  for ~field: K.Field<F>
+  for ~count: Nat
+  for ~side: F
+  for ~packing: P.Problem.Packing<F, field, count, side>
+  A.Algebra.le(~F, ~field, R.FieldRing.of_nat(~F, ~field, count), A.Algebra.mul(~F, ~field, side, side))
