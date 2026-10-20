@@ -39,6 +39,32 @@ describe("coverage matrix", () => {
     expect(repeated).toContain(">34</span> proved optimal");
   });
 
+  test("requires Lean evidence before an exact claim turns green", () => {
+    const publishedEvidence = archive.claims
+      .flatMap((claim) => claim.evidence)
+      .find((evidence) => evidence.kind === "published-proof")!;
+    const unverified = renderToStaticMarkup(
+      <CoverageMatrix
+        archive={{
+          ...archive,
+          claims: archive.claims.map((claim) =>
+            claim.n === 64
+              ? { ...claim, evidence: [publishedEvidence] }
+              : claim,
+          ),
+        }}
+        selectedCount={69}
+        onSelect={() => {}}
+      />,
+    );
+    const cell = unverified.match(
+      /<button[^>]*aria-label="n = 64:[\s\S]*?<\/button>/,
+    );
+    expect(cell).not.toBeNull();
+    expect(cell![0]).not.toContain("bg-forest-soft");
+    expect(unverified).toContain(">33</span> proved optimal");
+  });
+
   test("distinguishes optima, nontrivial bounds and basic grids", () => {
     for (const count of [5, 6, 10, 13, 22, 33, 64]) {
       expect(cellMarkup(count)).toContain("bg-forest-soft");

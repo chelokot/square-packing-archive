@@ -55,6 +55,11 @@ verification date. The claim must include its exact Lean value. Archive
 validation and the generated Lean audit enforce this for all records; marking
 a claim inactive does not waive the requirement. CI checks the linked theorem
 against the claim's count, bound, and relation, not just its metadata.
+The domain-specific meaning of an exact result is isolated in the
+[canonical Lean problem statement](formal/SquarePackingArchive/Problem.lean):
+the linked theorem must prove `IsMinimumSide n x`. See the
+[plain-language definition](docs/problem-definition.md) before reviewing
+individual proofs.
 
 Lean files must contain no `sorry`, custom axioms, or unchecked foreign proof
 oracle. The generated audit checks the transitive dependencies of every linked

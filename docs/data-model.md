@@ -28,11 +28,16 @@ Tracker records, publications, computational certificates, and Lean proofs are
 different evidence kinds. Every catalog claim must include its own `lean-proof`
 evidence, including inactive historical records. The other evidence kinds retain
 source provenance. Results awaiting formalization belong in GitHub issues.
-The public matrix uses green for proved optima, amber for nontrivial bounds,
-and white for basic grid bounds, not evidence status. An upper bound is colored
+The public matrix uses green for Lean-checked optima, amber for nontrivial
+bounds, and white for basic grid bounds. An upper bound is colored
 amber only when its displayed side is below `ceil(sqrt(n))`; a catalogued grid
 bound such as `s(12) ≤ 4` stays white. Exact claims take precedence, even when
 their optimal construction is a grid.
+Green requires both an exact claim and linked Lean evidence. The generated
+manifest audit checks that the linked theorem has type
+[`IsMinimumSide n x`](../formal/SquarePackingArchive/Problem.lean) at the
+claim's count and exact value. A computer-checked but unformalized candidate,
+such as [the `s(61)` proposal](proofs/s61/README.md), remains non-green.
 
 Each Lean evidence record requires `checkedAt`, the full calendar date
 (`YYYY-MM-DD`) when that theorem was first recorded as checked for this claim.

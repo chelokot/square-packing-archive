@@ -1,0 +1,37 @@
+name: S61 certificate
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/s61-certificate.yml
+      - experiments/s61-fractional-obstruction/**
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/s61-certificate.yml
+      - experiments/s61-fractional-obstruction/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: experiments/s61-fractional-obstruction
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Check certificate metadata
+        run: python3 -S verify_s61_metadata.py s61-certificate.txt
+      - name: Test integer verifier
+        run: |
+          rustc --edition 2021 --test -C overflow-checks=yes verify_interval.rs -o /tmp/verify_s61_tests
+          /tmp/verify_s61_tests
+      - name: Verify every orientation cell
+        run: |
+          rustc --edition 2021 -C opt-level=3 -C overflow-checks=yes verify_interval.rs -o /tmp/verify_s61
+          /tmp/verify_s61 cells < s61-certificate.txt

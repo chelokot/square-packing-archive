@@ -1,4 +1,4 @@
-import type { ExplorerBound } from "@square-packing/domain";
+import { isVerified, type ExplorerBound } from "@square-packing/domain";
 import { copy } from "../copy.ts";
 
 export const coveragePresentation = {
@@ -24,7 +24,9 @@ export const coveragePresentation = {
 
 export const coveragePresentationFor = (bound: ExplorerBound | undefined) => {
   if (bound === undefined) return coveragePresentation.grid;
-  if (bound.relation === "exact") return coveragePresentation.exact;
+  if (bound.relation === "exact" && isVerified(bound)) {
+    return coveragePresentation.exact;
+  }
   if (
     bound.relation === "upper" &&
     Number(bound.value.decimal) >= Math.ceil(Math.sqrt(bound.n))
