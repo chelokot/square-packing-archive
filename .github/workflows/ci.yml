@@ -21,10 +21,10 @@ jobs:
   bend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: bendlang/bend
           ref: 1487e77dee69bf5fbf3b9d291c523082856440f7
